@@ -1,9 +1,9 @@
-package com.hutoslib.common.particles.factory;
+package com.hutoslib.client.particles.factory;
 
 import com.hutoslib.client.particle.ParticleColor;
-import com.hutoslib.common.particles.ParticleGlow;
-import com.hutoslib.common.particles.ParticleInit;
-import com.hutoslib.common.particles.data.ColorParticleData;
+import com.hutoslib.client.particles.ParticleGlow;
+import com.hutoslib.client.particles.ParticleInit;
+import com.hutoslib.client.particles.data.ColorParticleData;
 
 import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.IParticleFactory;

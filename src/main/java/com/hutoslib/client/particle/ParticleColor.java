@@ -89,7 +89,6 @@ public class ParticleColor {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	public static ParticleColor deserialize(String string) {
 		String[] arr = string.split(",");
 		BigDecimal d = new BigDecimal(arr[0].trim());
@@ -128,7 +127,6 @@ public class ParticleColor {
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		public static ParticleColor.IntWrapper deserialize(String string) {
 			String[] arr = string.split(",");
 			BigDecimal d = new BigDecimal(arr[0].trim());

@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.hutoslib.client.particle.ParticleColor;
-import com.hutoslib.common.particles.factory.ParticleLightningFactory;
+import com.hutoslib.client.particles.factory.ParticleLightningFactory;
 import com.hutoslib.math.Vector3;
 
 import net.minecraft.client.world.ClientWorld;

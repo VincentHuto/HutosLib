@@ -1,7 +1,8 @@
 package com.hutoslib;
 
+import com.hutoslib.client.models.IAnimatable;
+import com.hutoslib.client.particles.ParticleInit;
 import com.hutoslib.common.PacketHandler;
-import com.hutoslib.common.particles.ParticleInit;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -30,7 +31,9 @@ public class HutosLib {
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
+		IAnimatable.registerCapability();
 		PacketHandler.registerChannels();
+
 
 	}
 

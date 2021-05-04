@@ -1,5 +1,3 @@
 {
-  "textures": [
-    "hutoslib:particle_dark_glow"
-  ]
+  "textures" : [ "hutoslib:particle_dark_glow" ]
 }

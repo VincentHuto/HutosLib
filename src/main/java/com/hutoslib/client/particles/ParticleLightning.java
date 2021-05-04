@@ -1,5 +1,5 @@
 
-package com.hutoslib.common.particles;
+package com.hutoslib.client.particles;
 
 import com.hutoslib.math.Vector3;
 import com.mojang.blaze3d.systems.RenderSystem;

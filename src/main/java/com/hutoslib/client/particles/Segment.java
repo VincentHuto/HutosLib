@@ -1,4 +1,4 @@
-package com.hutoslib.common.particles;
+package com.hutoslib.client.particles;
 
 import com.hutoslib.math.Vector3;
 

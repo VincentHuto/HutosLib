@@ -1,6 +1,6 @@
-package com.hutoslib.common.particles.type;
+package com.hutoslib.client.particles.type;
 
-import com.hutoslib.common.particles.data.ColorLightningData;
+import com.hutoslib.client.particles.data.ColorLightningData;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.particles.ParticleType;

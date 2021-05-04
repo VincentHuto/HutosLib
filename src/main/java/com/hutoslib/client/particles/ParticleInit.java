@@ -1,15 +1,15 @@
-package com.hutoslib.common.particles;
+package com.hutoslib.client.particles;
 
 import com.hutoslib.HutosLib;
-import com.hutoslib.common.particles.data.ColorLightningData;
-import com.hutoslib.common.particles.data.ColorParticleData;
-import com.hutoslib.common.particles.data.DarkColorParticleData;
-import com.hutoslib.common.particles.factory.DarkGlowParticleFactory;
-import com.hutoslib.common.particles.factory.GlowParticleFactory;
-import com.hutoslib.common.particles.factory.ParticleLightningFactory;
-import com.hutoslib.common.particles.type.DarkGlowParticleType;
-import com.hutoslib.common.particles.type.GlowParticleType;
-import com.hutoslib.common.particles.type.LightningParticleType;
+import com.hutoslib.client.particles.data.ColorLightningData;
+import com.hutoslib.client.particles.data.ColorParticleData;
+import com.hutoslib.client.particles.data.DarkColorParticleData;
+import com.hutoslib.client.particles.factory.DarkGlowParticleFactory;
+import com.hutoslib.client.particles.factory.GlowParticleFactory;
+import com.hutoslib.client.particles.factory.ParticleLightningFactory;
+import com.hutoslib.client.particles.type.DarkGlowParticleType;
+import com.hutoslib.client.particles.type.GlowParticleType;
+import com.hutoslib.client.particles.type.LightningParticleType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.particles.ParticleType;

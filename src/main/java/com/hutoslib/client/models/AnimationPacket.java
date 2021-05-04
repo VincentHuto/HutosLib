@@ -40,7 +40,7 @@ public class AnimationPacket {
 	public static <T extends Entity & IAnimatable> void send(T entity, Animation animation) {
 		if (!entity.world.isRemote) {
 			entity.setAnimation(animation);
-			PacketHandler.ANIMATIONS.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+			PacketHandler.MAINCHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
 					new AnimationPacket(entity.getEntityId(), ArrayUtils.indexOf(entity.getAnimations(), animation)));
 		}
 	}

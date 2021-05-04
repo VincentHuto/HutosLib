@@ -1,4 +1,4 @@
-package com.hutoslib.common.particles;
+package com.hutoslib.client.particles;
 
 import java.util.Random;
 
@@ -10,14 +10,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ParticleDarkGlow extends SpriteTexturedParticle {
+public class ParticleGlow extends SpriteTexturedParticle {
 	public float colorR = 0;
 	public float colorG = 0;
 	public float colorB = 0;
 	public float initScale = 0;
 	public float initAlpha = 0;
 
-	public ParticleDarkGlow(ClientWorld worldIn, double x, double y, double z, double vx, double vy, double vz, float r,
+	public ParticleGlow(ClientWorld worldIn, double x, double y, double z, double vx, double vy, double vz, float r,
 			float g, float b, float a, float scale, int lifetime, IAnimatedSprite sprite) {
 		super(worldIn, x, y, z, 0, 0, 0);
 		this.colorR = r;
@@ -45,7 +45,7 @@ public class ParticleDarkGlow extends SpriteTexturedParticle {
 
 	@Override
 	public IParticleRenderType getRenderType() {
-		return RenderTypeInit.DARK_GLOW_RENDER;
+		return RenderTypeInit.GLOW_RENDER;
 	}
 
 	@Override

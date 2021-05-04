@@ -1,4 +1,4 @@
-package com.hutoslib.common.particles;
+package com.hutoslib.client.particles;
 
 import org.lwjgl.opengl.GL11;
 

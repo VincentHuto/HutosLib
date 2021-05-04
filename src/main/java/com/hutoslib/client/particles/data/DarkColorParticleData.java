@@ -1,7 +1,7 @@
-package com.hutoslib.common.particles.data;
+package com.hutoslib.client.particles.data;
 
 import com.hutoslib.client.particle.ParticleColor;
-import com.hutoslib.common.particles.ParticleInit;
+import com.hutoslib.client.particles.ParticleInit;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
