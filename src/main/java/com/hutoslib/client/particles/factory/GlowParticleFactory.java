@@ -11,7 +11,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.IParticleData;
 
-public class GlowParticleFactory implements IParticleFactory<ColorParticleData>, IHutosColoredParticle {
+public class GlowParticleFactory implements IParticleFactory<ColorParticleData> {
 	private final IAnimatedSprite spriteSet;
 	public static final String NAME = "glow";
 
@@ -26,9 +26,9 @@ public class GlowParticleFactory implements IParticleFactory<ColorParticleData>,
 				data.color.getBlue(), 1.0f, .035f, 136, this.spriteSet);
 
 	}
-	public IParticleData createData(ParticleColor color) {
+
+	public static IParticleData createData(ParticleColor color) {
 		return new ColorParticleData(ParticleInit.glow.get(), color);
 	}
-	
 
 }
