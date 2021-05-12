@@ -2,12 +2,9 @@ package com.hutoslib.util;
 
 import net.minecraft.item.Rarity;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.loading.StringUtils;
 
-@OnlyIn(Dist.CLIENT)
-public class TextFormatingUtil {
+public class TextUtils {
 
 	public static Rarity AURIC = Rarity.create("Auric", TextFormatting.GOLD);
 	public static Rarity SANGUINE = Rarity.create("Sanguine", TextFormatting.DARK_RED);
@@ -37,7 +34,6 @@ public class TextFormatingUtil {
 		return outputString + TextFormatting.WHITE;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static String stringToBlueObf(String parString, int parShineLocation, boolean parReturnToBlack) {
 		int stringLength = parString.length();
 		if (stringLength < 1) {
@@ -63,7 +59,6 @@ public class TextFormatingUtil {
 		return outputString + TextFormatting.WHITE;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static String stringToRedObf(String parString, int parShineLocation, boolean parReturnToBlack) {
 		int stringLength = parString.length();
 		if (stringLength < 1) {
@@ -95,7 +90,6 @@ public class TextFormatingUtil {
 	 * @return a string formated red or blue depending of the resonant type >0 =
 	 *         blue <0 = red
 	 */
-	@OnlyIn(Dist.CLIENT)
 	public static String stringToResonant(String parString) {
 
 		float stringValue = Float.parseFloat(parString);
@@ -133,7 +127,6 @@ public class TextFormatingUtil {
 	 * @param input a string to be formated
 	 * @return a string formated as such hello world = Hello world || teSt = Test
 	 */
-
 	public static String toProperCase(String input) {
 		String newString = "";
 		String culledString = input.replaceAll("_", " ");
@@ -152,7 +145,6 @@ public class TextFormatingUtil {
 		return newString;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static String stringToBloody(String parString) {
 
 		String outputString = "";

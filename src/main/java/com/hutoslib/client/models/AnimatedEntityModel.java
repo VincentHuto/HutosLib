@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import com.hutoslib.math.MathUtil;
+import com.hutoslib.math.MathUtils;
 
 public abstract class AnimatedEntityModel<T extends Entity> extends EntityModel<T>
 {
@@ -127,7 +127,7 @@ public abstract class AnimatedEntityModel<T extends Entity> extends EntityModel<
 
     private float calculateChainOffset(double rootOffset, ModelRenderer... boxes)
     {
-        return (float) rootOffset * MathUtil.PI / (2f * boxes.length);
+        return (float) rootOffset * MathUtils.PI / (2f * boxes.length);
     }
 
     public void setTime(float x) { this.time = x; }
@@ -139,12 +139,12 @@ public abstract class AnimatedEntityModel<T extends Entity> extends EntityModel<
             if (modelRenderer instanceof AnimatedModelRenderer)
             {
                 AnimatedModelRenderer box = (AnimatedModelRenderer) modelRenderer;
-                box.rotationPointX = MathUtil.linTerp(box.rotationPointX, box.defaultPositionX, time);
-                box.rotationPointY = MathUtil.linTerp(box.rotationPointY, box.defaultPositionY, time);
-                box.rotationPointZ = MathUtil.linTerp(box.rotationPointZ, box.defaultPositionZ, time);
-                box.rotateAngleX = MathUtil.linTerp(box.rotateAngleX, box.defaultRotationX, time);
-                box.rotateAngleY = MathUtil.linTerp(box.rotateAngleY, box.defaultRotationY, time);
-                box.rotateAngleZ = MathUtil.linTerp(box.rotateAngleZ, box.defaultRotationZ, time);
+                box.rotationPointX = MathUtils.linTerp(box.rotationPointX, box.defaultPositionX, time);
+                box.rotationPointY = MathUtils.linTerp(box.rotationPointY, box.defaultPositionY, time);
+                box.rotationPointZ = MathUtils.linTerp(box.rotationPointZ, box.defaultPositionZ, time);
+                box.rotateAngleX = MathUtils.linTerp(box.rotateAngleX, box.defaultRotationX, time);
+                box.rotateAngleY = MathUtils.linTerp(box.rotateAngleY, box.defaultRotationY, time);
+                box.rotateAngleZ = MathUtils.linTerp(box.rotateAngleZ, box.defaultRotationZ, time);
             }
         }
     }

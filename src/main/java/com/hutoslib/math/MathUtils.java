@@ -1,5 +1,6 @@
 package com.hutoslib.math;
 
+import java.awt.Point;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
@@ -12,8 +13,8 @@ import net.minecraft.util.math.vector.Vector3d;
  * Half of this shit is just me throwing numbers in and hoping it works, seems
  * to be going well so far!
  */
-public final class MathUtil {
-	private MathUtil() {
+public final class MathUtils {
+	private MathUtils() {
 		/* good try */}
 
 	/**
@@ -61,6 +62,13 @@ public final class MathUtil {
 		if (x >= 1)
 			return b;
 		return a + x * (b - a);
+	}
+
+	public static Point rotatePointAbout(Point in, Point about, double degrees) {
+		double rad = degrees * Math.PI / 180.0;
+		double newX = Math.cos(rad) * (in.x - about.x) - Math.sin(rad) * (in.y - about.y) + about.x;
+		double newY = Math.sin(rad) * (in.x - about.x) + Math.cos(rad) * (in.y - about.y) + about.y;
+		return new Point((int) newX, (int) newY);
 	}
 
 }

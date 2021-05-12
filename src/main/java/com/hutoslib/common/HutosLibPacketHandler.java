@@ -13,7 +13,7 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
-public class PacketHandler {
+public class HutosLibPacketHandler {
 	private static int networkID = 0;
 	private static final String PROTOCOL_VERSION = "1";
 
@@ -34,7 +34,7 @@ public class PacketHandler {
 	/***
 	 * 
 	 * @param vec       Beginning Location
-	 * @param speedVec  Ending location
+	 * @param endVec  	Ending location
 	 * @param radius    How far to send the packet to
 	 * @param dimension The dimension Key to send to
 	 * @param color     Lightning Color
@@ -43,9 +43,9 @@ public class PacketHandler {
 	 * @param fract     How much it Fractals out
 	 * @param maxOff    How far each fractal can branch
 	 */
-	public static void sendLightningSpawn(Vector3d vec, Vector3d speedVec, float radius, RegistryKey<World> dimension,
+	public static void sendLightningSpawn(Vector3d vec, Vector3d endVec, float radius, RegistryKey<World> dimension,
 			ParticleColor color, int speed, int maxAge, int fract, float maxOff) {
-		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle(vec, speedVec, color, speed, maxAge, fract,
+		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle(vec, endVec, color, speed, maxAge, fract,
 				maxOff);
 		MAINCHANNEL.send(PacketDistributor.NEAR
 				.with(() -> new PacketDistributor.TargetPoint(vec.x, vec.y, vec.z, (double) radius, dimension)), msg);

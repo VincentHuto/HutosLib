@@ -6,13 +6,14 @@ import com.hutoslib.client.particles.data.ColorParticleData;
 import com.hutoslib.client.particles.data.DarkColorParticleData;
 import com.hutoslib.client.particles.factory.DarkGlowParticleFactory;
 import com.hutoslib.client.particles.factory.GlowParticleFactory;
-import com.hutoslib.client.particles.factory.ParticleLightningFactory;
+import com.hutoslib.client.particles.factory.LightningParticleFactory;
 import com.hutoslib.client.particles.type.DarkGlowParticleType;
 import com.hutoslib.client.particles.type.GlowParticleType;
 import com.hutoslib.client.particles.type.LightningParticleType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.particles.ParticleType;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -20,7 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-@Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ParticleInit {
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister
@@ -39,7 +40,7 @@ public class ParticleInit {
 	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
 		Minecraft.getInstance().particles.registerFactory(glow.get(), GlowParticleFactory::new);
 		Minecraft.getInstance().particles.registerFactory(dark_glow.get(), DarkGlowParticleFactory::new);
-		Minecraft.getInstance().particles.registerFactory(lightning_bolt.get(), ParticleLightningFactory::new);
+		Minecraft.getInstance().particles.registerFactory(lightning_bolt.get(), LightningParticleFactory::new);
 
 	}
 

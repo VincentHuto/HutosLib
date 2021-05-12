@@ -85,14 +85,14 @@ public class GuiButtonTextured extends Button {
 			if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
 				this.isHovered = true;
 				v = newV;
-				GuiUtil.drawTexturedModalRect(posX, posY, u, adjV, width, height);
+				GuiUtils.drawTexturedModalRect(posX, posY, u, adjV, width, height);
 			} else if (state == true) {
 				v = newV;
-				GuiUtil.drawTexturedModalRect(posX, posY, u, adjV, width, height);
+				GuiUtils.drawTexturedModalRect(posX, posY, u, adjV, width, height);
 			} else {
 				this.isHovered = false;
 				newV = v;
-				GuiUtil.drawTexturedModalRect(posX, posY, u, v, width, height);
+				GuiUtils.drawTexturedModalRect(posX, posY, u, v, width, height);
 			}
 			GlStateManager.disableBlend();
 

@@ -11,10 +11,10 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.IParticleData;
 
-public class ParticleLightningFactory implements IParticleFactory<ColorLightningData> {
+public class LightningParticleFactory implements IParticleFactory<ColorLightningData> {
 	protected final IAnimatedSprite spriteSet;
 
-	public ParticleLightningFactory(IAnimatedSprite sprite) {
+	public LightningParticleFactory(IAnimatedSprite sprite) {
 		this.spriteSet = sprite;
 	}
 

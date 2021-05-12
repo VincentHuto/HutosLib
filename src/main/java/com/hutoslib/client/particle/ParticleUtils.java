@@ -9,7 +9,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class ParticleUtil {
+public class ParticleUtils {
 	public static Random r = new Random();
 
 	public static double inRange(double min, double max) {

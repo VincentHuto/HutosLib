@@ -6,7 +6,7 @@ import net.minecraft.util.math.MathHelper;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hutoslib.math.MathUtil;
+import com.hutoslib.math.MathUtils;
 
 public class ModelAnimator {
 	private int tempTick = 0;
@@ -107,7 +107,7 @@ public class ModelAnimator {
 					}
 				} else {
 					float tick = ((float) (animationTick - prevTempTick) + partialTicks) / (tempTick - prevTempTick);
-					float inc = MathHelper.sin(tick * MathUtil.PI / 2f);
+					float inc = MathHelper.sin(tick * MathUtils.PI / 2f);
 					float dec = 1f - inc;
 
 					for (Map.Entry<AnimatedModelRenderer, BoxPosCache> entry : prevPosCache.entrySet()) {

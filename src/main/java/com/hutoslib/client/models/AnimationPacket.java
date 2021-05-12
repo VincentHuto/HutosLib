@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.hutoslib.common.PacketHandler;
+import com.hutoslib.common.HutosLibPacketHandler;
 import com.hutoslib.util.ClientUtils;
 
 import net.minecraft.entity.Entity;
@@ -40,7 +40,7 @@ public class AnimationPacket {
 	public static <T extends Entity & IAnimatable> void send(T entity, Animation animation) {
 		if (!entity.world.isRemote) {
 			entity.setAnimation(animation);
-			PacketHandler.MAINCHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+			HutosLibPacketHandler.MAINCHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
 					new AnimationPacket(entity.getEntityId(), ArrayUtils.indexOf(entity.getAnimations(), animation)));
 		}
 	}

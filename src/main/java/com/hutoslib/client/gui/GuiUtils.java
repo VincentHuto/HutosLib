@@ -1,13 +1,19 @@
 package com.hutoslib.client.gui;
 
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.IReorderingProcessor;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.TransformationMatrix;
+import net.minecraft.util.text.ITextProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiUtil {
+public class GuiUtils {
 
 	/**
 	 * Draws a textured rectangle at the current z-value. Ported From past Versions
@@ -61,6 +67,29 @@ public class GuiUtil {
 				.tex((float) ((float) (textureX + 0) * scaleIn), (float) ((float) (textureY + 0) * scaleIn))
 				.endVertex();
 		tessellator.draw();
+	}
+
+	/*
+	 * Vanilla copy of wrap to max width to allow for drop shadow and readable name
+	 */
+	public void drawMaxWidthString(FontRenderer fontIn, ITextProperties text, int x, int y, int maxLength, int color,
+			boolean dropShadow) {
+		Matrix4f matrix4f = TransformationMatrix.identity().getMatrix();
+		for (IReorderingProcessor ireorderingprocessor : fontIn.trimStringToWidth(text, maxLength)) {
+			drawText(fontIn, ireorderingprocessor, (float) x, (float) y, color, matrix4f, dropShadow);
+			y += 9;
+		}
+
+	}
+
+	private int drawText(FontRenderer fontIn, IReorderingProcessor reorderingProcessor, float x, float y, int color,
+			Matrix4f matrix, boolean drawShadow) {
+		IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer
+				.getImpl(Tessellator.getInstance().getBuffer());
+		int i = fontIn.drawEntityText(reorderingProcessor, x, y, color, drawShadow, matrix, irendertypebuffer$impl,
+				false, 0, 15728880);
+		irendertypebuffer$impl.finish();
+		return i;
 	}
 
 }

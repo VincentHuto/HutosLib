@@ -1,6 +1,6 @@
 package com.hutoslib.client.models;
 
-import com.hutoslib.math.MathUtil;
+import com.hutoslib.math.MathUtils;
 
 import net.minecraft.util.math.MathHelper;
 
@@ -28,7 +28,7 @@ public class TickFloat {
 	}
 
 	public float get(float x) {
-		return MathUtil.linTerp(previous, current, x);
+		return MathUtils.linTerp(previous, current, x);
 	}
 
 	public float get() {

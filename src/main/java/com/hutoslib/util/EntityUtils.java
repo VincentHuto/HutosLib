@@ -10,7 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 
-public class EntityUtil {
+public class EntityUtils {
 
 	/***
 	 * @param type   What type of entities to get be it

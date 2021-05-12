@@ -6,7 +6,7 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 
-public class BlockUtil {
+public class BlockUtils {
 
 	public static boolean isCrop(IWorldReader worldIn, BlockPos blockPos) {
 		if (worldIn.getBlockState(blockPos).getBlock() instanceof IGrowable) {

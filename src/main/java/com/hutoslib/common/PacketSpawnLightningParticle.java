@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.hutoslib.client.particle.ParticleColor;
-import com.hutoslib.client.particles.factory.ParticleLightningFactory;
+import com.hutoslib.client.particles.factory.LightningParticleFactory;
 import com.hutoslib.math.Vector3;
 
 import net.minecraft.client.world.ClientWorld;
@@ -107,7 +107,7 @@ public class PacketSpawnLightningParticle {
 		}
 
 		((ClientWorld) clientWorld.get()).addParticle(
-				ParticleLightningFactory.createData(msg.color, msg.getSpeed(), msg.maxAge, msg.fract,
+				LightningParticleFactory.createData(msg.color, msg.getSpeed(), msg.maxAge, msg.fract,
 						msg.getMaxOffset()),
 				(double) msg.getPosition().x, (double) msg.getPosition().y, (double) msg.getPosition().z,
 				(double) msg.getSpeedVec().x, (double) msg.getSpeedVec().y, (double) msg.getSpeedVec().z);
