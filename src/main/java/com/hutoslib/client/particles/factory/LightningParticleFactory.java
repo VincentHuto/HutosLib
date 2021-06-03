@@ -26,7 +26,7 @@ public class LightningParticleFactory implements IParticleFactory<ColorLightning
 		return particle;
 	}
 
-	public static IParticleData createData(ParticleColor color, int s, int a, int f, float o) {
+	public static IParticleData createData(ParticleColor color, float s, int a, int f, float o) {
 		return new ColorLightningData(ParticleInit.lightning_bolt.get(), color, s, a, f, o);
 	}
 }

@@ -18,12 +18,13 @@ public class ColorLightningData implements IParticleData {
 			.create(instance -> instance.group(Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
 					Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
 					Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
-					Codec.INT.fieldOf("s").forGetter(d -> d.speed), Codec.INT.fieldOf("a").forGetter(d -> d.maxAge),
+					Codec.FLOAT.fieldOf("s").forGetter(d -> d.speed), Codec.INT.fieldOf("a").forGetter(d -> d.maxAge),
 					Codec.INT.fieldOf("f").forGetter(d -> d.fract),
 					Codec.FLOAT.fieldOf("o").forGetter(d -> d.maxOffset)).apply(instance, ColorLightningData::new));
 
 	public ParticleColor color;
-	public int speed, maxAge, fract;
+	public float speed;
+	public int maxAge, fract;
 	public float maxOffset;
 
 	@SuppressWarnings("deprecation")
@@ -43,7 +44,7 @@ public class ColorLightningData implements IParticleData {
 		}
 	};
 
-	public ColorLightningData(float r, float g, float b, int s, int a, int f, float o) {
+	public ColorLightningData(float r, float g, float b, float s, int a, int f, float o) {
 		this.color = new ParticleColor(r, g, b);
 		this.type = ParticleInit.lightning_bolt.get();
 		this.speed = s;
@@ -52,8 +53,8 @@ public class ColorLightningData implements IParticleData {
 		this.maxOffset = o;
 	}
 
-	public ColorLightningData(ParticleType<ColorLightningData> particleTypeData, ParticleColor color, int s,
-			int a, int f, float o) {
+	public ColorLightningData(ParticleType<ColorLightningData> particleTypeData, ParticleColor color, float s, int a,
+			int f, float o) {
 		this.type = particleTypeData;
 		this.color = color;
 		this.speed = s;
@@ -70,7 +71,7 @@ public class ColorLightningData implements IParticleData {
 	@Override
 	public void write(PacketBuffer packetBuffer) {
 		packetBuffer.writeString(color.serialize());
-		packetBuffer.writeInt(speed);
+		packetBuffer.writeFloat(speed);
 		packetBuffer.writeInt(maxAge);
 		packetBuffer.writeInt(fract);
 		packetBuffer.writeFloat(maxOffset);

@@ -70,7 +70,7 @@ public class ParticleLightning extends SpriteTexturedParticle {
 	}
 
 	public ParticleLightning(ClientWorld worldIn, double startX, double startY, double startZ, double endX, double endY,
-			double endZ, IAnimatedSprite sprite, float r, float g, float b, int speed, int maxAge) {
+			double endZ, IAnimatedSprite sprite, float r, float g, float b, float speed, int maxAge) {
 		super(worldIn, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 		this.sprite = sprite.get(this.rand);
 		this.data = new ParticleLightningStorage(new Vector3(startX, startY, startZ), new Vector3(endX, endY, endZ),
@@ -98,7 +98,7 @@ public class ParticleLightning extends SpriteTexturedParticle {
 	}
 
 	public ParticleLightning(ClientWorld worldIn, double startX, double startY, double startZ, double endX, double endY,
-			double endZ, IAnimatedSprite sprite, float r, float g, float b, int speed, int maxAge, int fract,
+			double endZ, IAnimatedSprite sprite, float r, float g, float b, float speed, int maxAge, int fract,
 			float off) {
 		super(worldIn, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 		this.sprite = sprite.get(this.rand);

@@ -13,7 +13,7 @@ public class ParticleLightningStorage {
 	private Vector3 start;
 	private Vector3 end;
 	private float length;
-	private int speed;
+	private float speed;
 	private boolean finalized;
 	private Random rand;
 	private int age;
@@ -33,7 +33,7 @@ public class ParticleLightningStorage {
 		this.fract = 9;
 	}
 
-	public ParticleLightningStorage(Vector3 start, Vector3 end, long seed, int bPerTick, int maxAge) {
+	public ParticleLightningStorage(Vector3 start, Vector3 end, long seed, float bPerTick, int maxAge) {
 		this.start = start;
 		this.end = end;
 		this.rand = new Random(seed);
@@ -46,7 +46,7 @@ public class ParticleLightningStorage {
 
 	}
 
-	public ParticleLightningStorage(Vector3 start, Vector3 end, long seed, int speed, int maxAge, int fract,
+	public ParticleLightningStorage(Vector3 start, Vector3 end, long seed, float speed, int maxAge, int fract,
 			float maxOff) {
 		this.start = start;
 		this.end = end;
@@ -125,7 +125,7 @@ public class ParticleLightningStorage {
 		this.maxAge = maxAge;
 	}
 
-	public void setSpeed(int speed) {
+	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 

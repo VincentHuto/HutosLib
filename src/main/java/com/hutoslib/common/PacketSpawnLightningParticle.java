@@ -16,16 +16,17 @@ import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class PacketSpawnLightningParticle {
-	Vector3 position;
-	Vector3 speedVec;
+	Vector3 startVec;
+	Vector3 endVec;
 	ParticleColor color;
-	public int speed, maxAge, fract;
+	public float speed;
+	public int maxAge, fract;
 	public float maxOffset;
 
-	public PacketSpawnLightningParticle(Vector3d vec, Vector3d speedVec, ParticleColor color, int s, int a, int f,
+	public PacketSpawnLightningParticle(Vector3d startVec, Vector3d endVec, ParticleColor color, float s, int a, int f,
 			float o) {
-		this.position = new Vector3(vec.x, vec.y, vec.z);
-		this.speedVec = new Vector3(speedVec.x, speedVec.y, speedVec.z);
+		this.startVec = new Vector3(startVec.x, startVec.y, startVec.z);
+		this.endVec = new Vector3(endVec.x, endVec.y, endVec.z);
 		this.color = color;
 		this.speed = s;
 		this.maxAge = a;
@@ -36,7 +37,7 @@ public class PacketSpawnLightningParticle {
 	public PacketSpawnLightningParticle() {
 	}
 
-	public int getSpeed() {
+	public float getSpeed() {
 		return speed;
 	}
 
@@ -53,11 +54,11 @@ public class PacketSpawnLightningParticle {
 	}
 
 	public Vector3 getPosition() {
-		return this.position;
+		return this.startVec;
 	}
 
 	public Vector3 getSpeedVec() {
-		return this.speedVec;
+		return this.endVec;
 	}
 
 	public ParticleColor getColor() {
@@ -67,10 +68,10 @@ public class PacketSpawnLightningParticle {
 	public static PacketSpawnLightningParticle decode(PacketBuffer buf) {
 		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle();
 		try {
-			msg.position = new Vector3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-			msg.speedVec = new Vector3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+			msg.startVec = new Vector3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+			msg.endVec = new Vector3(buf.readDouble(), buf.readDouble(), buf.readDouble());
 			msg.color = new ParticleColor(buf.readFloat(), buf.readFloat(), buf.readFloat());
-			msg.speed = buf.readInt();
+			msg.speed = buf.readFloat();
 			msg.maxAge = buf.readInt();
 			msg.fract = buf.readInt();
 			msg.maxOffset = buf.readFloat();
@@ -91,7 +92,7 @@ public class PacketSpawnLightningParticle {
 		buf.writeFloat(msg.getColor().getRed());
 		buf.writeFloat(msg.getColor().getGreen());
 		buf.writeFloat(msg.getColor().getBlue());
-		buf.writeInt(msg.getSpeed());
+		buf.writeFloat(msg.getSpeed());
 		buf.writeInt(msg.getMaxAge());
 		buf.writeInt(msg.getFract());
 		buf.writeFloat(msg.getMaxOffset());

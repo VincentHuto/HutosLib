@@ -34,7 +34,7 @@ public class HutosLibPacketHandler {
 	/***
 	 * 
 	 * @param vec       Beginning Location
-	 * @param endVec  	Ending location
+	 * @param endVec    Ending location
 	 * @param radius    How far to send the packet to
 	 * @param dimension The dimension Key to send to
 	 * @param color     Lightning Color
@@ -44,23 +44,11 @@ public class HutosLibPacketHandler {
 	 * @param maxOff    How far each fractal can branch
 	 */
 	public static void sendLightningSpawn(Vector3d vec, Vector3d endVec, float radius, RegistryKey<World> dimension,
-			ParticleColor color, int speed, int maxAge, int fract, float maxOff) {
+			ParticleColor color, float speed, int maxAge, int fract, float maxOff) {
 		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle(vec, endVec, color, speed, maxAge, fract,
 				maxOff);
 		MAINCHANNEL.send(PacketDistributor.NEAR
 				.with(() -> new PacketDistributor.TargetPoint(vec.x, vec.y, vec.z, (double) radius, dimension)), msg);
-
-		/*
-		 * Proper Use Example
-		 * 
-		 * Vector3d translation = new Vector3d(0, 1, 0); Vector3d speedVec = new
-		 * Vector3d(target.getPosition().getX(), target.getPosition().getY() +
-		 * target.getHeight() / 2.0f, target.getPosition().getZ());
-		 * 
-		 * PacketHandler.sendLightningSpawn(player.getPositionVec().add(translation),
-		 * speedVec, 64.0f, (RegistryKey<World>) player.world.getDimensionKey(),
-		 * ParticleColor.YELLOW, 2, 10, 9, 0.2f);
-		 */
 
 	}
 }
