@@ -25,6 +25,10 @@ public class HutosLibBlockInit {
 	public static final RegistryObject<Block> display_glass = BLOCKS.register("display_glass",
 			() -> new BlockDisplayGlass(Block.Properties.create(Material.GLASS).hardnessAndResistance(0.1f, 1f)
 					.sound(SoundType.GLASS).notSolid()));
+	
+	public static final RegistryObject<Block> display_pedestal = BLOCKS.register("display_pedestal",
+			() -> new BlockDisplayPedestal(Block.Properties.create(Material.ROCK).hardnessAndResistance(50f, 2000f)
+					.sound(SoundType.STONE).notSolid()));
 
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {

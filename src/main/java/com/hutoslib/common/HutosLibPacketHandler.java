@@ -1,8 +1,8 @@
 package com.hutoslib.common;
 
 import com.hutoslib.HutosLib;
-import com.hutoslib.client.models.AnimationPacket;
-import com.hutoslib.client.particle.ParticleColor;
+import com.hutoslib.client.model.AnimationPacket;
+import com.hutoslib.client.particle.util.ParticleColor;
 
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;

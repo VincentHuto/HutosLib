@@ -1,10 +1,12 @@
 package com.hutoslib;
 
-import com.hutoslib.client.models.IAnimatable;
-import com.hutoslib.client.particles.ParticleInit;
+import com.hutoslib.client.model.IAnimatable;
+import com.hutoslib.client.particle.ParticleInit;
+import com.hutoslib.client.render.tile.RenderTileDisplayPedestal;
 import com.hutoslib.common.HutosLibPacketHandler;
 import com.hutoslib.common.block.HutosLibBlockInit;
 import com.hutoslib.common.item.HutosLibItemInit;
+import com.hutoslib.common.tile.HutosLibTileEntityInit;
 
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -15,6 +17,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -30,6 +33,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class HutosLib {
 
 	public static final String MOD_ID = "hutoslib";
+	public static volatile boolean hasInitialized;
 
 	public HutosLib() {
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -40,8 +44,14 @@ public class HutosLib {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 		HutosLibItemInit.ITEMS.register(modEventBus);
 		HutosLibBlockInit.BLOCKS.register(modEventBus);
-
+		HutosLibTileEntityInit.TILES.register(modEventBus);
 		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	synchronized public static void initialize() {
+		if (!hasInitialized) {
+		}
+		hasInitialized = true;
 	}
 
 	// Creative Tab
@@ -77,6 +87,9 @@ public class HutosLib {
 	}
 
 	private void doClientStuff(final FMLClientSetupEvent event) {
+		ClientRegistry.bindTileEntityRenderer(HutosLibTileEntityInit.display_pedestal.get(),
+				RenderTileDisplayPedestal::new);
+
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {

@@ -1,0 +1,180 @@
+package com.hutoslib.client;
+
+import net.minecraft.item.Rarity;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.loading.StringUtils;
+
+public class TextUtils {
+
+	public static Rarity AURIC = Rarity.create("Auric", TextFormatting.GOLD);
+	public static Rarity SANGUINE = Rarity.create("Sanguine", TextFormatting.DARK_RED);
+
+	public static String stringToGolden(String parString, int parShineLocation, boolean parReturnToBlack) {
+		int stringLength = parString.length();
+		if (stringLength < 1) {
+			return "";
+		}
+		String outputString = "";
+		for (int i = 0; i < stringLength; i++) {
+			if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 0) {
+				outputString = outputString + TextFormatting.WHITE + parString.substring(i, i + 1);
+			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 1) {
+				outputString = outputString + TextFormatting.GOLD + parString.substring(i, i + 1);
+			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 87) {
+				outputString = outputString + TextFormatting.WHITE + parString.substring(i, i + 1);
+			} else {
+				outputString = outputString + TextFormatting.BLACK + parString.substring(i, i + 1);
+			}
+		}
+		// return color to a common one after (most chat is white, but for other GUI
+		// might want black)
+		if (parReturnToBlack) {
+			return outputString + TextFormatting.BLACK;
+		}
+		return outputString + TextFormatting.WHITE;
+	}
+
+	public static String stringToBlueObf(String parString, int parShineLocation, boolean parReturnToBlack) {
+		int stringLength = parString.length();
+		if (stringLength < 1) {
+			return "";
+		}
+		String outputString = "";
+		for (int i = 0; i < stringLength; i++) {
+			if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 0) {
+				outputString = outputString + TextFormatting.OBFUSCATED + parString.substring(i, i + 1);
+			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 1) {
+				outputString = outputString + TextFormatting.RED + parString.substring(i, i + 1);
+			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 87) {
+				outputString = outputString + TextFormatting.OBFUSCATED + parString.substring(i, i + 1);
+			} else {
+				outputString = outputString + TextFormatting.RED + parString.substring(i, i + 1);
+			}
+		}
+		// return color to a common one after (most chat is white, but for other GUI
+		// might want black)
+		if (parReturnToBlack) {
+			return outputString + TextFormatting.BLACK;
+		}
+		return outputString + TextFormatting.WHITE;
+	}
+
+	public static String stringToRedObf(String parString, int parShineLocation, boolean parReturnToBlack) {
+		int stringLength = parString.length();
+		if (stringLength < 1) {
+			return "";
+		}
+		String outputString = "";
+		for (int i = 0; i < stringLength; i++) {
+			if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 0) {
+				outputString = outputString + TextFormatting.OBFUSCATED + parString.substring(i, i + 1);
+			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 1) {
+				outputString = outputString + TextFormatting.RED + parString.substring(i, i + 1);
+			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 87) {
+				outputString = outputString + TextFormatting.OBFUSCATED + parString.substring(i, i + 1);
+			} else {
+				outputString = outputString + TextFormatting.BLACK + parString.substring(i, i + 1);
+			}
+		}
+		// return color to a common one after (most chat is white, but for other GUI
+		// might want black)
+		if (parReturnToBlack) {
+			return outputString + TextFormatting.BLACK;
+		}
+		return outputString + TextFormatting.WHITE;
+	}
+
+	/***
+	 * 
+	 * @param input a string to be formated
+	 * @return a string formated red or blue depending of the resonant type >0 =
+	 *         blue <0 = red
+	 */
+	public static String stringToResonant(String parString) {
+
+		float stringValue = Float.parseFloat(parString);
+		int stringLength = parString.length();
+		if (stringLength < 1) {
+			return "";
+		}
+
+		System.out.println(stringValue);
+		String outputString = "";
+		TextFormatting[] karmicColors = { TextFormatting.RED, TextFormatting.DARK_RED, TextFormatting.BLUE,
+				TextFormatting.AQUA };
+		TextFormatting[] ManaColors = { TextFormatting.BLUE, TextFormatting.AQUA };
+		if (stringValue > 0) {
+
+			for (int i = 0; i < stringLength; i++) {
+				outputString = TextFormatting.ITALIC + outputString + ManaColors[i % 2] + parString.substring(i, i + 1);
+			}
+		} else if (stringValue < 0) {
+			for (int i = 0; i < stringLength; i++) {
+				outputString = TextFormatting.ITALIC + outputString + karmicColors[i % 2]
+						+ parString.substring(i, i + 1);
+			}
+
+		} else if (stringValue == 0.0) {
+			for (int i = 0; i < stringLength; i++) {
+				outputString = TextFormatting.WHITE + parString;
+			}
+		}
+		return outputString;
+	}
+
+	/***
+	 * 
+	 * @param input a string to be formated
+	 * @return a string formated as such hello world = Hello world || teSt = Test
+	 */
+	public static String toProperCase(String input) {
+		String newString = "";
+		String culledString = input.replaceAll("_", " ");
+		input = culledString;
+		for (int i = 0; i < input.length(); i++) {
+
+			if (i == 0) {
+				String temp = StringUtils.toUpperCase(String.valueOf(input.charAt(i)));
+				newString = newString + temp;
+			} else {
+				String temp = StringUtils.toLowerCase(String.valueOf(input.charAt(i)));
+				newString = newString + temp;
+
+			}
+		}
+		return newString;
+	}
+
+	public static String stringToBloody(String parString) {
+
+		String outputString = "";
+		outputString = TextFormatting.ITALIC + parString + TextFormatting.DARK_RED;
+		return outputString;
+
+	}
+
+	public static String convertInitToLang(String text) {
+		if (text == null || text.isEmpty()) {
+			return text;
+		}
+
+		StringBuilder converted = new StringBuilder();
+		boolean convertNext = true;
+		text.replace("_trail", "");
+		for (char ch : text.toCharArray()) {
+			if (ch == '_') {
+				ch = ' ';
+				convertNext = true;
+			} else if (convertNext) {
+				ch = Character.toTitleCase(ch);
+				convertNext = false;
+			} else {
+				ch = Character.toLowerCase(ch);
+			}
+			converted.append(ch);
+		}
+
+		return converted.toString();
+	}
+
+}

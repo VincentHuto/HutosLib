@@ -32,12 +32,12 @@ public class InventoryHelper {
 	}
 
 	public static void withdrawFromInventory(TileSimpleInventory inv, PlayerEntity player) {
-		for (int i = inv.inventorySize() - 1; i >= 0; i--) {
+		for (int i = inv.getSizeInventory() - 1; i >= 0; i--) {
 			ItemStack stackAt = inv.getItemHandler().getStackInSlot(i);
 			if (!stackAt.isEmpty()) {
 				ItemStack copy = stackAt.copy();
 				player.inventory.placeItemBackInInventory(player.world, copy);
-				inv.getItemHandler().setInventorySlotContents(i, ItemStack.EMPTY);
+				inv.getItemHandler().setStackInSlot(i, ItemStack.EMPTY);
 				break;
 			}
 		}

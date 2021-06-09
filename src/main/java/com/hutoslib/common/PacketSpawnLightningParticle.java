@@ -4,8 +4,8 @@ package com.hutoslib.common;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import com.hutoslib.client.particle.ParticleColor;
-import com.hutoslib.client.particles.factory.LightningParticleFactory;
+import com.hutoslib.client.particle.factory.LightningParticleFactory;
+import com.hutoslib.client.particle.util.ParticleColor;
 import com.hutoslib.math.Vector3;
 
 import net.minecraft.client.world.ClientWorld;
