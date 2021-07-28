@@ -1,0 +1,11 @@
+{
+  "itemGroup.hutoslibtab" : "HutosLib",
+  "item.hutoslib.raw_clay_flask" : "Raw Clay Flask",
+  "item.hutoslib.cured_clay_flask" : "Cured Flask",
+  "item.hutoslib.iron_knapper" : "Iron Knapper",
+  "item.hutoslib.diamond_knapper" : "Diamond Knapper",
+  "item.hutoslib.stick_of_holding" : "Stick Of Holding",
+  "item.hutoslib.obsidian_flakes" : "Obsidian Flakes",
+  "block.hutoslib.display_glass" : "Display Glass",
+  "block.hutoslib.display_pedestal" : "Display Pedestal"
+}

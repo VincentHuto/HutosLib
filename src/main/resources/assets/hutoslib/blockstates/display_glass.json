@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "hutoslib:block/display_glass" }
+    }
+}
