@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.hutoslib.client.ClientUtils;
+import com.hutoslib.client.model.capability.Animation;
+import com.hutoslib.client.model.capability.IAnimatable;
 import com.hutoslib.common.network.HutosLibPacketHandler;
 
 import net.minecraft.network.FriendlyByteBuf;

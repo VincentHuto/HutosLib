@@ -1,4 +1,4 @@
-package com.hutoslib.client.model;
+package com.hutoslib.client.model.capability;
 
 public class Animation
 {

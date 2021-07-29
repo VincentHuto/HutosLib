@@ -1,62 +1,71 @@
-/*
- * package com.hutoslib.client.model;
- * 
- * import net.minecraft.client.model.Model; import
- * net.minecraft.client.model.geom.ModelPart; import
- * net.minecraft.util.math.MathHelper;
- * 
- * public class AnimatedModelRenderer extends ModelPart { public float
- * defaultRotationX; public float defaultRotationY; public float
- * defaultRotationZ; public float defaultPositionX; public float
- * defaultPositionY; public float defaultPositionZ;
- * 
- * public AnimatedModelRenderer(AnimatedEntityModel<?> model) { super(model);
- * model.boxList.add(this); }
- * 
- * public AnimatedModelRenderer(AnimatedEntityModel<?> model, int
- * textureOffsetX, int textureOffsetY) { this(model);
- * setTextureOffset(textureOffsetX, textureOffsetY); }
- * 
- * public AnimatedModelRenderer(Model model, int textureOffsetX, int
- * textureOffsetY) { super(model); setTextureOffset(textureOffsetX,
- * textureOffsetY); }
- * 
- * public void addBox(float offX, float offY, float offZ, int width, int height,
- * int depth, float scaleFactor) { addBox(offX, offY, offZ, width, height,
- * depth); }
- * 
- * public void setDefaultPose() { defaultRotationX = rotateAngleX;
- * defaultRotationY = rotateAngleY; defaultRotationZ = rotateAngleZ;
- * defaultPositionX = rotationPointX; defaultPositionY = rotationPointY;
- * defaultPositionZ = rotationPointZ; }
- * 
- * public void resetToDefaultPose() { rotateAngleX = defaultRotationX;
- * rotateAngleY = defaultRotationY; rotateAngleZ = defaultRotationZ;
- * rotationPointX = defaultPositionX; rotationPointY = defaultPositionY;
- * rotationPointZ = defaultPositionZ; }
- * 
- * public void walk(float speed, float degree, boolean invert, float offset,
- * float weight, float limbSwing, float limbSwingAmount) { float rotation =
- * MathHelper.cos(limbSwing * speed + offset) * degree * limbSwingAmount +
- * weight * limbSwingAmount; rotateAngleX += invert? -rotation : rotation; }
- * 
- * public void swing(float speed, float degree, boolean invert, float offset,
- * float weight, float limbSwing, float limbSwingAmount) { float rotation =
- * MathHelper.cos(limbSwing * speed + offset) * degree * limbSwingAmount +
- * weight * limbSwingAmount; rotateAngleY += invert? -rotation : rotation; }
- * 
- * public void flap(float speed, float degree, boolean invert, float offset,
- * float weight, float limbSwing, float limbSwingAmount) { float rotation =
- * MathHelper.cos(limbSwing * speed + offset) * degree * limbSwingAmount +
- * weight * limbSwingAmount; rotateAngleZ += invert? -rotation : rotation; }
- * 
- * public void bob(float speed, float degree, boolean bounce, float limbSwing,
- * float limbSwingAmount) { rotationPointY += bounce?
- * -Math.abs(MathHelper.sin(limbSwing * speed) * limbSwingAmount * degree) :
- * MathHelper.sin(limbSwing * speed) * limbSwingAmount * degree -
- * limbSwingAmount * degree; }
- * 
- * public void copyRotationsTo(ModelRenderer box) { box.rotateAngleX =
- * rotateAngleX; box.rotateAngleY = -rotateAngleY; box.rotateAngleZ =
- * -rotateAngleZ; } }
- */
+package com.hutoslib.client.model;
+
+import java.util.List;
+import java.util.Map;
+
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.util.Mth;
+
+public class AnimatedModelRenderer extends ModelPart {
+
+
+	public float defaultRotationX;
+	public float defaultRotationY;
+	public float defaultRotationZ;
+	public float defaultPositionX;
+	public float defaultPositionY;
+	public float defaultPositionZ;
+	public final Map<String, ModelPart> children;
+	
+	public AnimatedModelRenderer(List<Cube> p_171306_, Map<String, ModelPart> p_171307_) {
+		super(p_171306_, p_171307_);
+	}
+
+	public void setDefaultPose() {
+		defaultRotationX = xRot;
+		defaultRotationY = yRot;
+		defaultRotationZ = zRot;
+		defaultPositionX = x;
+		defaultPositionY = y;
+		defaultPositionZ = z;
+	}
+
+	public void resetToDefaultPose() {
+		xRot = defaultRotationX;
+		yRot = defaultRotationY;
+		zRot = defaultRotationZ;
+		x = defaultPositionX;
+		y = defaultPositionY;
+		z = defaultPositionZ;
+	}
+
+	public void walk(float speed, float degree, boolean invert, float offset, float weight, float limbSwing,
+			float limbSwingAmount) {
+		float rotation = Mth.cos(limbSwing * speed + offset) * degree * limbSwingAmount + weight * limbSwingAmount;
+		xRot += invert ? -rotation : rotation;
+	}
+
+	public void swing(float speed, float degree, boolean invert, float offset, float weight, float limbSwing,
+			float limbSwingAmount) {
+		float rotation = Mth.cos(limbSwing * speed + offset) * degree * limbSwingAmount + weight * limbSwingAmount;
+		yRot += invert ? -rotation : rotation;
+	}
+
+	public void flap(float speed, float degree, boolean invert, float offset, float weight, float limbSwing,
+			float limbSwingAmount) {
+		float rotation = Mth.cos(limbSwing * speed + offset) * degree * limbSwingAmount + weight * limbSwingAmount;
+		zRot += invert ? -rotation : rotation;
+	}
+
+	public void bob(float speed, float degree, boolean bounce, float limbSwing, float limbSwingAmount) {
+		y += bounce ? -Math.abs(Mth.sin(limbSwing * speed) * limbSwingAmount * degree)
+				: Mth.sin(limbSwing * speed) * limbSwingAmount * degree - limbSwingAmount * degree;
+	}
+
+	public void copyRotationsTo(ModelPart box) {
+		box.xRot = xRot;
+		box.yRot = -yRot;
+		box.zRot = -zRot;
+	}
+}

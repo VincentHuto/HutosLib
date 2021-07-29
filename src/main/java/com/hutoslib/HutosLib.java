@@ -1,13 +1,17 @@
 package com.hutoslib;
 
+import com.hutoslib.client.model.capability.IAnimatable;
 import com.hutoslib.client.particle.HutosLibParticleInit;
 import com.hutoslib.client.render.block.RenderTileDisplayPedestal;
+import com.hutoslib.client.render.entity.RenderTestMob;
 import com.hutoslib.common.block.HutosLibBlockInit;
 import com.hutoslib.common.block.entity.HutosLibBlockEntityInit;
+import com.hutoslib.common.enity.HutosLibEntityInit;
 import com.hutoslib.common.item.HutosLibItemInit;
 import com.hutoslib.common.network.HutosLibPacketHandler;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -15,6 +19,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -47,6 +52,7 @@ public class HutosLib {
 		HutosLibItemInit.ITEMS.register(modEventBus);
 		HutosLibBlockInit.BLOCKS.register(modEventBus);
 		HutosLibParticleInit.PARTICLE_TYPES.register(modEventBus);
+		HutosLibEntityInit.ENTITY_TYPES.register(modEventBus);
 		HutosLibBlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.addListener(this::onClientTick);
@@ -88,11 +94,13 @@ public class HutosLib {
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
 		HutosLibPacketHandler.registerChannels();
+		CapabilityManager.INSTANCE.register(IAnimatable.class);
 
 	}
 
 	private void clientSetup(final FMLClientSetupEvent event) {
 		BlockEntityRenderers.register(HutosLibBlockEntityInit.display_pedestal.get(), RenderTileDisplayPedestal::new);
+		EntityRenderers.register(HutosLibEntityInit.testmob.get(), RenderTestMob::new);
 
 	}
 

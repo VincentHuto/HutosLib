@@ -1,6 +1,6 @@
 package com.hutoslib.client;
 
-import com.hutoslib.client.model.IAnimatable;
+import com.hutoslib.client.model.capability.IAnimatable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
