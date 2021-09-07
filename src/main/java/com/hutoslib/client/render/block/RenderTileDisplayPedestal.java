@@ -13,11 +13,9 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPedestalBlockEntity> {
-
 	public RenderTileDisplayPedestal(BlockEntityRendererProvider.Context p_173636_) {
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void render(DisplayPedestalBlockEntity te, float partialTicks, PoseStack matrixStackIn,
 			MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -40,13 +38,10 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 
 			matrixStackIn.pushPose();
 			matrixStackIn.translate(0.5F, 1.55F, 0.5F);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(angles[i] + (float) te.getLevel().getGameTime()));
-			// Edit True Radius
+			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(angles[i] + (float) te.getLevel().getGameTime())); // Edit
 			matrixStackIn.translate(0.025F, -0.5F, 0.025F);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90f));
-			// Edit Radius Movement
-			matrixStackIn.translate(0D, 0.175D + i * 0.25, 0F);
-			// Block/Item Scale
+			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90f)); // Edit Radius Movement
+			matrixStackIn.translate(0D, 0.175D + i * 0.25, 0F); // Block/Item Scale
 			matrixStackIn.scale(0.5f, 0.5f, 0.5f);
 			ItemStack stack = te.getItemHandler().getStackInSlot(i);
 			Minecraft mc = Minecraft.getInstance();
@@ -56,6 +51,7 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 			}
 			matrixStackIn.popPose();
 		}
+
 	}
 
 }

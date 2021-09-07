@@ -27,10 +27,6 @@ public class HutosLibItemInit {
 			() -> new ItemKnapper(50f, 1, 0, Tiers.DIAMOND, new Item.Properties().tab(HutosLibItemGroup.instance)));
 	public static final RegistryObject<Item> obsidian_flakes = ITEMS.register("obsidian_flakes",
 			() -> new Item(new Item.Properties().tab(HutosLibItemGroup.instance)));
-	/*
-	 * public static final RegistryObject<Item> stick_of_holding =
-	 * ITEMS.register("stick_of_holding", () -> new ItemStickOfHolding(new
-	 * Item.Properties().tab(HutosLibItemGroup.instance)));
-	 */
+
 
 }

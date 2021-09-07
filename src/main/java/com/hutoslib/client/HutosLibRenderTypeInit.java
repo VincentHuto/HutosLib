@@ -1,4 +1,4 @@
-package com.hutoslib.client.particle;
+package com.hutoslib.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -11,19 +11,17 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
 
-public class RenderTypeInit {
+public class HutosLibRenderTypeInit {
 	public static final ParticleRenderType GLOW_RENDER = new ParticleRenderType() {
-		@SuppressWarnings("deprecation")
 		@Override
 		public void begin(BufferBuilder buffer, TextureManager textureManager) {
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.enableCull();
-			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-			RenderSystem.depthMask(false);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);			RenderSystem.depthMask(false);
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-			buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP);
+			buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 		}
 
 		@Override
@@ -36,24 +34,24 @@ public class RenderTypeInit {
 
 		}
 
+		
 		@Override
 		public String toString() {
 			return "hutoslib:glow_rend";
 		}
 	};
 	public static final ParticleRenderType DARK_GLOW_RENDER = new ParticleRenderType() {
-		@SuppressWarnings("deprecation")
 		@Override
 		public void begin(BufferBuilder buffer, TextureManager textureManager) {
 			RenderSystem.depthMask(true);
-			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);			RenderSystem.depthMask(false);
 			RenderSystem.enableBlend();
 			RenderSystem.enableCull();
 			RenderSystem.depthMask(false);
 			RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP);
+			buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 		}
 
 		@Override

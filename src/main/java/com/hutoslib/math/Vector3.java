@@ -35,6 +35,10 @@ public class Vector3 {
 		this(vec.x, vec.y, vec.z);
 	}
 
+	public Vec3 toVec3() {
+		return new Vec3(this.x, this.y, this.z);
+	}
+
 	public static Vector3 fromBlockPos(BlockPos pos) {
 		return new Vector3(pos.getX(), pos.getY(), pos.getZ());
 	}
@@ -75,6 +79,10 @@ public class Vector3 {
 
 	public Vector3 add(double d, double d1, double d2) {
 		return new Vector3(x + d, y + d1, z + d2);
+	}
+
+	public Vec3 addToVec3(double d, double d1, double d2) {
+		return new Vec3(x + d, y + d1, z + d2);
 	}
 
 	public Vector3 add(Vector3 vec) {
@@ -260,5 +268,4 @@ public class Vector3 {
 		return this.scale(scale, scale, scale);
 	}
 
-	
 }

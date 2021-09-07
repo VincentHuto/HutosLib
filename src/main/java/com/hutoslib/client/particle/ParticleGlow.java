@@ -2,10 +2,14 @@ package com.hutoslib.client.particle;
 
 import java.util.Random;
 
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.TextureSheetParticle;
+import com.hutoslib.client.HutosLibRenderTypeInit;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.TextureSheetParticle;
 
 public class ParticleGlow extends TextureSheetParticle {
 	public float colorR = 0;
@@ -42,7 +46,7 @@ public class ParticleGlow extends TextureSheetParticle {
 
 	@Override
 	public ParticleRenderType getRenderType() {
-		return RenderTypeInit.GLOW_RENDER;
+		return HutosLibRenderTypeInit.GLOW_RENDER;
 	}
 
 	@Override
@@ -50,6 +54,14 @@ public class ParticleGlow extends TextureSheetParticle {
 		return 255;
 	}
 
+	
+	
+	@Override
+	public void render(VertexConsumer p_107678_, Camera p_107679_, float p_107680_) {
+		// TODO Auto-generated method stub
+		super.render(p_107678_, p_107679_, p_107680_);
+	}
+	
 	@Override
 	public void tick() {
 		super.tick();

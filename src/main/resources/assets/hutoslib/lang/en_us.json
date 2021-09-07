@@ -3,6 +3,8 @@
   "item.hutoslib.raw_clay_flask" : "Raw Clay Flask",
   "item.hutoslib.cured_clay_flask" : "Cured Flask",
   "item.hutoslib.iron_knapper" : "Iron Knapper",
+    "item.hutoslib.spawn_test_mob" : "Spawn Test Mob",
+  
   "item.hutoslib.diamond_knapper" : "Diamond Knapper",
   "item.hutoslib.stick_of_holding" : "Stick Of Holding",
   "item.hutoslib.obsidian_flakes" : "Obsidian Flakes",

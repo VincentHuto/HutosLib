@@ -3,7 +3,6 @@ package com.hutoslib.client.model;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
@@ -20,6 +19,8 @@ public class AnimatedModelRenderer extends ModelPart {
 	
 	public AnimatedModelRenderer(List<Cube> p_171306_, Map<String, ModelPart> p_171307_) {
 		super(p_171306_, p_171307_);
+		this.children = null;
+		
 	}
 
 	public void setDefaultPose() {

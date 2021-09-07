@@ -81,7 +81,7 @@ public class GuiUtils {
 		Matrix4f matrix4f = Transformation.identity().getMatrix();
 
 		for (FormattedCharSequence formattedcharsequence : fontIn.split(text, maxLength)) {
-			drawText(fontIn, formattedcharsequence, (float) x, (float) y, color, matrix4f, false);
+			drawText(fontIn, formattedcharsequence, (float) x, (float) y, color, matrix4f, dropShadow);
 			y += 9;
 		}
 

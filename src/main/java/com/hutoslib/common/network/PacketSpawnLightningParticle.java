@@ -6,26 +6,26 @@ import java.util.function.Supplier;
 
 import com.hutoslib.client.particle.factory.LightningParticleFactory;
 import com.hutoslib.client.particle.util.ParticleColor;
-import com.hutoslib.math.Vector3;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fmllegacy.LogicalSidedProvider;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class PacketSpawnLightningParticle {
-	Vector3 startVec;
-	Vector3 endVec;
+	Vec3 startVec;
+	Vec3 endVec;
 	ParticleColor color;
 	public float speed;
 	public int maxAge, fract;
 	public float maxOffset;
 
-	public PacketSpawnLightningParticle(Vector3 entVec, Vector3 endVec2, ParticleColor color, float s, int a, int f,
+	public PacketSpawnLightningParticle(Vec3 entVec, Vec3 endVec2, ParticleColor color, float s, int a, int f,
 			float o) {
-		this.startVec = new Vector3(entVec.x, entVec.y, entVec.z);
-		this.endVec = new Vector3(endVec2.x, endVec2.y, endVec2.z);
+		this.startVec = new Vec3(entVec.x, entVec.y, entVec.z);
+		this.endVec = new Vec3(endVec2.x, endVec2.y, endVec2.z);
 		this.color = color;
 		this.speed = s;
 		this.maxAge = a;
@@ -52,11 +52,11 @@ public class PacketSpawnLightningParticle {
 		return maxOffset;
 	}
 
-	public Vector3 getPosition() {
+	public Vec3 getPosition() {
 		return this.startVec;
 	}
 
-	public Vector3 getSpeedVec() {
+	public Vec3 getSpeedVec() {
 		return this.endVec;
 	}
 
@@ -67,8 +67,8 @@ public class PacketSpawnLightningParticle {
 	public static PacketSpawnLightningParticle decode(FriendlyByteBuf buf) {
 		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle();
 		try {
-			msg.startVec = new Vector3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-			msg.endVec = new Vector3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+			msg.startVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+			msg.endVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
 			msg.color = new ParticleColor(buf.readFloat(), buf.readFloat(), buf.readFloat());
 			msg.speed = buf.readFloat();
 			msg.maxAge = buf.readInt();

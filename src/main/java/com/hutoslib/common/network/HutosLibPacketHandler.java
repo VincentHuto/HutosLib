@@ -2,11 +2,11 @@ package com.hutoslib.common.network;
 
 import com.hutoslib.HutosLib;
 import com.hutoslib.client.particle.util.ParticleColor;
-import com.hutoslib.math.Vector3;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
@@ -50,7 +50,7 @@ public class HutosLibPacketHandler {
 	 * @param fract     How much it Fractals out
 	 * @param maxOff    How far each fractal can branch
 	 */
-	public static void sendLightningSpawn(Vector3 entVec, Vector3 endVec, float radius, ResourceKey<Level> dimension,
+	public static void sendLightningSpawn(Vec3 entVec, Vec3 endVec, float radius, ResourceKey<Level> dimension,
 			ParticleColor color, float speed, int maxAge, int fract, float maxOff) {
 		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle(entVec, endVec, color, speed, maxAge, fract,
 				maxOff);

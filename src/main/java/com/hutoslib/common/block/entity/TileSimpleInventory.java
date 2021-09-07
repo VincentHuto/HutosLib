@@ -44,7 +44,6 @@ public abstract class TileSimpleInventory extends TileMod {
 				did = true;
 				ItemStack stackToAdd = stack.copy();
 				stackToAdd.setCount(1);
-				System.out.println("t");
 				itemHandler.setStackInSlot(i, stackToAdd);
 				if (!player.isCreative() || player == null) {
 					stack.shrink(1);

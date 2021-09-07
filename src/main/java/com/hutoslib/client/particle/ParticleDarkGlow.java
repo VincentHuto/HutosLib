@@ -2,6 +2,8 @@ package com.hutoslib.client.particle;
 
 import java.util.Random;
 
+import com.hutoslib.client.HutosLibRenderTypeInit;
+
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
@@ -42,7 +44,7 @@ public class ParticleDarkGlow extends TextureSheetParticle {
 
 	@Override
 	public ParticleRenderType getRenderType() {
-		return RenderTypeInit.DARK_GLOW_RENDER;
+		return HutosLibRenderTypeInit.DARK_GLOW_RENDER;
 	}
 
 	@Override

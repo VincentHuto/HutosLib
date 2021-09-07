@@ -57,7 +57,6 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 
 	@Override
 	public RenderShape getRenderShape(BlockState p_49232_) {
-		// TODO Auto-generated method stub
 		return RenderShape.MODEL;
 	}
 
@@ -85,7 +84,6 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(te);
 			return InteractionResult.SUCCESS;
 		}
-		// If there is something in your hand add it to the block if its not an //
 		if (!stack.isEmpty() && !player.isCrouching()) {
 			te.addItem(player, stack, hand);
 			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(te);

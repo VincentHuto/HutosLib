@@ -27,7 +27,6 @@ public class DarkColorParticleData implements ParticleOptions {
 
 	public ParticleColor color;
 
-	@SuppressWarnings("deprecation")
 	public static final ParticleOptions.Deserializer<DarkColorParticleData> DESERIALIZER = new ParticleOptions.Deserializer<DarkColorParticleData>() {
 
 		@Override
