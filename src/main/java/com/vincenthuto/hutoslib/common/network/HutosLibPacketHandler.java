@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
@@ -16,7 +17,7 @@ public class HutosLibPacketHandler {
 	private static final String PROTOCOL_VERSION = "1";
 
 	public static final SimpleChannel MAINCHANNEL = NetworkRegistry.ChannelBuilder
-			.named(new ResourceLocation(HutosLib.MOD_ID, "animchannel"))
+			.named(new ResourceLocation(HutosLib.MOD_ID, "mainchannel"))
 			.clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals)
 			.networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
@@ -31,6 +32,27 @@ public class HutosLibPacketHandler {
 		MAINCHANNEL.registerMessage(networkID++, PacketSpawnLightningParticle.class,
 				PacketSpawnLightningParticle::encode, PacketSpawnLightningParticle::decode,
 				PacketSpawnLightningParticle::handle);
+
+		MAINCHANNEL.messageBuilder(PacketSyncBannerSlotContents.class, networkID++, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(PacketSyncBannerSlotContents::encode).decoder(PacketSyncBannerSlotContents::new)
+				.consumer(PacketSyncBannerSlotContents::handle).add();
+
+		MAINCHANNEL.messageBuilder(PacketOpenBanner.class, networkID++, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new)
+				.consumer(PacketOpenBanner::handle).add();
+
+		MAINCHANNEL.messageBuilder(PacketOpenBanner.class, networkID++, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new)
+				.consumer(PacketOpenBanner::handle).add();
+
+		MAINCHANNEL.messageBuilder(ContainerSlotsHack.class, networkID++, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(ContainerSlotsHack::encode).decoder(ContainerSlotsHack::new)
+				.consumer(ContainerSlotsHack::handle).add();
+
+		MAINCHANNEL.messageBuilder(PacketBannerChange.class, networkID++, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(PacketBannerChange::encode).decoder(PacketBannerChange::new)
+				.consumer(PacketBannerChange::handle).add();
+
 		/*
 		 * MAINCHANNEL.registerMessage(networkID++, PacketUpdateSOHItem.class,
 		 * PacketUpdateSOHItem::encode, PacketUpdateSOHItem::decode,
@@ -40,7 +62,7 @@ public class HutosLibPacketHandler {
 
 	/***
 	 * 
-	 * @param entVec       Beginning Location
+	 * @param entVec    Beginning Location
 	 * @param endVec    Ending location
 	 * @param radius    How far to send the packet to
 	 * @param dimension The dimension Key to send to
@@ -54,8 +76,9 @@ public class HutosLibPacketHandler {
 			ParticleColor color, float speed, int maxAge, int fract, float maxOff) {
 		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle(entVec, endVec, color, speed, maxAge, fract,
 				maxOff);
-		MAINCHANNEL.send(PacketDistributor.NEAR
-				.with(() -> new PacketDistributor.TargetPoint(entVec.x, entVec.y, entVec.z, (double) radius, dimension)), msg);
+		MAINCHANNEL.send(PacketDistributor.NEAR.with(
+				() -> new PacketDistributor.TargetPoint(entVec.x, entVec.y, entVec.z, (double) radius, dimension)),
+				msg);
 
 	}
 }

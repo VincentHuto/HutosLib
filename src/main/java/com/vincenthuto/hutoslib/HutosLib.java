@@ -1,20 +1,34 @@
 package com.vincenthuto.hutoslib;
 
+import com.vincenthuto.hutoslib.client.ForgeEvents;
 import com.vincenthuto.hutoslib.client.model.capability.IAnimatable;
 import com.vincenthuto.hutoslib.client.particle.HutosLibParticleInit;
 import com.vincenthuto.hutoslib.client.render.block.RenderTileDisplayPedestal;
+import com.vincenthuto.hutoslib.client.screen.BannerSlotScreen;
 import com.vincenthuto.hutoslib.common.block.HutosLibBlockInit;
 import com.vincenthuto.hutoslib.common.block.entity.HutosLibBlockEntityInit;
+import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
+import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot.AttachHandlers;
+import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot.EventHandlers;
+import com.vincenthuto.hutoslib.common.container.BannerSlotContainer;
+import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 import com.vincenthuto.hutoslib.common.item.HutosLibItemInit;
 import com.vincenthuto.hutoslib.common.network.HutosLibPacketHandler;
+import com.vincenthuto.hutoslib.common.recipe.ArmBannerCraftRecipe;
 
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -24,7 +38,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -33,25 +49,21 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class HutosLib {
 
 	public static final String MOD_ID = "hutoslib";
-	public static volatile boolean hasInitialized;
 
 	public HutosLib() {
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerCapability);
+		modEventBus.addListener(this::commonSetup);
+		modEventBus.addListener(this::clientSetup);
+		modEventBus.addListener(this::registerCapability);
+		modEventBus.addListener(this::loadComplete);
+		modEventBus.addGenericListener(MenuType.class, this::registerContainers);
 		HutosLibItemInit.ITEMS.register(modEventBus);
+		HutosLibItemInit.SPECIALITEMS.register(modEventBus);
 		HutosLibBlockInit.BLOCKS.register(modEventBus);
 		HutosLibParticleInit.PARTICLE_TYPES.register(modEventBus);
 		HutosLibBlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
 		MinecraftForge.EVENT_BUS.register(this);
 
-	}
-
-	synchronized public static void initialize() {
-		if (!hasInitialized) {
-		}
-		hasInitialized = true;
 	}
 
 	// Creative Tab
@@ -83,17 +95,39 @@ public class HutosLib {
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
 		HutosLibPacketHandler.registerChannels();
+		MinecraftForge.EVENT_BUS.register(new AttachHandlers());
+		MinecraftForge.EVENT_BUS.register(new EventHandlers());
+	}
 
+	public void loadComplete(FMLLoadCompleteEvent event) {
+		event.enqueueWork(() -> {
+			if (FMLEnvironment.dist == Dist.CLIENT)
+				ForgeEvents.initKeybinds();
+		});
 	}
 
 	private void registerCapability(RegisterCapabilitiesEvent event) {
 		event.register(IAnimatable.class);
-
+		event.register(IBannerSlotItem.class);
+		event.register(BannerExtensionSlot.class);
 	}
 
 	private void clientSetup(final FMLClientSetupEvent event) {
 		BlockEntityRenderers.register(HutosLibBlockEntityInit.display_pedestal.get(), RenderTileDisplayPedestal::new);
+		event.enqueueWork(() -> {
+			MenuScreens.register(BannerSlotContainer.TYPE, BannerSlotScreen::new);
+		});
+	}
 
+	public void registerContainers(RegistryEvent.Register<MenuType<?>> event) {
+		event.getRegistry()
+				.registerAll(new MenuType<>(BannerSlotContainer::new).setRegistryName("banner_slot_container"));
+	}
+
+	@SubscribeEvent
+	public static void onRecipeRegistry(final RegistryEvent.Register<RecipeSerializer<?>> event) {
+		event.getRegistry().register(new SimpleRecipeSerializer<>(ArmBannerCraftRecipe::new)
+				.setRegistryName(new ResourceLocation(MOD_ID, "arm_banner_craft")));
 	}
 
 	// Combined a few methods into one more generic one

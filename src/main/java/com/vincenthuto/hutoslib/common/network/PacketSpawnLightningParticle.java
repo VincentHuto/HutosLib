@@ -107,7 +107,7 @@ public class PacketSpawnLightningParticle {
 		}
 
 		((ClientLevel) clientWorld.get()).addParticle(
-				LightningParticleFactory.createData(new ParticleColor(1, 2, 3), msg.getSpeed(), msg.maxAge, msg.fract,
+				LightningParticleFactory.createData(msg.color, msg.getSpeed(), msg.maxAge, msg.fract,
 						msg.getMaxOffset()),
 				(double) msg.getPosition().x, (double) msg.getPosition().y, (double) msg.getPosition().z,
 				(double) msg.getSpeedVec().x, (double) msg.getSpeedVec().y, (double) msg.getSpeedVec().z);
