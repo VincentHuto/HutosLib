@@ -1,0 +1,14 @@
+{
+  "type" : "minecraft:crafting_shapeless",
+  "ingredients" : [ {
+    "item" : "minecraft:book"
+  }, {
+    "item" : "minecraft:glowstone_dust"
+  }, {
+    "item" : "minecraft:glow_ink_sac"
+  } ],
+  "result" : {
+    "item" : "minecraft:enchanted_book",
+    "nbt" : "{StoredEnchantments:[{lvl: 1,id:\"hutoslib:glimmer\"}]}"
+  }
+}

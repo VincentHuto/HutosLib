@@ -1,0 +1,6 @@
+{
+   "parent": "item/handheld",
+   "textures": {
+       "layer0": "hutoslib:item/stick_of_holding"
+   }
+}

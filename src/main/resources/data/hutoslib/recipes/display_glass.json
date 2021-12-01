@@ -1,0 +1,16 @@
+{
+  "type" : "minecraft:crafting_shaped",
+  "pattern" : [ " C ", "CSC", " C " ],
+  "key" : {
+    "C" : {
+      "item" : "minecraft:glass"
+    },
+    "S" : {
+      "item" : "minecraft:glowstone_dust"
+    }
+  },
+  "result" : {
+    "count" : 4,
+    "item" : "hutoslib:display_glass"
+  }
+}
