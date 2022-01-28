@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.client.screen.guide.lib;
 
-import com.vincenthuto.hutoslib.client.LocationHelper;
+import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.guide.GuiGuideTitlePage;
 import com.vincenthuto.hutoslib.client.screen.guide.TomeLib;
 import com.vincenthuto.hutoslib.common.item.HLItemInit;
@@ -12,7 +12,7 @@ public class HLTitlePage extends GuiGuideTitlePage {
 
 	public HLTitlePage() {
 		super(new TextComponent(""), new ItemStack(HLItemInit.diamond_knapper.get()), HLLib.chapters,
-				LocationHelper.guiPrefix("/guide/guide_overlay.png"));
+				HLLocHelper.guiPrefix("/guide/guide_overlay.png"));
 	}
 
 	@Override

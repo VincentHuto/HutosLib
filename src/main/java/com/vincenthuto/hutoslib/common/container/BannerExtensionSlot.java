@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.common.karma.IKarma;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.network.PacketSyncBannerSlotContents;
 
@@ -26,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -48,11 +48,16 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 
 	private static final ResourceLocation CAPABILITY_ID = new ResourceLocation(HutosLib.MOD_ID, "banner_slot");
 
-
-    public static final Capability<BannerExtensionSlot> CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+	public static final Capability<BannerExtensionSlot> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+	});
 
 	public static LazyOptional<BannerExtensionSlot> get(LivingEntity player) {
 		return player.getCapability(CAPABILITY);
+	}
+
+	public static void register() {
+		MinecraftForge.EVENT_BUS.register(new AttachHandlers());
+		MinecraftForge.EVENT_BUS.register(new EventHandlers());
 	}
 
 	public static class AttachHandlers {

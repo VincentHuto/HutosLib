@@ -19,4 +19,10 @@ public class TomeChapter {
 		this.pages = pages;
 	}
 
+	public TomeChapter(String category, TabColor color, GuiGuidePageTOC toc, List<GuiGuidePage> pages) {
+		this.category = category;
+		this.color = color;
+		this.TOC = toc;
+		this.pages = pages;
+	}
 }

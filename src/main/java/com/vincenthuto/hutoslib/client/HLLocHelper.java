@@ -4,7 +4,7 @@ import com.vincenthuto.hutoslib.HutosLib;
 
 import net.minecraft.resources.ResourceLocation;
 
-public class LocationHelper {
+public class HLLocHelper {
 
 	ResourceLocation test = new ResourceLocation(HutosLib.MOD_ID, "textures/gui/title_tab.png");
 

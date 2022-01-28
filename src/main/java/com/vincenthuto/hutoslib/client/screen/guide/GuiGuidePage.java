@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.vincenthuto.hutoslib.client.LocationHelper;
+import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class GuiGuidePage extends Screen {
-	final ResourceLocation texture = LocationHelper.guiPrefix("page.png");
+	final ResourceLocation texture = HLLocHelper.guiPrefix("page.png");
 	int left, top;
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
 	int pageNum, guiHeight = 228, guiWidth = 174;
@@ -201,7 +201,7 @@ public abstract class GuiGuidePage extends Screen {
 //					mc.setScreen(getOwnerTome().getTitle());
 //
 //				}));
-		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(LocationHelper.guiPrefix("book_tabs.png"),
+		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
 				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));

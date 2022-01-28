@@ -37,8 +37,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class ItemArmBanner extends Item implements IBannerSlotItem {
-	//@CapabilityInject(IBannerSlotItem.class)
-    public static final Capability<BannerSlotItemHandler> BANNER_SLOT_ITEM = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IBannerSlotItem> BANNER_SLOT_ITEM = CapabilityManager.get(new CapabilityToken<>(){});
 
 	public ArmorMaterial material;
 	ResourceLocation modellocation;

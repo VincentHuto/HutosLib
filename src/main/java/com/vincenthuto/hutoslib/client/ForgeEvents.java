@@ -21,7 +21,7 @@ public class ForgeEvents {
 
 	public static void initKeybinds() {
 		ClientRegistry.registerKeyBinding(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot",
-				GLFW.GLFW_KEY_V, "key.toolbanner.category"));
+				GLFW.GLFW_KEY_V, "key.armbanner.category"));
 	}
 
 	@SubscribeEvent

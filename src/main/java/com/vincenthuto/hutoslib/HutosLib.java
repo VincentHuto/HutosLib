@@ -5,11 +5,11 @@ import com.vincenthuto.hutoslib.client.particle.HLParticleInit;
 import com.vincenthuto.hutoslib.client.render.block.RenderTileDisplayPedestal;
 import com.vincenthuto.hutoslib.client.screen.BannerSlotScreen;
 import com.vincenthuto.hutoslib.client.screen.guide.lib.HLLib;
+import com.vincenthuto.hutoslib.common.banner.BannerFinderBannerSlot;
+import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
 import com.vincenthuto.hutoslib.common.block.HLBlockInit;
 import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
-import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot.AttachHandlers;
-import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot.EventHandlers;
 import com.vincenthuto.hutoslib.common.container.BannerSlotContainer;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 import com.vincenthuto.hutoslib.common.enchant.HLEnchantInit;
@@ -103,8 +103,8 @@ public class HutosLib {
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
 		HLPacketHandler.registerChannels();
-		MinecraftForge.EVENT_BUS.register(new AttachHandlers());
-		MinecraftForge.EVENT_BUS.register(new EventHandlers());
+		BannerExtensionSlot.register();
+		BannerFinderBannerSlot.initFinder();
 	}
 
 	public void loadComplete(FMLLoadCompleteEvent event) {
@@ -115,10 +115,11 @@ public class HutosLib {
 	}
 
 	private void registerCapability(RegisterCapabilitiesEvent event) {
-	//	event.register(IAnimatable.class);
+		// event.register(IAnimatable.class);
 		event.register(IBannerSlotItem.class);
 		event.register(BannerExtensionSlot.class);
 		event.register(IKarma.class);
+		BannerSlotCapability.register(event);
 
 	}
 
@@ -127,8 +128,9 @@ public class HutosLib {
 		event.enqueueWork(() -> {
 			MenuScreens.register(BannerSlotContainer.TYPE, BannerSlotScreen::new);
 		});
-		HLLib hemo = new HLLib();
-		hemo.registerTome();
+		HLLib hl = new HLLib();
+		hl.registerTome();
+
 	}
 
 	public void registerContainers(RegistryEvent.Register<MenuType<?>> event) {

@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.client.render.block.render;
+package com.vincenthuto.hutoslib.client.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

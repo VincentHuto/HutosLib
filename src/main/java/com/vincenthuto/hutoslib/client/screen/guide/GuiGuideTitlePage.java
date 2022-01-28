@@ -8,8 +8,8 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.vincenthuto.hutoslib.client.LocationHelper;
-import com.vincenthuto.hutoslib.client.TextUtils;
+import com.vincenthuto.hutoslib.client.HLLocHelper;
+import com.vincenthuto.hutoslib.client.HLTextUtils;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 
@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class GuiGuideTitlePage extends Screen {
 
-	final ResourceLocation texture = LocationHelper.guiPrefix("title.png");
+	final ResourceLocation texture = HLLocHelper.guiPrefix("title.png");
 	final ResourceLocation overlay;
 	Minecraft mc = Minecraft.getInstance();
 	int guiWidth = 186;
@@ -38,7 +38,7 @@ public abstract class GuiGuideTitlePage extends Screen {
 	public GuiGuideTitlePage() {
 		super(new TextComponent(""));
 		this.icon = ItemStack.EMPTY;
-		this.overlay = LocationHelper.guiPrefix("blank.png");
+		this.overlay = HLLocHelper.guiPrefix("blank.png");
 	}
 
 	public GuiGuideTitlePage(TextComponent title, ItemStack stack, List<TomeChapter> chapters,
@@ -55,7 +55,7 @@ public abstract class GuiGuideTitlePage extends Screen {
 		this.titleComponent = title;
 		this.icon = stack;
 		this.categories = chapters;
-		this.overlay = LocationHelper.guiPrefix("blank.png");
+		this.overlay = HLLocHelper.guiPrefix("blank.png");
 	}
 
 	public GuiGuideTitlePage(TextComponent title, List<TomeChapter> chapters, ResourceLocation overlay) {
@@ -71,7 +71,7 @@ public abstract class GuiGuideTitlePage extends Screen {
 		this.titleComponent = title;
 		this.icon = ItemStack.EMPTY;
 		this.categories = chapters;
-		this.overlay = LocationHelper.guiPrefix("blank.png");
+		this.overlay = HLLocHelper.guiPrefix("blank.png");
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public abstract class GuiGuideTitlePage extends Screen {
 
 		for (int i = 0; i < categories.size(); i++) {
 			TomeCategoryTab tab = new TomeCategoryTab(categories.get(i).color,
-					TextUtils.toProperCase(categories.get(i).category), i,
+					HLTextUtils.toProperCase(categories.get(i).category), i,
 					(int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
 					(int) (centerY - (i * -25) + 18), (press) -> {
 						if (press instanceof GuiButtonTextured button) {

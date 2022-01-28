@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
-import com.vincenthuto.hutoslib.client.LocationHelper;
+import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 
 import net.minecraft.client.gui.components.Button;
@@ -28,7 +28,7 @@ public class GuiButtonBookArrow extends GuiButtonTextured {
 	}
 
 	public static enum ArrowDirection {
-		FORWARD(LocationHelper.guiPrefix("arrow_forward.png")), BACKWARD(LocationHelper.guiPrefix("arrow_back.png"));
+		FORWARD(HLLocHelper.guiPrefix("arrow_forward.png")), BACKWARD(HLLocHelper.guiPrefix("arrow_back.png"));
 
 		ResourceLocation texture;
 

@@ -16,17 +16,17 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 	public RenderTileDisplayPedestal(BlockEntityRendererProvider.Context p_173636_) {
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void render(DisplayPedestalBlockEntity te, float partialTicks, PoseStack matrixStackIn,
 			MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-
 		int items = 0;
-		for (int i = 0; i < te.getSizeInventory(); i++)
-			if (te.getItemHandler().getStackInSlot(i).isEmpty())
+		for (int i = 0; i < te.inventorySize(); i++)
+			if (te.getItemHandler().getItem(i).isEmpty())
 				break;
 			else
 				items++;
-		float[] angles = new float[te.getSizeInventory()];
+		float[] angles = new float[te.inventorySize()];
 
 		float anglePer = 360F / items;
 		float totalAngle = 0F;
@@ -34,8 +34,7 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 			angles[i] = totalAngle += anglePer;
 
 		Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS);
-		for (int i = 0; i < te.getSizeInventory(); i++) {
-
+		for (int i = 0; i < te.inventorySize(); i++) {
 			matrixStackIn.pushPose();
 			matrixStackIn.translate(0.5F, 1.55F, 0.5F);
 			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(angles[i] + (float) te.getLevel().getGameTime())); // Edit
@@ -43,7 +42,7 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90f)); // Edit Radius Movement
 			matrixStackIn.translate(0D, 0.175D + i * 0.25, 0F); // Block/Item Scale
 			matrixStackIn.scale(0.5f, 0.5f, 0.5f);
-			ItemStack stack = te.getItemHandler().getStackInSlot(i);
+			ItemStack stack = te.getItemHandler().getItem(i);
 			Minecraft mc = Minecraft.getInstance();
 			if (!stack.isEmpty()) {
 				mc.getItemRenderer().renderStatic(null, stack, TransformType.FIXED, true, matrixStackIn, bufferIn, null,

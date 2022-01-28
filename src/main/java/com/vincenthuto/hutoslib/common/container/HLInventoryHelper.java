@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.common.block;
+package com.vincenthuto.hutoslib.common.container;
 
 import javax.annotation.Nullable;
 
@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class InventoryHelper {
+public class HLInventoryHelper {
 
 	@Nullable
 	public static IItemHandler getInventory(Level world, BlockPos pos, Direction side) {
@@ -32,12 +32,12 @@ public class InventoryHelper {
 	}
 
 	public static void withdrawFromInventory(TileSimpleInventory inv, Player player) {
-		for (int i = inv.getSizeInventory() - 1; i >= 0; i--) {
-			ItemStack stackAt = inv.getItemHandler().getStackInSlot(i);
+		for (int i = inv.inventorySize() - 1; i >= 0; i--) {
+			ItemStack stackAt = inv.getItemHandler().getItem(i);
 			if (!stackAt.isEmpty()) {
 				ItemStack copy = stackAt.copy();
 				player.getInventory().placeItemBackInInventory(copy);
-				inv.getItemHandler().setStackInSlot(i, ItemStack.EMPTY);
+				inv.getItemHandler().setItem(i, ItemStack.EMPTY);
 				break;
 			}
 		}

@@ -14,12 +14,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.network.PacketDistributor;
 
 public class BannerFinderBannerSlot extends BannerFinder {
 
-//	@CapabilityInject(BannerExtensionSlot.class)
-	public static void initFinder(Capability<?> cap) {
+    public static final Capability<BannerExtensionSlot> BANNER_SLOT_ITEM =CapabilityManager.get(new CapabilityToken<>(){});
+	
+	public static void initFinder() {
 		BannerFinder.addFinder(new BannerFinderBannerSlot());
 	}
 

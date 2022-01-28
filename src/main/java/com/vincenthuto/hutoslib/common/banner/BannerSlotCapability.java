@@ -1,13 +1,13 @@
 package com.vincenthuto.hutoslib.common.banner;
 
 import com.google.common.collect.ImmutableSet;
-import com.vincenthuto.hutoslib.common.container.BannerSlotItemHandler;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 
 public class BannerSlotCapability {
 
@@ -16,4 +16,8 @@ public class BannerSlotCapability {
 
     public static final Capability<IBannerSlotItem> INSTANCE = CapabilityManager.get(new CapabilityToken<>(){});
 
+    public static void register(RegisterCapabilitiesEvent event)
+    {
+        event.register(BannerSlotCapability.class);
+    }
 }

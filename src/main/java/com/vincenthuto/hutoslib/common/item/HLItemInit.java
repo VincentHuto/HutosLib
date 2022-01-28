@@ -25,6 +25,8 @@ public class HLItemInit {
 	public static final RegistryObject<Item> hl_guide_book = SPECIALITEMS.register("hl_guide_book",
 			() -> new ItemHLGuideBook(new Item.Properties().tab(HutosLibItemGroup.instance).stacksTo(1),
 					hl_guide_book_text));
+	
+	
 
 	// Materials
 	public static final RegistryObject<Item> raw_clay_flask = ITEMS.register("raw_clay_flask",

@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.client.render.block.render;
+package com.vincenthuto.hutoslib.client.render.block;
 
 import java.util.List;
 

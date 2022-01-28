@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
-import com.vincenthuto.hutoslib.client.LocationHelper;
+import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 
 import net.minecraft.client.gui.components.Button;
@@ -14,7 +14,7 @@ public class TomeCategoryTab extends GuiButtonTextured {
 	public TabColor color;
 
 	public TomeCategoryTab(TabColor color, String category, int idIn, int x, int y, Button.OnPress pressedAction) {
-		super(LocationHelper.guiPrefix("book_tabs.png"), idIn, x, y, 24, 16, color.locX, color.locY,
+		super(HLLocHelper.guiPrefix("book_tabs.png"), idIn, x, y, 24, 16, color.locX, color.locY,
 				new TextComponent(category), pressedAction);
 		this.color = color;
 	}

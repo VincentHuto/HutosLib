@@ -2,16 +2,21 @@ package com.vincenthuto.hutoslib.client.screen;
 
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Transformation;
+import com.mojang.math.Vector3d;
+import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
@@ -96,32 +101,43 @@ public class HLGuiUtils {
 		return i;
 	}
 
-	public static void drawLine(double src_x, double src_y, double dst_x, double dst_y, int zLevel, int color,
-			int displace) {
-		GL11.glDisable((int) 3553);
-		GL11.glLineWidth((float) 1.0f);
-		GL11.glColor3f((float) ((float) ((color & 0xFF0000) >> 16) / 255.0f),
-				(float) ((float) ((color & 0xFF00) >> 8) / 255.0f), (float) ((float) (color & 0xFF) / 255.0f));
-		GL11.glBegin((int) 1);
-		GL11.glVertex3f((float) src_x, (float) src_y, (float) zLevel);
-		GL11.glVertex3f((float) dst_x, (float) dst_y, (float) zLevel);
-		GL11.glEnd();
-		GL11.glColor3f((float) 1.0f, (float) 1.0f, (float) 1.0f);
-		GL11.glEnable((int) 3553);
+	private static void drawLine(PoseStack stack, int x1, int y1, int x2, int y2, ParticleColor color, int displace) {
+		// RenderSystem.assertThread(RenderSystem::isOnRenderThread);
+		GlStateManager._disableTexture();
+		GlStateManager._depthMask(false);
+		GlStateManager._disableCull();
+		RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
+		Tesselator var4 = RenderSystem.renderThreadTesselator();
+		BufferBuilder var5 = var4.getBuilder();
+		RenderSystem.lineWidth(1.0F);
+		var5.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
+		Vector3d vector3f = new Vector3d(x2 - x1, y2 - y1, 0);
+		Vector3d vector3f2 = new Vector3d(x1 - x2, y1 - y2, 0);
+		int red = (int) color.getRed();
+		int green = (int) color.getGreen();
+		int blue = (int) color.getBlue();
+		var5.vertex(x1, y1, 0.0D).color(red, green, blue, 255).normal((float) vector3f.x, (float) vector3f.y, 0.0F)
+				.endVertex();
+		var5.vertex(x2, y2, 0.0D).color(red, green, blue, 255).normal((float) vector3f2.x, (float) vector3f2.y, 0.0F)
+				.endVertex();
+		var4.end();
+		GlStateManager._enableCull();
+		GlStateManager._depthMask(true);
+		GlStateManager._enableTexture();
 	}
 
-	public static void fracLine(double src_x, double src_y, double dst_x, double dst_y, int zLevel, int color,
-			int displace, double detail) {
+	public static void fracLine(PoseStack matrix, int src_x, int src_y, int dst_x, int dst_y, int zLevel,
+			ParticleColor color, int displace, double detail) {
 		if (displace < detail) {
-			drawLine(src_x, src_y, dst_x, dst_y, zLevel, color, displace);
+			drawLine(matrix, src_x, src_y, dst_x, dst_y, color, displace);
 		} else {
 			Random rand = new Random();
-			double mid_x = (dst_x + src_x) / 2;
-			double mid_y = (dst_y + src_y) / 2;
-			mid_x = ((double) mid_x + ((double) rand.nextFloat() - 0.5) * (double) displace * 0.5);
-			mid_y = ((double) mid_y + ((double) rand.nextFloat() - 0.5) * (double) displace * 0.5);
-			fracLine(src_x, src_y, mid_x, mid_y, zLevel, color, (displace / 2), detail);
-			fracLine(dst_x, dst_y, mid_x, mid_y, zLevel, color, (displace / 2), detail);
+			int mid_x = (dst_x + src_x) / 2;
+			int mid_y = (dst_y + src_y) / 2;
+			mid_x = (int) (mid_x + (rand.nextFloat() - 0.25) * displace * 0.25);
+			mid_y = (int) (mid_y + (rand.nextFloat() - 0.25) * displace * 0.25);
+			fracLine(matrix, src_x, src_y, mid_x, mid_y, zLevel, color, (displace / 2), detail);
+			fracLine(matrix, dst_x, dst_y, mid_x, mid_y, zLevel, color, (displace / 2), detail);
 
 		}
 	}

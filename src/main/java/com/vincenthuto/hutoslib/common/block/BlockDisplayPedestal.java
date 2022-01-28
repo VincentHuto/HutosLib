@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.vincenthuto.hutoslib.common.block.entity.DisplayPedestalBlockEntity;
 import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
+import com.vincenthuto.hutoslib.common.container.HLInventoryHelper;
 import com.vincenthuto.hutoslib.common.network.VanillaPacketDispatcher;
 
 import net.minecraft.core.BlockPos;
@@ -71,26 +72,29 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-			BlockHitResult result) {
-
-		if (level.isClientSide)
-			return InteractionResult.SUCCESS;
-		DisplayPedestalBlockEntity te = (DisplayPedestalBlockEntity) level.getBlockEntity(pos);
-		ItemStack stack = player.getMainHandItem();
-
-		if (stack.isEmpty()) {
-			InventoryHelper.withdrawFromInventory(te, player);
-			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(te);
-			return InteractionResult.SUCCESS;
-		}
-		if (!stack.isEmpty() && !player.isCrouching()) {
-			te.addItem(player, stack, hand);
-			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(te);
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+			BlockHitResult hit) {
+		if (world.isClientSide) {
 			return InteractionResult.SUCCESS;
 		}
 
-		return super.use(state, level, pos, player, hand, result);
+		DisplayPedestalBlockEntity altar = (DisplayPedestalBlockEntity) world.getBlockEntity(pos);
+		ItemStack stack = player.getItemInHand(hand);
+
+		if (player.isShiftKeyDown()) {
+			HLInventoryHelper.withdrawFromInventory(altar, player);
+			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(altar);
+			return InteractionResult.SUCCESS;
+		} else if (altar.isEmpty() && stack.isEmpty()) {
+			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(altar);
+			return InteractionResult.SUCCESS;
+		} else if (!stack.isEmpty()) {
+			boolean result = altar.addItem(player, stack, hand);
+			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(altar);
+			return result ? InteractionResult.SUCCESS : InteractionResult.PASS;
+		}
+
+		return InteractionResult.PASS;
 	}
 
 	@Override

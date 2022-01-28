@@ -1,45 +1,41 @@
 package com.vincenthuto.hutoslib.common.block.entity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileMod extends BlockEntity {
 
-	public TileMod(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
-		super(tileEntityTypeIn, pos, state);
+	public TileMod(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag p_58888_) {
-		CompoundTag ret = super.save(p_58888_);
-		writePacketNBT(ret);
-		return super.save(p_58888_);
-	}
-
-	private boolean isVanilla = getClass().getName().startsWith("net.minecraft.");
-
-	public boolean shouldRefresh(Level world, BlockPos pos, BlockState oldState, BlockState newSate) {
-		return isVanilla ? (oldState.getBlock() != newSate.getBlock()) : oldState != newSate;
-	}
-
-	@Override
-	public void load(CompoundTag p_155245_) {
-		super.load(p_155245_);
-		readPacketNBT(p_155245_);
+	public void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
+		writePacketNBT(tag);
 	}
 
 	@Nonnull
 	@Override
 	public final CompoundTag getUpdateTag() {
-		return save(new CompoundTag());
+		var tag = new CompoundTag();
+		writePacketNBT(tag);
+		return tag;
+	}
+
+	@Override
+	public void load(@Nonnull CompoundTag tag) {
+		super.load(tag);
+		readPacketNBT(tag);
 	}
 
 	public void writePacketNBT(CompoundTag cmp) {
@@ -48,18 +44,10 @@ public class TileMod extends BlockEntity {
 	public void readPacketNBT(CompoundTag cmp) {
 	}
 
+	@Nullable
 	@Override
-	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		CompoundTag tag = new CompoundTag();
-		writePacketNBT(tag);
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
 		return ClientboundBlockEntityDataPacket.create(this);
-	}
-
-	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-		super.onDataPacket(net, pkt);
-		readPacketNBT(pkt.getTag());
-
 	}
 
 }

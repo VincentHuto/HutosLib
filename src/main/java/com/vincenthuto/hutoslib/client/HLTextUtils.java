@@ -4,7 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.fml.loading.StringUtils;
 
-public class TextUtils {
+public class HLTextUtils {
 
 	public static Rarity AURIC = Rarity.create("Auric", ChatFormatting.GOLD);
 	public static Rarity SANGUINE = Rarity.create("Sanguine", ChatFormatting.DARK_RED);
