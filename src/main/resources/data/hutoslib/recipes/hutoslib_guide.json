@@ -1,0 +1,11 @@
+{
+  "type" : "minecraft:crafting_shapeless",
+  "ingredients" : [ {
+    "item" : "minecraft:book"
+  }, {
+    "item" : "hutoslib:obsidian_flakes"
+  } ],
+  "result" : {
+    "item" : "hutoslib:hl_guide_book"
+  }
+}

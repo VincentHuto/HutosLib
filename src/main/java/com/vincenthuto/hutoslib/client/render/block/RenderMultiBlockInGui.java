@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderMultiBlockInGui {
-	public static void renderPatternInGUI(PoseStack ms, Minecraft mc, LabeledBlockPattern pattern) {
+	public static void renderPatternInGUI(PoseStack ms, Minecraft mc, MultiblockPattern pattern) {
 		ms.pushPose();
 		Lighting.setupFor3DItems();
 		List<BlockPosBlockPair> patternList = pattern.getBlockPosBlockList();
