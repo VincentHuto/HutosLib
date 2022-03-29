@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.client.screen.guide;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.vincenthuto.hutoslib.client.ClientUtils;
+import com.vincenthuto.hutoslib.client.HLClientUtils;
 import com.vincenthuto.hutoslib.client.render.block.MultiblockPattern;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 
@@ -61,7 +61,6 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 	@Override
 	public void render(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
 		super.render(matrices, mouseX, mouseY, partialTicks);
-		float guiHeight = 228, guiWidth = 174;
 		float left = width / 2 - guiWidth / 2;
 		float top = height / 2 - guiHeight / 2;
 		int line = 0;
@@ -79,9 +78,13 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 		matrices.mulPose(Vector3f.YP.rotationDegrees(45 + (float) this.dragLeftRight));
 		float structScale = 2f;
 		matrices.scale(structScale, structScale, structScale);
-		HLGuiUtils.renderMultiBlock(matrices, pattern, ClientUtils.getPartialTicks(), new ScreenBlockTintGetter(),
+		HLGuiUtils.renderMultiBlock(matrices, pattern, HLClientUtils.getPartialTicks(), new ScreenBlockTintGetter(),
 				left - guiWidth + 260, top + guiHeight - 65);
 
+	}
+	
+	public MultiblockPattern getPattern() {
+		return pattern;
 	}
 
 	@Override

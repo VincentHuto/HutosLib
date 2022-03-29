@@ -15,7 +15,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '3.31'
+version = '3.40'
 group = 'com.vincenthuto.hutoslib' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'hutoslib'
 
@@ -24,7 +24,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-      mappings channel: 'parchment', version: "2021.12.19-1.18.1"
+      mappings channel: 'parchment', version: "2022.03.13-1.18.2"
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 
@@ -94,7 +94,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.75'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.19'
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
 

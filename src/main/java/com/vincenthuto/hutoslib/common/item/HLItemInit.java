@@ -3,11 +3,12 @@ package com.vincenthuto.hutoslib.common.item;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.HutosLib.HutosLibItemGroup;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -19,14 +20,15 @@ public class HLItemInit {
 	public static final DeferredRegister<Item> SPECIALITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,
 			HutosLib.MOD_ID);
 
+	public static final TagKey<Item> TAG_KNAPPERS = TagKey.create(Registry.ITEM_REGISTRY,
+			new ResourceLocation("hutoslib:knappers"));
+
 	// Test Tome
 	public static ResourceLocation hl_guide_book_text = new ResourceLocation(HutosLib.MOD_ID,
 			"textures/gui/guide/hl_guide_model.png");
 	public static final RegistryObject<Item> hl_guide_book = SPECIALITEMS.register("hl_guide_book",
 			() -> new ItemHLGuideBook(new Item.Properties().tab(HutosLibItemGroup.instance).stacksTo(1),
 					hl_guide_book_text));
-	
-	
 
 	// Materials
 	public static final RegistryObject<Item> raw_clay_flask = ITEMS.register("raw_clay_flask",
@@ -40,9 +42,10 @@ public class HLItemInit {
 
 	// Knappers
 	public static final RegistryObject<Item> iron_knapper = ITEMS.register("iron_knapper",
-			() -> new ItemKnapper(35f, 1, 0, Tiers.IRON, new Item.Properties().tab(HutosLibItemGroup.instance)));
+			() -> new ItemKnapper(35f, 1, 0, HLModTiers.IRON, new Item.Properties().tab(HutosLibItemGroup.instance)));
 	public static final RegistryObject<Item> diamond_knapper = ITEMS.register("diamond_knapper",
-			() -> new ItemKnapper(50f, 1, 0, Tiers.DIAMOND, new Item.Properties().tab(HutosLibItemGroup.instance)));
+			() -> new ItemKnapper(50f, 1, 0, HLModTiers.DIAMOND,
+					new Item.Properties().tab(HutosLibItemGroup.instance)));
 	public static final RegistryObject<Item> obsidian_flakes = ITEMS.register("obsidian_flakes",
 			() -> new Item(new Item.Properties().tab(HutosLibItemGroup.instance)));
 

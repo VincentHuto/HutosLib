@@ -25,6 +25,7 @@ public abstract class GuiGuidePageTOC extends GuiGuidePage {
 		super(0, catagoryIn, "Table of Contents", "", iconIn, "");
 	}
 
+
 	public GuiGuidePageTOC(String catagoryIn, String subtitle) {
 		super(0, catagoryIn, "Table of Contents", subtitle, ItemStack.EMPTY, "");
 	}

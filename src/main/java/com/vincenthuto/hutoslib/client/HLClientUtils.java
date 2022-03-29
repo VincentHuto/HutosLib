@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.player.Player;
 
-public class ClientUtils {
+public class HLClientUtils {
 
 	public static Minecraft getClient() {
 		return Minecraft.getInstance();

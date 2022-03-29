@@ -6,12 +6,26 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 
 import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
 
-public class HLRenderTypeInit {
+public class HLRenderTypeInit extends RenderType {
+
+	public HLRenderTypeInit(String nameIn, VertexFormat formatIn, Mode drawModeIn, int bufferSizeIn,
+			boolean useDelegateIn, boolean needsSortingIn, Runnable setupTaskIn, Runnable clearTaskIn) {
+		super(nameIn, formatIn, drawModeIn, bufferSizeIn, useDelegateIn, needsSortingIn, setupTaskIn, clearTaskIn);
+	}
+
+	static RenderType.CompositeState lightningState = RenderType.CompositeState.builder()
+			.setShaderState(POSITION_COLOR_SHADER).setTransparencyState(LIGHTNING_TRANSPARENCY)
+			.createCompositeState(false);
+	public static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR,
+			VertexFormat.Mode.QUADS, 256, false, true, lightningState);
+
 	public static final ParticleRenderType GLOW_RENDER = new ParticleRenderType() {
 		@Override
 		public void begin(BufferBuilder buffer, TextureManager textureManager) {
@@ -19,7 +33,8 @@ public class HLRenderTypeInit {
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.enableCull();
-			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);			RenderSystem.depthMask(false);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+			RenderSystem.depthMask(false);
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 			buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 		}
@@ -34,7 +49,6 @@ public class HLRenderTypeInit {
 
 		}
 
-		
 		@Override
 		public String toString() {
 			return "hutoslib:glow_rend";
@@ -44,7 +58,8 @@ public class HLRenderTypeInit {
 		@Override
 		public void begin(BufferBuilder buffer, TextureManager textureManager) {
 			RenderSystem.depthMask(true);
-			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);			RenderSystem.depthMask(false);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+			RenderSystem.depthMask(false);
 			RenderSystem.enableBlend();
 			RenderSystem.enableCull();
 			RenderSystem.depthMask(false);

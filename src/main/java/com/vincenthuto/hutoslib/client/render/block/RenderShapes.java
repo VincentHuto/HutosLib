@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.client.render.block;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.vincenthuto.hutoslib.client.ClientUtils;
+import com.vincenthuto.hutoslib.client.HLClientUtils;
 import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Minecraft;
@@ -153,7 +153,7 @@ public class RenderShapes {
 
 		matrixStackIn.pushPose();
 		matrixStackIn.translate(-0.625, -0.1, 0.0625);
-		Player player = ClientUtils.getClientPlayer();
+		Player player = HLClientUtils.getClientPlayer();
 		float rotatSpeed = (float) (getSpeed(player) * 3);
 		matrixStackIn.translate(0, rotatSpeed / 360, -rotatSpeed / 360);
 		matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(rotatSpeed + 25));

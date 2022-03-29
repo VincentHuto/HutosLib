@@ -7,8 +7,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
-import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
-import com.vincenthuto.hutoslib.common.container.BannerSlotItemHandler;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 
 import net.minecraft.client.Minecraft;
@@ -35,9 +33,11 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ItemArmBanner extends Item implements IBannerSlotItem {
-    public static final Capability<IBannerSlotItem> BANNER_SLOT_ITEM = CapabilityManager.get(new CapabilityToken<>(){});
+	public static final Capability<IBannerSlotItem> BANNER_SLOT_ITEM = CapabilityManager.get(new CapabilityToken<>() {
+	});
 
 	public ArmorMaterial material;
 	ResourceLocation modellocation;
@@ -68,9 +68,10 @@ public class ItemArmBanner extends Item implements IBannerSlotItem {
 	}
 
 	@Override
-
 	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-		return ItemTags.PLANKS.contains(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
+
+		return ForgeRegistries.ITEMS.tags().getTag(ItemTags.PLANKS).contains(repair.getItem())
+				|| super.isValidRepairItem(toRepair, repair);
 	}
 
 	public static DyeColor getColor(ItemStack stack) {

@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib;
 
-import com.vincenthuto.hutoslib.client.ForgeEvents;
+import com.vincenthuto.hutoslib.client.HLForgeEvents;
 import com.vincenthuto.hutoslib.client.particle.HLParticleInit;
 import com.vincenthuto.hutoslib.client.render.block.RenderTileDisplayPedestal;
 import com.vincenthuto.hutoslib.client.screen.BannerSlotScreen;
@@ -55,6 +55,7 @@ public class HutosLib {
 	public static IProxy proxy = new IProxy() {
 	};
 
+	@SuppressWarnings("deprecation")
 	public HutosLib() {
 		MinecraftForge.EVENT_BUS.register(this);
 		DistExecutor.callWhenOn(Dist.CLIENT, () -> () -> proxy = new ClientProxy());
@@ -110,7 +111,7 @@ public class HutosLib {
 	public void loadComplete(FMLLoadCompleteEvent event) {
 		event.enqueueWork(() -> {
 			if (FMLEnvironment.dist == Dist.CLIENT)
-				ForgeEvents.initKeybinds();
+				HLForgeEvents.initKeybinds();
 		});
 	}
 
@@ -142,21 +143,6 @@ public class HutosLib {
 	public static void onRecipeRegistry(final RegistryEvent.Register<RecipeSerializer<?>> event) {
 		event.getRegistry().register(new SimpleRecipeSerializer<>(ArmBannerCraftRecipe::new)
 				.setRegistryName(new ResourceLocation(MOD_ID, "arm_banner_craft")));
-	}
-
-	// Combined a few methods into one more generic one
-	public static ItemStack findItemInPlayerInv(Player player, Class<? extends Item> item) {
-		if (item.isInstance(player.getOffhandItem().getItem()))
-			return player.getMainHandItem();
-		if (item.isInstance(player.getMainHandItem().getItem()))
-			return player.getOffhandItem();
-		Inventory inventory = player.getInventory();
-		for (int i = 0; i <= 35; i++) {
-			ItemStack stack = inventory.getItem(i);
-			if (item.isInstance(stack.getItem()))
-				return stack;
-		}
-		return ItemStack.EMPTY;
 	}
 
 }

@@ -27,7 +27,7 @@ public abstract class GuiGuidePage extends Screen {
 	final ResourceLocation texture = HLLocHelper.guiPrefix("page.png");
 	int left, top;
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
-	int pageNum, guiHeight = 228, guiWidth = 174;
+	public int pageNum, guiHeight = 228, guiWidth = 174;
 	static TextComponent titleComponent = new TextComponent("");
 	String title, subtitle, text;
 	ItemStack icon;

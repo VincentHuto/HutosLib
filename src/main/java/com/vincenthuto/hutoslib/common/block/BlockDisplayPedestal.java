@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.vincenthuto.hutoslib.common.block.entity.DisplayPedestalBlockEntity;
 import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
-import com.vincenthuto.hutoslib.common.container.HLInventoryHelper;
+import com.vincenthuto.hutoslib.common.container.HLInvHelper;
 import com.vincenthuto.hutoslib.common.network.VanillaPacketDispatcher;
 
 import net.minecraft.core.BlockPos;
@@ -82,7 +82,7 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 		ItemStack stack = player.getItemInHand(hand);
 
 		if (player.isShiftKeyDown()) {
-			HLInventoryHelper.withdrawFromInventory(altar, player);
+			HLInvHelper.withdrawFromInventory(altar, player);
 			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(altar);
 			return InteractionResult.SUCCESS;
 		} else if (altar.isEmpty() && stack.isEmpty()) {
@@ -107,6 +107,7 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
