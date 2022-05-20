@@ -32,6 +32,11 @@ public class ParticleColor {
 	public ParticleColor(float r, float g, float b) {
 		this((int) r, (int) g, (int) b);
 	}
+	
+	public ParticleColor(double r, double g, double b) {
+		this((int) r, (int) g, (int) b);
+	}
+
 
 	public static ParticleColor averageFromList(List<ParticleColor> list) {
 		float runningR = 0, runningG = 0, runningB = 0, count = 0;

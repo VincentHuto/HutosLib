@@ -3,7 +3,7 @@
   "ingredients" : [ {
     "item" : "minecraft:book"
   }, {
-    "item" : "hutoslib:obsidian_flakes"
+    "item" : "minecraft:obsidian"
   } ],
   "result" : {
     "item" : "hutoslib:hl_guide_book"
