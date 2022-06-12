@@ -13,11 +13,13 @@ import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.RegistryObject;
 
+//TODO remove because of ForgeSpawnEggItem
 public class ModSpawnEggItem extends SpawnEggItem {
 
 	protected static final List<ModSpawnEggItem> UNADDED_EGGS = new ArrayList<>();
 	private final Lazy<? extends EntityType<?>> entityTypeSupplier;
 
+	@SuppressWarnings("deprecation")
 	public ModSpawnEggItem(final RegistryObject<? extends EntityType<?>> entityTypeSupplier, final int primaryColour,
 			final int secondaryColour, final Item.Properties properties) {
 		super(null, primaryColour, secondaryColour, properties);

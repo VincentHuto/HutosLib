@@ -19,6 +19,8 @@ public class HLItemInit {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, HutosLib.MOD_ID);
 	public static final DeferredRegister<Item> SPECIALITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,
 			HutosLib.MOD_ID);
+	public static final DeferredRegister<BannerPattern> BANNERPATTERNS = DeferredRegister
+			.create(Registry.BANNER_PATTERN_REGISTRY, HutosLib.MOD_ID);
 
 	public static final TagKey<Item> TAG_KNAPPERS = TagKey.create(Registry.ITEM_REGISTRY,
 			new ResourceLocation("hutoslib:knappers"));
@@ -50,10 +52,18 @@ public class HLItemInit {
 			() -> new Item(new Item.Properties().tab(HutosLibItemGroup.instance)));
 
 	// Banners and Patterns
-	public static final BannerPattern logo = BannerPattern.create("hutoslib_logo".toUpperCase(), "hutoslib_logo",
-			"logo", true);
+
+	public static final RegistryObject<BannerPattern> logo = BANNERPATTERNS.register("hutoslib_logo",
+			() -> new BannerPattern("hutoslib_logo"));
+	public static final TagKey<BannerPattern> logoTag = TagKey.create(Registry.BANNER_PATTERN_REGISTRY,
+			new ResourceLocation(HutosLib.MOD_ID, "pattern_item/hutoslib_logo"));
+
 	public static final RegistryObject<Item> logo_pattern = ITEMS.register("logo_pattern",
-			() -> new BannerPatternItem(logo, new Item.Properties().tab(HutosLibItemGroup.instance)));
+			() -> new BannerPatternItem(logoTag, new Item.Properties().tab(HutosLibItemGroup.instance)));
+	
+	
+	
+	
 	public static final RegistryObject<Item> leather_arm_banner = SPECIALITEMS.register("leather_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties().tab(HutosLibItemGroup.instance), ArmorMaterials.LEATHER,
 					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/leather_arm_banner.png")));

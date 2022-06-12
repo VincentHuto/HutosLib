@@ -204,6 +204,7 @@ public class ParticleLightning extends TextureSheetParticle {
 		return LIGHTNING_BOLT_RENDER;
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void beginRenderCommon(BufferBuilder buffer, TextureManager textureManager) {
 		RenderSystem.depthMask((boolean) false);
 		RenderSystem.disableCull();
@@ -214,6 +215,7 @@ public class ParticleLightning extends TextureSheetParticle {
 		buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void endRenderCommon() {
 		Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_PARTICLES).restoreLastBlurMipmap();
 		// RenderSystem.alphaFunc((int) 516, (float) 0.1f);

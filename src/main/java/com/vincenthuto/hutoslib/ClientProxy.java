@@ -8,7 +8,6 @@ import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.client.screen.guide.lib.HLTitlePage;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.phys.Vec3;
 
 public class ClientProxy implements IProxy {

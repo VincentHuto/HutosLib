@@ -21,9 +21,9 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,8 +38,6 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 
 	public static final ResourceLocation fallback = new ResourceLocation(HutosLib.MOD_ID,
 			"textures/entity/arm_banner/arm_banner.png");
-	public static final Material LOCATION_ROYAL_GUARD_SHIELD_BASE = new Material(TextureAtlas.LOCATION_BLOCKS,
-			new ResourceLocation(HutosLib.MOD_ID, "entity/royal_guard_shield_base"));
 
 	@SuppressWarnings("rawtypes")
 	private final ModelArmBanner modelPauldron;
@@ -67,7 +65,7 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 
 			BannerFinder.findBanner(player, true).ifPresent((getter) -> {
 				ItemStack banner = getter.getBanner();
-				if (banner.getItem()instanceof ItemArmBanner type) {
+				if (banner.getItem() instanceof ItemArmBanner type) {
 					matrixStack.pushPose();
 					this.translateToBody(matrixStack);
 					matrixStack.translate(-0.35, -0.05, 0);
@@ -89,7 +87,7 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 					VertexConsumer vertexconsumer = material.sprite().wrap(ItemRenderer.getFoilBufferDirect(buffer,
 							this.modelPauldron.renderType(material.atlasLocation()), true, banner.hasFoil()));
 					if (flag) {
-						List<Pair<BannerPattern, DyeColor>> list = BannerBlockEntity.createPatterns(
+						List<Pair<Holder<BannerPattern>, DyeColor>> list = BannerBlockEntity.createPatterns(
 								ItemArmBanner.getColor(banner), BannerBlockEntity.getItemPatterns(banner));
 						matrixStack.mulPose(new Quaternion(Vector3f.YN, 90, true));
 						matrixStack.mulPose(new Quaternion(Vector3f.ZP, 180, true));

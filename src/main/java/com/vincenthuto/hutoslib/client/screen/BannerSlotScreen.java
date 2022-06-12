@@ -163,6 +163,7 @@ public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotC
 		return this.recipeBookComponent;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void renderEntityInInventory(int p_98851_, int p_98852_, int p_98853_, float p_98854_, float p_98855_,
 			LivingEntity p_98856_) {
 		float f = (float) Math.atan((double) (p_98854_ / 40.0F));

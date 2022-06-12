@@ -6,7 +6,7 @@ import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
 public class TomeCategoryTab extends GuiButtonTextured {
@@ -15,7 +15,7 @@ public class TomeCategoryTab extends GuiButtonTextured {
 
 	public TomeCategoryTab(TabColor color, String category, int idIn, int x, int y, Button.OnPress pressedAction) {
 		super(HLLocHelper.guiPrefix("book_tabs.png"), idIn, x, y, 24, 16, color.locX, color.locY,
-				new TextComponent(category), pressedAction);
+				 Component.translatable(category), pressedAction);
 		this.color = color;
 	}
 

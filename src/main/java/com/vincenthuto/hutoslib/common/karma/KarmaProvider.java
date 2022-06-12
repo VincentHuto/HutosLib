@@ -12,7 +12,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
 
 public class KarmaProvider implements ICapabilitySerializable<Tag> {
     public static final Capability<IKarma> KARMA_CAPA = CapabilityManager.get(new CapabilityToken<>(){});

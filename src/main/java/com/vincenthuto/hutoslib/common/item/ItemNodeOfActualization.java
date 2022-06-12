@@ -6,7 +6,7 @@ import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.network.PacketKarmaServer;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -34,7 +34,7 @@ public class ItemNodeOfActualization extends Item {
 				HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playerIn),
 						new PacketKarmaServer(karmaCap));
 				playerIn.displayClientMessage(
-						new TextComponent(ChatFormatting.GOLD + "Toggling Karma to :" + karmaCap.isActive()), true);
+						 Component.translatable(ChatFormatting.GOLD + "Toggling Karma to :" + karmaCap.isActive()), true);
 			}
 		}
 

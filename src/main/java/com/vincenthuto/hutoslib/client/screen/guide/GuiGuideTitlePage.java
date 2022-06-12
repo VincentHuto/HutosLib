@@ -16,7 +16,8 @@ import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,20 +30,19 @@ public abstract class GuiGuideTitlePage extends Screen {
 	int guiHeight = 240;
 	int left, top;
 	final int BUTTONCLOSE = 30;
-	TextComponent titleComponent;
+	Component titleComponent;
 	public ItemStack icon;
 	GuiButtonTextured buttonclose;
 	public List<TomeChapter> categories = new ArrayList<TomeChapter>();
 	public List<GuiButtonTextured> buttonList = new ArrayList<GuiButtonTextured>();
 
 	public GuiGuideTitlePage() {
-		super(new TextComponent(""));
+		super(Component.translatable(""));
 		this.icon = ItemStack.EMPTY;
 		this.overlay = HLLocHelper.guiPrefix("blank.png");
 	}
 
-	public GuiGuideTitlePage(TextComponent title, ItemStack stack, List<TomeChapter> chapters,
-			ResourceLocation overlay) {
+	public GuiGuideTitlePage(Component title, ItemStack stack, List<TomeChapter> chapters, ResourceLocation overlay) {
 		super(title);
 		this.titleComponent = title;
 		this.icon = stack;
@@ -50,7 +50,7 @@ public abstract class GuiGuideTitlePage extends Screen {
 		this.overlay = overlay;
 	}
 
-	public GuiGuideTitlePage(TextComponent title, ItemStack stack, List<TomeChapter> chapters) {
+	public GuiGuideTitlePage(Component title, ItemStack stack, List<TomeChapter> chapters) {
 		super(title);
 		this.titleComponent = title;
 		this.icon = stack;
@@ -58,7 +58,7 @@ public abstract class GuiGuideTitlePage extends Screen {
 		this.overlay = HLLocHelper.guiPrefix("blank.png");
 	}
 
-	public GuiGuideTitlePage(TextComponent title, List<TomeChapter> chapters, ResourceLocation overlay) {
+	public GuiGuideTitlePage(Component title, List<TomeChapter> chapters, ResourceLocation overlay) {
 		super(title);
 		this.titleComponent = title;
 		this.icon = ItemStack.EMPTY;
@@ -66,7 +66,7 @@ public abstract class GuiGuideTitlePage extends Screen {
 		this.overlay = overlay;
 	}
 
-	public GuiGuideTitlePage(TextComponent title, List<TomeChapter> chapters) {
+	public GuiGuideTitlePage(Component title, List<TomeChapter> chapters) {
 		super(title);
 		this.titleComponent = title;
 		this.icon = ItemStack.EMPTY;
@@ -86,7 +86,8 @@ public abstract class GuiGuideTitlePage extends Screen {
 		RenderSystem.setShaderTexture(0, this.overlay);
 		this.blit(matrixStack, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 
-		if (!title.getContents().isEmpty()) {
+		title.getContents();
+		if (title.getContents() != ComponentContents.EMPTY) {
 			HLGuiUtils.drawMaxWidthString(font, title, centerX + 10, centerY + 10, 165, 0xffffff, true);
 		}
 
@@ -106,7 +107,7 @@ public abstract class GuiGuideTitlePage extends Screen {
 
 		this.buttonclose.render(matrixStack, mouseX, mouseY, partialTicks);
 		if (this.buttonclose.isHoveredOrFocused()) {
-			renderTooltip(matrixStack, new TextComponent("Close"), this.buttonclose.x, this.buttonclose.y);
+			renderTooltip(matrixStack, Component.translatable("Close"), this.buttonclose.x, this.buttonclose.y);
 		}
 	}
 

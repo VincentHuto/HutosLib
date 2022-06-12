@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import com.vincenthuto.hutoslib.common.container.BannerSlotContainer;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -24,7 +24,7 @@ public class PacketOpenBanner {
 		context.get().getSender()
 				.openMenu(new SimpleMenuProvider(
 						(i, playerInventory, playerEntity) -> new BannerSlotContainer(i, playerInventory),
-						new TranslatableComponent("container.crafting")));
+						Component.translatable("container.crafting")));
 		return true;
 	}
 }

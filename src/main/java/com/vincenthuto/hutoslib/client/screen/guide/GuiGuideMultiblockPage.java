@@ -7,7 +7,7 @@ import com.vincenthuto.hutoslib.client.render.block.MultiblockPattern;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
@@ -66,7 +66,7 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 		int line = 0;
 		for (Block block : pattern.getBlockCount(false).keySet()) {
 			HLGuiUtils.drawMaxWidthString(font,
-					new TextComponent(
+					 Component.translatable(
 							I18n.get(block.getDescriptionId()) + ": " + pattern.getBlockCount(false).get(block)),
 					(int) (left - guiWidth + 180), (int) (top + guiHeight - 140) - line * -10, 160, 0xffffff, true);
 			line++;

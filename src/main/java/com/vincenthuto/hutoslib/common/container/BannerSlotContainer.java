@@ -1,6 +1,5 @@
 package com.vincenthuto.hutoslib.common.container;
 
-
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -21,7 +20,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.ResultContainer;
@@ -33,12 +31,8 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ObjectHolder;
 
 public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
-
-	@ObjectHolder("hutoslib:banner_slot_container")
-	public static MenuType<BannerSlotContainer> TYPE;
 
 	private final BannerSlot slotBanner;
 	private final IBannerSlot extensionSlot;
@@ -53,7 +47,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 	}
 
 	public BannerSlotContainer(int id, Inventory playerInventory) {
-		super(TYPE, id);
+		super(HlContainerInit.banner_slot_container.get(), id);
 		this.player = playerInventory.player;
 		this.addSlot(
 				new ResultSlot(playerInventory.player, this.craftingInventory, this.craftResultInventory, 0, 154, 28));

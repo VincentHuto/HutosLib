@@ -5,13 +5,13 @@ import com.vincenthuto.hutoslib.client.screen.guide.GuiGuideTitlePage;
 import com.vincenthuto.hutoslib.client.screen.guide.TomeLib;
 import com.vincenthuto.hutoslib.common.item.HLItemInit;
 
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class HLTitlePage extends GuiGuideTitlePage {
 
 	public HLTitlePage() {
-		super(new TextComponent(""), new ItemStack(HLItemInit.diamond_knapper.get()), HLLib.chapters,
+		super( Component.translatable(""), new ItemStack(HLItemInit.diamond_knapper.get()), HLLib.chapters,
 				HLLocHelper.guiPrefix("/guide/guide_overlay.png"));
 	}
 
