@@ -55,15 +55,13 @@ public class HLItemInit {
 
 	public static final RegistryObject<BannerPattern> logo = BANNERPATTERNS.register("hutoslib_logo",
 			() -> new BannerPattern("hutoslib_logo"));
-	public static final TagKey<BannerPattern> logoTag = TagKey.create(Registry.BANNER_PATTERN_REGISTRY,
-			new ResourceLocation(HutosLib.MOD_ID, "pattern_item/hutoslib_logo"));
 
 	public static final RegistryObject<Item> logo_pattern = ITEMS.register("logo_pattern",
-			() -> new BannerPatternItem(logoTag, new Item.Properties().tab(HutosLibItemGroup.instance)));
-	
-	
-	
-	
+			() -> new BannerPatternItem(
+					TagKey.create(Registry.BANNER_PATTERN_REGISTRY,
+							new ResourceLocation(HutosLib.MOD_ID, "pattern_item/hutoslib_logo")),
+					new Item.Properties().tab(HutosLibItemGroup.instance)));
+
 	public static final RegistryObject<Item> leather_arm_banner = SPECIALITEMS.register("leather_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties().tab(HutosLibItemGroup.instance), ArmorMaterials.LEATHER,
 					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/leather_arm_banner.png")));
