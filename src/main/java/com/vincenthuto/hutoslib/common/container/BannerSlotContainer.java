@@ -2,14 +2,14 @@ package com.vincenthuto.hutoslib.common.container;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.network.PacketContainerSlot;
 
 import net.minecraft.client.RecipeBookCategories;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
@@ -29,8 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 
@@ -59,39 +57,51 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 		}
 
 		for (int k = 0; k < 4; ++k) {
-			final EquipmentSlot equipmentslottype = InventoryMenu.SLOT_IDS[k];
+			final EquipmentSlot equipmentslot = InventoryMenu.SLOT_IDS[k];
 			this.addSlot(new Slot(playerInventory, 39 - k, 8, 8 + k * 18) {
+				public void set(ItemStack p_219985_) {
+					ItemStack itemstack = this.getItem();
+					super.set(p_219985_);
+					player.onEquipItem(equipmentslot, itemstack, p_219985_);
+				}
+
 				public int getMaxStackSize() {
 					return 1;
 				}
 
-				public boolean mayPlace(ItemStack stack) {
-					return stack.canEquip(equipmentslottype, player);
+				/**
+				 * Check if the stack is allowed to be placed in this slot, used for armor slots
+				 * as well as furnace fuel.
+				 */
+				public boolean mayPlace(ItemStack p_39746_) {
+					return p_39746_.canEquip(equipmentslot, player);
 				}
 
-				public boolean mayPickup(Player playerIn) {
+				/**
+				 * Return whether this slot's stack can be taken from this slot.
+				 */
+				public boolean mayPickup(Player p_39744_) {
 					ItemStack itemstack = this.getItem();
-					return !itemstack.isEmpty() && !playerIn.isCreative()
-							&& EnchantmentHelper.hasBindingCurse(itemstack) ? false : super.mayPickup(playerIn);
+					return !itemstack.isEmpty() && !p_39744_.isCreative()
+							&& EnchantmentHelper.hasBindingCurse(itemstack) ? false : super.mayPickup(p_39744_);
 				}
 
-				@Nullable
-				@OnlyIn(Dist.CLIENT)
-				public String getSlotTexture() {
-					return InventoryMenu.TEXTURE_EMPTY_SLOTS[equipmentslottype.getIndex()].toString();
+				public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+					return Pair.of(InventoryMenu.BLOCK_ATLAS,
+							InventoryMenu.TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()]);
 				}
 			});
 		}
 
-		for (int l = 0; l < 3; ++l) {
-			for (int j1 = 0; j1 < 9; ++j1) {
-				this.addSlot(new Slot(playerInventory, j1 + (l + 1) * 9, 8 + j1 * 18, 84 + l * 18));
-			}
-		}
+	    for(int l = 0; l < 3; ++l) {
+	         for(int j1 = 0; j1 < 9; ++j1) {
+	            this.addSlot(new Slot(playerInventory, j1 + (l + 1) * 9, 8 + j1 * 18, 84 + l * 18));
+	         }
+	      }
 
-		for (int i1 = 0; i1 < 9; ++i1) {
-			this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 142));
-		}
+	      for(int i1 = 0; i1 < 9; ++i1) {
+	         this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 142));
+	      }
 
 		this.addSlot(new Slot(playerInventory, 40, 77, 62) {
 			{
@@ -210,84 +220,64 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 	}
 
 	@Override
-	public ItemStack quickMoveStack(Player playerIn, int index) {
-		Slot slot = this.slots.get(index);
+	 public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+	      ItemStack itemstack = ItemStack.EMPTY;
+	      Slot slot = this.slots.get(pIndex);
+	      if (slot != null && slot.hasItem()) {
+	         ItemStack itemstack1 = slot.getItem();
+	         itemstack = itemstack1.copy();
+	         EquipmentSlot equipmentslot = Mob.getEquipmentSlotForItem(itemstack);
+	         if (pIndex == 0) {
+	            if (!this.moveItemStackTo(itemstack1, 9, 45, true)) {
+	               return ItemStack.EMPTY;
+	            }
 
-		if (slot != null && slot.hasItem()) {
-			ItemStack remaining = ItemStack.EMPTY;
-			ItemStack slotContents = slot.getItem();
-			remaining = slotContents.copy();
+	            slot.onQuickCraft(itemstack1, itemstack);
+	         } else if (pIndex >= 1 && pIndex < 5) {
+	            if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
+	               return ItemStack.EMPTY;
+	            }
+	         } else if (pIndex >= 5 && pIndex < 9) {
+	            if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
+	               return ItemStack.EMPTY;
+	            }
+	         } else if (equipmentslot.getType() == EquipmentSlot.Type.ARMOR && !this.slots.get(8 - equipmentslot.getIndex()).hasItem()) {
+	            int i = 8 - equipmentslot.getIndex();
+	            if (!this.moveItemStackTo(itemstack1, i, i + 1, false)) {
+	               return ItemStack.EMPTY;
+	            }
+	         } else if (equipmentslot == EquipmentSlot.OFFHAND && !this.slots.get(45).hasItem()) {
+	            if (!this.moveItemStackTo(itemstack1, 45, 46, false)) {
+	               return ItemStack.EMPTY;
+	            }
+	         } else if (pIndex >= 9 && pIndex < 36) {
+	            if (!this.moveItemStackTo(itemstack1, 36, 45, false)) {
+	               return ItemStack.EMPTY;
+	            }
+	         } else if (pIndex >= 36 && pIndex < 45) {
+	            if (!this.moveItemStackTo(itemstack1, 9, 36, false)) {
+	               return ItemStack.EMPTY;
+	            }
+	         } else if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
+	            return ItemStack.EMPTY;
+	         }
 
-			if (index == slotBanner.index) {
-				if (!this.moveItemStackTo(slotContents, 9, 45, false)) {
-					return ItemStack.EMPTY;
-				}
+	         if (itemstack1.isEmpty()) {
+	            slot.set(ItemStack.EMPTY);
+	         } else {
+	            slot.setChanged();
+	         }
 
-				return remaining;
-			} else if (slot.mayPlace(slotContents)) {
-				if (!this.moveItemStackTo(slotContents, slotBanner.index, slotBanner.index + 1, false)) {
-					return ItemStack.EMPTY;
-				}
-			}
-		}
+	         if (itemstack1.getCount() == itemstack.getCount()) {
+	            return ItemStack.EMPTY;
+	         }
 
-		ItemStack itemstack = ItemStack.EMPTY;
-		if (slot != null && slot.hasItem()) {
-			ItemStack itemstack1 = slot.getItem();
-			itemstack = itemstack1.copy();
-			EquipmentSlot equipmentslottype = Mob.getEquipmentSlotForItem(itemstack);
-			if (index == 0) {
-				if (!this.moveItemStackTo(itemstack1, 9, 45, true)) {
-					return ItemStack.EMPTY;
-				}
+	         slot.onTake(pPlayer, itemstack1);
+	         if (pIndex == 0) {
+	            pPlayer.drop(itemstack1, false);
+	         }
+	      }
 
-				slot.onQuickCraft(itemstack1, itemstack);
-			} else if (index >= 1 && index < 5) {
-				if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (index >= 5 && index < 9) {
-				if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (equipmentslottype.getType() == EquipmentSlot.Type.ARMOR
-					&& !this.slots.get(8 - equipmentslottype.getIndex()).hasItem()) {
-				int i = 8 - equipmentslottype.getIndex();
-				if (!this.moveItemStackTo(itemstack1, i, i + 1, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (equipmentslottype == EquipmentSlot.OFFHAND && !this.slots.get(45).hasItem()) {
-				if (!this.moveItemStackTo(itemstack1, 45, 46, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (index >= 9 && index < 36) {
-				if (!this.moveItemStackTo(itemstack1, 36, 45, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (index >= 36 && index < 45) {
-				if (!this.moveItemStackTo(itemstack1, 9, 36, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
-				return ItemStack.EMPTY;
-			}
-
-			if (itemstack1.isEmpty()) {
-				slot.set(ItemStack.EMPTY);
-			} else {
-				slot.setChanged();
-			}
-
-			if (itemstack1.getCount() == itemstack.getCount()) {
-				return ItemStack.EMPTY;
-			}
-
-			slot.onTake(playerIn, itemstack1);
-			if (index == 0) {
-				playerIn.drop(itemstack1, false);
-			}
-		}
-
-		return itemstack;
-	}
+	      return itemstack;
+	   }
 }

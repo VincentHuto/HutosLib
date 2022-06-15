@@ -47,12 +47,12 @@ public class Vector3 {
 		return new Vector3(e.getX(), e.getY() - e.getMyRidingOffset() + e.getBbHeight() / 2, e.getZ());
 	}
 
-	public static Vector3 fromTileEntity(BlockEntity e) {
+	public static Vector3 fromBlockEntity(BlockEntity e) {
 		return fromBlockPos(e.getBlockPos());
 	}
 
-	public static Vector3 fromTileEntityCenter(BlockEntity e) {
-		return fromTileEntity(e).add(0.5);
+	public static Vector3 fromBlockEntityCenter(BlockEntity e) {
+		return fromBlockEntity(e).add(0.5);
 	}
 
 	public double dotProduct(Vector3 vec) {
