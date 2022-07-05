@@ -1,12 +1,27 @@
 package com.vincenthuto.hutoslib.common.block;
 
+import java.util.function.Supplier;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BeetrootBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 public class HLBlockUtils {
+
+	public static RegistryObject<Block> registerBlockItems(String name, final Supplier<? extends Block> blockSup,
+			Item.Properties itemProps, DeferredRegister<Block> blockReg, DeferredRegister<Item> itemReg) {
+		RegistryObject<Block> regBlock = blockReg.register(name, blockSup);
+		itemReg.register(name, () -> new BlockItem(regBlock.get(), itemProps));
+		return regBlock;
+
+	}
 
 	public static boolean isCrop(LevelReader worldIn, BlockPos blockPos) {
 		if (worldIn.getBlockState(blockPos).getBlock() instanceof BonemealableBlock) {

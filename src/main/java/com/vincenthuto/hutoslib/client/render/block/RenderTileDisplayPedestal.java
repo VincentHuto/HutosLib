@@ -16,7 +16,6 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 	public RenderTileDisplayPedestal(BlockEntityRendererProvider.Context p_173636_) {
 	}
 
-	@SuppressWarnings("resource")
 	@Override
 	public void render(DisplayPedestalBlockEntity te, float partialTicks, PoseStack matrixStackIn,
 			MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {

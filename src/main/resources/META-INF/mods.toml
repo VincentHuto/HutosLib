@@ -18,7 +18,7 @@ license="All rights reserved"
 modId="hutoslib" #mandatory
 
 
-version="3.41" #mandatory
+version="3.50" #mandatory
  # A display name for the mod
 displayName="HutosLib" #mandatory
 

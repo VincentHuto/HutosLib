@@ -1,5 +1,6 @@
 package com.vincenthuto.hutoslib.common.recipe;
 
+import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
 
 import net.minecraft.nbt.CompoundTag;
@@ -9,9 +10,7 @@ import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ObjectHolder;
 
 public class ArmBannerCraftRecipe extends CustomRecipe {
 	public ArmBannerCraftRecipe(ResourceLocation idIn) {
@@ -90,10 +89,7 @@ public class ArmBannerCraftRecipe extends CustomRecipe {
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return SERIALIZER;
+		return HlContainerInit.arm_banner_craft.get();
 	}
-
-	@ObjectHolder("hutoslib:arm_banner_craft")
-	public static SimpleRecipeSerializer<ArmBannerCraftRecipe> SERIALIZER;
 
 }

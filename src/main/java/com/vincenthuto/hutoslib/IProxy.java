@@ -2,7 +2,6 @@ package com.vincenthuto.hutoslib;
 
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.phys.Vec3;
 
 public interface IProxy {

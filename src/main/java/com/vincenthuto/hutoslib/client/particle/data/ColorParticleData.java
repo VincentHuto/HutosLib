@@ -10,6 +10,7 @@ import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Simplified verison of ElementalCraft
@@ -63,6 +64,7 @@ public class ColorParticleData implements ParticleOptions {
 
 	@Override
 	public String writeToString() {
-		return type.getRegistryName().toString() + " " + color.serialize();
+
+		return ForgeRegistries.PARTICLE_TYPES.getKey(type).toString() + " " + color.serialize();
 	}
 }

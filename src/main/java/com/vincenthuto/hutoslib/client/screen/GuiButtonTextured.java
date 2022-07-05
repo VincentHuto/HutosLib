@@ -5,7 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class GuiButtonTextured extends Button {
@@ -15,7 +16,7 @@ public class GuiButtonTextured extends Button {
 	boolean state;
 	protected Button.OnTooltip onTooltip;
 	public Button.OnPress action;
-	public TextComponent text;
+	public Component text;
 
 	/***
 	 * 
@@ -38,7 +39,7 @@ public class GuiButtonTextured extends Button {
 	}
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
-			int buttonHeightIn, int uIn, int vIn, boolean stateIn, TextComponent text, Button.OnPress actionIn) {
+			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Component text, Button.OnPress actionIn) {
 		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn);
 		this.texture = texIn;
 		this.id = idIn;
@@ -57,7 +58,7 @@ public class GuiButtonTextured extends Button {
 	}
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
-			int buttonHeightIn, int uIn, int vIn, TextComponent text, Button.OnPress actionIn) {
+			int buttonHeightIn, int uIn, int vIn, Component text, Button.OnPress actionIn) {
 		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn);
 		this.texture = texIn;
 		this.id = idIn;
@@ -77,7 +78,7 @@ public class GuiButtonTextured extends Button {
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, new TextComponent(""), actionIn);
+		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, new TranslatableComponent(""), actionIn);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -90,7 +91,7 @@ public class GuiButtonTextured extends Button {
 		this.newV = vIn;
 		this.action = actionIn;
 		this.state = stateIn;
-		this.text = new TextComponent("");
+		this.text =  new TranslatableComponent("");
 
 	}
 

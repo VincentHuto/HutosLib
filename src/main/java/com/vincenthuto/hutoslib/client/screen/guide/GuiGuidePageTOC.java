@@ -9,7 +9,7 @@ import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
@@ -39,9 +39,9 @@ public abstract class GuiGuidePageTOC extends GuiGuidePage {
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		for (int i = 1; i < chapterButtons.size(); i++) {
 			chapterButtons.get(i).renderButton(matrixStack, mouseX, mouseY, partialTicks);
-			HLGuiUtils.drawMaxWidthString(font, new TextComponent("Pg." + i), (int) (chapterButtons.get(i).posX + 5),
+			HLGuiUtils.drawMaxWidthString(font,  new TranslatableComponent("Pg." + i), (int) (chapterButtons.get(i).posX + 5),
 					chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
-			HLGuiUtils.drawMaxWidthString(font, new TextComponent(getPages().get(i).title),
+			HLGuiUtils.drawMaxWidthString(font,  new TranslatableComponent(getPages().get(i).title),
 					(int) (chapterButtons.get(i).posX + 30), chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
 	}
