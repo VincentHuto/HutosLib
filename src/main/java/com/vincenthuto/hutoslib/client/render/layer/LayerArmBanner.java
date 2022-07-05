@@ -38,8 +38,6 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 
 	public static final ResourceLocation fallback = new ResourceLocation(HutosLib.MOD_ID,
 			"textures/entity/arm_banner/arm_banner.png");
-	public static final Material LOCATION_ROYAL_GUARD_SHIELD_BASE = new Material(TextureAtlas.LOCATION_BLOCKS,
-			new ResourceLocation(HutosLib.MOD_ID, "entity/royal_guard_shield_base"));
 
 	@SuppressWarnings("rawtypes")
 	private final ModelArmBanner modelPauldron;
