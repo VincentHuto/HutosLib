@@ -67,8 +67,6 @@ public class HutosLib {
 		MinecraftForge.EVENT_BUS.register(KarmaEvents.class);
 	}
 
-
-
 	// Creative Tab
 	public static class HutosLibItemGroup extends CreativeModeTab {
 		public static final HutosLibItemGroup instance = new HutosLibItemGroup(CreativeModeTab.getGroupCountSafe(),
@@ -89,7 +87,7 @@ public class HutosLib {
 		BannerExtensionSlot.register();
 		BannerFinderBannerSlot.initFinder();
 	}
-
+	
 	public void loadComplete(FMLLoadCompleteEvent event) {
 		event.enqueueWork(() -> {
 			if (FMLEnvironment.dist == Dist.CLIENT)
