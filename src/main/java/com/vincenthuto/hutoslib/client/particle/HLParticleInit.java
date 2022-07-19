@@ -17,7 +17,7 @@ import com.vincenthuto.hutoslib.client.particle.type.LightningParticleType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -43,7 +43,7 @@ public class HLParticleInit {
 			() -> new EmberParticleType());
 
 	@SubscribeEvent
-	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
+	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
 		Minecraft.getInstance().particleEngine.register(glow.get(), GlowParticleFactory::new);
 		Minecraft.getInstance().particleEngine.register(dark_glow.get(), DarkGlowParticleFactory::new);
 		Minecraft.getInstance().particleEngine.register(lightning_bolt.get(), LightningParticleFactory::new);

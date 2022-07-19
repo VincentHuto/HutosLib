@@ -52,7 +52,9 @@ public class HutosLib {
 		modEventBus.addListener(this::commonSetup);
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(this::registerCapability);
-		modEventBus.addListener(this::loadComplete);
+		modEventBus.addListener(HLForgeEvents::initKeybinds);
+
+		// modEventBus.addListener(this::loadComplete);
 		HLItemInit.SPECIALITEMS.register(modEventBus);
 		HLItemInit.BANNERPATTERNS.register(modEventBus);
 		HLBlockInit.BLOCKS.register(modEventBus);
@@ -86,13 +88,6 @@ public class HutosLib {
 		HLPacketHandler.registerChannels();
 		BannerExtensionSlot.register();
 		BannerFinderBannerSlot.initFinder();
-	}
-	
-	public void loadComplete(FMLLoadCompleteEvent event) {
-		event.enqueueWork(() -> {
-			if (FMLEnvironment.dist == Dist.CLIENT)
-				HLForgeEvents.initKeybinds();
-		});
 	}
 
 	private void registerCapability(RegisterCapabilitiesEvent event) {

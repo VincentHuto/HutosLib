@@ -26,7 +26,7 @@ public class KarmaEvents {
 
 	@SubscribeEvent
 	public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-		ServerPlayer player = (ServerPlayer) event.getPlayer();
+		ServerPlayer player = (ServerPlayer) event.getEntity();
 		IKarma volume = player.getCapability(KarmaProvider.KARMA_CAPA).orElseThrow(NullPointerException::new);
 		HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketKarmaServer(volume));
 //		player.displayClientMessage(
@@ -38,7 +38,7 @@ public class KarmaEvents {
 
 	@SubscribeEvent
 	public static void onDimensionChange(PlayerChangedDimensionEvent event) {
-		ServerPlayer player = (ServerPlayer) event.getPlayer();
+		ServerPlayer player = (ServerPlayer) event.getEntity();
 		IKarma volume = player.getCapability(KarmaProvider.KARMA_CAPA).orElseThrow(NullPointerException::new);
 		HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketKarmaServer(volume));
 	//	player.displayClientMessage(
@@ -48,7 +48,7 @@ public class KarmaEvents {
 
 	@SubscribeEvent
 	public static void playerRespawn(PlayerRespawnEvent event) {
-		Player playernew = event.getPlayer();
+		Player playernew = event.getEntity();
 		if (!playernew.level.isClientSide) {
 			IKarma bloodVolumeNew = playernew.getCapability(KarmaProvider.KARMA_CAPA)
 					.orElseThrow(NullPointerException::new);
@@ -64,7 +64,7 @@ public class KarmaEvents {
 			peorig.revive();
 			IKarma bloodVolumeOld = peorig.getCapability(KarmaProvider.KARMA_CAPA)
 					.orElseThrow(NullPointerException::new);
-			Player playernew = event.getPlayer();
+			Player playernew = event.getEntity();
 			peorig.reviveCaps();
 			IKarma bloodVolumeNew = playernew.getCapability(KarmaProvider.KARMA_CAPA)
 					.orElseThrow(NullPointerException::new);

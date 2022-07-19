@@ -103,7 +103,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 	public static class EventHandlers {
 		@SubscribeEvent
 		public void joinWorld(PlayerEvent.PlayerLoggedInEvent event) {
-			Player target = event.getPlayer();
+			Player target = event.getEntity();
 			if (target.level.isClientSide)
 				return;
 			get(target).ifPresent(BannerExtensionSlot::syncToSelf);
@@ -111,7 +111,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 
 		@SubscribeEvent
 		public void joinWorld(PlayerEvent.PlayerChangedDimensionEvent event) {
-			Player target = event.getPlayer();
+			Player target = event.getEntity();
 			if (target.level.isClientSide)
 				return;
 			get(target).ifPresent(BannerExtensionSlot::syncToSelf);
@@ -137,7 +137,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 
 		@SubscribeEvent
 		public void playerDeath(LivingDropsEvent event) {
-			LivingEntity entity = event.getEntityLiving();
+			LivingEntity entity = event.getEntity();
 
 			get(entity).ifPresent((instance) -> {
 				BannerSlotItemHandler banner = instance.getBanner();
@@ -167,7 +167,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 		public void playerClone(PlayerEvent.Clone event) {
 			Player oldPlayer = event.getOriginal();
 			oldPlayer.revive();
-			Player newPlayer = event.getPlayer();
+			Player newPlayer = event.getEntity();
 			get(oldPlayer).ifPresent((oldBanner) -> {
 				ItemStack stack = oldBanner.getBanner().getContents();
 				get(newPlayer).map(newBanner -> {

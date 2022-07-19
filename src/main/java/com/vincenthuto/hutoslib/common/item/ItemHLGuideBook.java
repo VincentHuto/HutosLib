@@ -9,6 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ItemHLGuideBook extends ItemGuideBook {
 
 	public ItemHLGuideBook(Properties prop, ResourceLocation texture) {

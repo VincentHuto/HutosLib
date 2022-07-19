@@ -17,6 +17,8 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ItemNodeOfActualization extends Item {
 
 	public ItemNodeOfActualization(Properties properties) {

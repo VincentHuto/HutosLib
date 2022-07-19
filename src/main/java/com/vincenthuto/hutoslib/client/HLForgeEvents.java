@@ -10,7 +10,7 @@ import com.vincenthuto.hutoslib.common.network.PacketOpenBanner;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,9 +22,9 @@ public class HLForgeEvents {
 
 	public static KeyMapping OPEN_BANNER_SLOT_KEYBIND;
 
-	public static void initKeybinds() {
-		ClientRegistry.registerKeyBinding(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot",
-				GLFW.GLFW_KEY_V, "key.armbanner.category"));
+	public static void initKeybinds(RegisterKeyMappingsEvent ev) {
+		ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V,
+				"key.armbanner.category"));
 	}
 
 	@SubscribeEvent

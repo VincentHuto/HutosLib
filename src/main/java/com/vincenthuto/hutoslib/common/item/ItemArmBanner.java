@@ -27,13 +27,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ItemArmBanner extends Item implements IBannerSlotItem {
 	public static final Capability<IBannerSlotItem> BANNER_SLOT_ITEM = CapabilityManager.get(new CapabilityToken<>() {
@@ -79,7 +81,7 @@ public class ItemArmBanner extends Item implements IBannerSlotItem {
 	}
 
 	@Override
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 		super.initializeClient(consumer);
 		consumer.accept(RenderPropArmBanner.INSTANCE);
 
@@ -106,17 +108,12 @@ public class ItemArmBanner extends Item implements IBannerSlotItem {
 	}
 }
 
-class RenderPropArmBanner implements IItemRenderProperties {
+class RenderPropArmBanner implements IClientItemExtensions {
 
 	public static RenderPropArmBanner INSTANCE = new RenderPropArmBanner();
 
 	@Override
-	public Font getFont(ItemStack stack) {
-		return Minecraft.getInstance().font;
-	}
-
-	@Override
-	public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+	public BlockEntityWithoutLevelRenderer getCustomRenderer() {
 		return new RenderItemArmBanner(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
 				Minecraft.getInstance().getEntityModels());
 	}

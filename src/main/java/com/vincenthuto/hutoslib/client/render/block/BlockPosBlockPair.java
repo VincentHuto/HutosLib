@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class BlockPosBlockPair {
 	Block block;
@@ -53,7 +52,7 @@ public class BlockPosBlockPair {
 		VertexConsumer consumer = Minecraft.getInstance().renderBuffers().bufferSource()
 				.getBuffer(ItemBlockRenderTypes.getRenderType(state, true));
 		blockDispatcher.renderBatched(state, BlockPos.ZERO, getter, matrices, consumer, false,
-				Minecraft.getInstance().level.random, EmptyModelData.INSTANCE);
+				Minecraft.getInstance().level.random/* , EmptyModelData.INSTANCE */);
 		matrices.popPose();
 	}
 }

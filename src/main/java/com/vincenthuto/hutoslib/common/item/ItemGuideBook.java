@@ -15,7 +15,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ItemGuideBook extends Item {
 	// Essentially taken from the enchanting table animation code with some slight
@@ -51,9 +53,13 @@ public class ItemGuideBook extends Item {
 	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 		if (entityIn instanceof Player player) {
-			ItemStack held = player.getOffhandItem();
-			boolean offHand = stack.getItem() == held.getItem();
-			if (isSelected || offHand) {
+			ItemStack oheld = player.getOffhandItem();
+			boolean offHand = stack.getItem() == oheld.getItem();
+
+			ItemStack mheld = player.getMainHandItem();
+			boolean mainHand = stack.getItem() == mheld.getItem();
+
+			if (mainHand || offHand) {
 				this.pageTurningSpeed = this.nextPageTurningSpeed;
 				this.pageAngle = this.nextPageAngle;
 				this.nextPageTurningSpeed += 0.1F;
@@ -90,34 +96,30 @@ public class ItemGuideBook extends Item {
 				this.flipA += (f - this.flipA) * 0.9F;
 				this.flip += this.flipA;
 				if (close < 1f) {
-					close += 0.05f;
+					close += 0.015f;
 				}
 			} else {
 				if (close > 0f) {
-					close -= 0.05f;
+					close -= 0.015f;
 				}
 			}
 		}
+
 	}
 
 	@Override
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 		super.initializeClient(consumer);
 		consumer.accept(RenderPropTome.INSTANCE);
 	}
 }
 
-class RenderPropTome implements IItemRenderProperties {
+class RenderPropTome implements IClientItemExtensions {
 
 	public static RenderPropTome INSTANCE = new RenderPropTome();
 
 	@Override
-	public Font getFont(ItemStack stack) {
-		return Minecraft.getInstance().font;
-	}
-
-	@Override
-	public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+	public BlockEntityWithoutLevelRenderer getCustomRenderer() {
 		return new RenderItemGuideBook(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
 				Minecraft.getInstance().getEntityModels());
 	}
