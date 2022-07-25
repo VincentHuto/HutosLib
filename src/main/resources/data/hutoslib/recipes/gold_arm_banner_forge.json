@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXB",
+    " XS"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:gold_ingot"
+    }
+    ,"S": {
+      "item": "minecraft:stick"
+    } ,"B": {
+      "item": "forge:slimeball"
+    }
+  },
+  "result": {
+    "item": "hutoslib:gold_arm_banner"
+  }
+}

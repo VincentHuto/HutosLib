@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXB",
+    " XS"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:leather"
+    }
+    ,"S": {
+      "item": "minecraft:stick"
+    } ,"B": {
+      "item": "forge:slimeball"
+    }
+  },
+  "result": {
+    "item": "hutoslib:leather_arm_banner"
+  }
+}
