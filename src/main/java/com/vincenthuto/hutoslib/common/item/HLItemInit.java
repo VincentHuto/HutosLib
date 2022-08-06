@@ -66,6 +66,11 @@ public class HLItemInit {
 	public static final RegistryObject<Item> diamond_arm_banner = SPECIALITEMS.register("diamond_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties().tab(HutosLibItemGroup.instance), ArmorMaterials.DIAMOND,
 					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/diamond_arm_banner.png")));
+	
+	public static final RegistryObject<Item> obsidian_arm_banner = SPECIALITEMS.register("obsidian_arm_banner",
+			() -> new ItemArmBanner(new Item.Properties().tab(HutosLibItemGroup.instance), ArmorMaterials.DIAMOND,
+					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/obsidian_arm_banner.png")));
+	
 	public static final RegistryObject<Item> netherite_arm_banner = SPECIALITEMS.register("netherite_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties().tab(HutosLibItemGroup.instance), ArmorMaterials.NETHERITE,
 					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/netherite_arm_banner.png")));

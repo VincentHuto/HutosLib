@@ -51,9 +51,13 @@ public class ItemGuideBook extends Item {
 	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 		if (entityIn instanceof Player player) {
-			ItemStack held = player.getOffhandItem();
-			boolean offHand = stack.getItem() == held.getItem();
-			if (isSelected || offHand) {
+			ItemStack oheld = player.getOffhandItem();
+			boolean offHand = stack.getItem() == oheld.getItem();
+
+			ItemStack mheld = player.getMainHandItem();
+			boolean mainHand = stack.getItem() == mheld.getItem();
+
+			if (mainHand || offHand) {
 				this.pageTurningSpeed = this.nextPageTurningSpeed;
 				this.pageAngle = this.nextPageAngle;
 				this.nextPageTurningSpeed += 0.1F;
@@ -90,14 +94,15 @@ public class ItemGuideBook extends Item {
 				this.flipA += (f - this.flipA) * 0.9F;
 				this.flip += this.flipA;
 				if (close < 1f) {
-					close += 0.05f;
+					close += 0.015f;
 				}
 			} else {
 				if (close > 0f) {
-					close -= 0.05f;
+					close -= 0.015f;
 				}
 			}
 		}
+
 	}
 
 	@Override

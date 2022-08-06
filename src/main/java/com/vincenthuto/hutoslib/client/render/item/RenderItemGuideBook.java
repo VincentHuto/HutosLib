@@ -31,7 +31,6 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 		this.model = new BookModel(p_172551_.bakeLayer(ModelLayers.BOOK));
 	}
 
-
 	@Override
 	public void renderByItem(ItemStack stack, ItemTransforms.TransformType transform, PoseStack ms,
 			MultiBufferSource buffers, int light, int overlay) {
@@ -54,13 +53,12 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 			while (f1 < -(float) Math.PI) {
 				f1 += ((float) Math.PI * 2F);
 			}
-			float f2 = item.pageAngle + f1 * 2;
+			float f2 = item.pageAngle + f1 ;
 			ms.mulPose(Vector3f.YP.rotation(-f2));
 			ms.mulPose(Vector3f.ZP.rotationDegrees(80.0F));
 			float f3 = Mth.lerp(1, item.oFlip, item.flip);
 			float f4 = Mth.frac(f3 + 0.25F) * 1.6F - 0.3F;
 			float f5 = Mth.frac(f3 + 0.75F) * 1.6F - 0.3F;
-
 			this.model.setupAnim(f, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), item.close);
 
 			MultiBufferSource.BufferSource irendertypebuffer$impl = MultiBufferSource

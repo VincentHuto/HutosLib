@@ -6,15 +6,15 @@
   ],
   "key": {
     "X": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:obsidian"
     }
     ,"S": {
       "item": "minecraft:stick"
     } ,"B": {
-      "item": "minecraft:slime_ball"
+      "tag": "forge:slimeballs"
     }
   },
   "result": {
-    "item": "hutoslib:iron_arm_banner"
+    "item": "hutoslib:obsidian_arm_banner"
   }
 }
