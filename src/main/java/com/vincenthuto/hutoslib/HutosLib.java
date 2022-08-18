@@ -116,11 +116,10 @@ public class HutosLib {
 	}
 
 	private void registerCapability(RegisterCapabilitiesEvent event) {
-		// event.register(IAnimatable.class);
 		event.register(IBannerSlotItem.class);
 		event.register(BannerExtensionSlot.class);
-		event.register(IKarma.class);
 		BannerSlotCapability.register(event);
+		event.register(IKarma.class);
 
 	}
 

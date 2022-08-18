@@ -15,7 +15,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '3.52'
+version = '3.53'
 group = 'com.vincenthuto.hutoslib' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'hutoslib'
 
