@@ -70,8 +70,7 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 							I18n.get(block.getDescriptionId()) + ": " + pattern.getBlockCount(false).get(block)),
 					(int) (left - guiWidth + 180), (int) (top + guiHeight - 140) - line * -10, 160, 0xffffff, true);
 			line++;
-			// System.out.println(I18n.get(block.getDescriptionId()) + ": " +
-			// pattern.getBlockCount(false).get(block));
+			//System.out.println(I18n.get(block.getDescriptionId()) + ": " + pattern.getBlockCount(false).get(block));
 		}
 
 		matrices.mulPose(Vector3f.XN.rotationDegrees(-45 + (float) this.dragUpDown));
