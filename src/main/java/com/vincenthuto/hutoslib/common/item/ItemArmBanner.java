@@ -35,8 +35,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class ItemArmBanner extends Item implements IBannerSlotItem {
 	public static final Capability<IBannerSlotItem> BANNER_SLOT_ITEM = CapabilityManager.get(new CapabilityToken<>() {
 	});

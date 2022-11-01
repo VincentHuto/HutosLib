@@ -30,9 +30,9 @@ public class KarmaEvents {
 		IKarma volume = player.getCapability(KarmaProvider.KARMA_CAPA).orElseThrow(NullPointerException::new);
 		HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketKarmaServer(volume));
 //		player.displayClientMessage(
-//				 Component.translatable("Welcome! Karma Active? " + ChatFormatting.LIGHT_PURPLE + volume.isActive()), false);
+//				 Component.literal("Welcome! Karma Active? " + ChatFormatting.LIGHT_PURPLE + volume.isActive()), false);
 //		player.displayClientMessage(
-//				 Component.translatable("Welcome! Current Karma: " + ChatFormatting.GOLD + volume.getKarma() + "ml"),
+//				 Component.literal("Welcome! Current Karma: " + ChatFormatting.GOLD + volume.getKarma() + "ml"),
 //				false);
 	}
 
@@ -42,7 +42,7 @@ public class KarmaEvents {
 		IKarma volume = player.getCapability(KarmaProvider.KARMA_CAPA).orElseThrow(NullPointerException::new);
 		HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketKarmaServer(volume));
 	//	player.displayClientMessage(
-	//			 Component.translatable("Welcome! Current Karma: " + ChatFormatting.GOLD + volume.getKarma() + "ml"),
+	//			 Component.literal("Welcome! Current Karma: " + ChatFormatting.GOLD + volume.getKarma() + "ml"),
 	//			false);
 	}
 

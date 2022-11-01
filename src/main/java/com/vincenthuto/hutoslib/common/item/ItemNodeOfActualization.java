@@ -17,8 +17,6 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class ItemNodeOfActualization extends Item {
 
 	public ItemNodeOfActualization(Properties properties) {
@@ -36,7 +34,7 @@ public class ItemNodeOfActualization extends Item {
 				HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playerIn),
 						new PacketKarmaServer(karmaCap));
 				playerIn.displayClientMessage(
-						 Component.translatable(ChatFormatting.GOLD + "Toggling Karma to :" + karmaCap.isActive()), true);
+						 Component.literal(ChatFormatting.GOLD + "Toggling Karma to :" + karmaCap.isActive()), true);
 			}
 		}
 

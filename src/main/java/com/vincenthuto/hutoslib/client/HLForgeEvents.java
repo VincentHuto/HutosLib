@@ -20,12 +20,14 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = Bus.FORGE)
 public class HLForgeEvents {
 
+
 	public static KeyMapping OPEN_BANNER_SLOT_KEYBIND;
 
 	public static void initKeybinds(RegisterKeyMappingsEvent ev) {
 		ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V,
 				"key.armbanner.category"));
 	}
+
 
 	@SubscribeEvent
 	public static void handleKeys(TickEvent.ClientTickEvent ev) {

@@ -43,7 +43,7 @@ public class HLParticleInit {
 			() -> new EmberParticleType());
 
 	@SubscribeEvent
-	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
+	public static void registerParticleFactories(RegisterParticleProvidersEvent  event) {
 		Minecraft.getInstance().particleEngine.register(glow.get(), GlowParticleFactory::new);
 		Minecraft.getInstance().particleEngine.register(dark_glow.get(), DarkGlowParticleFactory::new);
 		Minecraft.getInstance().particleEngine.register(lightning_bolt.get(), LightningParticleFactory::new);

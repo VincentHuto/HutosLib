@@ -27,7 +27,7 @@ public abstract class GuiGuidePage extends Screen {
 	int left, top;
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
 	public int pageNum, guiHeight = 228, guiWidth = 174;
-	static Component titleComponent =  Component.translatable("");
+	static Component titleComponent =  Component.literal("");
 	String title, subtitle, text;
 	ItemStack icon;
 	GuiButtonBookArrow arrowF, arrowB;
@@ -110,7 +110,7 @@ public abstract class GuiGuidePage extends Screen {
 		RenderSystem.setShaderTexture(0, texture);
 
 		if (pageNum != 0) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.translatable("Pg." + pageNum), left + guiWidth - 26,
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal("Pg." + pageNum), left + guiWidth - 26,
 					top + guiHeight - 15, 50, 0xffffff, true);
 		}
 		matrixStack.pushPose();
@@ -118,22 +118,22 @@ public abstract class GuiGuidePage extends Screen {
 				top + guiHeight - 220);
 		matrixStack.popPose();
 		if (!title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.translatable(I18n.get(title)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(title)), left - guiWidth + 180,
 					top + guiHeight - 220, 165, 0xffffff, true);
 		}
 		if (!subtitle.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.translatable(I18n.get(subtitle)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(subtitle)), left - guiWidth + 180,
 					top + guiHeight - 210, 165, 0xffffff, true);
 		}
 
 		if (!text.isEmpty() && subtitle.isEmpty() && title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.translatable(I18n.get(text)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(text)), left - guiWidth + 180,
 					top + guiHeight - 220, 160, 0xffffff, true);
 		} else if (!text.isEmpty() && subtitle.isEmpty() || title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.translatable(I18n.get(text)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(text)), left - guiWidth + 180,
 					top + guiHeight - 200, 160, 0xffffff, true);
 		} else if (!text.isEmpty() && !subtitle.isEmpty() && !title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.translatable(I18n.get(text)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(text)), left - guiWidth + 180,
 					top + guiHeight - 190, 160, 0xffffff, true);
 		}
 
@@ -153,19 +153,19 @@ public abstract class GuiGuidePage extends Screen {
 			if (mouseY >= top + guiHeight - 220 && mouseY <= top + guiHeight - 200) {
 				List<Component> text = new ArrayList<Component>();
 				if (!icon.isEmpty()) {
-					text.add( Component.translatable(I18n.get(icon.getHoverName().getString())));
+					text.add( Component.literal(I18n.get(icon.getHoverName().getString())));
 					renderComponentTooltip(matrixStack, text, left + guiWidth - 32, top + guiHeight - 220);
 				}
 			}
 		}
 //		List<Component> titlePage = new ArrayList<Component>();
-//		titlePage.add( Component.translatable(I18n.get("Title")));
-//		titlePage.add( Component.translatable(I18n.get("Return to Catagories")));
+//		titlePage.add( Component.literal(I18n.get("Title")));
+//		titlePage.add( Component.literal(I18n.get("Return to Catagories")));
 //		if (buttonTitle.isHovered()) {
 //			renderComponentTooltip(matrixStack, titlePage, mouseX, mouseY);
 //		}
 		List<Component> ClosePage = new ArrayList<Component>();
-		ClosePage.add( Component.translatable(I18n.get("Close Book")));
+		ClosePage.add( Component.literal(I18n.get("Close Book")));
 		if (buttonCloseTab.isHoveredOrFocused()) {
 			renderComponentTooltip(matrixStack, ClosePage, mouseX, mouseY);
 		}
@@ -204,7 +204,7 @@ public abstract class GuiGuidePage extends Screen {
 				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));
-		textBox = new EditBox(font, left - guiWidth + 155, top + guiHeight - 227, 14, 14,  Component.translatable(""));
+		textBox = new EditBox(font, left - guiWidth + 155, top + guiHeight - 227, 14, 14,  Component.literal(""));
 		super.init();
 	}
 

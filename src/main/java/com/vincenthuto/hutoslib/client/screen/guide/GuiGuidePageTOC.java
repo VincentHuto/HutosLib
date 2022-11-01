@@ -38,9 +38,9 @@ public abstract class GuiGuidePageTOC extends GuiGuidePage {
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		for (int i = 1; i < chapterButtons.size(); i++) {
 			chapterButtons.get(i).renderButton(matrixStack, mouseX, mouseY, partialTicks);
-			HLGuiUtils.drawMaxWidthString(font,  Component.translatable("Pg." + i), (int) (chapterButtons.get(i).posX + 5),
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal("Pg." + i), (int) (chapterButtons.get(i).posX + 5),
 					chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
-			HLGuiUtils.drawMaxWidthString(font,  Component.translatable(getPages().get(i).title),
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal(getPages().get(i).title),
 					(int) (chapterButtons.get(i).posX + 30), chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
 	}

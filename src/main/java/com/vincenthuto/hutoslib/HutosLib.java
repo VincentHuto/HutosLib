@@ -33,7 +33,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -53,20 +52,17 @@ public class HutosLib {
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(this::registerCapability);
 		modEventBus.addListener(HLForgeEvents::initKeybinds);
-
-		// modEventBus.addListener(this::loadComplete);
+		HLItemInit.ITEMS.register(modEventBus);
 		HLItemInit.SPECIALITEMS.register(modEventBus);
 		HLItemInit.BANNERPATTERNS.register(modEventBus);
 		HLBlockInit.BLOCKS.register(modEventBus);
-		HLItemInit.ITEMS.register(modEventBus);
-		HLBlockInit.BLOCKITEMS.register(modEventBus);
 		HLParticleInit.PARTICLE_TYPES.register(modEventBus);
 		HLBlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
-		HlContainerInit.CONTAINERS.register(modEventBus);
-		HlContainerInit.RECIPESERIALIZERS.register(modEventBus);
 		HLEnchantInit.ENCHANTS.register(modEventBus);
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(KarmaEvents.class);
+		HlContainerInit.CONTAINERS.register(modEventBus);
+		HlContainerInit.RECIPESERIALIZERS.register(modEventBus);
 	}
 
 	// Creative Tab
@@ -88,6 +84,7 @@ public class HutosLib {
 		HLPacketHandler.registerChannels();
 		BannerExtensionSlot.register();
 		BannerFinderBannerSlot.initFinder();
+
 	}
 
 	private void registerCapability(RegisterCapabilitiesEvent event) {
@@ -97,6 +94,7 @@ public class HutosLib {
 		BannerSlotCapability.register(event);
 
 	}
+
 
 	private void clientSetup(final FMLClientSetupEvent event) {
 		BlockEntityRenderers.register(HLBlockEntityInit.display_pedestal.get(), RenderTileDisplayPedestal::new);

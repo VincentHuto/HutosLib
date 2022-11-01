@@ -77,7 +77,7 @@ public class GuiButtonTextured extends Button {
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, Component.translatable(""), actionIn);
+		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, Component.literal(""), actionIn);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -90,7 +90,7 @@ public class GuiButtonTextured extends Button {
 		this.newV = vIn;
 		this.action = actionIn;
 		this.state = stateIn;
-		this.text =  Component.translatable("");
+		this.text =  Component.literal("");
 
 	}
 

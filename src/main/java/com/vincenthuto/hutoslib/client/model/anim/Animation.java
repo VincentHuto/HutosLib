@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.math.Vector3f;
+import com.vincenthuto.hutoslib.client.model.anim.Animation.Bone;
 
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

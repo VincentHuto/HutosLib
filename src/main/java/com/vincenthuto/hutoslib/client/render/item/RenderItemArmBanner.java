@@ -103,15 +103,18 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 			VertexConsumer vertexconsumer = material.sprite().wrap(ItemRenderer.getFoilBufferDirect(buffer,
 					this.modelPauldron.renderType(material.atlasLocation()), true, stack.hasFoil()));
 			if (flag) {
-				matrixStack.translate(0,+
-						0.05, -0.25);
+				matrixStack.translate(0, 0.05, -0.25);
 				matrixStack.mulPose(new Quaternion(Vector3f.ZN, 75, true));
 				matrixStack.scale(1.7f, 1.7f, 1.7f);
 				List<Pair<Holder<BannerPattern>, DyeColor>> list = BannerBlockEntity
 						.createPatterns(ItemArmBanner.getColor(stack), BannerBlockEntity.getItemPatterns(stack));
 				BannerRenderer.renderPatterns(matrixStack, buffer, combinedLight, combinedOverlay,
 						this.modelPauldron.plate(), material, false, list, stack.hasFoil());
+			} else {
+				// If there is no banner dont render shit
+
 			}
+
 			matrixStack.popPose();
 		}
 	}

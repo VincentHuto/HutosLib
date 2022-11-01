@@ -15,7 +15,7 @@ public class TomeCategoryTab extends GuiButtonTextured {
 
 	public TomeCategoryTab(TabColor color, String category, int idIn, int x, int y, Button.OnPress pressedAction) {
 		super(HLLocHelper.guiPrefix("book_tabs.png"), idIn, x, y, 24, 16, color.locX, color.locY,
-				Component.translatable(category), pressedAction);
+				Component.literal(category), pressedAction);
 		this.color = color;
 	}
 

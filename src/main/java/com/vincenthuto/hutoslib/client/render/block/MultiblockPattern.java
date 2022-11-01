@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.pattern.BlockPattern;
 public class MultiblockPattern {
 
 	BlockPattern pattern;
-	HashMap<Character, Block> symbolList;
+	Map<String, Block> symbolList;
 	String[][] patternArray;
 
 	/***
@@ -29,7 +29,7 @@ public class MultiblockPattern {
 	 * 
 	 ***/
 
-	public MultiblockPattern(BlockPattern pattern, HashMap<Character, Block> symbolList, String[][] patternArray) {
+	public MultiblockPattern(BlockPattern pattern, Map<String, Block> symbolList, String[][] patternArray) {
 		this.pattern = pattern;
 		this.symbolList = symbolList;
 		this.patternArray = patternArray;
@@ -43,7 +43,7 @@ public class MultiblockPattern {
 		this.pattern = pattern;
 	}
 
-	public HashMap<Character, Block> getSymbolList() {
+	public Map<String, Block> getSymbolList() {
 		return symbolList;
 	}
 
@@ -73,7 +73,7 @@ public class MultiblockPattern {
 			System.out.println();
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < currentAisle[i].toCharArray().length; j++) {
-					blockList.add(symbolList.get(currentAisle[i].toCharArray()[j]));
+					blockList.add(symbolList.get(String.valueOf(currentAisle[i].toCharArray()[j])));
 				}
 			}
 		}
@@ -88,7 +88,7 @@ public class MultiblockPattern {
 			int height = currentAisle.length;
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < currentAisle[i].toCharArray().length; j++) {
-					list.add(new BlockPosBlockPair(symbolList.get(currentAisle[i].toCharArray()[j]),
+					list.add(new BlockPosBlockPair(symbolList.get(String.valueOf(currentAisle[i].toCharArray()[j])),
 							new BlockPos(j, (height - i - 1), T)));
 				}
 			}
@@ -101,13 +101,13 @@ public class MultiblockPattern {
 		for (int i = 0; i < patternArray.length; i++) {
 			for (int j = 0; j < patternArray[i].length; j++) {
 				for (int k = 0; k < patternArray[i][j].length(); k++) {
-					Character curr = patternArray[i][j].charAt(k);
-					if (curr != 'A') {
-						if (!distinct.containsKey(symbolList.get(curr))) {
-							distinct.put(symbolList.get(curr), 1);
+					String curr = String.valueOf(patternArray[i][j].charAt(k));
+					if (curr != "A") {
+						if (!distinct.containsKey(symbolList.get(String.valueOf(curr)))) {
+							distinct.put(symbolList.get(String.valueOf(curr)), 1);
 						} else {
-							Integer incr = distinct.get(symbolList.get(curr)) + 1;
-							distinct.put(symbolList.get(curr), incr);
+							Integer incr = distinct.get(symbolList.get(String.valueOf(curr))) + 1;
+							distinct.put(symbolList.get(String.valueOf(curr)), incr);
 						}
 					}
 				}
@@ -132,7 +132,8 @@ public class MultiblockPattern {
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < currentAisle[i].toCharArray().length; j++) {
 					String coords = "(X:" + j + ",Y:" + (height - i - 1) + ",Z:" + T + ")";
-					System.out.print(coords + ": " + symbolList.get(currentAisle[i].toCharArray()[j]) + "\t");
+					System.out.print(
+							coords + ": " + symbolList.get(String.valueOf(currentAisle[i].toCharArray()[j])) + "\t");
 				}
 				System.out.println("");
 			}

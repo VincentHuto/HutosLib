@@ -65,7 +65,7 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 
 			BannerFinder.findBanner(player, true).ifPresent((getter) -> {
 				ItemStack banner = getter.getBanner();
-				if (banner.getItem() instanceof ItemArmBanner type) {
+				if (banner.getItem()instanceof ItemArmBanner type) {
 					matrixStack.pushPose();
 					this.translateToBody(matrixStack);
 					matrixStack.translate(-0.35, -0.05, 0);

@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemGuideBook;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -16,8 +15,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class ItemGuideBook extends Item {
 	// Essentially taken from the enchanting table animation code with some slight
@@ -108,7 +105,7 @@ public class ItemGuideBook extends Item {
 	}
 
 	@Override
-	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 		super.initializeClient(consumer);
 		consumer.accept(RenderPropTome.INSTANCE);
 	}
@@ -117,6 +114,7 @@ public class ItemGuideBook extends Item {
 class RenderPropTome implements IClientItemExtensions {
 
 	public static RenderPropTome INSTANCE = new RenderPropTome();
+
 
 	@Override
 	public BlockEntityWithoutLevelRenderer getCustomRenderer() {

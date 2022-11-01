@@ -26,8 +26,6 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class ItemKnapper extends DiggerItem {
 	public static final ToolAction KNAPPER_DIG = ToolAction.get("knapper_dig");
 	public static final Set<ToolAction> DEFAULT_KNAPPER_ACTIONS = Stream.of(KNAPPER_DIG)
