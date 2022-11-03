@@ -1,5 +1,6 @@
 package com.vincenthuto.hutoslib;
 
+import com.mojang.datafixers.util.Pair;
 import com.vincenthuto.hutoslib.client.HLForgeEvents;
 import com.vincenthuto.hutoslib.client.particle.HLParticleInit;
 import com.vincenthuto.hutoslib.client.render.block.RenderTileDisplayPedestal;
@@ -22,12 +23,17 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -35,6 +41,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 
 @Mod("hutoslib")
 @Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.MOD)
@@ -80,6 +88,26 @@ public class HutosLib {
 		}
 	}
 
+	
+	@SubscribeEvent
+	public static void onRegisterItems(final RegisterEvent event) {
+		if (event.getRegistryKey() != ForgeRegistries.Keys.ITEMS) {
+			return;
+		}
+
+		HLBlockInit.BLOCKS.getEntries().stream().map(m -> new Pair<>(m.get(), m.getId())).map(t -> createItemBlock(t))
+				.forEach(item -> registerBlockItem(event, item));
+	}
+
+	private static void registerBlockItem(RegisterEvent event, Pair<ResourceLocation, BlockItem> item) {
+		event.register(ForgeRegistries.Keys.ITEMS, helper -> helper.register(item.getFirst(), item.getSecond()));
+	}
+
+	public static Pair<ResourceLocation, BlockItem> createItemBlock(Pair<Block, ResourceLocation> block) {
+		return Pair.of(block.getSecond(),
+				new BlockItem((Block) block.getFirst(), new Item.Properties().tab(HutosLibItemGroup.instance)));
+	}
+	
 	private void commonSetup(final FMLCommonSetupEvent event) {
 		HLPacketHandler.registerChannels();
 		BannerExtensionSlot.register();
