@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.pattern.BlockPattern;
 public class MultiblockPattern {
 
 	BlockPattern pattern;
-	HashMap<String, Block> symbolList;
+	Map<String, Block> symbolList;
 	String[][] patternArray;
 
 	/***
@@ -29,7 +29,7 @@ public class MultiblockPattern {
 	 * 
 	 ***/
 
-	public MultiblockPattern(BlockPattern pattern, HashMap<String, Block> symbolList, String[][] patternArray) {
+	public MultiblockPattern(BlockPattern pattern, Map<String, Block> symbolList, String[][] patternArray) {
 		this.pattern = pattern;
 		this.symbolList = symbolList;
 		this.patternArray = patternArray;
@@ -43,7 +43,7 @@ public class MultiblockPattern {
 		this.pattern = pattern;
 	}
 
-	public HashMap<String, Block> getSymbolList() {
+	public Map<String, Block> getSymbolList() {
 		return symbolList;
 	}
 
