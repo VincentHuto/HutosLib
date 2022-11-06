@@ -12,7 +12,21 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockPosBlockPair {
+	@SuppressWarnings("deprecation")
+	private static void renderBlock(PoseStack matrices, MultiblockPattern pattern, BlockState state, double translatex,
+			double translatey, double translatez, BlockAndTintGetter getter) {
+		matrices.pushPose();
+		// Make sure to subtract 0.5 from it because thats the width of the block to get
+		// the true center
+		matrices.translate((translatex - (pattern.getBlockPattern().getWidth() / 2)) - 0.5,
+				(translatey - (pattern.getBlockPattern().getHeight() / 2)) - 0.5,
+				(translatez - (pattern.getBlockPattern().getDepth() / 2)) - 0.5);
+		Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrices,
+				Minecraft.getInstance().renderBuffers().bufferSource(), 0xF000F0, OverlayTexture.NO_OVERLAY);
+		matrices.popPose();
+	}
 	Block block;
+
 	BlockPos pos;
 
 	public BlockPosBlockPair(Block block, BlockPos pos) {
@@ -28,11 +42,6 @@ public class BlockPosBlockPair {
 		return pos;
 	}
 
-	@Override
-	public String toString() {
-		return block.toString() + "," + pos.toString();
-	}
-
 	public void render(MultiblockPattern pattern, PoseStack matrices, float partialTicks, BlockAndTintGetter getter,
 			MultiBufferSource src, BlockEntityRenderDispatcher d) {
 		if (block != null) {
@@ -40,17 +49,8 @@ public class BlockPosBlockPair {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	private static void renderBlock(PoseStack matrices, MultiblockPattern pattern, BlockState state, double translatex,
-			double translatey, double translatez, BlockAndTintGetter getter) {
-		matrices.pushPose();
-		// Make sure to subtract 0.5 from it because thats the width of the block to get
-		// the true center
-		matrices.translate((translatex - (pattern.getBlockPattern().getWidth() / 2)) - 0.5,
-				(translatey - (pattern.getBlockPattern().getHeight() / 2)) - 0.5,
-				(translatez - (pattern.getBlockPattern().getDepth() / 2)) - 0.5);
-		Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrices,
-				Minecraft.getInstance().renderBuffers().bufferSource(), 0xF000F0, OverlayTexture.NO_OVERLAY);
-		matrices.popPose();
+	@Override
+	public String toString() {
+		return block.toString() + "," + pos.toString();
 	}
 }

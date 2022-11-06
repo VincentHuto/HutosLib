@@ -33,12 +33,20 @@ public abstract class GuiGuideTitlePage extends Screen {
 	Component titleComponent;
 	public ItemStack icon;
 	GuiButtonTextured buttonclose;
-	public List<TomeChapter> categories = new ArrayList<TomeChapter>();
-	public List<GuiButtonTextured> buttonList = new ArrayList<GuiButtonTextured>();
+	public List<TomeChapter> categories = new ArrayList<>();
+	public List<GuiButtonTextured> buttonList = new ArrayList<>();
 
 	public GuiGuideTitlePage() {
 		super(Component.translatable(""));
 		this.icon = ItemStack.EMPTY;
+		this.overlay = HLLocHelper.guiPrefix("blank.png");
+	}
+
+	public GuiGuideTitlePage(Component title, ItemStack stack, List<TomeChapter> chapters) {
+		super(title);
+		this.titleComponent = title;
+		this.icon = stack;
+		this.categories = chapters;
 		this.overlay = HLLocHelper.guiPrefix("blank.png");
 	}
 
@@ -50,10 +58,10 @@ public abstract class GuiGuideTitlePage extends Screen {
 		this.overlay = overlay;
 	}
 
-	public GuiGuideTitlePage(Component title, ItemStack stack, List<TomeChapter> chapters) {
+	public GuiGuideTitlePage(Component title, List<TomeChapter> chapters) {
 		super(title);
 		this.titleComponent = title;
-		this.icon = stack;
+		this.icon = ItemStack.EMPTY;
 		this.categories = chapters;
 		this.overlay = HLLocHelper.guiPrefix("blank.png");
 	}
@@ -66,12 +74,46 @@ public abstract class GuiGuideTitlePage extends Screen {
 		this.overlay = overlay;
 	}
 
-	public GuiGuideTitlePage(Component title, List<TomeChapter> chapters) {
-		super(title);
-		this.titleComponent = title;
-		this.icon = ItemStack.EMPTY;
-		this.categories = chapters;
-		this.overlay = HLLocHelper.guiPrefix("blank.png");
+	public abstract TomeLib getOwnerTome();
+
+	@Override
+	public void init() {
+		Random rand = new Random();
+		int centerX = (width / 2) - guiWidth / 2;
+		int centerY = (height / 2) - guiHeight / 2;
+		this.buttonList.clear();
+		this.clearWidgets();
+		this.addRenderableWidget(
+				buttonclose = new GuiButtonTextured(overlay, BUTTONCLOSE, (int) (centerX + (guiWidth * 0.05f)),
+						(int) (centerY + (guiHeight * 0.78f)), 32, 32, 209, 32, (press) -> {
+							onClose();
+						}));
+
+		for (int i = 0; i < categories.size(); i++) {
+			TomeCategoryTab tab = new TomeCategoryTab(categories.get(i).color,
+					HLTextUtils.toProperCase(categories.get(i).category), i,
+					(int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
+					centerY - (i * -25) + 18, (press) -> {
+						if (press instanceof GuiButtonTextured button) {
+							mc.setScreen(getOwnerTome().getMatchingChapters(categories.get(button.id).category).TOC);
+						}
+					});
+			buttonList.add(tab);
+			this.addRenderableWidget(buttonList.get(i));
+		}
+	}
+
+	@Override
+	public boolean isPauseScreen() {
+		return false;
+	}
+
+	@Override
+	public boolean keyPressed(int p_96552_, int p_96553_, int p_96554_) {
+		if (p_96552_ == GLFW.GLFW_KEY_E || p_96552_ == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
+			this.onClose();
+		}
+		return true;
 	}
 
 	@Override
@@ -98,10 +140,10 @@ public abstract class GuiGuideTitlePage extends Screen {
 				top + guiHeight - 230);
 		matrixStack.popPose();
 
-		for (int i = 0; i < buttonList.size(); i++) {
-			buttonList.get(i).render(matrixStack, mouseX, mouseY, partialTicks);
-			if (buttonList.get(i).isHoveredOrFocused()) {
-				renderTooltip(matrixStack, buttonList.get(i).text, buttonList.get(i).x, buttonList.get(i).y);
+		for (GuiButtonTextured element : buttonList) {
+			element.render(matrixStack, mouseX, mouseY, partialTicks);
+			if (element.isHoveredOrFocused()) {
+				renderTooltip(matrixStack, element.text, element.x, element.y);
 			}
 		}
 
@@ -110,46 +152,4 @@ public abstract class GuiGuideTitlePage extends Screen {
 			renderTooltip(matrixStack, Component.translatable("Close"), this.buttonclose.x, this.buttonclose.y);
 		}
 	}
-
-	@Override
-	public void init() {
-		Random rand = new Random();
-		int centerX = (width / 2) - guiWidth / 2;
-		int centerY = (height / 2) - guiHeight / 2;
-		this.buttonList.clear();
-		this.clearWidgets();
-		this.addRenderableWidget(
-				buttonclose = new GuiButtonTextured(overlay, BUTTONCLOSE, (int) (centerX + (guiWidth * 0.05f)),
-						(int) (centerY + (guiHeight * 0.78f)), 32, 32, 209, 32, (press) -> {
-							onClose();
-						}));
-
-		for (int i = 0; i < categories.size(); i++) {
-			TomeCategoryTab tab = new TomeCategoryTab(categories.get(i).color,
-					HLTextUtils.toProperCase(categories.get(i).category), i,
-					(int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
-					(int) (centerY - (i * -25) + 18), (press) -> {
-						if (press instanceof GuiButtonTextured button) {
-							mc.setScreen(getOwnerTome().getMatchingChapters(categories.get(button.id).category).TOC);
-						}
-					});
-			buttonList.add(tab);
-			this.addRenderableWidget(buttonList.get(i));
-		}
-	}
-
-	@Override
-	public boolean keyPressed(int p_96552_, int p_96553_, int p_96554_) {
-		if (p_96552_ == GLFW.GLFW_KEY_E || p_96552_ == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
-			this.onClose();
-		}
-		return true;
-	}
-
-	@Override
-	public boolean isPauseScreen() {
-		return false;
-	}
-
-	public abstract TomeLib getOwnerTome();
 }

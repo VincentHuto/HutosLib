@@ -12,17 +12,17 @@ public class TomeChapter {
 	public List<GuiGuidePage> pages;
 	public TabColor color;
 
-	public TomeChapter(String category, TabColor color, List<GuiGuidePage> pages) {
-		this.category = category;
-		this.color = color;
-		this.TOC = new HLGuideTOC(category);
-		this.pages = pages;
-	}
-
 	public TomeChapter(String category, TabColor color, GuiGuidePageTOC toc, List<GuiGuidePage> pages) {
 		this.category = category;
 		this.color = color;
 		this.TOC = toc;
+		this.pages = pages;
+	}
+
+	public TomeChapter(String category, TabColor color, List<GuiGuidePage> pages) {
+		this.category = category;
+		this.color = color;
+		this.TOC = new HLGuideTOC(category);
 		this.pages = pages;
 	}
 }

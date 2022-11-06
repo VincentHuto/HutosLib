@@ -6,10 +6,6 @@ import net.minecraft.world.phys.Vec3;
 
 public interface IProxy {
 
-	default void openGuideGui() {
-
-	}
-
 	default void lightningFX(Vec3 vectorStart, Vec3 vectorEnd, float ticksPerMeter, int colorOuter, int colorInner) {
 		lightningFX(vectorStart, vectorEnd, ticksPerMeter, System.nanoTime(), colorOuter, colorInner);
 	}
@@ -19,6 +15,10 @@ public interface IProxy {
 	}
 
 	default void lightningFX(Vec3 vectorStart, Vec3 vectorEnd, float ticksPerMeter, ParticleColor color) {
+
+	}
+
+	default void openGuideGui() {
 
 	}
 

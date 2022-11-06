@@ -47,9 +47,44 @@ import net.minecraftforge.registries.RegisterEvent;
 @Mod("hutoslib")
 @Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.MOD)
 public class HutosLib {
+	// Creative Tab
+	public static class HutosLibItemGroup extends CreativeModeTab {
+		public static final HutosLibItemGroup instance = new HutosLibItemGroup(CreativeModeTab.getGroupCountSafe(),
+				"hutoslibtab");
+
+		public HutosLibItemGroup(int index, String label) {
+			super(index, label);
+		}
+
+		@Override
+		public ItemStack makeIcon() {
+			return new ItemStack(HLItemInit.obsidian_flakes.get());
+		}
+	}
 	public static final String MOD_ID = "hutoslib";
+
 	public static IProxy proxy = new IProxy() {
 	};
+
+	public static Pair<ResourceLocation, BlockItem> createItemBlock(Pair<Block, ResourceLocation> block) {
+		return Pair.of(block.getSecond(),
+				new BlockItem(block.getFirst(), new Item.Properties().tab(HutosLibItemGroup.instance)));
+	}
+
+
+	@SubscribeEvent
+	public static void onRegisterItems(final RegisterEvent event) {
+		if (event.getRegistryKey() != ForgeRegistries.Keys.ITEMS) {
+			return;
+		}
+
+		HLBlockInit.BLOCKS.getEntries().stream().map(m -> new Pair<>(m.get(), m.getId())).map(t -> createItemBlock(t))
+				.forEach(item -> registerBlockItem(event, item));
+	}
+
+	private static void registerBlockItem(RegisterEvent event, Pair<ResourceLocation, BlockItem> item) {
+		event.register(ForgeRegistries.Keys.ITEMS, helper -> helper.register(item.getFirst(), item.getSecond()));
+	}
 
 	@SuppressWarnings("deprecation")
 	public HutosLib() {
@@ -73,57 +108,6 @@ public class HutosLib {
 		HlContainerInit.RECIPESERIALIZERS.register(modEventBus);
 	}
 
-	// Creative Tab
-	public static class HutosLibItemGroup extends CreativeModeTab {
-		public static final HutosLibItemGroup instance = new HutosLibItemGroup(CreativeModeTab.getGroupCountSafe(),
-				"hutoslibtab");
-
-		public HutosLibItemGroup(int index, String label) {
-			super(index, label);
-		}
-
-		@Override
-		public ItemStack makeIcon() {
-			return new ItemStack(HLItemInit.obsidian_flakes.get());
-		}
-	}
-
-	
-	@SubscribeEvent
-	public static void onRegisterItems(final RegisterEvent event) {
-		if (event.getRegistryKey() != ForgeRegistries.Keys.ITEMS) {
-			return;
-		}
-
-		HLBlockInit.BLOCKS.getEntries().stream().map(m -> new Pair<>(m.get(), m.getId())).map(t -> createItemBlock(t))
-				.forEach(item -> registerBlockItem(event, item));
-	}
-
-	private static void registerBlockItem(RegisterEvent event, Pair<ResourceLocation, BlockItem> item) {
-		event.register(ForgeRegistries.Keys.ITEMS, helper -> helper.register(item.getFirst(), item.getSecond()));
-	}
-
-	public static Pair<ResourceLocation, BlockItem> createItemBlock(Pair<Block, ResourceLocation> block) {
-		return Pair.of(block.getSecond(),
-				new BlockItem((Block) block.getFirst(), new Item.Properties().tab(HutosLibItemGroup.instance)));
-	}
-	
-	private void commonSetup(final FMLCommonSetupEvent event) {
-		HLPacketHandler.registerChannels();
-		BannerExtensionSlot.register();
-		BannerFinderBannerSlot.initFinder();
-
-	}
-
-	private void registerCapability(RegisterCapabilitiesEvent event) {
-		event.register(IBannerSlotItem.class);
-		event.register(BannerExtensionSlot.class);
-		event.register(IKarma.class);
-		BannerSlotCapability.register(event);
-
-	}
-
-
 	private void clientSetup(final FMLClientSetupEvent event) {
 		BlockEntityRenderers.register(HLBlockEntityInit.display_pedestal.get(), RenderTileDisplayPedestal::new);
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -135,6 +119,22 @@ public class HutosLib {
 		});
 		HLLib hl = new HLLib();
 		hl.registerTome();
+
+	}
+
+	private void commonSetup(final FMLCommonSetupEvent event) {
+		HLPacketHandler.registerChannels();
+		BannerExtensionSlot.register();
+		BannerFinderBannerSlot.initFinder();
+
+	}
+
+
+	private void registerCapability(RegisterCapabilitiesEvent event) {
+		event.register(IBannerSlotItem.class);
+		event.register(BannerExtensionSlot.class);
+		event.register(IKarma.class);
+		BannerSlotCapability.register(event);
 
 	}
 

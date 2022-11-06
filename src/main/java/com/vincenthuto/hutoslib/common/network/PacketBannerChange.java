@@ -20,18 +20,18 @@ public class PacketBannerChange {
 	public JsonElement slot;
 	public ItemStack stack;
 
-	public PacketBannerChange(LivingEntity player, String where, JsonElement slot, ItemStack stack) {
-		this.player = player.getId();
-		this.where = where;
-		this.slot = slot;
-		this.stack = stack.copy();
-	}
-
 	public PacketBannerChange(FriendlyByteBuf buf) {
 		player = buf.readVarInt();
 		where = buf.readUtf();
 		slot = (new JsonParser()).parse(buf.readUtf(2048));
 		stack = buf.readItem();
+	}
+
+	public PacketBannerChange(LivingEntity player, String where, JsonElement slot, ItemStack stack) {
+		this.player = player.getId();
+		this.where = where;
+		this.slot = slot;
+		this.stack = stack.copy();
 	}
 
 	public void encode(FriendlyByteBuf buf) {

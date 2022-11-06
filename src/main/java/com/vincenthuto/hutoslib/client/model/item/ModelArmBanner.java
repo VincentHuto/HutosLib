@@ -18,18 +18,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.LivingEntity;
 
 public class ModelArmBanner<T extends LivingEntity> extends EntityModel<T> {
-	public final List<ModelPart> parts = new ArrayList<ModelPart>();
-
-	public final ModelPart leftShoulder;
-	private final ModelPart plate;
-
-	public ModelArmBanner(ModelPart root) {
-		super(RenderType::entitySolid);
-		this.leftShoulder = root.getChild("leftShoulder");
-		this.plate = root.getChild("plate");
-
-	}
-
 	@SuppressWarnings("unused")
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
@@ -53,20 +41,32 @@ public class ModelArmBanner<T extends LivingEntity> extends EntityModel<T> {
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
-	public ModelPart plate() {
-		return this.plate;
+	public final List<ModelPart> parts = new ArrayList<>();
+	public final ModelPart leftShoulder;
+
+	private final ModelPart plate;
+
+	public ModelArmBanner(ModelPart root) {
+		super(RenderType::entitySolid);
+		this.leftShoulder = root.getChild("leftShoulder");
+		this.plate = root.getChild("plate");
+
 	}
 
-	@Override
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
-			float headPitch) {
-
+	public ModelPart plate() {
+		return this.plate;
 	}
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
 			float red, float green, float blue, float alpha) {
 		leftShoulder.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+
+	@Override
+	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
+			float headPitch) {
+
 	}
 
 }

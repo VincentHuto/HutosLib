@@ -10,17 +10,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
 public class PacketKarmaServer {
-	private boolean active;
-	private float volume;
-
-	public PacketKarmaServer(IKarma volume) {
-		this.active = volume.isActive();
-		this.volume = volume.getKarma();
+	public static PacketKarmaServer decode(final FriendlyByteBuf packetBuffer) {
+		return new PacketKarmaServer(packetBuffer.readBoolean(), packetBuffer.readFloat());
 	}
-
-	public PacketKarmaServer(boolean active, float volumeIn) {
-		this.active = active;
-		this.volume = volumeIn;
+	public static void encode(final PacketKarmaServer msg, final FriendlyByteBuf packetBuffer) {
+		packetBuffer.writeBoolean(msg.active);
+		packetBuffer.writeFloat(msg.volume);
 	}
 
 	public static void handle(final PacketKarmaServer msg, Supplier<NetworkEvent.Context> ctx) {
@@ -37,12 +32,17 @@ public class PacketKarmaServer {
 		ctx.get().setPacketHandled(true);
 	}
 
-	public static void encode(final PacketKarmaServer msg, final FriendlyByteBuf packetBuffer) {
-		packetBuffer.writeBoolean(msg.active);
-		packetBuffer.writeFloat(msg.volume);
+	private boolean active;
+
+	private float volume;
+
+	public PacketKarmaServer(boolean active, float volumeIn) {
+		this.active = active;
+		this.volume = volumeIn;
 	}
 
-	public static PacketKarmaServer decode(final FriendlyByteBuf packetBuffer) {
-		return new PacketKarmaServer(packetBuffer.readBoolean(), packetBuffer.readFloat());
+	public PacketKarmaServer(IKarma volume) {
+		this.active = volume.isActive();
+		this.volume = volume.getKarma();
 	}
 }

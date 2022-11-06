@@ -8,15 +8,15 @@ public class Segment {
 	private Vector3 diff;
 	public final float light;
 
+	public Segment(Vector3 start, Vector3 end) {
+		this(start, end, 1.0f);
+	}
+
 	public Segment(Vector3 start, Vector3 end, float light) {
 		this.startPoint = start;
 		this.endPoint = end;
 		this.light = light;
 		this.calcDiff();
-	}
-
-	public Segment(Vector3 start, Vector3 end) {
-		this(start, end, 1.0f);
 	}
 
 	private void calcDiff() {
@@ -27,11 +27,11 @@ public class Segment {
 		return this.diff;
 	}
 
-	public Vector3 getStart() {
-		return this.startPoint;
-	}
-
 	public Vector3 getEnd() {
 		return this.endPoint;
+	}
+
+	public Vector3 getStart() {
+		return this.startPoint;
 	}
 }

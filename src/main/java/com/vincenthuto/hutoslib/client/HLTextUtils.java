@@ -9,29 +9,36 @@ public class HLTextUtils {
 	public static Rarity AURIC = Rarity.create("Auric", ChatFormatting.GOLD);
 	public static Rarity SANGUINE = Rarity.create("Sanguine", ChatFormatting.DARK_RED);
 
-	public static String stringToGolden(String parString, int parShineLocation, boolean parReturnToBlack) {
-		int stringLength = parString.length();
-		if (stringLength < 1) {
-			return "";
+	public static String convertInitToLang(String text) {
+		if (text == null || text.isEmpty()) {
+			return text;
 		}
-		String outputString = "";
-		for (int i = 0; i < stringLength; i++) {
-			if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 0) {
-				outputString = outputString + ChatFormatting.WHITE + parString.substring(i, i + 1);
-			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 1) {
-				outputString = outputString + ChatFormatting.GOLD + parString.substring(i, i + 1);
-			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 87) {
-				outputString = outputString + ChatFormatting.WHITE + parString.substring(i, i + 1);
+
+		StringBuilder converted = new StringBuilder();
+		boolean convertNext = true;
+		text.replace("_trail", "");
+		for (char ch : text.toCharArray()) {
+			if (ch == '_') {
+				ch = ' ';
+				convertNext = true;
+			} else if (convertNext) {
+				ch = Character.toTitleCase(ch);
+				convertNext = false;
 			} else {
-				outputString = outputString + ChatFormatting.BLACK + parString.substring(i, i + 1);
+				ch = Character.toLowerCase(ch);
 			}
+			converted.append(ch);
 		}
-		// return color to a common one after (most chat is white, but for other GUI
-		// might want black)
-		if (parReturnToBlack) {
-			return outputString + ChatFormatting.BLACK;
-		}
-		return outputString + ChatFormatting.WHITE;
+
+		return converted.toString();
+	}
+
+	public static String stringToBloody(String parString) {
+
+		String outputString = "";
+		outputString = ChatFormatting.ITALIC + parString + ChatFormatting.DARK_RED;
+		return outputString;
+
 	}
 
 	public static String stringToBlueObf(String parString, int parShineLocation, boolean parReturnToBlack) {
@@ -49,6 +56,31 @@ public class HLTextUtils {
 				outputString = outputString + ChatFormatting.OBFUSCATED + parString.substring(i, i + 1);
 			} else {
 				outputString = outputString + ChatFormatting.RED + parString.substring(i, i + 1);
+			}
+		}
+		// return color to a common one after (most chat is white, but for other GUI
+		// might want black)
+		if (parReturnToBlack) {
+			return outputString + ChatFormatting.BLACK;
+		}
+		return outputString + ChatFormatting.WHITE;
+	}
+
+	public static String stringToGolden(String parString, int parShineLocation, boolean parReturnToBlack) {
+		int stringLength = parString.length();
+		if (stringLength < 1) {
+			return "";
+		}
+		String outputString = "";
+		for (int i = 0; i < stringLength; i++) {
+			if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 0) {
+				outputString = outputString + ChatFormatting.WHITE + parString.substring(i, i + 1);
+			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 1) {
+				outputString = outputString + ChatFormatting.GOLD + parString.substring(i, i + 1);
+			} else if ((i + parShineLocation + System.nanoTime() / 20) % 88 == 87) {
+				outputString = outputString + ChatFormatting.WHITE + parString.substring(i, i + 1);
+			} else {
+				outputString = outputString + ChatFormatting.BLACK + parString.substring(i, i + 1);
 			}
 		}
 		// return color to a common one after (most chat is white, but for other GUI
@@ -85,7 +117,7 @@ public class HLTextUtils {
 	}
 
 	/***
-	 * 
+	 *
 	 * @param input a string to be formated
 	 * @return a string formated red or blue depending of the resonant type >0 =
 	 *         blue <0 = red
@@ -123,7 +155,7 @@ public class HLTextUtils {
 	}
 
 	/***
-	 * 
+	 *
 	 * @param input a string to be formated
 	 * @return a string formated as such hello world = Hello world || teSt = Test
 	 */
@@ -143,38 +175,6 @@ public class HLTextUtils {
 			}
 		}
 		return newString;
-	}
-
-	public static String stringToBloody(String parString) {
-
-		String outputString = "";
-		outputString = ChatFormatting.ITALIC + parString + ChatFormatting.DARK_RED;
-		return outputString;
-
-	}
-
-	public static String convertInitToLang(String text) {
-		if (text == null || text.isEmpty()) {
-			return text;
-		}
-
-		StringBuilder converted = new StringBuilder();
-		boolean convertNext = true;
-		text.replace("_trail", "");
-		for (char ch : text.toCharArray()) {
-			if (ch == '_') {
-				ch = ' ';
-				convertNext = true;
-			} else if (convertNext) {
-				ch = Character.toTitleCase(ch);
-				convertNext = false;
-			} else {
-				ch = Character.toLowerCase(ch);
-			}
-			converted.append(ch);
-		}
-
-		return converted.toString();
 	}
 
 }

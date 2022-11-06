@@ -21,6 +21,22 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 @Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class HLClientEvents {
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static <T extends LivingEntity, M extends HumanoidModel<T>, R extends LivingEntityRenderer<T, M>> void addLayerToEntity(
+			EntityRenderersEvent.AddLayers event, EntityType<? extends T> entityType) {
+		R renderer = event.getRenderer(entityType);
+		if (renderer != null)
+			renderer.addLayer(new LayerArmBanner(renderer));
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, String skinName) {
+		EntityRenderer<? extends Player> render = event.getSkin(skinName);
+		if (render instanceof LivingEntityRenderer livingRenderer) {
+			livingRenderer.addLayer(new LayerArmBanner<>(livingRenderer));
+		}
+	}
+
 	@SubscribeEvent
 	public static void constructLayers(EntityRenderersEvent.AddLayers event) {
 
@@ -40,22 +56,6 @@ public class HLClientEvents {
 		if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS) {
 			event.addSprite(BannerSlot.SLOT_BACKGROUND);
 		}
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, String skinName) {
-		EntityRenderer<? extends Player> render = event.getSkin(skinName);
-		if (render instanceof LivingEntityRenderer livingRenderer) {
-			livingRenderer.addLayer(new LayerArmBanner<>(livingRenderer));
-		}
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static <T extends LivingEntity, M extends HumanoidModel<T>, R extends LivingEntityRenderer<T, M>> void addLayerToEntity(
-			EntityRenderersEvent.AddLayers event, EntityType<? extends T> entityType) {
-		R renderer = event.getRenderer(entityType);
-		if (renderer != null)
-			renderer.addLayer(new LayerArmBanner(renderer));
 	}
 
 }

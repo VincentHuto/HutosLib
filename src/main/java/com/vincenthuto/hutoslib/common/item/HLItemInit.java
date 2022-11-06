@@ -21,7 +21,7 @@ public class HLItemInit {
 			HutosLib.MOD_ID);
 	public static final DeferredRegister<BannerPattern> BANNERPATTERNS = DeferredRegister
 			.create(Registry.BANNER_PATTERN_REGISTRY, HutosLib.MOD_ID);
-	
+
 	public static final TagKey<Item> TAG_KNAPPERS = TagKey.create(Registry.ITEM_REGISTRY,
 			new ResourceLocation("hutoslib:knappers"));
 
@@ -61,7 +61,7 @@ public class HLItemInit {
 					TagKey.create(Registry.BANNER_PATTERN_REGISTRY,
 							new ResourceLocation(HutosLib.MOD_ID, "pattern_item/hutoslib_logo")),
 					new Item.Properties().tab(HutosLibItemGroup.instance)));
-	
+
 	public static final RegistryObject<Item> leather_arm_banner = SPECIALITEMS.register("leather_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties().tab(HutosLibItemGroup.instance), ArmorMaterials.LEATHER,
 					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/leather_arm_banner.png")));
@@ -74,11 +74,11 @@ public class HLItemInit {
 	public static final RegistryObject<Item> diamond_arm_banner = SPECIALITEMS.register("diamond_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties().tab(HutosLibItemGroup.instance), ArmorMaterials.DIAMOND,
 					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/diamond_arm_banner.png")));
-	
+
 	public static final RegistryObject<Item> obsidian_arm_banner = SPECIALITEMS.register("obsidian_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties().tab(HutosLibItemGroup.instance), ArmorMaterials.DIAMOND,
 					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/obsidian_arm_banner.png")));
-	
+
 	public static final RegistryObject<Item> netherite_arm_banner = SPECIALITEMS.register("netherite_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties().tab(HutosLibItemGroup.instance), ArmorMaterials.NETHERITE,
 					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/netherite_arm_banner.png")));

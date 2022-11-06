@@ -15,12 +15,12 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class DisplayPedestalBlockEntity extends TileSimpleInventory {
 
-	public DisplayPedestalBlockEntity(BlockPos pos, BlockState state) {
-		super(HLBlockEntityInit.display_pedestal.get(), pos, state);
-	}
-
 	public static void animTick(Level level, BlockPos pos, BlockState state, DisplayPedestalBlockEntity ent) {
 
+	}
+
+	public DisplayPedestalBlockEntity(BlockPos pos, BlockState state) {
+		super(HLBlockEntityInit.display_pedestal.get(), pos, state);
 	}
 
 	public boolean addItem(@Nullable Player player, ItemStack stack, @Nullable InteractionHand hand) {
@@ -49,6 +49,15 @@ public class DisplayPedestalBlockEntity extends TileSimpleInventory {
 		return true;
 	}
 
+	@Override
+	protected SimpleContainer createItemHandler() {
+		return new SimpleContainer(1) {
+			@Override
+			public int getMaxStackSize() {
+				return 1;
+			}
+		};
+	}
 	public boolean isEmpty() {
 		for (int i = 0; i < inventorySize(); i++) {
 			if (!getItemHandler().getItem(i).isEmpty()) {
@@ -58,11 +67,6 @@ public class DisplayPedestalBlockEntity extends TileSimpleInventory {
 
 		return true;
 	}
-	@Override
-	public void writePacketNBT(CompoundTag tag) {
-		super.writePacketNBT(tag);
-
-	}
 
 	@Override
 	public void readPacketNBT(CompoundTag tag) {
@@ -71,13 +75,9 @@ public class DisplayPedestalBlockEntity extends TileSimpleInventory {
 	}
 
 	@Override
-	protected SimpleContainer createItemHandler() {
-		return new SimpleContainer(1) {
-			@Override
-			public int getMaxStackSize() {
-				return 1;
-			}
-		};
+	public void writePacketNBT(CompoundTag tag) {
+		super.writePacketNBT(tag);
+
 	}
 
 }

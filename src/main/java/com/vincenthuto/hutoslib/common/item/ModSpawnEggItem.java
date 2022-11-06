@@ -17,16 +17,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModSpawnEggItem extends SpawnEggItem {
 
 	protected static final List<ModSpawnEggItem> UNADDED_EGGS = new ArrayList<>();
-	private final Lazy<? extends EntityType<?>> entityTypeSupplier;
-
-	@SuppressWarnings("deprecation")
-	public ModSpawnEggItem(final RegistryObject<? extends EntityType<?>> entityTypeSupplier, final int primaryColour,
-			final int secondaryColour, final Item.Properties properties) {
-		super(null, primaryColour, secondaryColour, properties);
-		this.entityTypeSupplier = Lazy.of(entityTypeSupplier::get);
-		UNADDED_EGGS.add(this);
-	}
-
 	@SuppressWarnings("unchecked")
 	public static void initSpawnEggs() {
 		final Map<EntityType<? extends Mob>, SpawnEggItem> EGGS = ObfuscationReflectionHelper
@@ -35,6 +25,16 @@ public class ModSpawnEggItem extends SpawnEggItem {
 			EGGS.put((EntityType<? extends Mob>) spawnEgg.getType(null), spawnEgg);
 		}
 		UNADDED_EGGS.clear();
+	}
+
+	private final Lazy<? extends EntityType<?>> entityTypeSupplier;
+
+	@SuppressWarnings("deprecation")
+	public ModSpawnEggItem(final RegistryObject<? extends EntityType<?>> entityTypeSupplier, final int primaryColour,
+			final int secondaryColour, final Item.Properties properties) {
+		super(null, primaryColour, secondaryColour, properties);
+		this.entityTypeSupplier = Lazy.of(entityTypeSupplier::get);
+		UNADDED_EGGS.add(this);
 	}
 
 	@Override

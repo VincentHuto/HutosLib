@@ -15,17 +15,12 @@ import net.minecraft.client.renderer.texture.TextureManager;
 
 public class HLRenderTypeInit extends RenderType {
 
-	public HLRenderTypeInit(String nameIn, VertexFormat formatIn, Mode drawModeIn, int bufferSizeIn,
-			boolean useDelegateIn, boolean needsSortingIn, Runnable setupTaskIn, Runnable clearTaskIn) {
-		super(nameIn, formatIn, drawModeIn, bufferSizeIn, useDelegateIn, needsSortingIn, setupTaskIn, clearTaskIn);
-	}
-
 	static RenderType.CompositeState lightningState = RenderType.CompositeState.builder()
 			.setShaderState(POSITION_COLOR_SHADER).setTransparencyState(LIGHTNING_TRANSPARENCY)
 			.createCompositeState(false);
+
 	public static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR,
 			VertexFormat.Mode.QUADS, 256, false, true, lightningState);
-
 	public static final ParticleRenderType GLOW_RENDER = new ParticleRenderType() {
 		@Override
 		public void begin(BufferBuilder buffer, TextureManager textureManager) {
@@ -54,6 +49,7 @@ public class HLRenderTypeInit extends RenderType {
 			return "hutoslib:glow_rend";
 		}
 	};
+
 	public static final ParticleRenderType DARK_GLOW_RENDER = new ParticleRenderType() {
 		@Override
 		public void begin(BufferBuilder buffer, TextureManager textureManager) {
@@ -83,5 +79,9 @@ public class HLRenderTypeInit extends RenderType {
 			return "hutoslib:dark_glow_rend";
 		}
 	};
+	public HLRenderTypeInit(String nameIn, VertexFormat formatIn, Mode drawModeIn, int bufferSizeIn,
+			boolean useDelegateIn, boolean needsSortingIn, Runnable setupTaskIn, Runnable clearTaskIn) {
+		super(nameIn, formatIn, drawModeIn, bufferSizeIn, useDelegateIn, needsSortingIn, setupTaskIn, clearTaskIn);
+	}
 
 }

@@ -10,18 +10,13 @@ public class Karma implements IKarma {
 	}
 
 	@Override
-	public void subtractKarma(float points) {
-		this.karma -= points;
-	}
-
-	@Override
 	public float getKarma() {
 		return this.karma;
 	}
 
 	@Override
-	public void setKarma(float points) {
-		this.karma = points;
+	public boolean isActive() {
+		return active;
 	}
 
 	@Override
@@ -30,8 +25,13 @@ public class Karma implements IKarma {
 	}
 
 	@Override
-	public boolean isActive() {
-		return active;
+	public void setKarma(float points) {
+		this.karma = points;
+	}
+
+	@Override
+	public void subtractKarma(float points) {
+		this.karma -= points;
 	}
 
 	@Override

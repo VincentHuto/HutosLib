@@ -12,37 +12,51 @@ import net.minecraft.world.phys.Vec3;
 public class BitLocation {
 	private static final double One32nd = 0.5 / 16;
 
+	public static BitLocation max(final BitLocation from, final BitLocation to) {
+		final int bitX = Max(from.blockPos.getX(), to.blockPos.getX(), from.bitX, to.bitX);
+		final int bitY = Max(from.blockPos.getY(), to.blockPos.getY(), from.bitY, to.bitY);
+		final int bitZ = Max(from.blockPos.getZ(), to.blockPos.getZ(), from.bitZ, to.bitZ);
+
+		return new BitLocation(new BlockPos(Math.max(from.blockPos.getX(), to.blockPos.getX()),
+				Math.max(from.blockPos.getY(), to.blockPos.getY()), Math.max(from.blockPos.getZ(), to.blockPos.getZ())),
+				bitX, bitY, bitZ);
+	}
+	private static int Max(final int x, final int x2, final int bitX2, final int bitX3) {
+		if (x > x2) {
+			return bitX2;
+		}
+		if (x2 == x) {
+			return Math.max(bitX2, bitX3);
+		}
+
+		return bitX3;
+	}
+
+	public static BitLocation min(final BitLocation from, final BitLocation to) {
+		final int bitX = Min(from.blockPos.getX(), to.blockPos.getX(), from.bitX, to.bitX);
+		final int bitY = Min(from.blockPos.getY(), to.blockPos.getY(), from.bitY, to.bitY);
+		final int bitZ = Min(from.blockPos.getZ(), to.blockPos.getZ(), from.bitZ, to.bitZ);
+
+		return new BitLocation(new BlockPos(Math.min(from.blockPos.getX(), to.blockPos.getX()),
+				Math.min(from.blockPos.getY(), to.blockPos.getY()), Math.min(from.blockPos.getZ(), to.blockPos.getZ())),
+				bitX, bitY, bitZ);
+	}
+
+	private static int Min(final int x, final int x2, final int bitX2, final int bitX3) {
+		if (x < x2) {
+			return bitX2;
+		}
+		if (x2 == x) {
+			return Math.min(bitX2, bitX3);
+		}
+
+		return bitX3;
+	}
+
 	@Nonnull
 	public BlockPos blockPos;
+
 	public int bitX, bitY, bitZ;
-
-	public BlockPos getBlockPos() {
-		return blockPos;
-	}
-
-	public int getBitX() {
-		return bitX;
-	}
-
-	public int getBitY() {
-		return bitY;
-	}
-
-	public int getBitZ() {
-		return bitZ;
-	}
-
-	public BitLocation offSet(final Direction direction) {
-		final int newBitX = bitX + direction.getStepX();
-		final int newBitY = bitY + direction.getStepY();
-		final int newBitZ = bitZ + direction.getStepZ();
-
-		return new BitLocation(blockPos, newBitX, newBitY, newBitZ);
-	}
-
-	public int snapToValid(final int x) {
-		return Math.min(Math.max(0, x), 15);
-	}
 
 	public BitLocation(final BlockHitResult mop) {
 		final Vec3 hitVec = mop.getLocation();
@@ -74,46 +88,20 @@ public class BitLocation {
 		normalize();
 	}
 
-	public static BitLocation min(final BitLocation from, final BitLocation to) {
-		final int bitX = Min(from.blockPos.getX(), to.blockPos.getX(), from.bitX, to.bitX);
-		final int bitY = Min(from.blockPos.getY(), to.blockPos.getY(), from.bitY, to.bitY);
-		final int bitZ = Min(from.blockPos.getZ(), to.blockPos.getZ(), from.bitZ, to.bitZ);
-
-		return new BitLocation(new BlockPos(Math.min(from.blockPos.getX(), to.blockPos.getX()),
-				Math.min(from.blockPos.getY(), to.blockPos.getY()), Math.min(from.blockPos.getZ(), to.blockPos.getZ())),
-				bitX, bitY, bitZ);
+	public int getBitX() {
+		return bitX;
 	}
 
-	public static BitLocation max(final BitLocation from, final BitLocation to) {
-		final int bitX = Max(from.blockPos.getX(), to.blockPos.getX(), from.bitX, to.bitX);
-		final int bitY = Max(from.blockPos.getY(), to.blockPos.getY(), from.bitY, to.bitY);
-		final int bitZ = Max(from.blockPos.getZ(), to.blockPos.getZ(), from.bitZ, to.bitZ);
-
-		return new BitLocation(new BlockPos(Math.max(from.blockPos.getX(), to.blockPos.getX()),
-				Math.max(from.blockPos.getY(), to.blockPos.getY()), Math.max(from.blockPos.getZ(), to.blockPos.getZ())),
-				bitX, bitY, bitZ);
+	public int getBitY() {
+		return bitY;
 	}
 
-	private static int Min(final int x, final int x2, final int bitX2, final int bitX3) {
-		if (x < x2) {
-			return bitX2;
-		}
-		if (x2 == x) {
-			return Math.min(bitX2, bitX3);
-		}
-
-		return bitX3;
+	public int getBitZ() {
+		return bitZ;
 	}
 
-	private static int Max(final int x, final int x2, final int bitX2, final int bitX3) {
-		if (x > x2) {
-			return bitX2;
-		}
-		if (x2 == x) {
-			return Math.max(bitX2, bitX3);
-		}
-
-		return bitX3;
+	public BlockPos getBlockPos() {
+		return blockPos;
 	}
 
 	private void normalize() {
@@ -126,6 +114,18 @@ public class BitLocation {
 		bitZ = (bitZ + 16) % 16;
 
 		this.blockPos = this.blockPos.offset(xOffset, yOffset, zOffset);
+	}
+
+	public BitLocation offSet(final Direction direction) {
+		final int newBitX = bitX + direction.getStepX();
+		final int newBitY = bitY + direction.getStepY();
+		final int newBitZ = bitZ + direction.getStepZ();
+
+		return new BitLocation(blockPos, newBitX, newBitY, newBitZ);
+	}
+
+	public int snapToValid(final int x) {
+		return Math.min(Math.max(0, x), 15);
 	}
 
 }

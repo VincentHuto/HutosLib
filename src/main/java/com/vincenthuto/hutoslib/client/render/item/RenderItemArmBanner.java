@@ -35,10 +35,15 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 
 public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 
-	@SuppressWarnings("rawtypes")
-	private final ModelArmBanner modelPauldron;
 	public static final ResourceLocation fallback = new ResourceLocation(HutosLib.MOD_ID,
 			"textures/entity/arm_banner/iron_arm_banner.png");
+	public static void render_plate(PoseStack ms, MultiBufferSource buffer, int combinedLight, int combinedOverlay,
+			ModelPart parts, Material material, boolean p_241717_6_, List<Pair<BannerPattern, DyeColor>> list,
+			boolean hasEffect) {
+	}
+
+	@SuppressWarnings("rawtypes")
+	private final ModelArmBanner modelPauldron;
 
 	@SuppressWarnings("rawtypes")
 	public RenderItemArmBanner(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
@@ -117,10 +122,5 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 
 			matrixStack.popPose();
 		}
-	}
-
-	public static void render_plate(PoseStack ms, MultiBufferSource buffer, int combinedLight, int combinedOverlay,
-			ModelPart parts, Material material, boolean p_241717_6_, List<Pair<BannerPattern, DyeColor>> list,
-			boolean hasEffect) {
 	}
 }

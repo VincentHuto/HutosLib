@@ -18,17 +18,17 @@ public class PacketSyncBannerSlotContents {
 	public final NonNullList<ItemStack> stacks = NonNullList.create();
 	public int entityId;
 
-	public PacketSyncBannerSlotContents(Player player, BannerExtensionSlot extension) {
-		this.entityId = player.getId();
-		extension.getSlots().stream().map(BannerSlotItemHandler::getContents).forEach(stacks::add);
-	}
-
 	public PacketSyncBannerSlotContents(FriendlyByteBuf buf) {
 		entityId = buf.readVarInt();
 		int numStacks = buf.readVarInt();
 		for (int i = 0; i < numStacks; i++) {
 			stacks.add(buf.readItem());
 		}
+	}
+
+	public PacketSyncBannerSlotContents(Player player, BannerExtensionSlot extension) {
+		this.entityId = player.getId();
+		extension.getSlots().stream().map(BannerSlotItemHandler::getContents).forEach(stacks::add);
 	}
 
 	public void encode(FriendlyByteBuf buf) {

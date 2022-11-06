@@ -25,28 +25,14 @@ public class BannerSlot extends Slot {
 		setBackground(InventoryMenu.BLOCK_ATLAS, SLOT_BACKGROUND);
 	}
 
-	@Override
-	public boolean mayPlace(@Nonnull ItemStack stack) {
-		if (stack.isEmpty())
-			return false;
-		return slot.canEquip(stack);
+	public IBannerSlot getExtensionSlot() {
+		return slot;
 	}
 
 	@Override
 	@Nonnull
 	public ItemStack getItem() {
 		return slot.getContents();
-	}
-
-	@Override
-	public void set(@Nonnull ItemStack stack) {
-		slot.setContents(stack);
-		this.setChanged();
-	}
-
-	@Override
-	public void onQuickCraft(@Nonnull ItemStack oldStackIn, @Nonnull ItemStack newStackIn) {
-
 	}
 
 	@Override
@@ -60,8 +46,25 @@ public class BannerSlot extends Slot {
 	}
 
 	@Override
+	public boolean isSameInventory(Slot other) {
+		return other instanceof BannerSlot && ((BannerSlot) other).getExtensionSlot() == this.slot;
+	}
+
+	@Override
 	public boolean mayPickup(Player playerIn) {
 		return slot.canUnequip(slot.getContents());
+	}
+
+	@Override
+	public boolean mayPlace(@Nonnull ItemStack stack) {
+		if (stack.isEmpty())
+			return false;
+		return slot.canEquip(stack);
+	}
+
+	@Override
+	public void onQuickCraft(@Nonnull ItemStack oldStackIn, @Nonnull ItemStack newStackIn) {
+
 	}
 
 	@Override
@@ -84,12 +87,9 @@ public class BannerSlot extends Slot {
 		return split;
 	}
 
-	public IBannerSlot getExtensionSlot() {
-		return slot;
-	}
-
 	@Override
-	public boolean isSameInventory(Slot other) {
-		return other instanceof BannerSlot && ((BannerSlot) other).getExtensionSlot() == this.slot;
+	public void set(@Nonnull ItemStack stack) {
+		slot.setContents(stack);
+		this.setChanged();
 	}
 }

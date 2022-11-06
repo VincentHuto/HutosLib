@@ -11,7 +11,11 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
 public class PacketKarmaClient {
-	public PacketKarmaClient() {
+	public static PacketKarmaClient decode(final FriendlyByteBuf packetBuffer) {
+		return new PacketKarmaClient();
+	}
+
+	public static void encode(final PacketKarmaClient msg, final FriendlyByteBuf packetBuffer) {
 
 	}
 
@@ -28,11 +32,7 @@ public class PacketKarmaClient {
 		ctx.get().setPacketHandled(true);
 	}
 
-	public static void encode(final PacketKarmaClient msg, final FriendlyByteBuf packetBuffer) {
+	public PacketKarmaClient() {
 
-	}
-
-	public static PacketKarmaClient decode(final FriendlyByteBuf packetBuffer) {
-		return new PacketKarmaClient();
 	}
 }

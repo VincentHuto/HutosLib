@@ -15,12 +15,65 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 
 public class PacketSpawnLightningParticle {
+	public static PacketSpawnLightningParticle decode(FriendlyByteBuf buf) {
+		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle();
+		try {
+			msg.startVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+			msg.endVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+			msg.color = new ParticleColor(buf.readFloat(), buf.readFloat(), buf.readFloat());
+			msg.speed = buf.readFloat();
+			msg.maxAge = buf.readInt();
+			msg.fract = buf.readInt();
+			msg.maxOffset = buf.readFloat();
+
+		} catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+			return msg;
+		}
+		return msg;
+	}
+	public static void encode(PacketSpawnLightningParticle msg, FriendlyByteBuf buf) {
+		buf.writeDouble(msg.getPosition().x);
+		buf.writeDouble(msg.getPosition().y);
+		buf.writeDouble(msg.getPosition().z);
+		buf.writeDouble(msg.getSpeedVec().x);
+		buf.writeDouble(msg.getSpeedVec().y);
+		buf.writeDouble(msg.getSpeedVec().z);
+		buf.writeFloat(msg.getColor().getRed());
+		buf.writeFloat(msg.getColor().getGreen());
+		buf.writeFloat(msg.getColor().getBlue());
+		buf.writeFloat(msg.getSpeed());
+		buf.writeInt(msg.getMaxAge());
+		buf.writeInt(msg.getFract());
+		buf.writeFloat(msg.getMaxOffset());
+
+	}
+	public static void handle(PacketSpawnLightningParticle msg, Supplier<NetworkEvent.Context> ctxSupplier) {
+		NetworkEvent.Context ctx = ctxSupplier.get();
+		LogicalSide sideReceived = ctx.getDirection().getReceptionSide();
+		Optional<?> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
+		if (!clientWorld.isPresent()) {
+			return;
+		}
+
+		((ClientLevel) clientWorld.get()).addParticle(
+				LightningParticleFactory.createData(msg.color, msg.getSpeed(), msg.maxAge, msg.fract,
+						msg.getMaxOffset()),
+				msg.getPosition().x, msg.getPosition().y, msg.getPosition().z,
+				msg.getSpeedVec().x, msg.getSpeedVec().y, msg.getSpeedVec().z);
+		ctxSupplier.get().setPacketHandled(true);
+	}
 	Vec3 startVec;
 	Vec3 endVec;
 	ParticleColor color;
+
 	public float speed;
+
 	public int maxAge, fract;
+
 	public float maxOffset;
+
+	public PacketSpawnLightningParticle() {
+	}
 
 	public PacketSpawnLightningParticle(Vec3 entVec, Vec3 endVec2, ParticleColor color, float s, int a, int f,
 			float o) {
@@ -33,11 +86,8 @@ public class PacketSpawnLightningParticle {
 		this.maxOffset = o;
 	}
 
-	public PacketSpawnLightningParticle() {
-	}
-
-	public float getSpeed() {
-		return speed;
+	public ParticleColor getColor() {
+		return color;
 	}
 
 	public int getFract() {
@@ -56,61 +106,11 @@ public class PacketSpawnLightningParticle {
 		return this.startVec;
 	}
 
+	public float getSpeed() {
+		return speed;
+	}
+
 	public Vec3 getSpeedVec() {
 		return this.endVec;
-	}
-
-	public ParticleColor getColor() {
-		return color;
-	}
-
-	public static PacketSpawnLightningParticle decode(FriendlyByteBuf buf) {
-		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle();
-		try {
-			msg.startVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-			msg.endVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-			msg.color = new ParticleColor(buf.readFloat(), buf.readFloat(), buf.readFloat());
-			msg.speed = buf.readFloat();
-			msg.maxAge = buf.readInt();
-			msg.fract = buf.readInt();
-			msg.maxOffset = buf.readFloat();
-
-		} catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-			return msg;
-		}
-		return msg;
-	}
-
-	public static void encode(PacketSpawnLightningParticle msg, FriendlyByteBuf buf) {
-		buf.writeDouble((double) msg.getPosition().x);
-		buf.writeDouble((double) msg.getPosition().y);
-		buf.writeDouble((double) msg.getPosition().z);
-		buf.writeDouble((double) msg.getSpeedVec().x);
-		buf.writeDouble((double) msg.getSpeedVec().y);
-		buf.writeDouble((double) msg.getSpeedVec().z);
-		buf.writeFloat(msg.getColor().getRed());
-		buf.writeFloat(msg.getColor().getGreen());
-		buf.writeFloat(msg.getColor().getBlue());
-		buf.writeFloat(msg.getSpeed());
-		buf.writeInt(msg.getMaxAge());
-		buf.writeInt(msg.getFract());
-		buf.writeFloat(msg.getMaxOffset());
-
-	}
-
-	public static void handle(PacketSpawnLightningParticle msg, Supplier<NetworkEvent.Context> ctxSupplier) {
-		NetworkEvent.Context ctx = ctxSupplier.get();
-		LogicalSide sideReceived = ctx.getDirection().getReceptionSide();
-		Optional<?> clientWorld = (Optional<?>) LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
-		if (!clientWorld.isPresent()) {
-			return;
-		}
-
-		((ClientLevel) clientWorld.get()).addParticle(
-				LightningParticleFactory.createData(msg.color, msg.getSpeed(), msg.maxAge, msg.fract,
-						msg.getMaxOffset()),
-				(double) msg.getPosition().x, (double) msg.getPosition().y, (double) msg.getPosition().z,
-				(double) msg.getSpeedVec().x, (double) msg.getSpeedVec().y, (double) msg.getSpeedVec().z);
-		ctxSupplier.get().setPacketHandled(true);
 	}
 }

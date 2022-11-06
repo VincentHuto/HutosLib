@@ -15,21 +15,6 @@ import net.minecraft.world.level.material.FluidState;
 
 public class ScreenBlockTintGetter implements BlockAndTintGetter {
 
-	@Override
-	public float getShade(Direction p_45522_, boolean p_45523_) {
-		return 50f;
-	}
-
-	@Override
-	public LevelLightEngine getLightEngine() {
-		return null;
-	}
-
-	@Override
-	public int getBlockTint(BlockPos pos, ColorResolver resolver) {
-		return resolver.getColor(Minecraft.getInstance().level.getBiome(pos).value(), pos.getX(), pos.getZ());
-	}
-
 	@Nullable
 	@Override
 	public BlockEntity getBlockEntity(BlockPos pos) {
@@ -39,6 +24,16 @@ public class ScreenBlockTintGetter implements BlockAndTintGetter {
 	@Override
 	public BlockState getBlockState(BlockPos pos) {
 		return Minecraft.getInstance().level.getBlockState(pos);
+	}
+
+	@Override
+	public int getBlockTint(BlockPos pos, ColorResolver resolver) {
+		return resolver.getColor(Minecraft.getInstance().level.getBiome(pos).value(), pos.getX(), pos.getZ());
+	}
+
+	@Override
+	public int getBrightness(LightLayer p_45518_, BlockPos p_45519_) {
+		return 15;
 	}
 
 	@Override
@@ -52,6 +47,11 @@ public class ScreenBlockTintGetter implements BlockAndTintGetter {
 	}
 
 	@Override
+	public LevelLightEngine getLightEngine() {
+		return null;
+	}
+
+	@Override
 	public int getMinBuildHeight() {
 		return 0;
 	}
@@ -62,7 +62,7 @@ public class ScreenBlockTintGetter implements BlockAndTintGetter {
 	}
 
 	@Override
-	public int getBrightness(LightLayer p_45518_, BlockPos p_45519_) {
-		return 15;
+	public float getShade(Direction p_45522_, boolean p_45523_) {
+		return 50f;
 	}
 }

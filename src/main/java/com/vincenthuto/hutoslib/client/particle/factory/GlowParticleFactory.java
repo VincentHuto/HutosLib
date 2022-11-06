@@ -12,8 +12,12 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
 
 public class GlowParticleFactory implements ParticleProvider<ColorParticleData> {
-	private final SpriteSet spriteSet;
 	public static final String NAME = "glow";
+	public static ParticleOptions createData(ParticleColor color) {
+		return new ColorParticleData(HLParticleInit.glow.get(), color);
+	}
+
+	private final SpriteSet spriteSet;
 
 	public GlowParticleFactory(SpriteSet sprite) {
 		this.spriteSet = sprite;
@@ -25,10 +29,6 @@ public class GlowParticleFactory implements ParticleProvider<ColorParticleData> 
 		return new ParticleGlow(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(),
 				data.color.getBlue(), 1.0f, .035f, 136, this.spriteSet);
 
-	}
-
-	public static ParticleOptions createData(ParticleColor color) {
-		return new ColorParticleData(HLParticleInit.glow.get(), color);
 	}
 
 }

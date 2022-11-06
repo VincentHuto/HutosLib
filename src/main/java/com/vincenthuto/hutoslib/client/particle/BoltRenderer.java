@@ -27,76 +27,32 @@ import net.minecraft.world.phys.Vec3;
 // todo(williewillus) integrate this properly into the particle system
 public class BoltRenderer {
 
-	public static final BoltRenderer INSTANCE = new BoltRenderer();
-	private static final float REFRESH_TIME = 3F;
-	/**
-	 * We will keep track of an owner's render data for 100 ticks after there are no
-	 * bolts remaining.
-	 */
-	private static final double MAX_OWNER_TRACK_TIME = 100;
+	private static class BoltInstance {
 
-	private Timestamp refreshTimestamp = Timestamp.ZERO;
+		private final BoltParticleData bolt;
+		private final List<BoltParticleData.BoltQuads> renderQuads;
+		private final Timestamp createdTimestamp;
 
-	private final Random random = new Random();
-	private final Minecraft minecraft = Minecraft.getInstance();
-
-	private final List<BoltOwnerData> boltOwners = new LinkedList<>();
-
-	public static void onWorldRenderLast(float partialTicks, PoseStack ps) {
-		ps.pushPose();
-		// here we translate based on the inverse position of the client viewing camera
-		// to get back to 0, 0, 0
-		Vec3 camVec = BoltRenderer.INSTANCE.minecraft.gameRenderer.getMainCamera().getPosition();
-		ps.translate(-camVec.x, -camVec.y, -camVec.z);
-		MultiBufferSource.BufferSource buffers = BoltRenderer.INSTANCE.minecraft.renderBuffers().bufferSource();
-		BoltRenderer.INSTANCE.render(partialTicks, ps, buffers);
-
-		buffers.endBatch(HLRenderTypeInit.LIGHTNING);
-		ps.popPose();
-	}
-
-	public void render(float partialTicks, PoseStack matrixStack, MultiBufferSource buffers) {
-
-		VertexConsumer buffer = buffers.getBuffer(HLRenderTypeInit.LIGHTNING);
-		Matrix4f matrix = matrixStack.last().pose();
-		Timestamp timestamp = new Timestamp(minecraft.level.getGameTime(), partialTicks);
-		boolean refresh = timestamp.isPassed(refreshTimestamp, (1 / REFRESH_TIME));
-		if (refresh) {
-			refreshTimestamp = timestamp;
+		public BoltInstance(BoltParticleData bolt, Timestamp timestamp) {
+			this.bolt = bolt;
+			this.renderQuads = bolt.generate();
+			this.createdTimestamp = timestamp;
 		}
 
-		// todo XXX see other synchronize block
-		synchronized (boltOwners) {
-			for (Iterator<BoltOwnerData> iter = boltOwners.iterator(); iter.hasNext();) {
-				BoltOwnerData data = iter.next();
-
-				data.renderTick(timestamp, refresh, matrix, buffer);
-				if (data.shouldRemove(timestamp)) {
-					iter.remove();
-				}
+		public void render(Matrix4f matrix, VertexConsumer buffer, Timestamp timestamp) {
+			float lifeScale = timestamp.subtract(createdTimestamp).value() / bolt.getLifespan();
+			Pair<Integer, Integer> bounds = bolt.getFadeFunction().getRenderBounds(renderQuads.size(), lifeScale);
+			for (int i = bounds.getLeft(); i < bounds.getRight(); i++) {
+				renderQuads.get(i).getVecs().forEach(v -> buffer.vertex(matrix, (float) v.x, (float) v.y, (float) v.z)
+						.color(bolt.getColor().x(), bolt.getColor().y(), bolt.getColor().z(), bolt.getColor().w())
+						.endVertex());
 			}
 		}
-	}
 
-	public void add(BoltParticleData newBoltData, float partialTicks) {
-		if (minecraft.level == null) {
-			return;
-		}
-		var data = new BoltOwnerData();
-		data.lastBolt = newBoltData;
-		Timestamp timestamp = new Timestamp(minecraft.level.getGameTime(), partialTicks);
-		if ((!data.lastBolt.getSpawnFunction().isConsecutive() || data.bolts.isEmpty())
-				&& timestamp.isPassed(data.lastBoltTimestamp, data.lastBoltDelay)) {
-			data.addBolt(new BoltInstance(newBoltData, timestamp), timestamp);
-		}
-		data.lastUpdateTimestamp = timestamp;
-		// todo XXX ItemThunderSword calls this method from logical server in SP, don't
-		// do that.
-		synchronized (boltOwners) {
-			boltOwners.add(data);
+		public boolean tick(Timestamp timestamp) {
+			return timestamp.isPassed(createdTimestamp, bolt.getLifespan());
 		}
 	}
-
 	public class BoltOwnerData {
 
 		private final Set<BoltInstance> bolts = new ObjectOpenHashSet<>();
@@ -128,34 +84,6 @@ public class BoltRenderer {
 			return bolts.isEmpty() && timestamp.isPassed(lastUpdateTimestamp, MAX_OWNER_TRACK_TIME);
 		}
 	}
-
-	private static class BoltInstance {
-
-		private final BoltParticleData bolt;
-		private final List<BoltParticleData.BoltQuads> renderQuads;
-		private final Timestamp createdTimestamp;
-
-		public BoltInstance(BoltParticleData bolt, Timestamp timestamp) {
-			this.bolt = bolt;
-			this.renderQuads = bolt.generate();
-			this.createdTimestamp = timestamp;
-		}
-
-		public void render(Matrix4f matrix, VertexConsumer buffer, Timestamp timestamp) {
-			float lifeScale = timestamp.subtract(createdTimestamp).value() / bolt.getLifespan();
-			Pair<Integer, Integer> bounds = bolt.getFadeFunction().getRenderBounds(renderQuads.size(), lifeScale);
-			for (int i = bounds.getLeft(); i < bounds.getRight(); i++) {
-				renderQuads.get(i).getVecs().forEach(v -> buffer.vertex(matrix, (float) v.x, (float) v.y, (float) v.z)
-						.color(bolt.getColor().x(), bolt.getColor().y(), bolt.getColor().z(), bolt.getColor().w())
-						.endVertex());
-			}
-		}
-
-		public boolean tick(Timestamp timestamp) {
-			return timestamp.isPassed(createdTimestamp, bolt.getLifespan());
-		}
-	}
-
 	private static class Timestamp {
 
 		public static final Timestamp ZERO = new Timestamp(0, 0);
@@ -165,6 +93,18 @@ public class BoltRenderer {
 		public Timestamp(long ticks, float partial) {
 			this.ticks = ticks;
 			this.partial = partial;
+		}
+
+		public boolean isPassed(Timestamp prev, double duration) {
+			long ticksPassed = ticks - prev.ticks;
+			if (ticksPassed > duration) {
+				return true;
+			}
+			duration -= ticksPassed;
+			if (duration >= 1) {
+				return false;
+			}
+			return (partial - prev.partial) >= duration;
 		}
 
 		public Timestamp subtract(Timestamp other) {
@@ -180,17 +120,77 @@ public class BoltRenderer {
 		public float value() {
 			return ticks + partial;
 		}
+	}
 
-		public boolean isPassed(Timestamp prev, double duration) {
-			long ticksPassed = ticks - prev.ticks;
-			if (ticksPassed > duration) {
-				return true;
+	public static final BoltRenderer INSTANCE = new BoltRenderer();
+
+	private static final float REFRESH_TIME = 3F;
+	/**
+	 * We will keep track of an owner's render data for 100 ticks after there are no
+	 * bolts remaining.
+	 */
+	private static final double MAX_OWNER_TRACK_TIME = 100;
+
+	public static void onWorldRenderLast(float partialTicks, PoseStack ps) {
+		ps.pushPose();
+		// here we translate based on the inverse position of the client viewing camera
+		// to get back to 0, 0, 0
+		Vec3 camVec = BoltRenderer.INSTANCE.minecraft.gameRenderer.getMainCamera().getPosition();
+		ps.translate(-camVec.x, -camVec.y, -camVec.z);
+		MultiBufferSource.BufferSource buffers = BoltRenderer.INSTANCE.minecraft.renderBuffers().bufferSource();
+		BoltRenderer.INSTANCE.render(partialTicks, ps, buffers);
+
+		buffers.endBatch(HLRenderTypeInit.LIGHTNING);
+		ps.popPose();
+	}
+
+	private Timestamp refreshTimestamp = Timestamp.ZERO;
+
+	private final Random random = new Random();
+
+	private final Minecraft minecraft = Minecraft.getInstance();
+
+	private final List<BoltOwnerData> boltOwners = new LinkedList<>();
+
+	public void add(BoltParticleData newBoltData, float partialTicks) {
+		if (minecraft.level == null) {
+			return;
+		}
+		var data = new BoltOwnerData();
+		data.lastBolt = newBoltData;
+		Timestamp timestamp = new Timestamp(minecraft.level.getGameTime(), partialTicks);
+		if ((!data.lastBolt.getSpawnFunction().isConsecutive() || data.bolts.isEmpty())
+				&& timestamp.isPassed(data.lastBoltTimestamp, data.lastBoltDelay)) {
+			data.addBolt(new BoltInstance(newBoltData, timestamp), timestamp);
+		}
+		data.lastUpdateTimestamp = timestamp;
+		// todo XXX ItemThunderSword calls this method from logical server in SP, don't
+		// do that.
+		synchronized (boltOwners) {
+			boltOwners.add(data);
+		}
+	}
+
+	public void render(float partialTicks, PoseStack matrixStack, MultiBufferSource buffers) {
+
+		VertexConsumer buffer = buffers.getBuffer(HLRenderTypeInit.LIGHTNING);
+		Matrix4f matrix = matrixStack.last().pose();
+		Timestamp timestamp = new Timestamp(minecraft.level.getGameTime(), partialTicks);
+		boolean refresh = timestamp.isPassed(refreshTimestamp, (1 / REFRESH_TIME));
+		if (refresh) {
+			refreshTimestamp = timestamp;
+		}
+
+		// todo XXX see other synchronize block
+		synchronized (boltOwners) {
+			for (Iterator<BoltOwnerData> iter = boltOwners.iterator(); iter.hasNext();) {
+				BoltOwnerData data = iter.next();
+
+				data.renderTick(timestamp, refresh, matrix, buffer);
+				if (data.shouldRemove(timestamp)) {
+					iter.remove();
+				}
 			}
-			duration -= ticksPassed;
-			if (duration >= 1) {
-				return false;
-			}
-			return (partial - prev.partial) >= duration;
 		}
 	}
 }

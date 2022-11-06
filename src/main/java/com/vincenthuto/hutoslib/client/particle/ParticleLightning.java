@@ -22,30 +22,53 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 public class ParticleLightning extends TextureSheetParticle {
-	private ParticleLightningStorage data;
-	public float colorR = 0;
-	public float colorG = 0;
-	public float colorB = 0;
 	private static final ParticleRenderType LIGHTNING_BOLT_RENDER = new ParticleRenderType() {
 
+		@Override
 		public void begin(BufferBuilder bufferBuilder, TextureManager textureManager) {
 			ParticleLightning.beginRenderCommon(bufferBuilder, textureManager);
 		}
 
+		@Override
 		public void end(Tesselator tessellator) {
 			tessellator.end();
 			ParticleLightning.endRenderCommon();
 		}
 
+		@Override
 		public String toString() {
 			return "hutoslib:lightning_bolt";
 		}
 
 	};
-	
-	
-	
-	
+	@SuppressWarnings("deprecation")
+	private static void beginRenderCommon(BufferBuilder buffer, TextureManager textureManager) {
+		RenderSystem.depthMask(false);
+		RenderSystem.disableCull();
+		RenderSystem.enableBlend();
+		RenderSystem.blendFunc(770, 1);
+	    RenderSystem.setShader(GameRenderer::getParticleShader);
+		RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+		buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+	}
+	@SuppressWarnings("deprecation")
+	private static void endRenderCommon() {
+		Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_PARTICLES).restoreLastBlurMipmap();
+		// RenderSystem.alphaFunc((int) 516, (float) 0.1f);
+		RenderSystem.disableBlend();
+		RenderSystem.enableCull();
+		RenderSystem.depthMask(true);
+	}
+	private ParticleLightningStorage data;
+	public float colorR = 0;
+
+
+
+
+
+	public float colorG = 0;
+
+	public float colorB = 0;
 
 	public ParticleLightning(ClientLevel worldIn, double startX, double startY, double startZ, double endX, double endY,
 			double endZ, SpriteSet sprite, float r, float g, float b) {
@@ -131,31 +154,22 @@ public class ParticleLightning extends TextureSheetParticle {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	public void tick() {
-		super.tick();
-		this.data.onUpdate();
-		if (this.age > this.getLifetime() - 10) {
-			float delta;
-			this.alpha = delta = (float) (this.getLifetime() - this.age) / 10.0f;
-		}
-	}
-
-	public boolean shouldCull() {
-		return false;
+	@Override
+	public ParticleRenderType getRenderType() {
+		return LIGHTNING_BOLT_RENDER;
 	}
 
 	@Override
 	public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
 		Vec3 vec3d = renderInfo.getPosition();
-		float f = (float) (Mth.lerp((double) partialTicks, (double) this.xo, (double) this.x) - vec3d.x);
-		float f1 = (float) (Mth.lerp((double) partialTicks, (double) this.yo, (double) this.y) - vec3d.y);
-		float f2 = (float) (Mth.lerp((double) partialTicks, (double) this.zo, (double) this.z) - vec3d.z);
+		float f = (float) (Mth.lerp(partialTicks, this.xo, this.x) - vec3d.x);
+		float f1 = (float) (Mth.lerp(partialTicks, this.yo, this.y) - vec3d.y);
+		float f2 = (float) (Mth.lerp(partialTicks, this.zo, this.z) - vec3d.z);
 		Vector3 posOffset = new Vector3(f, f1, f2);
 		Vector3 particleOrigin = new Vector3(this.x, this.y, this.z);
 		int count = 0;
-		int maxIndex = (int) Math.ceil(((float) this.data.getAge() + partialTicks) / (float) this.data.getMaxAge()
-				* (float) this.data.numSegments());
+		int maxIndex = (int) Math.ceil((this.data.getAge() + partialTicks) / this.data.getMaxAge()
+				* this.data.numSegments());
 		Vector3 lastEnd1 = null;
 		Vector3 lastEnd2 = null;
 		for (Segment s : this.data.getSegments()) {
@@ -179,49 +193,41 @@ public class ParticleLightning extends TextureSheetParticle {
 			float minV = this.getV0();
 			float maxV = this.getV1();
 			int j = 0xF00000;
-			buffer.vertex((double) avector3f[3].x, (double) avector3f[3].y, (double) avector3f[3].z).uv(maxU, maxV)
+			buffer.vertex(avector3f[3].x, avector3f[3].y, avector3f[3].z).uv(maxU, maxV)
 					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex((double) avector3f[2].x, (double) avector3f[2].y, (double) avector3f[2].z).uv(maxU, minV)
+			buffer.vertex(avector3f[2].x, avector3f[2].y, avector3f[2].z).uv(maxU, minV)
 					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex((double) avector3f[0].x, (double) avector3f[0].y, (double) avector3f[0].z).uv(minU, minV)
+			buffer.vertex(avector3f[0].x, avector3f[0].y, avector3f[0].z).uv(minU, minV)
 					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex((double) avector3f[1].x, (double) avector3f[1].y, (double) avector3f[1].z).uv(minU, maxV)
+			buffer.vertex(avector3f[1].x, avector3f[1].y, avector3f[1].z).uv(minU, maxV)
 					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex((double) avector3f[3].x, (double) avector3f[3].y, (double) avector3f[3].z).uv(maxU, maxV)
+			buffer.vertex(avector3f[3].x, avector3f[3].y, avector3f[3].z).uv(maxU, maxV)
 					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex((double) avector3f[2].x, (double) avector3f[2].y, (double) avector3f[2].z).uv(maxU, minV)
+			buffer.vertex(avector3f[2].x, avector3f[2].y, avector3f[2].z).uv(maxU, minV)
 					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex((double) avector3f[0].x, (double) avector3f[0].y, (double) avector3f[0].z).uv(minU, minV)
+			buffer.vertex(avector3f[0].x, avector3f[0].y, avector3f[0].z).uv(minU, minV)
 					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex((double) avector3f[1].x, (double) avector3f[1].y, (double) avector3f[1].z).uv(minU, maxV)
+			buffer.vertex(avector3f[1].x, avector3f[1].y, avector3f[1].z).uv(minU, maxV)
 					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
 
 			++count;
 		}
 	}
 
-	public ParticleRenderType getRenderType() {
-		return LIGHTNING_BOLT_RENDER;
+	@Override
+	public boolean shouldCull() {
+		return false;
 	}
 
-	@SuppressWarnings("deprecation")
-	private static void beginRenderCommon(BufferBuilder buffer, TextureManager textureManager) {
-		RenderSystem.depthMask((boolean) false);
-		RenderSystem.disableCull();
-		RenderSystem.enableBlend();
-		RenderSystem.blendFunc((int) 770, (int) 1);
-	    RenderSystem.setShader(GameRenderer::getParticleShader);
-		RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-		buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-	}
-
-	@SuppressWarnings("deprecation")
-	private static void endRenderCommon() {
-		Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_PARTICLES).restoreLastBlurMipmap();
-		// RenderSystem.alphaFunc((int) 516, (float) 0.1f);
-		RenderSystem.disableBlend();
-		RenderSystem.enableCull();
-		RenderSystem.depthMask((boolean) true);
+	@Override
+	@SuppressWarnings("unused")
+	public void tick() {
+		super.tick();
+		this.data.onUpdate();
+		if (this.age > this.getLifetime() - 10) {
+			float delta;
+			this.alpha = delta = (this.getLifetime() - this.age) / 10.0f;
+		}
 	}
 
 }

@@ -36,111 +36,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class HLGuiUtils {
 
-	// MATRIX FIXING
-	public static void renderItemStackInGui(PoseStack ms, ItemStack stack, int x, int y) {
-		transferMsToGl(ms, () -> Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y));
-	}
-
-	public static void transferMsToGl(PoseStack ms, Runnable toRun) {
-		PoseStack mvs = RenderSystem.getModelViewStack();
-		mvs.pushPose();
-		mvs.mulPoseMatrix(ms.last().pose());
-		RenderSystem.applyModelViewMatrix();
-		toRun.run();
-		mvs.popPose();
-		RenderSystem.applyModelViewMatrix();
-	}
-
-	public static void renderPatternInGUI(PoseStack ms, Minecraft mc, MultiblockPattern pattern, double xOff,
-			double yOff) {
-		PoseStack viewModelPose = RenderSystem.getModelViewStack();
-		viewModelPose.pushPose();
-		Lighting.setupFor3DItems();
-		List<BlockPosBlockPair> patternList = pattern.getBlockPosBlockList();
-		viewModelPose.scale(0.5f, 0.5f, -1f);
-		viewModelPose.mulPose(new Quaternion(Vector3f.YP, -5, true));
-		for (BlockPosBlockPair pair : patternList) {
-			renderItemStackInGui(ms, new ItemStack(pair.getBlock()), pair.getPos().getX() * -16,
-					pair.getPos().getZ() * 16);
-		}
-		viewModelPose.popPose();
-	}
-
-	/**
-	 * Draws a textured rectangle at the current z-value. Ported From past Versions
-	 */
-	public static void drawTexturedModalRect(float x, float y, float textureX, float textureY, float width,
-			float height) {
-		/*
-		 * float f = 0.00390625F; float f1 = 0.00390625F;
-		 */
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		bufferbuilder.vertex((double) (x + 0), (double) (y + height), (double) 1)
-				.uv((float) ((float) (textureX + 0) * 0.00390625F), (float) ((float) (textureY + height) * 0.00390625F))
-				.endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + height), (double) 1)
-				.uv((float) ((float) (textureX + width) * 0.00390625F),
-						(float) ((float) (textureY + height) * 0.00390625F))
-				.endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + 0), (double) 1)
-				.uv((float) ((float) (textureX + width) * 0.00390625F), (float) ((float) (textureY + 0) * 0.00390625F))
-				.endVertex();
-		bufferbuilder.vertex((double) (x + 0), (double) (y + 0), 1)
-				.uv((float) ((float) (textureX + 0) * 0.00390625F), (float) ((float) (textureY + 0) * 0.00390625F))
-				.endVertex();
-		tessellator.end();
-	}
-
-	/**
-	 * Draws a textured rectangle at the current z-value. Ported From past Versions
-	 */
-	public static void drawScaledTexturedModalRect(float x, float y, float textureX, float textureY, float width,
-			float height, float scaleIn) {
-		/*
-		 * float f = 0.01090625F; float f1 = 0.01090625F;
-		 */
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		bufferbuilder.vertex((double) (x + 0), (double) (y + height), (double) 1)
-				.uv((float) ((float) (textureX + 0) * scaleIn), (float) ((float) (textureY + height) * scaleIn))
-				.endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + height), (double) 1)
-				.uv((float) ((float) (textureX + width) * scaleIn), (float) ((float) (textureY + height) * scaleIn))
-				.endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + 0), (double) 1)
-				.uv((float) ((float) (textureX + width) * scaleIn), (float) ((float) (textureY + 0) * scaleIn))
-				.endVertex();
-		bufferbuilder.vertex((double) (x + 0), (double) (y + 0), 1)
-				.uv((float) ((float) (textureX + 0) * scaleIn), (float) ((float) (textureY + 0) * scaleIn)).endVertex();
-		tessellator.end();
-	}
-
-	/*
-	 * Vanilla copy of wrap to max width to allow for drop shadow and readable name
-	 */
-	public static void drawMaxWidthString(Font fontIn, FormattedText text, int x, int y, int maxLength, int color,
-			boolean dropShadow) {
-		Matrix4f matrix4f = Transformation.identity().getMatrix();
-		for (FormattedCharSequence formattedcharsequence : fontIn.split(text, maxLength)) {
-			drawText(fontIn, formattedcharsequence, (float) x, (float) y, color, matrix4f, dropShadow);
-			y += 9;
-		}
-
-	}
-
-	public static int drawText(Font fontIn, FormattedCharSequence reorderingProcessor, float x, float y, int color,
-			Matrix4f matrix, boolean drawShadow) {
-		MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource
-				.immediate(Tesselator.getInstance().getBuilder());
-		int i = fontIn.drawInBatch(reorderingProcessor, x, y, color, drawShadow, matrix, multibuffersource$buffersource,
-				false, 0, 15728880);
-		multibuffersource$buffersource.endBatch();
-		return i;
-	}
-
 	private static void drawLine(PoseStack stack, double x1, double y1, double x2, double y2, ParticleColor color,
 			int displace) {
 
@@ -167,6 +62,81 @@ public class HLGuiUtils {
 		GlStateManager._enableTexture();
 	}
 
+	/*
+	 * Vanilla copy of wrap to max width to allow for drop shadow and readable name
+	 */
+	public static void drawMaxWidthString(Font fontIn, FormattedText text, int x, int y, int maxLength, int color,
+			boolean dropShadow) {
+		Matrix4f matrix4f = Transformation.identity().getMatrix();
+		for (FormattedCharSequence formattedcharsequence : fontIn.split(text, maxLength)) {
+			drawText(fontIn, formattedcharsequence, x, y, color, matrix4f, dropShadow);
+			y += 9;
+		}
+
+	}
+
+	/**
+	 * Draws a textured rectangle at the current z-value. Ported From past Versions
+	 */
+	public static void drawScaledTexturedModalRect(float x, float y, float textureX, float textureY, float width,
+			float height, float scaleIn) {
+		/*
+		 * float f = 0.01090625F; float f1 = 0.01090625F;
+		 */
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuilder();
+		bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		bufferbuilder.vertex(x + 0, y + height, 1)
+				.uv((textureX + 0) * scaleIn, (textureY + height) * scaleIn)
+				.endVertex();
+		bufferbuilder.vertex(x + width, y + height, 1)
+				.uv((textureX + width) * scaleIn, (textureY + height) * scaleIn)
+				.endVertex();
+		bufferbuilder.vertex(x + width, y + 0, 1)
+				.uv((textureX + width) * scaleIn, (textureY + 0) * scaleIn)
+				.endVertex();
+		bufferbuilder.vertex(x + 0, y + 0, 1)
+				.uv((textureX + 0) * scaleIn, (textureY + 0) * scaleIn).endVertex();
+		tessellator.end();
+	}
+
+	public static int drawText(Font fontIn, FormattedCharSequence reorderingProcessor, float x, float y, int color,
+			Matrix4f matrix, boolean drawShadow) {
+		MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource
+				.immediate(Tesselator.getInstance().getBuilder());
+		int i = fontIn.drawInBatch(reorderingProcessor, x, y, color, drawShadow, matrix, multibuffersource$buffersource,
+				false, 0, 15728880);
+		multibuffersource$buffersource.endBatch();
+		return i;
+	}
+
+	/**
+	 * Draws a textured rectangle at the current z-value. Ported From past Versions
+	 */
+	public static void drawTexturedModalRect(float x, float y, float textureX, float textureY, float width,
+			float height) {
+		/*
+		 * float f = 0.00390625F; float f1 = 0.00390625F;
+		 */
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuilder();
+		bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		bufferbuilder.vertex(x + 0, y + height, 1)
+				.uv((textureX + 0) * 0.00390625F, (textureY + height) * 0.00390625F)
+				.endVertex();
+		bufferbuilder.vertex(x + width, y + height, 1)
+				.uv((textureX + width) * 0.00390625F,
+						(textureY + height) * 0.00390625F)
+				.endVertex();
+		bufferbuilder.vertex(x + width, y + 0, 1)
+				.uv((textureX + width) * 0.00390625F, (textureY + 0) * 0.00390625F)
+				.endVertex();
+		bufferbuilder.vertex(x + 0, y + 0, 1)
+				.uv((textureX + 0) * 0.00390625F, (textureY + 0) * 0.00390625F)
+				.endVertex();
+		tessellator.end();
+	}
+
 	public static void fracLine(PoseStack matrix, double src_x, double src_y, double dst_x, double dst_y, int zLevel,
 			ParticleColor color, int displace, double detail) {
 		if (displace < detail) {
@@ -181,6 +151,11 @@ public class HLGuiUtils {
 			fracLine(matrix, dst_x, dst_y, mid_x, mid_y, zLevel, color, (displace / 2), detail);
 
 		}
+	}
+
+	// MATRIX FIXING
+	public static void renderItemStackInGui(PoseStack ms, ItemStack stack, int x, int y) {
+		transferMsToGl(ms, () -> Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y));
 	}
 
 	// MULTIBLOCK STUFF
@@ -203,6 +178,31 @@ public class HLGuiUtils {
 		stack.popPose();
 		RenderSystem.applyModelViewMatrix();
 
+	}
+
+	public static void renderPatternInGUI(PoseStack ms, Minecraft mc, MultiblockPattern pattern, double xOff,
+			double yOff) {
+		PoseStack viewModelPose = RenderSystem.getModelViewStack();
+		viewModelPose.pushPose();
+		Lighting.setupFor3DItems();
+		List<BlockPosBlockPair> patternList = pattern.getBlockPosBlockList();
+		viewModelPose.scale(0.5f, 0.5f, -1f);
+		viewModelPose.mulPose(new Quaternion(Vector3f.YP, -5, true));
+		for (BlockPosBlockPair pair : patternList) {
+			renderItemStackInGui(ms, new ItemStack(pair.getBlock()), pair.getPos().getX() * -16,
+					pair.getPos().getZ() * 16);
+		}
+		viewModelPose.popPose();
+	}
+
+	public static void transferMsToGl(PoseStack ms, Runnable toRun) {
+		PoseStack mvs = RenderSystem.getModelViewStack();
+		mvs.pushPose();
+		mvs.mulPoseMatrix(ms.last().pose());
+		RenderSystem.applyModelViewMatrix();
+		toRun.run();
+		mvs.popPose();
+		RenderSystem.applyModelViewMatrix();
 	}
 
 }

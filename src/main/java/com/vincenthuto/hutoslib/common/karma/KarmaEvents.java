@@ -25,18 +25,6 @@ public class KarmaEvents {
 	}
 
 	@SubscribeEvent
-	public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-		ServerPlayer player = (ServerPlayer) event.getEntity();
-		IKarma volume = player.getCapability(KarmaProvider.KARMA_CAPA).orElseThrow(NullPointerException::new);
-		HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketKarmaServer(volume));
-//		player.displayClientMessage(
-//				 Component.literal("Welcome! Karma Active? " + ChatFormatting.LIGHT_PURPLE + volume.isActive()), false);
-//		player.displayClientMessage(
-//				 Component.literal("Welcome! Current Karma: " + ChatFormatting.GOLD + volume.getKarma() + "ml"),
-//				false);
-	}
-
-	@SubscribeEvent
 	public static void onDimensionChange(PlayerChangedDimensionEvent event) {
 		ServerPlayer player = (ServerPlayer) event.getEntity();
 		IKarma volume = player.getCapability(KarmaProvider.KARMA_CAPA).orElseThrow(NullPointerException::new);
@@ -44,17 +32,6 @@ public class KarmaEvents {
 	//	player.displayClientMessage(
 	//			 Component.literal("Welcome! Current Karma: " + ChatFormatting.GOLD + volume.getKarma() + "ml"),
 	//			false);
-	}
-
-	@SubscribeEvent
-	public static void playerRespawn(PlayerRespawnEvent event) {
-		Player playernew = event.getEntity();
-		if (!playernew.level.isClientSide) {
-			IKarma bloodVolumeNew = playernew.getCapability(KarmaProvider.KARMA_CAPA)
-					.orElseThrow(NullPointerException::new);
-			HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playernew),
-					new PacketKarmaServer(bloodVolumeNew.isActive(), bloodVolumeNew.getKarma()));
-		}
 	}
 
 	@SubscribeEvent
@@ -73,6 +50,29 @@ public class KarmaEvents {
 			peorig.invalidateCaps();
 		}
 
+	}
+
+	@SubscribeEvent
+	public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+		ServerPlayer player = (ServerPlayer) event.getEntity();
+		IKarma volume = player.getCapability(KarmaProvider.KARMA_CAPA).orElseThrow(NullPointerException::new);
+		HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketKarmaServer(volume));
+//		player.displayClientMessage(
+//				 Component.literal("Welcome! Karma Active? " + ChatFormatting.LIGHT_PURPLE + volume.isActive()), false);
+//		player.displayClientMessage(
+//				 Component.literal("Welcome! Current Karma: " + ChatFormatting.GOLD + volume.getKarma() + "ml"),
+//				false);
+	}
+
+	@SubscribeEvent
+	public static void playerRespawn(PlayerRespawnEvent event) {
+		Player playernew = event.getEntity();
+		if (!playernew.level.isClientSide) {
+			IKarma bloodVolumeNew = playernew.getCapability(KarmaProvider.KARMA_CAPA)
+					.orElseThrow(NullPointerException::new);
+			HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playernew),
+					new PacketKarmaServer(bloodVolumeNew.isActive(), bloodVolumeNew.getKarma()));
+		}
 	}
 
 }

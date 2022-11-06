@@ -111,13 +111,17 @@ public record Animation(int lengthInTicks, float lengthScale, Map<String, Bone> 
 				this.easing = easing;
 			}
 
-			public Builder rotation(float time, float x, float y, float z) {
-				rotationBuilder.put(time, new Vector3f(x / 180F * Mth.PI, y / 180F * Mth.PI, z / 180F * Mth.PI));
+			public Bone build() {
+				return new Bone(rotationBuilder.build(), translationBuilder.build(), scaleBuilder.build(), easing);
+			}
+
+			public Builder noRotation(float time) {
+				rotationBuilder.put(time, Vector3f.ZERO);
 				return this;
 			}
 
-			public Builder translation(float time, float x, float y, float z) {
-				translationBuilder.put(time, new Vector3f(x / 180F * Mth.PI, y / 180F * Mth.PI, z / 180F * Mth.PI));
+			public Builder rotation(float time, float x, float y, float z) {
+				rotationBuilder.put(time, new Vector3f(x / 180F * Mth.PI, y / 180F * Mth.PI, z / 180F * Mth.PI));
 				return this;
 			}
 
@@ -126,13 +130,9 @@ public record Animation(int lengthInTicks, float lengthScale, Map<String, Bone> 
 				return this;
 			}
 
-			public Builder noRotation(float time) {
-				rotationBuilder.put(time, Vector3f.ZERO);
+			public Builder translation(float time, float x, float y, float z) {
+				translationBuilder.put(time, new Vector3f(x / 180F * Mth.PI, y / 180F * Mth.PI, z / 180F * Mth.PI));
 				return this;
-			}
-
-			public Bone build() {
-				return new Bone(rotationBuilder.build(), translationBuilder.build(), scaleBuilder.build(), easing);
 			}
 		}
 	}

@@ -32,7 +32,7 @@ public class ParticleDarkGlow extends TextureSheetParticle {
 			this.colorB = this.colorB / 255.0f;
 		}
 		this.setColor(colorR, colorG, colorB);
-		this.age = (int) ((float) lifetime * 0.5f);
+		this.age = (int) (lifetime * 0.5f);
 		this.quadSize = scale / 8;
 		this.initScale = scale;
 		this.xd = vx * 2.0f;
@@ -43,13 +43,18 @@ public class ParticleDarkGlow extends TextureSheetParticle {
 	}
 
 	@Override
+	public int getLightColor(float pTicks) {
+		return 255;
+	}
+
+	@Override
 	public ParticleRenderType getRenderType() {
 		return HLRenderTypeInit.DARK_GLOW_RENDER;
 	}
 
 	@Override
-	public int getLightColor(float pTicks) {
-		return 255;
+	public boolean isAlive() {
+		return this.age < this.age;
 	}
 
 	@Override
@@ -64,10 +69,5 @@ public class ParticleDarkGlow extends TextureSheetParticle {
 		this.alpha = initAlpha * (1.0f - lifeCoeff);
 		this.oRoll = roll;
 		roll += 1.0f;
-	}
-
-	@Override
-	public boolean isAlive() {
-		return this.age < this.age;
 	}
 }

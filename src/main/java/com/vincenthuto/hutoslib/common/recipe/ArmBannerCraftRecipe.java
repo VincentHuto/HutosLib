@@ -18,41 +18,6 @@ public class ArmBannerCraftRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public boolean matches(CraftingContainer inv, Level worldIn) {
-		ItemStack itemstack = ItemStack.EMPTY;
-		ItemStack itemstack1 = ItemStack.EMPTY;
-
-		for (int i = 0; i < inv.getContainerSize(); ++i) {
-			ItemStack itemstack2 = inv.getItem(i);
-			if (!itemstack2.isEmpty()) {
-				if (itemstack2.getItem() instanceof BannerItem) {
-					if (!itemstack1.isEmpty()) {
-						return false;
-					}
-
-					itemstack1 = itemstack2;
-				} else {
-					if (!(itemstack2.getItem() instanceof ItemArmBanner)) {
-						return false;
-					}
-
-					if (!itemstack.isEmpty()) {
-						return false;
-					}
-
-					if (itemstack2.getTagElement("BlockEntityTag") != null) {
-						return false;
-					}
-
-					itemstack = itemstack2;
-				}
-			}
-		}
-
-		return !itemstack.isEmpty() && !itemstack1.isEmpty();
-	}
-
-	@Override
 	public ItemStack assemble(CraftingContainer inv) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		ItemStack itemstack1 = ItemStack.EMPTY;
@@ -90,6 +55,33 @@ public class ArmBannerCraftRecipe extends CustomRecipe {
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return HlContainerInit.arm_banner_craft.get();
+	}
+
+	@Override
+	public boolean matches(CraftingContainer inv, Level worldIn) {
+		ItemStack itemstack = ItemStack.EMPTY;
+		ItemStack itemstack1 = ItemStack.EMPTY;
+
+		for (int i = 0; i < inv.getContainerSize(); ++i) {
+			ItemStack itemstack2 = inv.getItem(i);
+			if (!itemstack2.isEmpty()) {
+				if (itemstack2.getItem() instanceof BannerItem) {
+					if (!itemstack1.isEmpty()) {
+						return false;
+					}
+
+					itemstack1 = itemstack2;
+				} else {
+					if (!(itemstack2.getItem() instanceof ItemArmBanner) || !itemstack.isEmpty() || (itemstack2.getTagElement("BlockEntityTag") != null)) {
+						return false;
+					}
+
+					itemstack = itemstack2;
+				}
+			}
+		}
+
+		return !itemstack.isEmpty() && !itemstack1.isEmpty();
 	}
 
 }

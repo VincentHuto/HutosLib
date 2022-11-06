@@ -23,11 +23,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class GuiGuidePage extends Screen {
+	static Component titleComponent =  Component.literal("");
 	final ResourceLocation texture = HLLocHelper.guiPrefix("page.png");
 	int left, top;
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
 	public int pageNum, guiHeight = 228, guiWidth = 174;
-	static Component titleComponent =  Component.literal("");
 	String title, subtitle, text;
 	ItemStack icon;
 	GuiButtonBookArrow arrowF, arrowB;
@@ -35,18 +35,6 @@ public abstract class GuiGuidePage extends Screen {
 	EditBox textBox;
 	String catagory;
 	Minecraft mc = Minecraft.getInstance();
-
-	public GuiGuidePage(String catagoryIn) {
-		this(0, catagoryIn, "", "", ItemStack.EMPTY, "");
-	}
-
-	public GuiGuidePage(String catagoryIn, String titleIn) {
-		this(0, catagoryIn, titleIn, "", ItemStack.EMPTY, "");
-	}
-
-	public GuiGuidePage(String catagoryIn, String titleIn, String subtitleIn) {
-		this(0, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, "");
-	}
 
 	public GuiGuidePage(int pageNumIn, String catagoryIn) {
 		this(pageNumIn, catagoryIn, "", "", ItemStack.EMPTY, "");
@@ -68,14 +56,6 @@ public abstract class GuiGuidePage extends Screen {
 		this(pageNumIn, catagoryIn, titleIn, subtitleIn, iconIn, "");
 	}
 
-	public GuiGuidePage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn, String textIn) {
-		this(pageNumIn, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, textIn);
-	}
-
-	public GuiGuidePage(String catagoryIn, String titleIn, String subtitleIn, String textIn) {
-		this(0, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, textIn);
-	}
-
 	public GuiGuidePage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn, ItemStack iconIn,
 			String textIn) {
 		super(titleComponent);
@@ -87,17 +67,91 @@ public abstract class GuiGuidePage extends Screen {
 		this.catagory = catagoryIn;
 	}
 
+	public GuiGuidePage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn, String textIn) {
+		this(pageNumIn, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, textIn);
+	}
+
+	public GuiGuidePage(String catagoryIn) {
+		this(0, catagoryIn, "", "", ItemStack.EMPTY, "");
+	}
+
+	public GuiGuidePage(String catagoryIn, String titleIn) {
+		this(0, catagoryIn, titleIn, "", ItemStack.EMPTY, "");
+	}
+
+	public GuiGuidePage(String catagoryIn, String titleIn, String subtitleIn) {
+		this(0, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, "");
+	}
+
+	public GuiGuidePage(String catagoryIn, String titleIn, String subtitleIn, String textIn) {
+		this(0, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, textIn);
+	}
+
+	public String getCatagory() {
+		return catagory;
+	}
+
+	public abstract TomeLib getOwnerTome();
+
+	public List<GuiGuidePage> getPages() {
+		return getOwnerTome().getMatchingChapters(getCatagory()).pages;
+
+	}
+
 	@Override
-	public void renderBackground(PoseStack matrixStack, int p_96560_) {
-		super.renderBackground(matrixStack, p_96560_);
+	protected void init() {
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, texture);
-		int centerX = (width / 2) - guiWidth / 2;
-		int centerY = (height / 2) - guiHeight / 2;
-		this.blit(matrixStack, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
+		this.clearWidgets();
+		if (pageNum != (getPages().size() - 1)) {
+			this.addRenderableWidget(arrowF = new GuiButtonBookArrow(ArrowDirection.FORWARD, ARROWF,
+					left + guiWidth - 18, top + guiHeight - 7, (press) -> {
+						if (pageNum != (getPages().size() - 1)) {
+							mc.setScreen(getPages().get((pageNum + 1)));
+						} else {
+							mc.setScreen(getPages().get((pageNum)));
+						}
+					}));
+		}
+		this.addRenderableWidget(
+				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
+					if (pageNum > 0) {
+						mc.setScreen(getPages().get((pageNum - 1)));
+					} else {
+						mc.setScreen(getOwnerTome().getTitle());
+					}
+				}));
+
+//		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(LocationHelper.guiPrefix("book_tabs.png"),
+//				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
+//					mc.setScreen(getOwnerTome().getTitle());
+//
+//				}));
+		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
+				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 32, (press) -> {
+					this.onClose();
+				}));
+		textBox = new EditBox(font, left - guiWidth + 155, top + guiHeight - 227, 14, 14,  Component.literal(""));
+		super.init();
+	}
+
+	@Override
+	public boolean isPauseScreen() {
+		return false;
+	}
+
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		textBox.setValue(GLFW.glfwGetKeyName(keyCode, scanCode));
+		updateTextBoxes();
+		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		textBox.mouseClicked(mouseX, mouseY, mouseButton);
+		updateTextBoxes();
+		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
@@ -151,7 +205,7 @@ public abstract class GuiGuidePage extends Screen {
 		textBox.render(matrixStack, mouseX, mouseY, partialTicks);
 		if ((mouseX >= left + guiWidth - 32 && mouseX <= left + guiWidth - 10)) {
 			if (mouseY >= top + guiHeight - 220 && mouseY <= top + guiHeight - 200) {
-				List<Component> text = new ArrayList<Component>();
+				List<Component> text = new ArrayList<>();
 				if (!icon.isEmpty()) {
 					text.add( Component.literal(I18n.get(icon.getHoverName().getString())));
 					renderComponentTooltip(matrixStack, text, left + guiWidth - 32, top + guiHeight - 220);
@@ -164,7 +218,7 @@ public abstract class GuiGuidePage extends Screen {
 //		if (buttonTitle.isHovered()) {
 //			renderComponentTooltip(matrixStack, titlePage, mouseX, mouseY);
 //		}
-		List<Component> ClosePage = new ArrayList<Component>();
+		List<Component> ClosePage = new ArrayList<>();
 		ClosePage.add( Component.literal(I18n.get("Close Book")));
 		if (buttonCloseTab.isHoveredOrFocused()) {
 			renderComponentTooltip(matrixStack, ClosePage, mouseX, mouseY);
@@ -172,40 +226,16 @@ public abstract class GuiGuidePage extends Screen {
 	}
 
 	@Override
-	protected void init() {
+	public void renderBackground(PoseStack matrixStack, int p_96560_) {
+		super.renderBackground(matrixStack, p_96560_);
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
-		this.clearWidgets();
-		if (pageNum != (getPages().size() - 1)) {
-			this.addRenderableWidget(arrowF = new GuiButtonBookArrow(ArrowDirection.FORWARD, ARROWF,
-					left + guiWidth - 18, top + guiHeight - 7, (press) -> {
-						if (pageNum != (getPages().size() - 1)) {
-							mc.setScreen(getPages().get((pageNum + 1)));
-						} else {
-							mc.setScreen(getPages().get((pageNum)));
-						}
-					}));
-		}
-		this.addRenderableWidget(
-				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
-					if (pageNum > 0) {
-						mc.setScreen(getPages().get((pageNum - 1)));
-					} else {
-						mc.setScreen(getOwnerTome().getTitle());
-					}
-				}));
-
-//		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(LocationHelper.guiPrefix("book_tabs.png"),
-//				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
-//					mc.setScreen(getOwnerTome().getTitle());
-//
-//				}));
-		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 32, (press) -> {
-					this.onClose();
-				}));
-		textBox = new EditBox(font, left - guiWidth + 155, top + guiHeight - 227, 14, 14,  Component.literal(""));
-		super.init();
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, texture);
+		int centerX = (width / 2) - guiWidth / 2;
+		int centerY = (height / 2) - guiHeight / 2;
+		this.blit(matrixStack, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 	}
 
 	public void updateTextBoxes() {
@@ -219,35 +249,5 @@ public abstract class GuiGuidePage extends Screen {
 				}
 			}
 		}
-	}
-
-	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		textBox.setValue(GLFW.glfwGetKeyName(keyCode, scanCode));
-		updateTextBoxes();
-		return super.keyPressed(keyCode, scanCode, modifiers);
-	}
-
-	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		textBox.mouseClicked(mouseX, mouseY, mouseButton);
-		updateTextBoxes();
-		return super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	public boolean isPauseScreen() {
-		return false;
-	}
-
-	public String getCatagory() {
-		return catagory;
-	}
-
-	public abstract TomeLib getOwnerTome();
-
-	public List<GuiGuidePage> getPages() {
-		return getOwnerTome().getMatchingChapters(getCatagory()).pages;
-
 	}
 }

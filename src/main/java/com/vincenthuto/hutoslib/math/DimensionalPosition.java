@@ -8,32 +8,23 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 
+	public static DimensionalPosition fromNBT(CompoundTag nbt) {
+		DimensionalPosition dp = new DimensionalPosition();
+		dp.deserializeNBT(nbt);
+		return dp;
+	}
 	private ResourceLocation dimension;
-	private BlockPos position;
 
+	private BlockPos position;
 	public DimensionalPosition() {
 	}
+
 	/*
 	 * to get RL Player().level.dimension().location();
 	 */
 	public DimensionalPosition(ResourceLocation dim, BlockPos pos) {
 		this.dimension = dim;
 		this.position = pos;
-	}
-
-	public static DimensionalPosition fromNBT(CompoundTag nbt) {
-		DimensionalPosition dp = new DimensionalPosition();
-		dp.deserializeNBT(nbt);
-		return dp;
-	}
-
-	@Override
-	public CompoundTag serializeNBT() {
-		CompoundTag nbt = new CompoundTag();
-		nbt.putString("dim", dimension.toString());
-		CompoundTag posNbt = NbtUtils.writeBlockPos(position);
-		nbt.put("pos", posNbt);
-		return nbt;
 	}
 
 	@Override
@@ -56,5 +47,14 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 
 	public BlockPos getPosition() {
 		return this.position;
+	}
+
+	@Override
+	public CompoundTag serializeNBT() {
+		CompoundTag nbt = new CompoundTag();
+		nbt.putString("dim", dimension.toString());
+		CompoundTag posNbt = NbtUtils.writeBlockPos(position);
+		nbt.put("pos", posNbt);
+		return nbt;
 	}
 }

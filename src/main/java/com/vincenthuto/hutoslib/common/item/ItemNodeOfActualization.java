@@ -25,6 +25,11 @@ public class ItemNodeOfActualization extends Item {
 	}
 
 	@Override
+	public Rarity getRarity(ItemStack stack) {
+		return Rarity.RARE;
+	}
+
+	@Override
 	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		IKarma karmaCap = playerIn.getCapability(KarmaProvider.KARMA_CAPA).orElseThrow(NullPointerException::new);
 
@@ -39,10 +44,5 @@ public class ItemNodeOfActualization extends Item {
 		}
 
 		return super.use(worldIn, playerIn, handIn);
-	}
-
-	@Override
-	public Rarity getRarity(ItemStack stack) {
-		return Rarity.RARE;
 	}
 }

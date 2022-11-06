@@ -23,12 +23,6 @@ public class HLForgeEvents {
 
 	public static KeyMapping OPEN_BANNER_SLOT_KEYBIND;
 
-	public static void initKeybinds(RegisterKeyMappingsEvent ev) {
-		ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V,
-				"key.armbanner.category"));
-	}
-
-
 	@SubscribeEvent
 	public static void handleKeys(TickEvent.ClientTickEvent ev) {
 		if (ev.phase != TickEvent.Phase.START)
@@ -40,6 +34,12 @@ public class HLForgeEvents {
 				HLPacketHandler.MAINCHANNEL.sendToServer(new PacketOpenBanner());
 			}
 		}
+	}
+
+
+	public static void initKeybinds(RegisterKeyMappingsEvent ev) {
+		ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V,
+				"key.armbanner.category"));
 	}
 
 	@SubscribeEvent

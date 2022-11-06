@@ -17,14 +17,14 @@ public class HLGuideTOC extends GuiGuidePageTOC {
 	}
 
 	@Override
-	public List<GuiGuidePage> getPages() {
-		return getOwnerTome().getMatchingChapters(getCatagory()).pages;
-
+	public TomeLib getOwnerTome() {
+		return new HLLib();
 	}
 
 	@Override
-	public TomeLib getOwnerTome() {
-		return new HLLib();
+	public List<GuiGuidePage> getPages() {
+		return getOwnerTome().getMatchingChapters(getCatagory()).pages;
+
 	}
 
 }

@@ -18,6 +18,21 @@ import net.minecraftforge.items.IItemHandler;
 
 public class HLInvHelper {
 
+	// Combined a few methods into one more generic one
+	public static ItemStack findItemInPlayerInv(Player player, Class<? extends Item> item) {
+		if (item.isInstance(player.getOffhandItem().getItem()))
+			return player.getMainHandItem();
+		if (item.isInstance(player.getMainHandItem().getItem()))
+			return player.getOffhandItem();
+		Inventory inventory = player.getInventory();
+		for (int i = 0; i <= 35; i++) {
+			ItemStack stack = inventory.getItem(i);
+			if (item.isInstance(stack.getItem()))
+				return stack;
+		}
+		return ItemStack.EMPTY;
+	}
+
 	@Nullable
 	public static IItemHandler getInventory(Level world, BlockPos pos, Direction side) {
 		BlockEntity te = world.getBlockEntity(pos);
@@ -43,21 +58,6 @@ public class HLInvHelper {
 				break;
 			}
 		}
-	}
-
-	// Combined a few methods into one more generic one
-	public static ItemStack findItemInPlayerInv(Player player, Class<? extends Item> item) {
-		if (item.isInstance(player.getOffhandItem().getItem()))
-			return player.getMainHandItem();
-		if (item.isInstance(player.getMainHandItem().getItem()))
-			return player.getOffhandItem();
-		Inventory inventory = player.getInventory();
-		for (int i = 0; i <= 35; i++) {
-			ItemStack stack = inventory.getItem(i);
-			if (item.isInstance(stack.getItem()))
-				return stack;
-		}
-		return ItemStack.EMPTY;
 	}
 
 }

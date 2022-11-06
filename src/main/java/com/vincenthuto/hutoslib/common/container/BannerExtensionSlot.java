@@ -46,20 +46,6 @@ import net.minecraftforge.network.PacketDistributor;
 @Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.MOD)
 public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<CompoundTag> {
 
-	private static final ResourceLocation CAPABILITY_ID = new ResourceLocation(HutosLib.MOD_ID, "banner_slot");
-
-	public static final Capability<BannerExtensionSlot> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-	});
-
-	public static LazyOptional<BannerExtensionSlot> get(LivingEntity player) {
-		return player.getCapability(CAPABILITY);
-	}
-
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new AttachHandlers());
-		MinecraftForge.EVENT_BUS.register(new EventHandlers());
-	}
-
 	public static class AttachHandlers {
 		@SubscribeEvent
 		public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
@@ -78,11 +64,6 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 							.of(() -> extensionContainer);
 
 					@Override
-					public CompoundTag serializeNBT() {
-						return extensionContainer.serializeNBT();
-					}
-
-					@Override
 					public void deserializeNBT(CompoundTag nbt) {
 						extensionContainer.deserializeNBT(nbt);
 					}
@@ -95,6 +76,11 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 
 						return LazyOptional.empty();
 					}
+
+					@Override
+					public CompoundTag serializeNBT() {
+						return extensionContainer.serializeNBT();
+					}
 				});
 			}
 		}
@@ -102,11 +88,11 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 
 	public static class EventHandlers {
 		@SubscribeEvent
-		public void joinWorld(PlayerEvent.PlayerLoggedInEvent event) {
-			Player target = event.getEntity();
-			if (target.level.isClientSide)
+		public void entityTick(TickEvent.PlayerTickEvent event) {
+			if (event.phase != TickEvent.Phase.END)
 				return;
-			get(target).ifPresent(BannerExtensionSlot::syncToSelf);
+
+			get(event.player).ifPresent(BannerExtensionSlot::tickAllSlots);
 		}
 
 		@SubscribeEvent
@@ -118,21 +104,30 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 		}
 
 		@SubscribeEvent
-		public void track(PlayerEvent.StartTracking event) {
-			Entity target = event.getTarget();
+		public void joinWorld(PlayerEvent.PlayerLoggedInEvent event) {
+			Player target = event.getEntity();
 			if (target.level.isClientSide)
 				return;
-			if (target instanceof Player) {
-				get((LivingEntity) target).ifPresent(BannerExtensionSlot::syncToSelf);
-			}
+			get(target).ifPresent(BannerExtensionSlot::syncToSelf);
 		}
 
 		@SubscribeEvent
-		public void entityTick(TickEvent.PlayerTickEvent event) {
-			if (event.phase != TickEvent.Phase.END)
-				return;
-
-			get(event.player).ifPresent(BannerExtensionSlot::tickAllSlots);
+		public void playerClone(PlayerEvent.Clone event) {
+			Player oldPlayer = event.getOriginal();
+			oldPlayer.revive();
+			Player newPlayer = event.getEntity();
+			get(oldPlayer).ifPresent((oldBanner) -> {
+				ItemStack stack = oldBanner.getBanner().getContents();
+				get(newPlayer).map(newBanner -> {
+					newBanner.getBanner().setContents(stack);
+					return Unit.INSTANCE;
+				}).orElseGet(() -> {
+					if (stack.getCount() > 0) {
+						oldPlayer.drop(stack, true, false);
+					}
+					return Unit.INSTANCE;
+				});
+			});
 		}
 
 		@SubscribeEvent
@@ -164,43 +159,34 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 		}
 
 		@SubscribeEvent
-		public void playerClone(PlayerEvent.Clone event) {
-			Player oldPlayer = event.getOriginal();
-			oldPlayer.revive();
-			Player newPlayer = event.getEntity();
-			get(oldPlayer).ifPresent((oldBanner) -> {
-				ItemStack stack = oldBanner.getBanner().getContents();
-				get(newPlayer).map(newBanner -> {
-					newBanner.getBanner().setContents(stack);
-					return Unit.INSTANCE;
-				}).orElseGet(() -> {
-					if (stack.getCount() > 0) {
-						oldPlayer.drop(stack, true, false);
-					}
-					return Unit.INSTANCE;
-				});
-			});
+		public void track(PlayerEvent.StartTracking event) {
+			Entity target = event.getTarget();
+			if (target.level.isClientSide)
+				return;
+			if (target instanceof Player) {
+				get((LivingEntity) target).ifPresent(BannerExtensionSlot::syncToSelf);
+			}
 		}
 	}
 
-	private void syncToSelf() {
-		syncTo((Player) owner);
-	}
+	private static final ResourceLocation CAPABILITY_ID = new ResourceLocation(HutosLib.MOD_ID, "banner_slot");
 
-	protected void syncTo(Player target) {
-		PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
-		HLPacketHandler.MAINCHANNEL.sendTo(message, ((ServerPlayer) target).connection.getConnection(),
-				NetworkDirection.PLAY_TO_CLIENT);
-	}
-
-	protected void syncTo(PacketDistributor.PacketTarget target) {
-		PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
-		HLPacketHandler.MAINCHANNEL.send(target, message);
-	}
+	public static final Capability<BannerExtensionSlot> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+	});
 
 	public static final ResourceLocation BANNER = new ResourceLocation("hutoslib", "banner");
 
+	public static LazyOptional<BannerExtensionSlot> get(LivingEntity player) {
+		return player.getCapability(CAPABILITY);
+	}
+
+	public static void register() {
+		MinecraftForge.EVENT_BUS.register(new AttachHandlers());
+		MinecraftForge.EVENT_BUS.register(new EventHandlers());
+	}
+
 	private final LivingEntity owner;
+
 	private final ItemStackHandler inventory = new ItemStackHandler(1) {
 		@Override
 		protected void onContentsChanged(int slot) {
@@ -208,11 +194,20 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 			banner.onContentsChanged();
 		}
 	};
-	private final BannerSlotItemHandler banner = new BannerSlotItemHandler(this, BANNER, inventory, 0);
-	private final ImmutableList<BannerSlotItemHandler> slots = ImmutableList.of(banner);
 
+	private final BannerSlotItemHandler banner = new BannerSlotItemHandler(this, BANNER, inventory, 0);
+
+	private final ImmutableList<BannerSlotItemHandler> slots = ImmutableList.of(banner);
 	private BannerExtensionSlot(LivingEntity owner) {
 		this.owner = owner;
+	}
+	@Override
+	public void deserializeNBT(CompoundTag nbt) {
+		inventory.deserializeNBT(nbt);
+	}
+	@Nonnull
+	public BannerSlotItemHandler getBanner() {
+		return banner;
 	}
 
 	@Nonnull
@@ -232,15 +227,9 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 
 	}
 
-	@Nonnull
-	public BannerSlotItemHandler getBanner() {
-		return banner;
-	}
-
-	private void tickAllSlots() {
-		for (BannerSlotItemHandler slot : slots) {
-			((BannerSlotItemHandler) slot).onWornTick();
-		}
+	@Override
+	public CompoundTag serializeNBT() {
+		return inventory.serializeNBT();
 	}
 
 	public void setAll(NonNullList<ItemStack> stacks) {
@@ -250,13 +239,24 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 		}
 	}
 
-	@Override
-	public CompoundTag serializeNBT() {
-		return inventory.serializeNBT();
+	protected void syncTo(PacketDistributor.PacketTarget target) {
+		PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
+		HLPacketHandler.MAINCHANNEL.send(target, message);
 	}
 
-	@Override
-	public void deserializeNBT(CompoundTag nbt) {
-		inventory.deserializeNBT(nbt);
+	protected void syncTo(Player target) {
+		PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
+		HLPacketHandler.MAINCHANNEL.sendTo(message, ((ServerPlayer) target).connection.getConnection(),
+				NetworkDirection.PLAY_TO_CLIENT);
+	}
+
+	private void syncToSelf() {
+		syncTo((Player) owner);
+	}
+
+	private void tickAllSlots() {
+		for (BannerSlotItemHandler slot : slots) {
+			slot.onWornTick();
+		}
 	}
 }

@@ -12,8 +12,12 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
 
 public class EmberParticleFactory implements ParticleProvider<EmberParticleData> {
-	private final SpriteSet spriteSet;
 	public static final String NAME = "ember";
+	public static ParticleOptions createData(ParticleColor color, float s, float a, int l) {
+		return new EmberParticleData(HLParticleInit.ember.get(), color, a, s, l);
+	}
+
+	private final SpriteSet spriteSet;
 
 	public EmberParticleFactory(SpriteSet sprite) {
 		this.spriteSet = sprite;
@@ -29,10 +33,6 @@ public class EmberParticleFactory implements ParticleProvider<EmberParticleData>
 		return new ParticleGlow(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(),
 				data.color.getBlue(), data.alpha, data.scale, data.life, this.spriteSet);
 
-	}
-
-	public static ParticleOptions createData(ParticleColor color, float s, float a, int l) {
-		return new EmberParticleData(HLParticleInit.ember.get(), color, a, s, l);
 	}
 
 }

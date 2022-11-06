@@ -13,6 +13,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 public abstract class BannerFinder {
+	public interface BannerGetter {
+		ItemStack getBanner();
+
+		default boolean isHidden() {
+			return false;
+		}
+
+		default void setBanner(ItemStack stack) {
+			// Defaults to "do nothing"
+		}
+
+		void syncToClients();
+	}
+
 	private static NonNullList<BannerFinder> instances = NonNullList.create();
 
 	public static synchronized void addFinder(BannerFinder finder) {
@@ -40,12 +54,6 @@ public abstract class BannerFinder {
 		}
 	}
 
-	public abstract String getName();
-
-	public abstract Optional<? extends BannerGetter> findStack(LivingEntity player, boolean allowCosmetic);
-
-	protected abstract Optional<BannerGetter> getSlotFromId(Player player, JsonElement slot);
-
 	protected final Optional<? extends BannerGetter> findBannerInInventory(IItemHandler inventory,
 			IntFunction<? extends BannerGetter> getterFactory) {
 		for (int i = 0; i < inventory.getSlots(); i++) {
@@ -59,17 +67,9 @@ public abstract class BannerFinder {
 		return Optional.empty();
 	}
 
-	public interface BannerGetter {
-		ItemStack getBanner();
+	public abstract Optional<? extends BannerGetter> findStack(LivingEntity player, boolean allowCosmetic);
 
-		default void setBanner(ItemStack stack) {
-			// Defaults to "do nothing"
-		}
+	public abstract String getName();
 
-		default boolean isHidden() {
-			return false;
-		}
-
-		void syncToClients();
-	}
+	protected abstract Optional<BannerGetter> getSlotFromId(Player player, JsonElement slot);
 }

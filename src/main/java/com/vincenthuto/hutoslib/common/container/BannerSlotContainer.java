@@ -12,7 +12,7 @@ import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
@@ -32,17 +32,29 @@ import net.minecraft.world.level.Level;
 
 public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 
-	private final BannerSlot slotBanner;
-	private final IBannerSlot extensionSlot;
+	private static class Bridge extends CraftingMenu {
+		public static void slotChangedCraftingGridAccessor(AbstractContainerMenu container, Level level, Player player,
+				CraftingContainer craftingInventory, ResultContainer craftResultInventory) {
+			CraftingMenu.slotChangedCraftingGrid(container, level, player, craftingInventory, craftResultInventory);
+		}
 
-	private final CraftingContainer craftingInventory = new CraftingContainer(this, 2, 2);
-	private final ResultContainer craftResultInventory = new ResultContainer();
-	private final Player player;
-
+		private Bridge(int p_39353_, Inventory p_39354_) {
+			super(p_39353_, p_39354_);
+			throw new IllegalStateException("Not instantiable.");
+		}
+	}
 	@SuppressWarnings("unused")
 	private interface SlotFactory<T extends Slot> {
 		T create(IBannerSlot slot, int x, int y);
 	}
+
+	private final BannerSlot slotBanner;
+	private final IBannerSlot extensionSlot;
+	private final CraftingContainer craftingInventory = new CraftingContainer(this, 2, 2);
+
+	private final ResultContainer craftResultInventory = new ResultContainer();
+
+	private final Player player;
 
 	public BannerSlotContainer(int id, Inventory playerInventory) {
 		super(HlContainerInit.banner_slot_container.get(), id);
@@ -59,36 +71,41 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 		for (int k = 0; k < 4; ++k) {
 			final EquipmentSlot equipmentslot = InventoryMenu.SLOT_IDS[k];
 			this.addSlot(new Slot(playerInventory, 39 - k, 8, 8 + k * 18) {
-				public void set(ItemStack p_219985_) {
-					ItemStack itemstack = this.getItem();
-					super.set(p_219985_);
-					player.onEquipItem(equipmentslot, itemstack, p_219985_);
-				}
-
+				@Override
 				public int getMaxStackSize() {
 					return 1;
 				}
 
-				/**
-				 * Check if the stack is allowed to be placed in this slot, used for armor slots
-				 * as well as furnace fuel.
-				 */
-				public boolean mayPlace(ItemStack p_39746_) {
-					return p_39746_.canEquip(equipmentslot, player);
+				@Override
+				public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+					return Pair.of(InventoryMenu.BLOCK_ATLAS,
+							InventoryMenu.TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()]);
 				}
 
 				/**
 				 * Return whether this slot's stack can be taken from this slot.
 				 */
+				@Override
 				public boolean mayPickup(Player p_39744_) {
 					ItemStack itemstack = this.getItem();
 					return !itemstack.isEmpty() && !p_39744_.isCreative()
 							&& EnchantmentHelper.hasBindingCurse(itemstack) ? false : super.mayPickup(p_39744_);
 				}
 
-				public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-					return Pair.of(InventoryMenu.BLOCK_ATLAS,
-							InventoryMenu.TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()]);
+				/**
+				 * Check if the stack is allowed to be placed in this slot, used for armor slots
+				 * as well as furnace fuel.
+				 */
+				@Override
+				public boolean mayPlace(ItemStack p_39746_) {
+					return p_39746_.canEquip(equipmentslot, player);
+				}
+
+				@Override
+				public void set(ItemStack p_219985_) {
+					ItemStack itemstack = this.getItem();
+					super.set(p_219985_);
+					player.onEquipItem(equipmentslot, itemstack, p_219985_);
 				}
 			});
 		}
@@ -122,6 +139,37 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 	}
 
 	@Override
+	public void broadcastChanges() {
+		super.broadcastChanges();
+	}
+
+	@Override
+	public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
+		return slotIn.container != this.craftResultInventory && super.canTakeItemForPickAll(stack, slotIn);
+	}
+
+	@Override
+	public void clearCraftingContent() {
+		this.craftResultInventory.clearContent();
+		this.craftingInventory.clearContent();
+	}
+
+	@Override
+	public void fillCraftSlotsStackedContents(StackedContents itemHelperIn) {
+		this.craftingInventory.fillStackedContents(itemHelperIn);
+	}
+
+	@Override
+	public int getGridHeight() {
+		return this.craftingInventory.getHeight();
+	}
+
+	@Override
+	public int getGridWidth() {
+		return this.craftingInventory.getWidth();
+	}
+
+	@Override
 	public List<RecipeBookCategories> getRecipeBookCategories() {
 		return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH, RecipeBookCategories.CRAFTING_EQUIPMENT,
 				RecipeBookCategories.CRAFTING_BUILDING_BLOCKS, RecipeBookCategories.CRAFTING_MISC,
@@ -134,89 +182,13 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 	}
 
 	@Override
-	public boolean shouldMoveToInventory(int slot) {
-		return slot != this.getResultSlotIndex();
-	}
-
-	@Override
-	public void fillCraftSlotsStackedContents(StackedContents itemHelperIn) {
-		this.craftingInventory.fillStackedContents(itemHelperIn);
-	}
-
-	@Override
-	public void clearCraftingContent() {
-		this.craftResultInventory.clearContent();
-		this.craftingInventory.clearContent();
-	}
-
-	@Override
-	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn) {
-		return recipeIn.matches(this.craftingInventory, this.player.level);
-	}
-
-	@Override
-	public void slotsChanged(Container inventoryIn) {
-		Bridge.slotChangedCraftingGridAccessor(this, this.player.level, this.player, this.craftingInventory,
-				this.craftResultInventory);
-	}
-
-	private static class Bridge extends CraftingMenu {
-		private Bridge(int p_39353_, Inventory p_39354_) {
-			super(p_39353_, p_39354_);
-			throw new IllegalStateException("Not instantiable.");
-		}
-
-		public static void slotChangedCraftingGridAccessor(AbstractContainerMenu container, Level level, Player player,
-				CraftingContainer craftingInventory, ResultContainer craftResultInventory) {
-			CraftingMenu.slotChangedCraftingGrid(container, level, player, craftingInventory, craftResultInventory);
-		}
-	}
-
-	@Override
-	public void removed(Player playerIn) {
-		super.removed(playerIn);
-
-		this.craftResultInventory.clearContent();
-
-		if (!playerIn.level.isClientSide) {
-			this.clearContainer(playerIn, this.craftingInventory);
-			BannerFinder.sendSync(playerIn);
-		}
-	}
-
-	@Override
-	public boolean stillValid(Player playerIn) {
-		return true;
-	}
-
-	@Override
-	public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
-		return slotIn.container != this.craftResultInventory && super.canTakeItemForPickAll(stack, slotIn);
-	}
-
-	@Override
 	public int getResultSlotIndex() {
 		return 0;
 	}
 
 	@Override
-	public int getGridWidth() {
-		return this.craftingInventory.getWidth();
-	}
-
-	@Override
-	public int getGridHeight() {
-		return this.craftingInventory.getHeight();
-	}
-
-	@Override
 	public int getSize() {
 		return 5;
-	}
-
-	@Override
-	public void broadcastChanges() {
-		super.broadcastChanges();
 	}
 
 	@Override
@@ -226,7 +198,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 	      if (slot != null && slot.hasItem()) {
 	         ItemStack itemstack1 = slot.getItem();
 	         itemstack = itemstack1.copy();
-	         EquipmentSlot equipmentslot = Mob.getEquipmentSlotForItem(itemstack);
+	         EquipmentSlot equipmentslot = LivingEntity.getEquipmentSlotForItem(itemstack);
 	         if (pIndex == 0) {
 	            if (!this.moveItemStackTo(itemstack1, 9, 45, true)) {
 	               return ItemStack.EMPTY;
@@ -280,4 +252,37 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 
 	      return itemstack;
 	   }
+
+	@Override
+	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn) {
+		return recipeIn.matches(this.craftingInventory, this.player.level);
+	}
+
+	@Override
+	public void removed(Player playerIn) {
+		super.removed(playerIn);
+
+		this.craftResultInventory.clearContent();
+
+		if (!playerIn.level.isClientSide) {
+			this.clearContainer(playerIn, this.craftingInventory);
+			BannerFinder.sendSync(playerIn);
+		}
+	}
+
+	@Override
+	public boolean shouldMoveToInventory(int slot) {
+		return slot != this.getResultSlotIndex();
+	}
+
+	@Override
+	public void slotsChanged(Container inventoryIn) {
+		Bridge.slotChangedCraftingGridAccessor(this, this.player.level, this.player, this.craftingInventory,
+				this.craftResultInventory);
+	}
+
+	@Override
+	public boolean stillValid(Player playerIn) {
+		return true;
+	}
 }

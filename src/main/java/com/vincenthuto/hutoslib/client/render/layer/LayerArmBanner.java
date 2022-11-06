@@ -49,10 +49,6 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 				Minecraft.getInstance().getEntityModels().bakeLayer(HutosLibModelLayersInit.arm_banner));
 	}
 
-	private void translateToBody(PoseStack matrixStack) {
-		this.getParentModel().leftArm.translateAndRotate(matrixStack);
-	}
-
 	@SuppressWarnings({ "unchecked", "unused" })
 	@Override
 	public void render(PoseStack matrixStack, MultiBufferSource buffer, int lightness, T ent, float limbSwing,
@@ -101,6 +97,10 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 				}
 			});
 		}
+	}
+
+	private void translateToBody(PoseStack matrixStack) {
+		this.getParentModel().leftArm.translateAndRotate(matrixStack);
 	}
 
 }

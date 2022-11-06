@@ -17,14 +17,36 @@ import net.minecraft.world.item.Items;
 
 public class HLLib extends TomeLib {
 
-	public static List<TomeChapter> chapters = new ArrayList<TomeChapter>();;
-	public static List<GuiGuidePage> introPages = new ArrayList<GuiGuidePage>();
-	public static List<GuiGuidePage> knapperPages = new ArrayList<GuiGuidePage>();
-	public static List<GuiGuidePage> bannerPages = new ArrayList<GuiGuidePage>();
-	public static List<GuiGuidePage> itemsPages = new ArrayList<GuiGuidePage>();
-	public static List<GuiGuidePage> blocksPages = new ArrayList<GuiGuidePage>();
-	public static List<GuiGuidePage> enchantPages = new ArrayList<GuiGuidePage>();
+	public static List<TomeChapter> chapters = new ArrayList<>();
+	public static List<GuiGuidePage> introPages = new ArrayList<>();
+	public static List<GuiGuidePage> knapperPages = new ArrayList<>();
+	public static List<GuiGuidePage> bannerPages = new ArrayList<>();
+	public static List<GuiGuidePage> itemsPages = new ArrayList<>();
+	public static List<GuiGuidePage> blocksPages = new ArrayList<>();
+	public static List<GuiGuidePage> enchantPages = new ArrayList<>();
 	public static TomeChapter introChapter, bannerChapter, itemChapter, blockChapter, knapperChapter, enchantChapter;
+
+	@Override
+	public List<TomeChapter> getChapters() {
+		return chapters;
+	}
+
+	@Override
+	public GuiGuideTitlePage getTitle() {
+		return new HLTitlePage();
+	}
+
+	@Override
+	public void registerChapters() {
+		introChapter = new TomeChapter("Intro", TabColor.WHITE, introPages);
+		knapperChapter = new TomeChapter("Knappers", TabColor.BLUE, knapperPages);
+		bannerChapter = new TomeChapter("Arm Banners", TabColor.CYAN, bannerPages);
+		itemChapter = new TomeChapter("Misc Items", TabColor.YELLOW, itemsPages);
+		blockChapter = new TomeChapter("Misc Blocks", TabColor.GREEN, blocksPages);
+		enchantChapter = new TomeChapter("Enchantments", TabColor.PURPLE, enchantPages);
+		Collections.addAll(chapters, introChapter, knapperChapter, bannerChapter, itemChapter, blockChapter,
+				enchantChapter);
+	}
 
 	@Override
 	public void registerTome() {
@@ -87,28 +109,6 @@ public class HLLib extends TomeLib {
 				new ItemStack(Items.GLOW_BERRIES)));
 
 		registerChapters();
-	}
-
-	@Override
-	public void registerChapters() {
-		introChapter = new TomeChapter("Intro", TabColor.WHITE, introPages);
-		knapperChapter = new TomeChapter("Knappers", TabColor.BLUE, knapperPages);
-		bannerChapter = new TomeChapter("Arm Banners", TabColor.CYAN, bannerPages);
-		itemChapter = new TomeChapter("Misc Items", TabColor.YELLOW, itemsPages);
-		blockChapter = new TomeChapter("Misc Blocks", TabColor.GREEN, blocksPages);
-		enchantChapter = new TomeChapter("Enchantments", TabColor.PURPLE, enchantPages);
-		Collections.addAll(chapters, introChapter, knapperChapter, bannerChapter, itemChapter, blockChapter,
-				enchantChapter);
-	}
-
-	@Override
-	public GuiGuideTitlePage getTitle() {
-		return new HLTitlePage();
-	}
-
-	@Override
-	public List<TomeChapter> getChapters() {
-		return chapters;
 	}
 
 }

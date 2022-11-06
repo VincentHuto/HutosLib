@@ -19,16 +19,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class ColorParticleData implements ParticleOptions {
 
-	private ParticleType<ColorParticleData> type;
 	public static final Codec<ColorParticleData> CODEC = RecordCodecBuilder.create(instance -> instance
 			.group(Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
 					Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
 					Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()))
 			.apply(instance, ColorParticleData::new));
-
-	public ParticleColor color;
-
-	public static final ParticleOptions.Deserializer<ColorParticleData> DESERIALIZER = new ParticleOptions.Deserializer<ColorParticleData>() {
+	public static final ParticleOptions.Deserializer<ColorParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
 		@Override
 		public ColorParticleData fromCommand(ParticleType<ColorParticleData> type, StringReader reader)
 				throws CommandSyntaxException {
@@ -41,6 +37,10 @@ public class ColorParticleData implements ParticleOptions {
 			return new ColorParticleData(type, ParticleColor.deserialize(buffer.readUtf()));
 		}
 	};
+
+	private ParticleType<ColorParticleData> type;
+
+	public ParticleColor color;
 
 	public ColorParticleData(float r, float g, float b) {
 		this.color = new ParticleColor(r, g, b);

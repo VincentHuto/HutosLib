@@ -19,16 +19,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class DarkColorParticleData implements ParticleOptions {
 
-	private  ParticleType<DarkColorParticleData> type;
 	public static final Codec<DarkColorParticleData> CODEC = RecordCodecBuilder.create(instance -> instance
 			.group(Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
 					Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
 					Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()))
 			.apply(instance, DarkColorParticleData::new));
-
-	public ParticleColor color;
-
-	public static final ParticleOptions.Deserializer<DarkColorParticleData> DESERIALIZER = new ParticleOptions.Deserializer<DarkColorParticleData>() {
+	public static final ParticleOptions.Deserializer<DarkColorParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
 
 		@Override
 		public DarkColorParticleData fromCommand(ParticleType<DarkColorParticleData> type, StringReader reader)
@@ -43,6 +39,10 @@ public class DarkColorParticleData implements ParticleOptions {
 			return new DarkColorParticleData(type, ParticleColor.deserialize(p_123736_.readUtf()));
 		}
 	};
+
+	private  ParticleType<DarkColorParticleData> type;
+
+	public ParticleColor color;
 
 	public DarkColorParticleData(float r, float g, float b) {
 		this.color = new ParticleColor(r, g, b);

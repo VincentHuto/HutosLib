@@ -14,7 +14,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class ColorLightningData implements ParticleOptions {
 
-	private ParticleType<ColorLightningData> type;
 	public static final Codec<ColorLightningData> CODEC = RecordCodecBuilder
 			.create(instance -> instance.group(Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
 					Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
@@ -22,14 +21,8 @@ public class ColorLightningData implements ParticleOptions {
 					Codec.FLOAT.fieldOf("s").forGetter(d -> d.speed), Codec.INT.fieldOf("a").forGetter(d -> d.maxAge),
 					Codec.INT.fieldOf("f").forGetter(d -> d.fract),
 					Codec.FLOAT.fieldOf("o").forGetter(d -> d.maxOffset)).apply(instance, ColorLightningData::new));
-
-	public ParticleColor color;
-	public float speed;
-	public int maxAge, fract;
-	public float maxOffset;
-
 	@SuppressWarnings("deprecation")
-	public static final ParticleOptions.Deserializer<ColorLightningData> DESERIALIZER = new ParticleOptions.Deserializer<ColorLightningData>() {
+	public static final ParticleOptions.Deserializer<ColorLightningData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
 		@Override
 		public ColorLightningData fromCommand(ParticleType<ColorLightningData> type, StringReader reader)
 				throws CommandSyntaxException {
@@ -44,6 +37,13 @@ public class ColorLightningData implements ParticleOptions {
 					buffer.readInt(), buffer.readInt(), buffer.readFloat());
 		}
 	};
+
+	private ParticleType<ColorLightningData> type;
+	public ParticleColor color;
+	public float speed;
+	public int maxAge, fract;
+
+	public float maxOffset;
 
 	public ColorLightningData(float r, float g, float b, float s, int a, int f, float o) {
 		this.color = new ParticleColor(r, g, b);

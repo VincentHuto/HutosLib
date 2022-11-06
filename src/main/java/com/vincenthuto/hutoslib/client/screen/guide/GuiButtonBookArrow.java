@@ -11,8 +11,18 @@ import net.minecraft.sounds.SoundEvents;
 
 public class GuiButtonBookArrow extends GuiButtonTextured {
 
+	public static enum ArrowDirection {
+		FORWARD(HLLocHelper.guiPrefix("arrow_forward.png")), BACKWARD(HLLocHelper.guiPrefix("arrow_back.png"));
+
+		ResourceLocation texture;
+
+		ArrowDirection(ResourceLocation texture) {
+			this.texture = texture;
+		}
+	}
 	int buttonWidth, buttonHeight;
 	int id, u, v;
+
 	public ArrowDirection direction;
 
 	public GuiButtonBookArrow(ArrowDirection direction, int idIn, int x, int y, Button.OnPress pressedAction) {
@@ -25,15 +35,5 @@ public class GuiButtonBookArrow extends GuiButtonTextured {
 	@Override
 	public void playDownSound(SoundManager handler) {
 		handler.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0f, 1F));
-	}
-
-	public static enum ArrowDirection {
-		FORWARD(HLLocHelper.guiPrefix("arrow_forward.png")), BACKWARD(HLLocHelper.guiPrefix("arrow_back.png"));
-
-		ResourceLocation texture;
-
-		ArrowDirection(ResourceLocation texture) {
-			this.texture = texture;
-		}
 	}
 }

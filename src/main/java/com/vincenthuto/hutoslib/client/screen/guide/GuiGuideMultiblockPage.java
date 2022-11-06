@@ -24,6 +24,13 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 		this.pattern = pattern;
 	}
 
+	public GuiGuideMultiblockPage(int pageNumIn, String categoryIn, String titleIn, ItemStack iconIn,
+			MultiblockPattern pattern) {
+		super(pageNumIn, categoryIn, titleIn, "", iconIn);
+		this.pattern = pattern;
+
+	}
+
 	public GuiGuideMultiblockPage(int pageNumIn, String catagoryIn, String titleIn, MultiblockPattern pattern) {
 		super(pageNumIn, catagoryIn, titleIn, "", "");
 		this.pattern = pattern;
@@ -37,13 +44,6 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 
 	}
 
-	public GuiGuideMultiblockPage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn, String textIn,
-			MultiblockPattern pattern) {
-		super(pageNumIn, catagoryIn, titleIn, subtitleIn, textIn);
-		this.pattern = pattern;
-
-	}
-
 	public GuiGuideMultiblockPage(int pageNumIn, String categoryIn, String titleIn, String subtitleIn, String textIn,
 			ItemStack iconIn, MultiblockPattern pattern) {
 		super(pageNumIn, categoryIn, titleIn, subtitleIn, iconIn, textIn);
@@ -51,11 +51,24 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 
 	}
 
-	public GuiGuideMultiblockPage(int pageNumIn, String categoryIn, String titleIn, ItemStack iconIn,
+	public GuiGuideMultiblockPage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn, String textIn,
 			MultiblockPattern pattern) {
-		super(pageNumIn, categoryIn, titleIn, "", iconIn);
+		super(pageNumIn, catagoryIn, titleIn, subtitleIn, textIn);
 		this.pattern = pattern;
 
+	}
+
+	public MultiblockPattern getPattern() {
+		return pattern;
+	}
+
+	@Override
+	public boolean mouseDragged(double xPos, double yPos, int button, double dragLeftRight, double dragUpDown) {
+		xDragPos = xPos;
+		yDragPos = yPos;
+		this.dragLeftRight += dragLeftRight / 2;
+		this.dragUpDown -= dragUpDown / 2;
+		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
 	}
 
 	@Override
@@ -80,19 +93,6 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 		HLGuiUtils.renderMultiBlock(matrices, pattern, HLClientUtils.getPartialTicks(), new ScreenBlockTintGetter(),
 				left - guiWidth + 260, top + guiHeight - 65);
 
-	}
-	
-	public MultiblockPattern getPattern() {
-		return pattern;
-	}
-
-	@Override
-	public boolean mouseDragged(double xPos, double yPos, int button, double dragLeftRight, double dragUpDown) {
-		xDragPos = xPos;
-		yDragPos = yPos;
-		this.dragLeftRight += dragLeftRight / 2;
-		this.dragUpDown -= dragUpDown / 2;
-		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
 	}
 
 }

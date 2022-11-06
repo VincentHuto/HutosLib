@@ -19,20 +19,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class EmberParticleData implements ParticleOptions {
 
-	private ParticleType<EmberParticleData> type;
 	public static final Codec<EmberParticleData> CODEC = RecordCodecBuilder
 			.create(instance -> instance.group(Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
 					Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
 					Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
 					Codec.FLOAT.fieldOf("a").forGetter(d -> d.alpha), Codec.FLOAT.fieldOf("s").forGetter(d -> d.scale),
 					Codec.INT.fieldOf("l").forGetter(d -> d.life)).apply(instance, EmberParticleData::new));
-
-	public ParticleColor color;
-	public float scale;
-	public float alpha;
-	public int life;
-
-	public static final ParticleOptions.Deserializer<EmberParticleData> DESERIALIZER = new ParticleOptions.Deserializer<EmberParticleData>() {
+	public static final ParticleOptions.Deserializer<EmberParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
 
 		@Override
 		public EmberParticleData fromCommand(ParticleType<EmberParticleData> type, StringReader reader)
@@ -48,6 +41,13 @@ public class EmberParticleData implements ParticleOptions {
 					packetBuffer.readFloat(), packetBuffer.readFloat(), packetBuffer.readInt());
 		}
 	};
+
+	private ParticleType<EmberParticleData> type;
+	public ParticleColor color;
+	public float scale;
+	public float alpha;
+
+	public int life;
 
 	public EmberParticleData(float r, float g, float b, float s, float a, int l) {
 		this.color = new ParticleColor(r, g, b);

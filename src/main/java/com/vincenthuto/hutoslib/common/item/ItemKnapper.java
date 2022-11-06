@@ -42,19 +42,13 @@ public class ItemKnapper extends DiggerItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level lvl, Player p_41433_, InteractionHand p_41434_) {
-		return super.use(lvl, p_41433_, p_41434_);
-
+	public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
+		return DEFAULT_KNAPPER_ACTIONS.contains(toolAction);
 	}
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state) {
 		return ForgeRegistries.BLOCKS.tags().getTag(EFFECTIVE_ON).contains(state.getBlock()) ? speed : 0.5f;
-	}
-
-	@Override
-	public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
-		return DEFAULT_KNAPPER_ACTIONS.contains(toolAction);
 	}
 
 	@Override
@@ -66,5 +60,11 @@ public class ItemKnapper extends DiggerItem {
 			worldIn.addFreshEntity(ent);
 		}
 		return super.mineBlock(stack, worldIn, state, pos, entityLiving);
+	}
+
+	@Override
+	public InteractionResultHolder<ItemStack> use(Level lvl, Player p_41433_, InteractionHand p_41434_) {
+		return super.use(lvl, p_41433_, p_41434_);
+
 	}
 }

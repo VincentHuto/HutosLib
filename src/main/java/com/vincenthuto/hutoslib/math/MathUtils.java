@@ -19,29 +19,11 @@ import net.minecraft.world.phys.Vec3;
  * to be going well so far!
  */
 public final class MathUtils {
-	private MathUtils() {
-		/* good try */}
-
 	/**
 	 * Float Version of PI. Why? so we don't have to cast the fucking official one
 	 * 314159265358979323846 (heh) times
 	 */
 	public static final float PI = (float) Math.PI;
-
-	/**
-	 * Returns a new pseudo random double value constrained to the values of
-	 * {@code (-1.0d)} and {@code (1.0d)}
-	 */
-	public static double nextDouble(Random rand) {
-		return 2 * rand.nextDouble() - 1;
-	}
-
-	/**
-	 * A good way to get a position offset by the direction of a yaw angle.
-	 */
-	public static Vec3 getYawVec(float yaw, double xOffset, double zOffset) {
-		return new Vec3(xOffset, 0, zOffset).yRot(-yaw * (PI / 180f));
-	}
 
 	/**
 	 * Get the angle between 2 sources
@@ -58,6 +40,13 @@ public final class MathUtils {
 	}
 
 	/**
+	 * A good way to get a position offset by the direction of a yaw angle.
+	 */
+	public static Vec3 getYawVec(float yaw, double xOffset, double zOffset) {
+		return new Vec3(xOffset, 0, zOffset).yRot(-yaw * (PI / 180f));
+	}
+
+	/**
 	 * Clamped (0-1) Linear Interpolation (Float version)
 	 */
 	public static float linTerp(float a, float b, float x) {
@@ -68,11 +57,12 @@ public final class MathUtils {
 		return a + x * (b - a);
 	}
 
-	public static Point rotatePointAbout(Point in, Point about, double degrees) {
-		double rad = degrees * Math.PI / 180.0;
-		double newX = Math.cos(rad) * (in.x - about.x) - Math.sin(rad) * (in.y - about.y) + about.x;
-		double newY = Math.sin(rad) * (in.x - about.x) + Math.cos(rad) * (in.y - about.y) + about.y;
-		return new Point((int) newX, (int) newY);
+	/**
+	 * Returns a new pseudo random double value constrained to the values of
+	 * {@code (-1.0d)} and {@code (1.0d)}
+	 */
+	public static double nextDouble(Random rand) {
+		return 2 * rand.nextDouble() - 1;
 	}
 
 	@Nullable
@@ -95,5 +85,15 @@ public final class MathUtils {
 
 		return result == null ? null : new EntityHitResult(result);
 	}
+
+	public static Point rotatePointAbout(Point in, Point about, double degrees) {
+		double rad = degrees * Math.PI / 180.0;
+		double newX = Math.cos(rad) * (in.x - about.x) - Math.sin(rad) * (in.y - about.y) + about.x;
+		double newY = Math.sin(rad) * (in.x - about.x) + Math.cos(rad) * (in.y - about.y) + about.y;
+		return new Point((int) newX, (int) newY);
+	}
+
+	private MathUtils() {
+		/* good try */}
 
 }

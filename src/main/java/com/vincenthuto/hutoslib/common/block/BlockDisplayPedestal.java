@@ -51,14 +51,24 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 	}
 
 	@Override
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+	}
+
+	@Override
+	public RenderShape getRenderShape(BlockState p_49232_) {
+		return RenderShape.MODEL;
+	}
+
+	@Override
 	public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_,
 			CollisionContext p_60558_) {
 		return SHAPE_N;
 	}
 
 	@Override
-	public RenderShape getRenderShape(BlockState p_49232_) {
-		return RenderShape.MODEL;
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
@@ -69,6 +79,23 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 				? createTickerHelper(p_153184_, HLBlockEntityInit.display_pedestal.get(),
 						DisplayPedestalBlockEntity::animTick)
 				: null;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public BlockState mirror(BlockState state, Mirror mirrorIn) {
+		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+	}
+
+	@Nullable
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new DisplayPedestalBlockEntity(pos, state);
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rot) {
+		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Override
@@ -95,33 +122,6 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 		}
 
 		return InteractionResult.PASS;
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
-	}
-
-	@Override
-	public BlockState rotate(BlockState state, Rotation rot) {
-		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
-	}
-
-	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(FACING);
-	}
-
-	@Nullable
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new DisplayPedestalBlockEntity(pos, state);
 	}
 
 }

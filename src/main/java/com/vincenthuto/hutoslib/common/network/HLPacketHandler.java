@@ -66,7 +66,7 @@ public class HLPacketHandler {
 	}
 
 	/***
-	 * 
+	 *
 	 * @param entVec    Beginning Location
 	 * @param endVec    Ending location
 	 * @param radius    How far to send the packet to
@@ -82,7 +82,7 @@ public class HLPacketHandler {
 		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle(entVec, endVec, color, speed, maxAge, fract,
 				maxOff);
 		MAINCHANNEL.send(PacketDistributor.NEAR.with(
-				() -> new PacketDistributor.TargetPoint(entVec.x, entVec.y, entVec.z, (double) radius, dimension)),
+				() -> new PacketDistributor.TargetPoint(entVec.x, entVec.y, entVec.z, radius, dimension)),
 				msg);
 
 	}

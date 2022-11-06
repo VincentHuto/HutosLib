@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 public class ItemGuideBook extends Item {
+	private static final Random random = new Random();
 	// Essentially taken from the enchanting table animation code with some slight
 	// modifications
 	public int ticks;
@@ -30,7 +31,6 @@ public class ItemGuideBook extends Item {
 	public float pageAngle;
 	public float tRot;
 	public float close;
-	private static final Random random = new Random();
 	private ResourceLocation texture;
 
 	public ItemGuideBook(Properties prop, ResourceLocation loc) {
@@ -42,8 +42,10 @@ public class ItemGuideBook extends Item {
 		return texture;
 	}
 
-	public void setTexture(ResourceLocation texture) {
-		this.texture = texture;
+	@Override
+		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		super.initializeClient(consumer);
+		consumer.accept(RenderPropTome.INSTANCE);
 	}
 
 	@Override
@@ -104,10 +106,8 @@ public class ItemGuideBook extends Item {
 
 	}
 
-	@Override
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-		super.initializeClient(consumer);
-		consumer.accept(RenderPropTome.INSTANCE);
+	public void setTexture(ResourceLocation texture) {
+		this.texture = texture;
 	}
 }
 

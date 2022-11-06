@@ -36,7 +36,7 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 		for (int i = 0; i < te.inventorySize(); i++) {
 			matrixStackIn.pushPose();
 			matrixStackIn.translate(0.5F, 1.55F, 0.5F);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(angles[i] + (float) te.getLevel().getGameTime())); // Edit
+			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(angles[i] + te.getLevel().getGameTime())); // Edit
 			matrixStackIn.translate(0.025F, -0.5F, 0.025F);
 			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90f)); // Edit Radius Movement
 			matrixStackIn.translate(0D, 0.175D + i * 0.25, 0F); // Block/Item Scale

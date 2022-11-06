@@ -10,7 +10,6 @@ import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -39,7 +38,11 @@ public class ItemArmBanner extends Item implements IBannerSlotItem {
 	public static final Capability<IBannerSlotItem> BANNER_SLOT_ITEM = CapabilityManager.get(new CapabilityToken<>() {
 	});
 
+	public static DyeColor getColor(ItemStack stack) {
+		return DyeColor.byId(stack.getOrCreateTagElement("BlockEntityTag").getInt("Base"));
+	}
 	public ArmorMaterial material;
+
 	ResourceLocation modellocation;
 
 	public ItemArmBanner(Properties prop, ArmorMaterial materialIn, ResourceLocation modellocation) {
@@ -49,40 +52,19 @@ public class ItemArmBanner extends Item implements IBannerSlotItem {
 	}
 
 	@Override
-	public String getDescriptionId(ItemStack stack) {
-		return stack.getTagElement("BlockEntityTag") != null ? this.getDescriptionId() + '.' + getColor(stack).getName()
-				: super.getDescriptionId(stack);
-	}
-
-	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
 	}
 
 	@Override
-
-	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-		ItemStack itemstack = playerIn.getItemInHand(handIn);
-		playerIn.startUsingItem(handIn);
-		return InteractionResultHolder.consume(itemstack);
+	public String getDescriptionId(ItemStack stack) {
+		return stack.getTagElement("BlockEntityTag") != null ? this.getDescriptionId() + '.' + getColor(stack).getName()
+				: super.getDescriptionId(stack);
 	}
 
-	@Override
-	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+	public ResourceLocation getTexture() {
 
-		return ForgeRegistries.ITEMS.tags().getTag(ItemTags.PLANKS).contains(repair.getItem())
-				|| super.isValidRepairItem(toRepair, repair);
-	}
-
-	public static DyeColor getColor(ItemStack stack) {
-		return DyeColor.byId(stack.getOrCreateTagElement("BlockEntityTag").getInt("Base"));
-	}
-
-	@Override
-	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-		super.initializeClient(consumer);
-		consumer.accept(RenderPropArmBanner.INSTANCE);
-
+		return modellocation;
 	}
 
 	@Override
@@ -100,9 +82,26 @@ public class ItemArmBanner extends Item implements IBannerSlotItem {
 		};
 	}
 
-	public ResourceLocation getTexture() {
+	@Override
+	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		super.initializeClient(consumer);
+		consumer.accept(RenderPropArmBanner.INSTANCE);
 
-		return modellocation;
+	}
+
+	@Override
+	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+
+		return ForgeRegistries.ITEMS.tags().getTag(ItemTags.PLANKS).contains(repair.getItem())
+				|| super.isValidRepairItem(toRepair, repair);
+	}
+
+	@Override
+
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+		ItemStack itemstack = playerIn.getItemInHand(handIn);
+		playerIn.startUsingItem(handIn);
+		return InteractionResultHolder.consume(itemstack);
 	}
 }
 

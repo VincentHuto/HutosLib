@@ -8,7 +8,12 @@ import net.minecraft.world.phys.Vec3;
 public class VecHelper {
 	public static final Vec3 ONE = new Vec3(1, 1, 1);
 
-	private VecHelper() {
+	public static AABB boxForRange(Vec3 v, double range) {
+		return boxForRange(v, range, range, range);
+	}
+
+	public static AABB boxForRange(Vec3 v, double rangeX, double rangeY, double rangeZ) {
+		return new AABB(v.x - rangeX, v.y - rangeY, v.z - rangeZ, v.x + rangeX, v.y + rangeY, v.z + rangeZ);
 	}
 
 	public static Vec3 fromEntityCenter(Entity e) {
@@ -34,11 +39,6 @@ public class VecHelper {
 				firstTerm.z + secondTerm.z + thirdTerm.z);
 	}
 
-	public static AABB boxForRange(Vec3 v, double range) {
-		return boxForRange(v, range, range, range);
-	}
-
-	public static AABB boxForRange(Vec3 v, double rangeX, double rangeY, double rangeZ) {
-		return new AABB(v.x - rangeX, v.y - rangeY, v.z - rangeZ, v.x + rangeX, v.y + rangeY, v.z + rangeZ);
+	private VecHelper() {
 	}
 }

@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class GuiGuidePageTOC extends GuiGuidePage {
 	GuiButtonTextured buttonTOC;
-	public List<GuiButtonTextured> chapterButtons = new ArrayList<GuiButtonTextured>();
+	public List<GuiButtonTextured> chapterButtons = new ArrayList<>();
 
 	public GuiGuidePageTOC(String catagoryIn) {
 		this(catagoryIn, ItemStack.EMPTY);
@@ -25,40 +25,12 @@ public abstract class GuiGuidePageTOC extends GuiGuidePage {
 	}
 
 
-	public GuiGuidePageTOC(String catagoryIn, String subtitle) {
-		super(0, catagoryIn, "Table of Contents", subtitle, ItemStack.EMPTY, "");
-	}
-
 	public GuiGuidePageTOC(String catagoryIn, ItemStack iconIn, String subtitle) {
 		super(0, catagoryIn, "Table of Contents", subtitle, iconIn, "");
 	}
 
-	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
-		for (int i = 1; i < chapterButtons.size(); i++) {
-			chapterButtons.get(i).renderButton(matrixStack, mouseX, mouseY, partialTicks);
-			HLGuiUtils.drawMaxWidthString(font,  Component.literal("Pg." + i), (int) (chapterButtons.get(i).posX + 5),
-					chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
-			HLGuiUtils.drawMaxWidthString(font,  Component.literal(getPages().get(i).title),
-					(int) (chapterButtons.get(i).posX + 30), chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
-		}
-	}
-
-	@Override
-	public void renderBackground(PoseStack p_96557_) {
-		super.renderBackground(p_96557_);
-	}
-
-	@Override
-	public void renderTooltip(PoseStack p_169389_, List<Component> p_169390_, Optional<TooltipComponent> p_169391_,
-			int mouseX, int mouseY) {
-		super.renderTooltip(p_169389_, p_169390_, p_169391_, mouseX, mouseY);
-	}
-
-	@Override
-	public void renderComponentTooltip(PoseStack p_96598_, List<Component> p_96599_, int mouseX, int mouseY) {
-		super.renderComponentTooltip(p_96598_, p_96599_, mouseX, mouseY);
+	public GuiGuidePageTOC(String catagoryIn, String subtitle) {
+		super(0, catagoryIn, "Table of Contents", subtitle, ItemStack.EMPTY, "");
 	}
 
 	@Override
@@ -78,9 +50,37 @@ public abstract class GuiGuidePageTOC extends GuiGuidePage {
 						}
 					}));
 		}
-		for (int i = 0; i < chapterButtons.size(); i++) {
-			this.addRenderableWidget(chapterButtons.get(i));
+		for (GuiButtonTextured chapterButton : chapterButtons) {
+			this.addRenderableWidget(chapterButton);
 		}
+	}
+
+	@Override
+	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		for (int i = 1; i < chapterButtons.size(); i++) {
+			chapterButtons.get(i).renderButton(matrixStack, mouseX, mouseY, partialTicks);
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal("Pg." + i), chapterButtons.get(i).posX + 5,
+					chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
+			HLGuiUtils.drawMaxWidthString(font,  Component.literal(getPages().get(i).title),
+					chapterButtons.get(i).posX + 30, chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
+		}
+	}
+
+	@Override
+	public void renderBackground(PoseStack p_96557_) {
+		super.renderBackground(p_96557_);
+	}
+
+	@Override
+	public void renderComponentTooltip(PoseStack p_96598_, List<Component> p_96599_, int mouseX, int mouseY) {
+		super.renderComponentTooltip(p_96598_, p_96599_, mouseX, mouseY);
+	}
+
+	@Override
+	public void renderTooltip(PoseStack p_169389_, List<Component> p_169390_, Optional<TooltipComponent> p_169391_,
+			int mouseX, int mouseY) {
+		super.renderTooltip(p_169389_, p_169390_, p_169391_, mouseX, mouseY);
 	}
 
 	public void tableButtonCheck(int page) {

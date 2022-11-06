@@ -30,31 +30,14 @@ public class BannerSlotItemHandler implements IBannerSlot {
 
 	@Nonnull
 	@Override
-	public ResourceLocation getType() {
-		return slotType;
-	}
-
-	@Nonnull
-	@Override
 	public ItemStack getContents() {
 		return inventory.getStackInSlot(slot);
 	}
 
+	@Nonnull
 	@Override
-	public void setContents(@Nonnull ItemStack stack) {
-		ItemStack oldStack = getContents();
-		if (oldStack == stack)
-			return;
-		if (!oldStack.isEmpty())
-			notifyUnequip(oldStack);
-		inventory.setStackInSlot(slot, stack);
-		if (!stack.isEmpty())
-			notifyEquip(stack);
-	}
-
-	@Override
-	public void onContentsChanged() {
-		owner.onContentsChanged(this);
+	public ResourceLocation getType() {
+		return slotType;
 	}
 
 	private void notifyEquip(ItemStack stack) {
@@ -69,6 +52,11 @@ public class BannerSlotItemHandler implements IBannerSlot {
 		});
 	}
 
+	@Override
+	public void onContentsChanged() {
+		owner.onContentsChanged(this);
+	}
+
 	public void onWornTick() {
 		ItemStack stack = getContents();
 		if (stack.isEmpty())
@@ -76,6 +64,18 @@ public class BannerSlotItemHandler implements IBannerSlot {
 		stack.getCapability(BannerSlotCapability.INSTANCE, null).ifPresent((extItem) -> {
 			extItem.onWornTick(stack, this);
 		});
+	}
+
+	@Override
+	public void setContents(@Nonnull ItemStack stack) {
+		ItemStack oldStack = getContents();
+		if (oldStack == stack)
+			return;
+		if (!oldStack.isEmpty())
+			notifyUnequip(oldStack);
+		inventory.setStackInSlot(slot, stack);
+		if (!stack.isEmpty())
+			notifyEquip(stack);
 	}
 
 }

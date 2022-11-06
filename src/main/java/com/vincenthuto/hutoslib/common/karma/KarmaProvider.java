@@ -16,20 +16,12 @@ import net.minecraftforge.common.util.LazyOptional;
 public class KarmaProvider implements ICapabilitySerializable<Tag> {
     public static final Capability<IKarma> KARMA_CAPA = CapabilityManager.get(new CapabilityToken<>(){});
 
+	public static float getPlayerbloodAmount(Player player) {
+		return player.getCapability(KARMA_CAPA).orElseThrow(IllegalStateException::new).getKarma();
+	}
 	Karma capability = new Karma();
+
 	private LazyOptional<IKarma> instance = LazyOptional.of(() -> capability);
-
-	@Nonnull
-	@Override
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-		return cap == KARMA_CAPA ? instance.cast() : LazyOptional.empty();
-	}
-
-	@Override
-	public Tag serializeNBT() {
-		return writeNBT(KARMA_CAPA,
-				instance.orElseThrow(() -> new IllegalArgumentException("LazyOptional cannot be empty!")), null);
-	}
 
 	@Override
 	public void deserializeNBT(Tag nbt) {
@@ -37,15 +29,10 @@ public class KarmaProvider implements ICapabilitySerializable<Tag> {
 				null, nbt);
 	}
 
-	public static float getPlayerbloodAmount(Player player) {
-		return player.getCapability(KARMA_CAPA).orElseThrow(IllegalStateException::new).getKarma();
-	}
-
-	public CompoundTag writeNBT(Capability<IKarma> capability, IKarma instance, Direction side) {
-		CompoundTag entry = new CompoundTag();
-		entry.putBoolean("Active", instance.isActive());
-		entry.putFloat("Amount", instance.getKarma());
-		return entry;
+	@Nonnull
+	@Override
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+		return cap == KARMA_CAPA ? instance.cast() : LazyOptional.empty();
 	}
 
 	public void readNBT(Capability<IKarma> capability, IKarma instance, Direction side, Tag nbt) {
@@ -59,5 +46,18 @@ public class KarmaProvider implements ICapabilitySerializable<Tag> {
 			}
 		}
 
+	}
+
+	@Override
+	public Tag serializeNBT() {
+		return writeNBT(KARMA_CAPA,
+				instance.orElseThrow(() -> new IllegalArgumentException("LazyOptional cannot be empty!")), null);
+	}
+
+	public CompoundTag writeNBT(Capability<IKarma> capability, IKarma instance, Direction side) {
+		CompoundTag entry = new CompoundTag();
+		entry.putBoolean("Active", instance.isActive());
+		entry.putFloat("Amount", instance.getKarma());
+		return entry;
 	}
 }

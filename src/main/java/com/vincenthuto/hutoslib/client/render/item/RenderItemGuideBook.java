@@ -22,13 +22,17 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
-	public BookModel model;
 	public static ResourceLocation defaultText = new ResourceLocation(HutosLib.MOD_ID,
 			"textures/gui/hl_guide_book_text_default.png");
+	public BookModel model;
 
 	public RenderItemGuideBook(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
 		super(p_172550_, p_172551_);
 		this.model = new BookModel(p_172551_.bakeLayer(ModelLayers.BOOK));
+	}
+
+	public BookModel getModel() {
+		return model;
 	}
 
 	@Override
@@ -98,9 +102,5 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 			}
 
 		}
-	}
-
-	public BookModel getModel() {
-		return model;
 	}
 }

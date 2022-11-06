@@ -20,33 +20,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 public class BannerFinderBannerSlot extends BannerFinder {
 
-    public static final Capability<BannerExtensionSlot> BANNER_SLOT_ITEM =CapabilityManager.get(new CapabilityToken<>(){});
-	
-	public static void initFinder() {
-		BannerFinder.addFinder(new BannerFinderBannerSlot());
-	}
-
-	@Override
-	protected Optional<BannerGetter> getSlotFromId(Player player, JsonElement packetData) {
-		return BannerExtensionSlot.get(player).resolve().map(BannerExtensionSlot::getSlots)
-				.map(slots -> slots.get(packetData.getAsInt()))
-				.map(slot -> new ExtensionSlotBannerGetter(player, slot));
-	}
-
-	@Override
-	public String getName() {
-		return "banner_slot";
-	}
-
-	@Override
-	public Optional<? extends BannerGetter> findStack(LivingEntity player, boolean allowCosmetic) {
-		return BannerExtensionSlot.get(player).resolve()
-				.flatMap(ext -> ext.getSlots().stream()
-						.filter(slot -> slot.getContents().getItem() instanceof ItemArmBanner)
-						.map(slot -> new ExtensionSlotBannerGetter(player, slot)).findFirst());
-	}
-
-	private static class ExtensionSlotBannerGetter implements BannerGetter {
+    private static class ExtensionSlotBannerGetter implements BannerGetter {
 		@SuppressWarnings("unused")
 		private final LivingEntity player;
 		private final BannerSlotItemHandler slot;
@@ -62,13 +36,13 @@ public class BannerFinderBannerSlot extends BannerFinder {
 		}
 
 		@Override
-		public void setBanner(ItemStack stack) {
-			slot.setContents(stack);
+		public boolean isHidden() {
+			return false;
 		}
 
 		@Override
-		public boolean isHidden() {
-			return false;
+		public void setBanner(ItemStack stack) {
+			slot.setContents(stack);
 		}
 
 		@Override
@@ -81,5 +55,31 @@ public class BannerFinderBannerSlot extends BannerFinder {
 			HLPacketHandler.MAINCHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> thePlayer),
 					message);
 		}
+	}
+
+	public static final Capability<BannerExtensionSlot> BANNER_SLOT_ITEM =CapabilityManager.get(new CapabilityToken<>(){});
+
+	public static void initFinder() {
+		BannerFinder.addFinder(new BannerFinderBannerSlot());
+	}
+
+	@Override
+	public Optional<? extends BannerGetter> findStack(LivingEntity player, boolean allowCosmetic) {
+		return BannerExtensionSlot.get(player).resolve()
+				.flatMap(ext -> ext.getSlots().stream()
+						.filter(slot -> slot.getContents().getItem() instanceof ItemArmBanner)
+						.map(slot -> new ExtensionSlotBannerGetter(player, slot)).findFirst());
+	}
+
+	@Override
+	public String getName() {
+		return "banner_slot";
+	}
+
+	@Override
+	protected Optional<BannerGetter> getSlotFromId(Player player, JsonElement packetData) {
+		return BannerExtensionSlot.get(player).resolve().map(BannerExtensionSlot::getSlots)
+				.map(slots -> slots.get(packetData.getAsInt()))
+				.map(slot -> new ExtensionSlotBannerGetter(player, slot));
 	}
 }

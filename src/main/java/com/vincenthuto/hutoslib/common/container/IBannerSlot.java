@@ -11,18 +11,11 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 public interface IBannerSlot {
-	@Nonnull
-	IBannerContainer getContainer();
-
-	@Nonnull
-	ResourceLocation getType();
-
-	@Nonnull
-	ItemStack getContents();
-
-	void setContents(@Nonnull ItemStack stack);
-
-	void onContentsChanged();
+	static boolean isAcceptableSlot(@Nonnull IBannerSlot slot, @Nonnull ItemStack stack,
+			@Nonnull IBannerSlotItem extItem) {
+		ImmutableSet<ResourceLocation> slots = extItem.getAcceptableSlots(stack);
+		return slots.contains(BannerSlotCapability.ANY_SLOT) || slots.contains(slot.getType());
+	}
 
 	default boolean canEquip(@Nonnull ItemStack stack) {
 		return stack.getCapability(BannerSlotCapability.INSTANCE, null)
@@ -37,9 +30,16 @@ public interface IBannerSlot {
 				.orElse(true);
 	}
 
-	static boolean isAcceptableSlot(@Nonnull IBannerSlot slot, @Nonnull ItemStack stack,
-			@Nonnull IBannerSlotItem extItem) {
-		ImmutableSet<ResourceLocation> slots = extItem.getAcceptableSlots(stack);
-		return slots.contains(BannerSlotCapability.ANY_SLOT) || slots.contains(slot.getType());
-	}
+	@Nonnull
+	IBannerContainer getContainer();
+
+	@Nonnull
+	ItemStack getContents();
+
+	@Nonnull
+	ResourceLocation getType();
+
+	void onContentsChanged();
+
+	void setContents(@Nonnull ItemStack stack);
 }

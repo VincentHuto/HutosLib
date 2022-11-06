@@ -18,10 +18,10 @@ public class TileMod extends BlockEntity {
 		super(type, pos, state);
 	}
 
+	@Nullable
 	@Override
-	public void saveAdditional(CompoundTag tag) {
-		super.saveAdditional(tag);
-		writePacketNBT(tag);
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Nonnull
@@ -38,16 +38,16 @@ public class TileMod extends BlockEntity {
 		readPacketNBT(tag);
 	}
 
-	public void writePacketNBT(CompoundTag cmp) {
-	}
-
 	public void readPacketNBT(CompoundTag cmp) {
 	}
 
-	@Nullable
 	@Override
-	public Packet<ClientGamePacketListener> getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
+	public void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
+		writePacketNBT(tag);
+	}
+
+	public void writePacketNBT(CompoundTag cmp) {
 	}
 
 }

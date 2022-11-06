@@ -14,12 +14,12 @@ public class HLClientUtils {
 		return getClient().player;
 	}
 
-	public static ClientLevel getWorld() {
-		return getClient().level;
-	}
-
 	public static float getPartialTicks() {
 		return getClient().getFrameTime();
+	}
+
+	public static ClientLevel getWorld() {
+		return getClient().level;
 	}
 
 }

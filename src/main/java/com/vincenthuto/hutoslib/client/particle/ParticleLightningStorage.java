@@ -8,6 +8,15 @@ import java.util.Random;
 import com.vincenthuto.hutoslib.math.Vector3;
 
 public class ParticleLightningStorage {
+	class SegmentSorterLightValue implements Comparator<Segment> {
+		SegmentSorterLightValue() {
+		}
+
+		@Override
+		public int compare(Segment a, Segment b) {
+			return Float.compare(b.light, a.light);
+		}
+	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private ArrayList<Segment> segments = new ArrayList();
 	private Vector3 start;
@@ -19,6 +28,7 @@ public class ParticleLightningStorage {
 	private int age;
 	private int maxAge;
 	private float maxOffset = 0.22f;
+
 	private int fract;
 
 	public ParticleLightningStorage(Vector3 start, Vector3 end, long seed) {
@@ -60,8 +70,67 @@ public class ParticleLightningStorage {
 
 	}
 
+	@Override
+	public void finalize() {
+		if (this.finalized) {
+			return;
+		}
+		this.finalized = true;
+		Collections.sort(this.segments, new SegmentSorterLightValue());
+	}
+
+	public void fractalize() {
+		this.fractalize(fract);
+	}
+
+	public void fractalize(int count) {
+		for (int i = 0; i < count; ++i) {
+			this.split();
+
+		}
+	}
+
+	public int getAge() {
+		return this.age;
+	}
+
+	public float getLength() {
+		return this.length;
+	}
+
+	public int getMaxAge() {
+		return this.maxAge;
+	}
+
+	public ArrayList<Segment> getSegments() {
+		return this.segments;
+	}
+
+	public boolean isFinal() {
+		return this.finalized;
+	}
+
+	public int numSegments() {
+		return this.segments.size();
+	}
+
+	public void onUpdate() {
+		this.age += this.speed;
+		if (this.age > this.maxAge) {
+			this.age = this.maxAge;
+		}
+	}
+
+	public void setMaxAge(int maxAge) {
+		this.maxAge = maxAge;
+	}
+
 	public void setMaxOffset(float offset) {
 		this.maxOffset = offset;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -84,74 +153,6 @@ public class ParticleLightningStorage {
 				Segment seg = new Segment(newPoints[i], newPoints[i + 1], segment.light);
 				this.segments.add(seg);
 			}
-		}
-	}
-
-	public void fractalize() {
-		this.fractalize(fract);
-	}
-
-	public void fractalize(int count) {
-		for (int i = 0; i < count; ++i) {
-			this.split();
-
-		}
-	}
-
-	public void finalize() {
-		if (this.finalized) {
-			return;
-		}
-		this.finalized = true;
-		Collections.sort(this.segments, new SegmentSorterLightValue());
-	}
-
-	public void onUpdate() {
-		this.age += this.speed;
-		if (this.age > this.maxAge) {
-			this.age = this.maxAge;
-		}
-	}
-
-	public int getAge() {
-		return this.age;
-	}
-
-	public int getMaxAge() {
-		return this.maxAge;
-	}
-
-	public void setMaxAge(int maxAge) {
-		this.maxAge = maxAge;
-	}
-
-	public void setSpeed(float speed) {
-		this.speed = speed;
-	}
-
-	public float getLength() {
-		return this.length;
-	}
-
-	public int numSegments() {
-		return this.segments.size();
-	}
-
-	public ArrayList<Segment> getSegments() {
-		return this.segments;
-	}
-
-	public boolean isFinal() {
-		return this.finalized;
-	}
-
-	class SegmentSorterLightValue implements Comparator<Segment> {
-		SegmentSorterLightValue() {
-		}
-
-		@Override
-		public int compare(Segment a, Segment b) {
-			return Float.compare(b.light, a.light);
 		}
 	}
 }

@@ -1,17 +1,17 @@
 package com.vincenthuto.hutoslib.common.karma;
 
 public interface IKarma {
-	public boolean isActive();
-
-	public void subtractKarma(float points);
-
 	public void addKarma(float points);
 
-	public void setKarma(float points);
+	public float getKarma();
+
+	public boolean isActive();
 
 	public void setActive(boolean set);
 
-	public void toggleActive();
+	public void setKarma(float points);
 
-	public float getKarma();
+	public void subtractKarma(float points);
+
+	public void toggleActive();
 }
