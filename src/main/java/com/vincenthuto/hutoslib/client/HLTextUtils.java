@@ -1,13 +1,29 @@
 package com.vincenthuto.hutoslib.client;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.loading.StringUtils;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class HLTextUtils {
 
 	public static Rarity AURIC = Rarity.create("Auric", ChatFormatting.GOLD);
 	public static Rarity SANGUINE = Rarity.create("Sanguine", ChatFormatting.DARK_RED);
+
+	public static String getItemRegistryName(Item item) {
+		return ForgeRegistries.ITEMS.getKey(item).getPath();
+	}
+
+	public static String getBlockRegistryName(Block block) {
+		return ForgeRegistries.BLOCKS.getKey(block).getPath();
+	}
+
+	public static String getEntityRegistryName(EntityType<?> entity) {
+		return ForgeRegistries.ENTITY_TYPES.getKey(entity).getPath();
+	}
 
 	public static String convertInitToLang(String text) {
 		if (text == null || text.isEmpty()) {
