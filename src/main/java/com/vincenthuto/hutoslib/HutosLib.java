@@ -23,15 +23,16 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -47,30 +48,15 @@ import net.minecraftforge.registries.RegisterEvent;
 @Mod("hutoslib")
 @Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.MOD)
 public class HutosLib {
-	// Creative Tab
-	public static class HutosLibItemGroup extends CreativeModeTab {
-		public static final HutosLibItemGroup instance = new HutosLibItemGroup(CreativeModeTab.getGroupCountSafe(),
-				"hutoslibtab");
 
-		public HutosLibItemGroup(int index, String label) {
-			super(index, label);
-		}
-
-		@Override
-		public ItemStack makeIcon() {
-			return new ItemStack(HLItemInit.obsidian_flakes.get());
-		}
-	}
 	public static final String MOD_ID = "hutoslib";
 
 	public static IProxy proxy = new IProxy() {
 	};
 
 	public static Pair<ResourceLocation, BlockItem> createItemBlock(Pair<Block, ResourceLocation> block) {
-		return Pair.of(block.getSecond(),
-				new BlockItem(block.getFirst(), new Item.Properties().tab(HutosLibItemGroup.instance)));
+		return Pair.of(block.getSecond(), new BlockItem(block.getFirst(), new Item.Properties()));
 	}
-
 
 	@SubscribeEvent
 	public static void onRegisterItems(final RegisterEvent event) {
@@ -95,6 +81,8 @@ public class HutosLib {
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(this::registerCapability);
 		modEventBus.addListener(HLForgeEvents::initKeybinds);
+		modEventBus.addListener(this::buildCreativeTabs);
+		
 		HLItemInit.ITEMS.register(modEventBus);
 		HLItemInit.SPECIALITEMS.register(modEventBus);
 		HLItemInit.BANNERPATTERNS.register(modEventBus);
@@ -128,14 +116,45 @@ public class HutosLib {
 		BannerFinderBannerSlot.initFinder();
 
 	}
-
-
+	
 	private void registerCapability(RegisterCapabilitiesEvent event) {
 		event.register(IBannerSlotItem.class);
 		event.register(BannerExtensionSlot.class);
 		event.register(IKarma.class);
 		BannerSlotCapability.register(event);
 
+	}
+	
+	private void buildCreativeTabs(CreativeModeTabEvent.Register event) {
+		event.registerCreativeModeTab(new ResourceLocation(MOD_ID, "hutoslibtab"), builder ->
+		// Set name of tab to display
+		builder.title(Component.translatable("item_group." + MOD_ID + ".hutoslibtab"))
+				// Set icon of creative tab
+				.icon(() -> new ItemStack(HLItemInit.obsidian_flakes.get()))
+				.displayItems((enabledFlags, populator, hasPermissions) -> {
+					//Items
+					populator.accept(HLItemInit.hl_guide_book.get());
+
+					populator.accept(HLItemInit.raw_clay_flask.get());
+					populator.accept(HLItemInit.cured_clay_flask.get());
+					populator.accept(HLItemInit.node_of_actualization.get());
+
+					populator.accept(HLItemInit.iron_knapper.get());
+					populator.accept(HLItemInit.diamond_knapper.get());
+					populator.accept(HLItemInit.obsidian_flakes.get());
+
+					populator.accept(HLItemInit.leather_arm_banner.get());
+					populator.accept(HLItemInit.iron_arm_banner.get());
+					populator.accept(HLItemInit.gold_arm_banner.get());
+					populator.accept(HLItemInit.diamond_arm_banner.get());
+					populator.accept(HLItemInit.obsidian_arm_banner.get());
+					populator.accept(HLItemInit.netherite_arm_banner.get());
+
+					//Blocks
+					populator.accept(HLBlockInit.display_pedestal.get());
+					populator.accept(HLBlockInit.display_glass.get());
+
+				}));
 	}
 
 }

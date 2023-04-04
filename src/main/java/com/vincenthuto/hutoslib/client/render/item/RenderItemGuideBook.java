@@ -3,10 +3,10 @@ package com.vincenthuto.hutoslib.client.render.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.item.ItemGuideBook;
+import com.vincenthuto.hutoslib.math.Quaternion;
+import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -39,13 +39,21 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 	public void renderByItem(ItemStack stack, ItemTransforms.TransformType transform, PoseStack ms,
 			MultiBufferSource buffers, int light, int overlay) {
 
+		if (transform == TransformType.GUI) {
+			ms.mulPose(Vector3.XP.rotationDegrees(80).toMoj());
+			ms.mulPose(Vector3.YN.rotationDegrees(30).toMoj());
+			ms.mulPose(Vector3.ZN.rotationDegrees(-20).toMoj());
+			ms.translate(-1.5D, -0.45D, -0.075D);
+
+
+		}
 		if (stack.getItem() instanceof ItemGuideBook) {
 			ItemGuideBook item = (ItemGuideBook) stack.getItem();
 			ms.pushPose();
 			ms.translate(0.5D, 0.50D, 0.5D);
-			ms.mulPose(Vector3f.XP.rotationDegrees(45));
-			ms.mulPose(Vector3f.ZP.rotationDegrees(15));
-			ms.mulPose(Vector3f.YP.rotationDegrees(-60));
+			ms.mulPose(Vector3.XP.rotationDegrees(45).toMoj());
+			ms.mulPose(Vector3.ZP.rotationDegrees(15).toMoj());
+			ms.mulPose(Vector3.YP.rotationDegrees(-60).toMoj());
 
 			float f = (float) item.ticks + 1;
 			ms.translate(0.0D, 0.1F + Mth.sin(f * 0.1F) * 0.01F, 0.0D);
@@ -57,9 +65,9 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 			while (f1 < -(float) Math.PI) {
 				f1 += ((float) Math.PI * 2F);
 			}
-			float f2 = item.pageAngle + f1 ;
-			ms.mulPose(Vector3f.YP.rotation(-f2));
-			ms.mulPose(Vector3f.ZP.rotationDegrees(80.0F));
+			float f2 = item.pageAngle + f1;
+			ms.mulPose(Vector3.YP.rotation(-f2).toMoj());
+			ms.mulPose(Vector3.ZP.rotationDegrees(80.0F).toMoj());
 			float f3 = Mth.lerp(1, item.oFlip, item.flip);
 			float f4 = Mth.frac(f3 + 0.25F) * 1.6F - 0.3F;
 			float f5 = Mth.frac(f3 + 0.75F) * 1.6F - 0.3F;
@@ -73,9 +81,8 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 				if (transform == TransformType.GUI) {
 					ms.translate(0.15, 0.03, 0);
 					ms.scale(0.8f, 0.8f, 0.8f);
-					ms.mulPose(new Quaternion(Vector3f.YP, -125, true));
-					ms.mulPose(new Quaternion(Vector3f.XP, 35, true));
-					ms.mulPose(new Quaternion(Vector3f.ZP, 45, true));
+					ms.mulPose(new Quaternion(Vector3.XP, 35, true).toMoj());
+					ms.mulPose(new Quaternion(Vector3.ZP, 45, true).toMoj());
 
 				}
 
@@ -89,9 +96,9 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 				if (transform == TransformType.GUI) {
 					ms.translate(0.15, 0.03, 0);
 					ms.scale(0.8f, 0.8f, 0.8f);
-					ms.mulPose(new Quaternion(Vector3f.YP, -125, true));
-					ms.mulPose(new Quaternion(Vector3f.XP, 35, true));
-					ms.mulPose(new Quaternion(Vector3f.ZP, 45, true));
+					ms.mulPose(new Quaternion(Vector3.YP, -125, true).toMoj());
+					ms.mulPose(new Quaternion(Vector3.XP, 35, true).toMoj());
+					ms.mulPose(new Quaternion(Vector3.ZP, 45, true).toMoj());
 
 				}
 

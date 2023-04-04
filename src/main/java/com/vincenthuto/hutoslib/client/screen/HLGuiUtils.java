@@ -3,6 +3,9 @@ package com.vincenthuto.hutoslib.client.screen;
 import java.util.List;
 import java.util.Random;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3d;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -12,14 +15,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector3f;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.client.render.block.BlockPosBlockPair;
 import com.vincenthuto.hutoslib.client.render.block.MultiblockPattern;
+import com.vincenthuto.hutoslib.math.Quaternion;
+import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -187,7 +188,7 @@ public class HLGuiUtils {
 		Lighting.setupFor3DItems();
 		List<BlockPosBlockPair> patternList = pattern.getBlockPosBlockList();
 		viewModelPose.scale(0.5f, 0.5f, -1f);
-		viewModelPose.mulPose(new Quaternion(Vector3f.YP, -5, true));
+		viewModelPose.mulPose(new Quaternion(Vector3.YP, -5, true).toMoj());
 		for (BlockPosBlockPair pair : patternList) {
 			renderItemStackInGui(ms, new ItemStack(pair.getBlock()), pair.getPos().getX() * -16,
 					pair.getPos().getZ() * 16);

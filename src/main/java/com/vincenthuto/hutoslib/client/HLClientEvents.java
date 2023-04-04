@@ -51,11 +51,4 @@ public class HLClientEvents {
 
 	}
 
-	@SubscribeEvent
-	public static void textureStitch(TextureStitchEvent.Pre event) {
-		if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS) {
-			event.addSprite(BannerSlot.SLOT_BACKGROUND);
-		}
-	}
-
 }

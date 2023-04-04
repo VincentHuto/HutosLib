@@ -143,13 +143,13 @@ public abstract class GuiGuideTitlePage extends Screen {
 		for (GuiButtonTextured element : buttonList) {
 			element.render(matrixStack, mouseX, mouseY, partialTicks);
 			if (element.isHoveredOrFocused()) {
-				renderTooltip(matrixStack, element.text, element.x, element.y);
+				renderTooltip(matrixStack, element.text, element.getX(), element.getY());
 			}
 		}
 
 		this.buttonclose.render(matrixStack, mouseX, mouseY, partialTicks);
 		if (this.buttonclose.isHoveredOrFocused()) {
-			renderTooltip(matrixStack, Component.translatable("Close"), this.buttonclose.x, this.buttonclose.y);
+			renderTooltip(matrixStack, Component.translatable("Close"), this.buttonclose.getX(), this.buttonclose.getY());
 		}
 	}
 }

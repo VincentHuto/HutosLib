@@ -8,6 +8,7 @@ import com.google.common.collect.Sets;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -31,7 +32,7 @@ public class ItemKnapper extends DiggerItem {
 	public static final Set<ToolAction> DEFAULT_KNAPPER_ACTIONS = Stream.of(KNAPPER_DIG)
 			.collect(Collectors.toCollection(Sets::newIdentityHashSet));
 	public static final Material OBSIDIAN = (new Material.Builder(MaterialColor.COLOR_PURPLE)).build();
-	public static TagKey<Block> EFFECTIVE_ON = TagKey.create(Registry.BLOCK_REGISTRY,
+	public static TagKey<Block> EFFECTIVE_ON = TagKey.create(Registries.BLOCK,
 			new ResourceLocation("mineable/knapper"));
 
 	private float speed;

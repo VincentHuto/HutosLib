@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.vincenthuto.hutoslib.math.Quaternion;
+import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +15,7 @@ public class RenderMultiBlockInGui {
 		ms.pushPose();
 		Lighting.setupFor3DItems();
 		List<BlockPosBlockPair> patternList = pattern.getBlockPosBlockList();
-		ms.mulPose(new Quaternion(Vector3f.ZERO, 45, true));
+		ms.mulPose(new Quaternion(Vector3.ZERO, 45, true).toMoj());
 		ms.scale(0.5f, 0.5f, 0.5f);
 		ms.translate(0, 2, 0);
 		for (BlockPosBlockPair pair : patternList) {

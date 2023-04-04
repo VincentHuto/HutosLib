@@ -1,10 +1,10 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import com.vincenthuto.hutoslib.client.HLClientUtils;
 import com.vincenthuto.hutoslib.client.render.block.MultiblockPattern;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
+import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -86,8 +86,8 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 			//System.out.println(I18n.get(block.getDescriptionId()) + ": " + pattern.getBlockCount(false).get(block));
 		}
 
-		matrices.mulPose(Vector3f.XN.rotationDegrees(-45 + (float) this.dragUpDown));
-		matrices.mulPose(Vector3f.YP.rotationDegrees(45 + (float) this.dragLeftRight));
+		matrices.mulPose(Vector3.XN.rotationDegrees(-45 + (float) this.dragUpDown).toMoj());
+		matrices.mulPose(Vector3.YP.rotationDegrees(45 + (float) this.dragLeftRight).toMoj());
 		float structScale = 2f;
 		matrices.scale(structScale, structScale, structScale);
 		HLGuiUtils.renderMultiBlock(matrices, pattern, HLClientUtils.getPartialTicks(), new ScreenBlockTintGetter(),

@@ -6,12 +6,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.model.HutosLibModelLayersInit;
 import com.vincenthuto.hutoslib.client.model.item.ModelArmBanner;
 import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
+import com.vincenthuto.hutoslib.math.Quaternion;
+import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelPart;
@@ -61,29 +61,29 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 			ResourceLocation texture = type.getTexture() != null ? type.getTexture() : fallback;
 			if (p_239207_2_ == TransformType.GUI) {
 				matrixStack.scale(0.45f, 0.45f, 0.45f);
-				matrixStack.mulPose(new Quaternion(Vector3f.ZP, -73.5f, true));
+				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 				matrixStack.translate(0.34, 0, 0);
 			}
 
 			if (p_239207_2_ == TransformType.THIRD_PERSON_RIGHT_HAND) {
 				matrixStack.scale(0.1f, 0.1f, 0.1f);
-				matrixStack.mulPose(new Quaternion(Vector3f.ZP, -73.5f, true));
+				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 				matrixStack.translate(-0.1, 2.5, 0);
 			}
 			if (p_239207_2_ == TransformType.THIRD_PERSON_LEFT_HAND) {
 				matrixStack.scale(0.1f, 0.1f, 0.1f);
-				matrixStack.mulPose(new Quaternion(Vector3f.ZP, -73.5f, true));
+				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 				matrixStack.translate(-1.3, -1.75, 0);
 			}
 			if (p_239207_2_ == TransformType.FIRST_PERSON_RIGHT_HAND) {
 				matrixStack.scale(0.2f, 0.2f, 0.2f);
-				matrixStack.mulPose(new Quaternion(Vector3f.ZP, -73.5f, true));
+				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 				matrixStack.translate(-1.3, 0.75, 0);
 
 			}
 			if (p_239207_2_ == TransformType.FIRST_PERSON_LEFT_HAND) {
 				matrixStack.scale(0.2f, 0.2f, 0.2f);
-				matrixStack.mulPose(new Quaternion(Vector3f.ZP, -73.5f, true));
+				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 
 				matrixStack.translate(-1.3, 0.75, 0);
 
@@ -93,8 +93,8 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 			VertexConsumer vb = impl.getBuffer(modelPauldron.renderType(texture));
 			matrixStack.scale(4.1f, 5f, 4.1f);
 			matrixStack.translate(-0.21, 0.02, -0.53);
-			matrixStack.mulPose(new Quaternion(Vector3f.ZP, -105f, true));
-			matrixStack.mulPose(new Quaternion(Vector3f.YP, -90, true));
+			matrixStack.mulPose(new Quaternion(Vector3.ZP, -105f, true).toMoj());
+			matrixStack.mulPose(new Quaternion(Vector3.YP, -90, true).toMoj());
 			modelPauldron.renderToBuffer(matrixStack, vb, combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F,
 					1.0F);
 			impl.endBatch();
@@ -109,7 +109,7 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 					this.modelPauldron.renderType(material.atlasLocation()), true, stack.hasFoil()));
 			if (flag) {
 				matrixStack.translate(0, 0.05, -0.25);
-				matrixStack.mulPose(new Quaternion(Vector3f.ZN, 75, true));
+				matrixStack.mulPose(new Quaternion(Vector3.ZN, 75, true).toMoj());
 				matrixStack.scale(1.7f, 1.7f, 1.7f);
 				List<Pair<Holder<BannerPattern>, DyeColor>> list = BannerBlockEntity
 						.createPatterns(ItemArmBanner.getColor(stack), BannerBlockEntity.getItemPatterns(stack));

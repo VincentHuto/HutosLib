@@ -1,8 +1,8 @@
 package com.vincenthuto.hutoslib.client.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import com.vincenthuto.hutoslib.common.block.entity.DisplayPedestalBlockEntity;
+import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -36,9 +36,9 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 		for (int i = 0; i < te.inventorySize(); i++) {
 			matrixStackIn.pushPose();
 			matrixStackIn.translate(0.5F, 1.55F, 0.5F);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(angles[i] + te.getLevel().getGameTime())); // Edit
+			matrixStackIn.mulPose(Vector3.YP.rotationDegrees(angles[i] + te.getLevel().getGameTime()).toMoj()); // Edit
 			matrixStackIn.translate(0.025F, -0.5F, 0.025F);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90f)); // Edit Radius Movement
+			matrixStackIn.mulPose(Vector3.YP.rotationDegrees(90f).toMoj()); // Edit Radius Movement
 			matrixStackIn.translate(0D, 0.175D + i * 0.25, 0F); // Block/Item Scale
 			matrixStackIn.scale(0.5f, 0.5f, 0.5f);
 			ItemStack stack = te.getItemHandler().getItem(i);

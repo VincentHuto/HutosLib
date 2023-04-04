@@ -5,13 +5,13 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.model.HutosLibModelLayersInit;
 import com.vincenthuto.hutoslib.client.model.item.ModelArmBanner;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
 import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
+import com.vincenthuto.hutoslib.math.Quaternion;
+import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -61,7 +61,7 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 
 			BannerFinder.findBanner(player, true).ifPresent((getter) -> {
 				ItemStack banner = getter.getBanner();
-				if (banner.getItem()instanceof ItemArmBanner type) {
+				if (banner.getItem() instanceof ItemArmBanner type) {
 					matrixStack.pushPose();
 					this.translateToBody(matrixStack);
 					matrixStack.translate(-0.35, -0.05, 0);
@@ -85,8 +85,8 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 					if (flag) {
 						List<Pair<Holder<BannerPattern>, DyeColor>> list = BannerBlockEntity.createPatterns(
 								ItemArmBanner.getColor(banner), BannerBlockEntity.getItemPatterns(banner));
-						matrixStack.mulPose(new Quaternion(Vector3f.YN, 90, true));
-						matrixStack.mulPose(new Quaternion(Vector3f.ZP, 180, true));
+						matrixStack.mulPose(new Quaternion(Vector3.YN, 90, true).toMoj());
+						matrixStack.mulPose(new Quaternion(Vector3.ZP, 180, true).toMoj());
 						matrixStack.translate(0, 0.3, -0.55);
 						matrixStack.scale(0.5f, 0.5f, 0.5f);
 						BannerRenderer.renderPatterns(matrixStack, buffer, lightness, OverlayTexture.NO_OVERLAY,

@@ -13,13 +13,12 @@ public class GuiButtonTextured extends Button {
 	public final ResourceLocation texture;
 	public int id, posX, posY, buttonWidth, buttonHeight, u, v, adjV, newV;
 	boolean state;
-	protected Button.OnTooltip onTooltip;
 	public Button.OnPress action;
 	public Component text;
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, Component.literal(""), actionIn);
+		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, Component.literal(""), actionIn, null);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -32,13 +31,13 @@ public class GuiButtonTextured extends Button {
 		this.newV = vIn;
 		this.action = actionIn;
 		this.state = stateIn;
-		this.text =  Component.literal("");
+		this.text = Component.literal("");
 
 	}
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Component text, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn);
+		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, null);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -77,7 +76,7 @@ public class GuiButtonTextured extends Button {
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, Component text, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn);
+		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, null);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -113,8 +112,8 @@ public class GuiButtonTextured extends Button {
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			RenderSystem.setShaderTexture(0, texture);
 
-
-			if (mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height) {
+			if (mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width
+					&& mouseY < this.getY() + this.height) {
 				this.isHovered = true;
 				v = newV;
 				this.blit(matrix, posX, posY, u, adjV, width, height);

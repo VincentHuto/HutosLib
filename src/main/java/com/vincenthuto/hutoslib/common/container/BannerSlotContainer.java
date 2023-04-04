@@ -43,17 +43,15 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 			throw new IllegalStateException("Not instantiable.");
 		}
 	}
+
 	@SuppressWarnings("unused")
 	private interface SlotFactory<T extends Slot> {
 		T create(IBannerSlot slot, int x, int y);
 	}
 
-	private final BannerSlot slotBanner;
 	private final IBannerSlot extensionSlot;
 	private final CraftingContainer craftingInventory = new CraftingContainer(this, 2, 2);
-
 	private final ResultContainer craftResultInventory = new ResultContainer();
-
 	private final Player player;
 
 	public BannerSlotContainer(int id, Inventory playerInventory) {
@@ -110,15 +108,15 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 			});
 		}
 
-	    for(int l = 0; l < 3; ++l) {
-	         for(int j1 = 0; j1 < 9; ++j1) {
-	            this.addSlot(new Slot(playerInventory, j1 + (l + 1) * 9, 8 + j1 * 18, 84 + l * 18));
-	         }
-	      }
+		for (int l = 0; l < 3; ++l) {
+			for (int j1 = 0; j1 < 9; ++j1) {
+				this.addSlot(new Slot(playerInventory, j1 + (l + 1) * 9, 8 + j1 * 18, 84 + l * 18));
+			}
+		}
 
-	      for(int i1 = 0; i1 < 9; ++i1) {
-	         this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 142));
-	      }
+		for (int i1 = 0; i1 < 9; ++i1) {
+			this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 142));
+		}
 
 		this.addSlot(new Slot(playerInventory, 40, 77, 62) {
 			{
@@ -131,7 +129,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 
 		extensionSlot = container.getBanner();
 
-		this.addSlot(slotBanner = new BannerSlot(BannerSlotContainer.this.extensionSlot, 77, 44));
+		this.addSlot(new BannerSlot(BannerSlotContainer.this.extensionSlot, 77, 44));
 
 		if (playerInventory.player.level.isClientSide) {
 			HLPacketHandler.MAINCHANNEL.sendToServer(new PacketContainerSlot());
@@ -192,66 +190,67 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 	}
 
 	@Override
-	 public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-	      ItemStack itemstack = ItemStack.EMPTY;
-	      Slot slot = this.slots.get(pIndex);
-	      if (slot != null && slot.hasItem()) {
-	         ItemStack itemstack1 = slot.getItem();
-	         itemstack = itemstack1.copy();
-	         EquipmentSlot equipmentslot = LivingEntity.getEquipmentSlotForItem(itemstack);
-	         if (pIndex == 0) {
-	            if (!this.moveItemStackTo(itemstack1, 9, 45, true)) {
-	               return ItemStack.EMPTY;
-	            }
+	public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+		ItemStack itemstack = ItemStack.EMPTY;
+		Slot slot = this.slots.get(pIndex);
+		if (slot != null && slot.hasItem()) {
+			ItemStack itemstack1 = slot.getItem();
+			itemstack = itemstack1.copy();
+			EquipmentSlot equipmentslot = LivingEntity.getEquipmentSlotForItem(itemstack);
+			if (pIndex == 0) {
+				if (!this.moveItemStackTo(itemstack1, 9, 45, true)) {
+					return ItemStack.EMPTY;
+				}
 
-	            slot.onQuickCraft(itemstack1, itemstack);
-	         } else if (pIndex >= 1 && pIndex < 5) {
-	            if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
-	               return ItemStack.EMPTY;
-	            }
-	         } else if (pIndex >= 5 && pIndex < 9) {
-	            if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
-	               return ItemStack.EMPTY;
-	            }
-	         } else if (equipmentslot.getType() == EquipmentSlot.Type.ARMOR && !this.slots.get(8 - equipmentslot.getIndex()).hasItem()) {
-	            int i = 8 - equipmentslot.getIndex();
-	            if (!this.moveItemStackTo(itemstack1, i, i + 1, false)) {
-	               return ItemStack.EMPTY;
-	            }
-	         } else if (equipmentslot == EquipmentSlot.OFFHAND && !this.slots.get(45).hasItem()) {
-	            if (!this.moveItemStackTo(itemstack1, 45, 46, false)) {
-	               return ItemStack.EMPTY;
-	            }
-	         } else if (pIndex >= 9 && pIndex < 36) {
-	            if (!this.moveItemStackTo(itemstack1, 36, 45, false)) {
-	               return ItemStack.EMPTY;
-	            }
-	         } else if (pIndex >= 36 && pIndex < 45) {
-	            if (!this.moveItemStackTo(itemstack1, 9, 36, false)) {
-	               return ItemStack.EMPTY;
-	            }
-	         } else if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
-	            return ItemStack.EMPTY;
-	         }
+				slot.onQuickCraft(itemstack1, itemstack);
+			} else if (pIndex >= 1 && pIndex < 5) {
+				if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (pIndex >= 5 && pIndex < 9) {
+				if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (equipmentslot.getType() == EquipmentSlot.Type.ARMOR
+					&& !this.slots.get(8 - equipmentslot.getIndex()).hasItem()) {
+				int i = 8 - equipmentslot.getIndex();
+				if (!this.moveItemStackTo(itemstack1, i, i + 1, false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (equipmentslot == EquipmentSlot.OFFHAND && !this.slots.get(45).hasItem()) {
+				if (!this.moveItemStackTo(itemstack1, 45, 46, false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (pIndex >= 9 && pIndex < 36) {
+				if (!this.moveItemStackTo(itemstack1, 36, 45, false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (pIndex >= 36 && pIndex < 45) {
+				if (!this.moveItemStackTo(itemstack1, 9, 36, false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
+				return ItemStack.EMPTY;
+			}
 
-	         if (itemstack1.isEmpty()) {
-	            slot.set(ItemStack.EMPTY);
-	         } else {
-	            slot.setChanged();
-	         }
+			if (itemstack1.isEmpty()) {
+				slot.set(ItemStack.EMPTY);
+			} else {
+				slot.setChanged();
+			}
 
-	         if (itemstack1.getCount() == itemstack.getCount()) {
-	            return ItemStack.EMPTY;
-	         }
+			if (itemstack1.getCount() == itemstack.getCount()) {
+				return ItemStack.EMPTY;
+			}
 
-	         slot.onTake(pPlayer, itemstack1);
-	         if (pIndex == 0) {
-	            pPlayer.drop(itemstack1, false);
-	         }
-	      }
+			slot.onTake(pPlayer, itemstack1);
+			if (pIndex == 0) {
+				pPlayer.drop(itemstack1, false);
+			}
+		}
 
-	      return itemstack;
-	   }
+		return itemstack;
+	}
 
 	@Override
 	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn) {

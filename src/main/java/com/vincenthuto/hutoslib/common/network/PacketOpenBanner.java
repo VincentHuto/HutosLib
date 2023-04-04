@@ -24,7 +24,7 @@ public class PacketOpenBanner {
 		context.get().getSender()
 				.openMenu(new SimpleMenuProvider(
 						(i, playerInventory, playerEntity) -> new BannerSlotContainer(i, playerInventory),
-						Component.literal("container.crafting")));
+						Component.translatable("container.crafting")));
 		return true;
 	}
 }

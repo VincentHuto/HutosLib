@@ -5,7 +5,7 @@ import com.vincenthuto.hutoslib.common.recipe.ArmBannerCraftRecipe;
 
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -22,5 +22,5 @@ public class HlContainerInit {
 			() -> new MenuType<>(BannerSlotContainer::new));
 
 	public static final RegistryObject<RecipeSerializer<?>> arm_banner_craft = RECIPESERIALIZERS
-			.register("arm_banner_craft", () -> new SimpleRecipeSerializer<>(ArmBannerCraftRecipe::new));
+			.register("arm_banner_craft", () -> new SimpleCraftingRecipeSerializer<>(ArmBannerCraftRecipe::new));
 }

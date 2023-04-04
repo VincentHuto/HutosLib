@@ -12,10 +12,10 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import com.vincenthuto.hutoslib.client.HLRenderTypeInit;
 import com.vincenthuto.hutoslib.client.particle.data.BoltParticleData;
 

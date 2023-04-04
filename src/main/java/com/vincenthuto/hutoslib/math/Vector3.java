@@ -5,9 +5,11 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3d;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3d;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -18,15 +20,50 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class Vector3 {
+
+	public float x;
+
+	public float y;
+
+	public float z;
+
 	public static final Vector3 ZERO = new Vector3(0, 0, 0);
 	public static final Vector3 ONE = new Vector3(1, 1, 1);
+	public static Vector3 XN = new Vector3(-1.0F, 0.0F, 0.0F);
+	public static Vector3 XP = new Vector3(1.0F, 0.0F, 0.0F);
+	public static Vector3 YN = new Vector3(0.0F, -1.0F, 0.0F);
+	public static Vector3 YP = new Vector3(0.0F, 1.0F, 0.0F);
+	public static Vector3 ZN = new Vector3(0.0F, 0.0F, -1.0F);
+	public static Vector3 ZP = new Vector3(0.0F, 0.0F, 1.0F);
+
+	public Vector3(float x, float y, float z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	public Vector3(double x, double y, double z) {
+		this.x = (float) x;
+		this.y = (float) y;
+		this.z = (float) z;
+	}
+
+	public Quaternion rotation(float pValue) {
+		return new Quaternion(this, pValue, false);
+	}
+
+	public Quaternion rotationDegrees(float pValue) {
+		return new Quaternion(this, pValue, true);
+	}
 
 	public static Vector3 fromBlockEntity(BlockEntity e) {
 		return fromBlockPos(e.getBlockPos());
 	}
+
 	public static Vector3 fromBlockEntityCenter(BlockEntity e) {
 		return fromBlockEntity(e).add(0.5);
 	}
+
 	public static Vector3 fromBlockPos(BlockPos pos) {
 		return new Vector3(pos.getX(), pos.getY(), pos.getZ());
 	}
@@ -48,18 +85,6 @@ public class Vector3 {
 
 	public static Vector3 zCrossProduct(Vector3 vec) {
 		return new Vector3(-vec.y, vec.x, 0.0);
-	}
-
-	public final double x;
-
-	public final double y;
-
-	public final double z;
-
-	public Vector3(double d, double d1, double d2) {
-		x = d;
-		y = d1;
-		z = d2;
 	}
 
 	public Vector3(Vec3 vec) {
@@ -166,6 +191,10 @@ public class Vector3 {
 		return new Vector3(-x, -y, -z);
 	}
 
+	public Vector3 copy() {
+		return new Vector3(this.x, this.y, this.z);
+	}
+
 	public Vector3 normalize() {
 		double d = mag();
 		if (d != 0) {
@@ -266,6 +295,42 @@ public class Vector3 {
 		double d = y;
 		double d1 = -x;
 		return new Vector3(d, d1, 0);
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public void setZ(float z) {
+		this.z = z;
+	}
+
+	public void transform(Matrix3f pMatrix) {
+		float f = this.x;
+		float f1 = this.y;
+		float f2 = this.z;
+		this.x = pMatrix.m00 * f + pMatrix.m01 * f1 + pMatrix.m02 * f2;
+		this.y = pMatrix.m10 * f + pMatrix.m11 * f1 + pMatrix.m12 * f2;
+		this.z = pMatrix.m20 * f + pMatrix.m21 * f1 + pMatrix.m22 * f2;
+	}
+
+	public void transform(Quaternion pQuaternion) {
+		Quaternion quaternion = new Quaternion(pQuaternion);
+		quaternion.mul(new Quaternion(this.x, this.y, this.z, 0.0F));
+		Quaternion quaternion1 = new Quaternion(pQuaternion);
+		quaternion1.conj();
+		quaternion.mul(quaternion1);
+		this.set(quaternion.i(), quaternion.j(), quaternion.k());
+	}
+
+	public void set(float pX, float pY, float pZ) {
+		this.x = pX;
+		this.y = pY;
+		this.z = pZ;
 	}
 
 }

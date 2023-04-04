@@ -1,8 +1,9 @@
 package com.vincenthuto.hutoslib.client.render.block;
 
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import com.vincenthuto.hutoslib.client.HLClientUtils;
 import com.vincenthuto.hutoslib.math.Vector3;
 
@@ -120,8 +121,8 @@ public class RenderShapes {
 		// Roof
 		matrixStackIn.translate(pyramidXOffset, pyramidYOffset, pyramidZOffset);
 		// North
-		builder.vertex(matrixStackIn.last().pose(), xScale * cubeXScale, 0.0f, -zScale * cubeXScale)
-				.color(r, g, b, 255).uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), xScale * cubeXScale, 0.0f, -zScale * cubeXScale).color(r, g, b, 255)
+				.uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		builder.vertex(matrixStackIn.last().pose(), 0f, 0, -zScale * cubeXScale).color(r, g, b, 255).uv(1, 0)
@@ -136,8 +137,8 @@ public class RenderShapes {
 				.color(r, g, b, 255).uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		// South
-		builder.vertex(matrixStackIn.last().pose(), 0f * cubeXScale, 0.0f, 0 * cubeXScale).color(r, g, b, 255)
-				.uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), 0f * cubeXScale, 0.0f, 0 * cubeXScale).color(r, g, b, 255).uv(1, 1)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		builder.vertex(matrixStackIn.last().pose(), xScale * cubeXScale / 2, yScale, -zScale * cubeXScale / 2)
@@ -165,13 +166,13 @@ public class RenderShapes {
 				.color(r, g, b, 255).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-		builder.vertex(matrixStackIn.last().pose(), xScale * cubeXScale, 0f, -zScale * cubeXScale)
-				.color(r, g, b, 255).uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), xScale * cubeXScale, 0f, -zScale * cubeXScale).color(r, g, b, 255)
+				.uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		// West
-		builder.vertex(matrixStackIn.last().pose(), 0f * cubeXScale, 0.0f, 0 * cubeXScale).color(r, g, b, 255)
-				.uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), 0f * cubeXScale, 0.0f, 0 * cubeXScale).color(r, g, b, 255).uv(1, 1)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		builder.vertex(matrixStackIn.last().pose(), xScale * cubeXScale / 2, yScale, -zScale * cubeXScale / 2)
@@ -209,8 +210,8 @@ public class RenderShapes {
 		 * 0).color(r, g, b, 255).uv(1, 0)
 		 * .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 		 * .normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
-		 * builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0, -zScale
-		 * * baseScale).color(r, g, b, 255) .uv(0,
+		 * builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0, -zScale *
+		 * baseScale).color(r, g, b, 255) .uv(0,
 		 * 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 		 * .normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		 * builder.vertex(matrixStackIn.last().pose(), 0 * baseScale, 0, -zScale *
@@ -248,8 +249,8 @@ public class RenderShapes {
 				.color(r, g, b, 255).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0f, 0 * baseScale).color(r, g, b, 255)
-				.uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0f, 0 * baseScale).color(r, g, b, 255).uv(0, 1)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		// East
@@ -288,8 +289,8 @@ public class RenderShapes {
 
 		// Bottom Half
 		// North
-		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0.0f, -zScale * baseScale)
-				.color(r, g, b, 255).uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0.0f, -zScale * baseScale).color(r, g, b, 255)
+				.uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		builder.vertex(matrixStackIn.last().pose(), 0f, 0, -zScale * baseScale).color(r, g, b, 255).uv(1, 0)
@@ -316,8 +317,8 @@ public class RenderShapes {
 				.color(r, g, b, 255).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0f, 0 * baseScale).color(r, g, b, 255)
-				.uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0f, 0 * baseScale).color(r, g, b, 255).uv(0, 1)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		// East
@@ -367,7 +368,7 @@ public class RenderShapes {
 		Player player = HLClientUtils.getClientPlayer();
 		float rotatSpeed = (float) (getSpeed(player) * 3);
 		matrixStackIn.translate(0, rotatSpeed / 360, -rotatSpeed / 360);
-		matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(rotatSpeed + 25));
+		matrixStackIn.mulPose(Vector3.XP.rotationDegrees(rotatSpeed + 25).toMoj());
 		VertexConsumer builder = builderIn;
 		int color = 0xB6B900;
 		int r = color >> 16 & 255, g = color >> 8 & 255, b = color & 255;
@@ -378,26 +379,26 @@ public class RenderShapes {
 
 		yScale *= 2;
 
-		Vector3f vec = new Vector3f(xScale, 0.0f, -zScale - sin);
-		Vector3f vec1 = new Vector3f(0f, 0, -zScale - sin);
-		Vector3f vec2 = new Vector3f(0f + 0, yScale, -zScale + 0);
-		Vector3f vec3 = new Vector3f(xScale + 0, yScale, -zScale + 0);
+		Vector3 vec = new Vector3(xScale, 0.0f, -zScale - sin);
+		Vector3 vec1 = new Vector3(0f, 0, -zScale - sin);
+		Vector3 vec2 = new Vector3(0f + 0, yScale, -zScale + 0);
+		Vector3 vec3 = new Vector3(xScale + 0, yScale, -zScale + 0);
 
 		for (int i = 0; i < length; i++) {
 
-			builder.vertex(matrixStackIn.last().pose(), vec.x(), vec.y(), vec.z()).color(r, g, b, 255).uv(1, 1)
+			builder.vertex(matrixStackIn.last().pose(), vec.x, vec.y, vec.z).color(r, g, b, 255).uv(1, 1)
 					.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 					.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-			builder.vertex(matrixStackIn.last().pose(), vec1.x(), vec1.y(), vec1.z()).color(r, g, b, 255).uv(1, 0)
+			builder.vertex(matrixStackIn.last().pose(), vec1.x, vec1.y, vec1.z).color(r, g, b, 255).uv(1, 0)
 					.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 					.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-			builder.vertex(matrixStackIn.last().pose(), vec2.x(), vec2.y(), vec2.z()).color(r, g, b, 255).uv(0, 0)
+			builder.vertex(matrixStackIn.last().pose(), vec2.x, vec2.y, vec2.z).color(r, g, b, 255).uv(0, 0)
 					.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 					.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-			builder.vertex(matrixStackIn.last().pose(), vec3.x(), vec3.y(), vec3.z()).color(r, g, b, 255).uv(0, 1)
+			builder.vertex(matrixStackIn.last().pose(), vec3.x, vec3.y, vec3.z).color(r, g, b, 255).uv(0, 1)
 					.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 					.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
@@ -410,50 +411,50 @@ public class RenderShapes {
 			vec3.add(0, 0.25f, 0);
 
 			matrixStackIn.translate(0, -0.25, 0);
-			vec.setY(vec2.y() + 0.25f);
-			vec1.setY(vec3.y() + 0.25f);
+			vec.setY(vec2.y + 0.25f);
+			vec1.setY(vec3.y + 0.25f);
 
-			builder.vertex(matrixStackIn.last().pose(), vec2.x(), vec2.y(), vec2.z()).color(r, g, b, 255).uv(1, 1)
+			builder.vertex(matrixStackIn.last().pose(), vec2.x, vec2.y, vec2.z).color(r, g, b, 255).uv(1, 1)
 					.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 					.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-			builder.vertex(matrixStackIn.last().pose(), vec3.x(), vec3.y(), vec3.z()).color(r, g, b, 255).uv(1, 0)
+			builder.vertex(matrixStackIn.last().pose(), vec3.x, vec3.y, vec3.z).color(r, g, b, 255).uv(1, 0)
 					.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 					.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-			builder.vertex(matrixStackIn.last().pose(), vec.x(), vec.y(), vec.z()).color(r, g, b, 255).uv(0, 0)
+			builder.vertex(matrixStackIn.last().pose(), vec.x, vec.y, vec.z).color(r, g, b, 255).uv(0, 0)
 					.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 					.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-			builder.vertex(matrixStackIn.last().pose(), vec1.x(), vec1.y(), vec1.z()).color(r, g, b, 255).uv(0, 1)
+			builder.vertex(matrixStackIn.last().pose(), vec1.x, vec1.y, vec1.z).color(r, g, b, 255).uv(0, 1)
 					.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 					.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 			vec.add(0, -0.25f, 0);
 			vec1.add(0, -0.25f, 0);
 			matrixStackIn.translate(0, 0.25, 0);
-			vec2.setY(vec2.y() + 0.25f);
-			vec3.setY(vec3.y() + 0.25f);
+			vec2.setY(vec2.y + 0.25f);
+			vec3.setY(vec3.y + 0.25f);
 		}
 
 		// Top
 		/*
 		 * for (int i = 0; i < 3; i++) { builder.vertex(matrixStackIn.last().pose(),
-		 * vec.x(), vec.y(), vec.z()).color(r, g, b, 255) .uv(1,
+		 * vec.x, vec.y, vec.z).color(r, g, b, 255) .uv(1,
 		 * 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 		 * .normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		 *
-		 * builder.vertex(matrixStackIn.last().pose(), vec1.x(), vec1.y(),
-		 * vec1.z()).color(r, g, b, 255) .uv(1,
+		 * builder.vertex(matrixStackIn.last().pose(), vec1.x, vec1.y, vec1.z).color(r,
+		 * g, b, 255) .uv(1,
 		 * 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 		 * .normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		 *
-		 * builder.vertex(matrixStackIn.last().pose(), vec2.x(), vec2.y(),
-		 * vec2.z()).color(r, g, b, 255) .uv(0,
+		 * builder.vertex(matrixStackIn.last().pose(), vec2.x, vec2.y, vec2.z).color(r,
+		 * g, b, 255) .uv(0,
 		 * 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 		 * .normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		 *
-		 * builder.vertex(matrixStackIn.last().pose(), vec3.x(), vec3.y(),
-		 * vec3.z()).color(r, g, b, 255) .uv(0,
+		 * builder.vertex(matrixStackIn.last().pose(), vec3.x, vec3.y, vec3.z).color(r,
+		 * g, b, 255) .uv(0,
 		 * 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 		 * .normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		 *
@@ -488,13 +489,13 @@ public class RenderShapes {
 		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0, -zScale * baseScale).color(r, g, b, 255)
 				.uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
-		builder.vertex(matrixStackIn.last().pose(), 0 * baseScale, 0, -zScale * baseScale).color(r, g, b, 255)
-				.uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), 0 * baseScale, 0, -zScale * baseScale).color(r, g, b, 255).uv(0, 1)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		// North
-		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0.0f, -zScale * baseScale)
-				.color(r, g, b, 255).uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0.0f, -zScale * baseScale).color(r, g, b, 255)
+				.uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		builder.vertex(matrixStackIn.last().pose(), 0f, 0, -zScale * baseScale).color(r, g, b, 255).uv(1, 0)
@@ -521,8 +522,8 @@ public class RenderShapes {
 				.color(r, g, b, 255).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
-		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0f, 0 * baseScale).color(r, g, b, 255)
-				.uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), xScale * baseScale, 0f, 0 * baseScale).color(r, g, b, 255).uv(0, 1)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		// East
@@ -801,8 +802,8 @@ public class RenderShapes {
 		builder.vertex(matrixStackIn.last().pose(), xScale * xSlant, yScale * ySlant, -zScale + zSlant)
 				.color(r, g, b, 255).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
-		builder.vertex(matrixStackIn.last().pose(), 0, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255)
-				.uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), 0, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255).uv(0, 1)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 
 		// Bottom
@@ -826,8 +827,8 @@ public class RenderShapes {
 		builder.vertex(matrixStackIn.last().pose(), 0f, 0, -zScale).color(r, g, b, 255).uv(1, 0)
 				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
-		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255)
-				.uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255).uv(0, 0)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		builder.vertex(matrixStackIn.last().pose(), xScale * xSlant, yScale * ySlant, -zScale + zSlant)
 				.color(r, g, b, 255).uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
@@ -866,8 +867,8 @@ public class RenderShapes {
 		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, 0).color(r, g, b, 255).uv(1, 0)
 				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
-		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255)
-				.uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255).uv(0, 0)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		builder.vertex(matrixStackIn.last().pose(), 0, 0f, -zScale).color(r, g, b, 255).uv(0, 1)
 				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
@@ -907,8 +908,8 @@ public class RenderShapes {
 		builder.vertex(matrixStackIn.last().pose(), 0f, 0, -zScale).color(r, g, b, 255).uv(1, 0)
 				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
-		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255)
-				.uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255).uv(0, 0)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		builder.vertex(matrixStackIn.last().pose(), xScale * xSlant, yScale * ySlant, -zScale + zSlant)
 				.color(r, g, b, 255).uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
@@ -947,8 +948,8 @@ public class RenderShapes {
 		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, 0).color(r, g, b, 255).uv(1, 0)
 				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
-		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255)
-				.uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
+		builder.vertex(matrixStackIn.last().pose(), 0f, yScale * ySlant, -zScale + zSlant).color(r, g, b, 255).uv(0, 0)
+				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)
 				.normal(matrixStackIn.last().normal(), 0, 1, 0).endVertex();
 		builder.vertex(matrixStackIn.last().pose(), 0, 0f, -zScale).color(r, g, b, 255).uv(0, 1)
 				.overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLightIn)

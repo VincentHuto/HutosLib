@@ -1,5 +1,6 @@
 {
-	"itemGroup.hutoslibtab": "Hutos Lib",
+	"container.crafting": "Crafting",
+	"item_group.hutoslib.hutoslibtab": "Hutos Lib",
 	"enchantment.hutoslib.glimmer": "Glimmer",
 	"item.hutoslib.hl_guide_book": "HutosLib Guide",
 	"item.hutoslib.raw_clay_flask": "Raw Clay Flask",

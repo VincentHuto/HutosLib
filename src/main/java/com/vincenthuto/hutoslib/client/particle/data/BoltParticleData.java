@@ -10,8 +10,8 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector4f;
 
-import com.mojang.math.Vector4f;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 
 import net.minecraft.world.phys.Vec3;
