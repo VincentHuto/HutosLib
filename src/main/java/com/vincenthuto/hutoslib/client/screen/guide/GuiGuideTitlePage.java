@@ -136,7 +136,7 @@ public abstract class GuiGuideTitlePage extends Screen {
 		matrixStack.pushPose();
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
-		Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(icon, left + guiWidth - 48,
+		Minecraft.getInstance().getItemRenderer().renderAndDecorateFakeItem(matrixStack,icon, left + guiWidth - 48,
 				top + guiHeight - 230);
 		matrixStack.popPose();
 

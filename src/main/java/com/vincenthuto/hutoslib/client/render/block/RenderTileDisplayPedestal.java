@@ -6,14 +6,19 @@ import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPedestalBlockEntity> {
-	public RenderTileDisplayPedestal(BlockEntityRendererProvider.Context p_173636_) {
+	   private final ItemRenderer itemRenderer;
+
+	public RenderTileDisplayPedestal(BlockEntityRendererProvider.Context pContext) {
+	      this.itemRenderer = pContext.getItemRenderer();
+
 	}
 
 	@Override
@@ -42,9 +47,8 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 			matrixStackIn.translate(0D, 0.175D + i * 0.25, 0F); // Block/Item Scale
 			matrixStackIn.scale(0.5f, 0.5f, 0.5f);
 			ItemStack stack = te.getItemHandler().getItem(i);
-			Minecraft mc = Minecraft.getInstance();
 			if (!stack.isEmpty()) {
-				mc.getItemRenderer().renderStatic(null, stack, TransformType.FIXED, true, matrixStackIn, bufferIn, null,
+				  this.itemRenderer.renderStatic(null, stack, ItemDisplayContext.FIXED, true, matrixStackIn, bufferIn, null,
 						combinedLightIn, combinedOverlayIn, i);
 			}
 			matrixStackIn.popPose();

@@ -106,7 +106,7 @@ public class GuiButtonTextured extends Button {
 	}
 
 	@Override
-	public void renderButton(PoseStack matrix, int mouseX, int mouseY, float particks) {
+	public void render(PoseStack matrix, int mouseX, int mouseY, float particks) {
 		if (visible) {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

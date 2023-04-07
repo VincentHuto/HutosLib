@@ -168,7 +168,7 @@ public abstract class GuiGuidePage extends Screen {
 					top + guiHeight - 15, 50, 0xffffff, true);
 		}
 		matrixStack.pushPose();
-		Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(icon, left + guiWidth - 32,
+		Minecraft.getInstance().getItemRenderer().renderAndDecorateFakeItem(matrixStack, icon, left + guiWidth - 32,
 				top + guiHeight - 220);
 		matrixStack.popPose();
 		if (!title.isEmpty()) {
@@ -192,15 +192,15 @@ public abstract class GuiGuidePage extends Screen {
 		}
 
 		if (pageNum != (getPages().size() - 1)) {
-			arrowF.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+			arrowF.render(matrixStack, mouseX, mouseY, partialTicks);
 		}
 
 		if (pageNum >= 0) {
-			arrowB.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+			arrowB.render(matrixStack, mouseX, mouseY, partialTicks);
 		}
 
 		// buttonTitle.renderButton(matrixStack, mouseX, mouseY, partialTicks);
-		buttonCloseTab.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+		buttonCloseTab.render(matrixStack, mouseX, mouseY, partialTicks);
 
 		textBox.render(matrixStack, mouseX, mouseY, partialTicks);
 		if ((mouseX >= left + guiWidth - 32 && mouseX <= left + guiWidth - 10)) {
@@ -226,8 +226,8 @@ public abstract class GuiGuidePage extends Screen {
 	}
 
 	@Override
-	public void renderBackground(PoseStack matrixStack, int p_96560_) {
-		super.renderBackground(matrixStack, p_96560_);
+	public void renderBackground(PoseStack matrixStack) {
+		super.renderBackground(matrixStack);
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);

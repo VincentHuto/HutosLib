@@ -59,7 +59,7 @@ public abstract class GuiGuidePageTOC extends GuiGuidePage {
 	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		for (int i = 1; i < chapterButtons.size(); i++) {
-			chapterButtons.get(i).renderButton(matrixStack, mouseX, mouseY, partialTicks);
+			chapterButtons.get(i).render(matrixStack, mouseX, mouseY, partialTicks);
 			HLGuiUtils.drawMaxWidthString(font,  Component.literal("Pg." + i), chapterButtons.get(i).posX + 5,
 					chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
 			HLGuiUtils.drawMaxWidthString(font,  Component.literal(getPages().get(i).title),

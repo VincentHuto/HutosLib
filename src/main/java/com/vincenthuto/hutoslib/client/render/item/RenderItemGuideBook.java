@@ -13,12 +13,11 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
@@ -34,12 +33,12 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 	public BookModel getModel() {
 		return model;
 	}
-
+ 
 	@Override
-	public void renderByItem(ItemStack stack, ItemTransforms.TransformType transform, PoseStack ms,
+	public void renderByItem(ItemStack stack, ItemDisplayContext transform, PoseStack ms,
 			MultiBufferSource buffers, int light, int overlay) {
 
-		if (transform == TransformType.GUI) {
+		if (transform == ItemDisplayContext.GUI) {
 			ms.mulPose(Vector3.XP.rotationDegrees(80).toMoj());
 			ms.mulPose(Vector3.YN.rotationDegrees(30).toMoj());
 			ms.mulPose(Vector3.ZN.rotationDegrees(-20).toMoj());
@@ -78,7 +77,7 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 			if (item.getTexture() != null) {
 				VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(model.renderType(item.getTexture()));
 				ms.scale(0.75f, 0.75f, 0.75f);
-				if (transform == TransformType.GUI) {
+				if (transform == ItemDisplayContext.GUI) {
 					ms.translate(0.15, 0.03, 0);
 					ms.scale(0.8f, 0.8f, 0.8f);
 					ms.mulPose(new Quaternion(Vector3.XP, 35, true).toMoj());
@@ -93,7 +92,7 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 			} else {
 				VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(model.renderType(defaultText));
 				ms.scale(0.75f, 0.75f, 0.75f);
-				if (transform == TransformType.GUI) {
+				if (transform == ItemDisplayContext.GUI) {
 					ms.translate(0.15, 0.03, 0);
 					ms.scale(0.8f, 0.8f, 0.8f);
 					ms.mulPose(new Quaternion(Vector3.YP, -125, true).toMoj());

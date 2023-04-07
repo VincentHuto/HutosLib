@@ -112,10 +112,13 @@ public class BitLocation {
 		bitX = (bitX + 16) % 16;
 		bitY = (bitY + 16) % 16;
 		bitZ = (bitZ + 16) % 16;
-
-		this.blockPos = this.blockPos.offset(xOffset, yOffset, zOffset);
+		
+		this.blockPos = BlockPos.containing((int)xOffset, (int)yOffset, (int)zOffset);
 	}
 
+	
+	
+	
 	public BitLocation offSet(final Direction direction) {
 		final int newBitX = bitX + direction.getStepX();
 		final int newBitY = bitY + direction.getStepY();

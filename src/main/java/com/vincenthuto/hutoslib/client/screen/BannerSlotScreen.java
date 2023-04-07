@@ -60,7 +60,7 @@ public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotC
 					this.buttonClicked = true;
 				}));
 		this.addWidget(this.recipeBookComponent);
-		this.setInitialFocus(this.recipeBookComponent);
+		this.setFocused(this.recipeBookComponent);
 	}
 
 	@Override

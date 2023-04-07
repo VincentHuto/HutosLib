@@ -236,7 +236,7 @@ public final class Quaternion {
 	public void normalize() {
 		float f = this.i() * this.i() + this.j() * this.j() + this.k() * this.k() + this.r() * this.r();
 		if (f > 1.0E-6F) {
-			float f1 = Mth.fastInvSqrt(f);
+			float f1 = (float) Mth.fastInvSqrt(f);
 			this.i *= f1;
 			this.j *= f1;
 			this.k *= f1;

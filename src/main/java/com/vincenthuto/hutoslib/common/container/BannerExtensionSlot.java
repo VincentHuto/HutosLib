@@ -246,7 +246,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 
 	protected void syncTo(Player target) {
 		PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
-		HLPacketHandler.MAINCHANNEL.sendTo(message, ((ServerPlayer) target).connection.getConnection(),
+		HLPacketHandler.MAINCHANNEL.sendTo(message, ((ServerPlayer) target).connection.connection,
 				NetworkDirection.PLAY_TO_CLIENT);
 	}
 

@@ -40,7 +40,6 @@ public class HLGuiUtils {
 	private static void drawLine(PoseStack stack, double x1, double y1, double x2, double y2, ParticleColor color,
 			int displace) {
 
-		GlStateManager._disableTexture();
 		GlStateManager._depthMask(false);
 		GlStateManager._disableCull();
 		RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
@@ -60,7 +59,6 @@ public class HLGuiUtils {
 		var4.end();
 		GlStateManager._enableCull();
 		GlStateManager._depthMask(true);
-		GlStateManager._enableTexture();
 	}
 
 	/*
@@ -106,7 +104,7 @@ public class HLGuiUtils {
 		MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource
 				.immediate(Tesselator.getInstance().getBuilder());
 		int i = fontIn.drawInBatch(reorderingProcessor, x, y, color, drawShadow, matrix, multibuffersource$buffersource,
-				false, 0, 15728880);
+				Font.DisplayMode.NORMAL, 0, 15728880);
 		multibuffersource$buffersource.endBatch();
 		return i;
 	}
@@ -156,7 +154,7 @@ public class HLGuiUtils {
 
 	// MATRIX FIXING
 	public static void renderItemStackInGui(PoseStack ms, ItemStack stack, int x, int y) {
-		transferMsToGl(ms, () -> Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y));
+		transferMsToGl(ms, () -> Minecraft.getInstance().getItemRenderer().renderAndDecorateFakeItem(ms,stack, x, y));
 	}
 
 	// MULTIBLOCK STUFF

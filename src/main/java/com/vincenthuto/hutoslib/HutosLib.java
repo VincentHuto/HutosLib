@@ -131,28 +131,28 @@ public class HutosLib {
 		builder.title(Component.translatable("item_group." + MOD_ID + ".hutoslibtab"))
 				// Set icon of creative tab
 				.icon(() -> new ItemStack(HLItemInit.obsidian_flakes.get()))
-				.displayItems((enabledFlags, populator, hasPermissions) -> {
+				.displayItems((params, output) -> {
 					//Items
-					populator.accept(HLItemInit.hl_guide_book.get());
+					output.accept(HLItemInit.hl_guide_book.get());
 
-					populator.accept(HLItemInit.raw_clay_flask.get());
-					populator.accept(HLItemInit.cured_clay_flask.get());
-					populator.accept(HLItemInit.node_of_actualization.get());
+					output.accept(HLItemInit.raw_clay_flask.get());
+					output.accept(HLItemInit.cured_clay_flask.get());
+					output.accept(HLItemInit.node_of_actualization.get());
 
-					populator.accept(HLItemInit.iron_knapper.get());
-					populator.accept(HLItemInit.diamond_knapper.get());
-					populator.accept(HLItemInit.obsidian_flakes.get());
+					output.accept(HLItemInit.iron_knapper.get());
+					output.accept(HLItemInit.diamond_knapper.get());
+					output.accept(HLItemInit.obsidian_flakes.get());
 
-					populator.accept(HLItemInit.leather_arm_banner.get());
-					populator.accept(HLItemInit.iron_arm_banner.get());
-					populator.accept(HLItemInit.gold_arm_banner.get());
-					populator.accept(HLItemInit.diamond_arm_banner.get());
-					populator.accept(HLItemInit.obsidian_arm_banner.get());
-					populator.accept(HLItemInit.netherite_arm_banner.get());
+					output.accept(HLItemInit.leather_arm_banner.get());
+					output.accept(HLItemInit.iron_arm_banner.get());
+					output.accept(HLItemInit.gold_arm_banner.get());
+					output.accept(HLItemInit.diamond_arm_banner.get());
+					output.accept(HLItemInit.obsidian_arm_banner.get());
+					output.accept(HLItemInit.netherite_arm_banner.get());
 
 					//Blocks
-					populator.accept(HLBlockInit.display_pedestal.get());
-					populator.accept(HLBlockInit.display_glass.get());
+					output.accept(HLBlockInit.display_pedestal.get());
+					output.accept(HLBlockInit.display_glass.get());
 
 				}));
 	}

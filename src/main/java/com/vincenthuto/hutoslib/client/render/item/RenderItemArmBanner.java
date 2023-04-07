@@ -17,8 +17,6 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -29,6 +27,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
@@ -54,34 +53,34 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 
 	@SuppressWarnings("unused")
 	@Override
-	public void renderByItem(ItemStack stack, ItemTransforms.TransformType p_239207_2_, PoseStack matrixStack,
+	public void renderByItem(ItemStack stack, ItemDisplayContext p_239207_2_, PoseStack matrixStack,
 			MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		Item item = stack.getItem();
 		if (item instanceof ItemArmBanner type) {
 			ResourceLocation texture = type.getTexture() != null ? type.getTexture() : fallback;
-			if (p_239207_2_ == TransformType.GUI) {
+			if (p_239207_2_ == ItemDisplayContext.GUI) {
 				matrixStack.scale(0.45f, 0.45f, 0.45f);
 				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 				matrixStack.translate(0.34, 0, 0);
 			}
 
-			if (p_239207_2_ == TransformType.THIRD_PERSON_RIGHT_HAND) {
+			if (p_239207_2_ == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
 				matrixStack.scale(0.1f, 0.1f, 0.1f);
 				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 				matrixStack.translate(-0.1, 2.5, 0);
 			}
-			if (p_239207_2_ == TransformType.THIRD_PERSON_LEFT_HAND) {
+			if (p_239207_2_ == ItemDisplayContext.THIRD_PERSON_LEFT_HAND) {
 				matrixStack.scale(0.1f, 0.1f, 0.1f);
 				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 				matrixStack.translate(-1.3, -1.75, 0);
 			}
-			if (p_239207_2_ == TransformType.FIRST_PERSON_RIGHT_HAND) {
+			if (p_239207_2_ == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
 				matrixStack.scale(0.2f, 0.2f, 0.2f);
 				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 				matrixStack.translate(-1.3, 0.75, 0);
 
 			}
-			if (p_239207_2_ == TransformType.FIRST_PERSON_LEFT_HAND) {
+			if (p_239207_2_ == ItemDisplayContext.FIRST_PERSON_LEFT_HAND) {
 				matrixStack.scale(0.2f, 0.2f, 0.2f);
 				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());
 

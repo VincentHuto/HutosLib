@@ -20,7 +20,7 @@ public class RenderMultiBlockInGui {
 		ms.translate(0, 2, 0);
 		for (BlockPosBlockPair pair : patternList) {
 			ms.translate(1, 1, pair.getPos().getZ());
-			mc.getItemRenderer().renderAndDecorateFakeItem(new ItemStack(pair.getBlock()), pair.getPos().getX() * -16,
+			mc.getItemRenderer().renderGuiItem(ms,new ItemStack(pair.getBlock()), pair.getPos().getX() * -16,
 					pair.getPos().getY() * -16);
 
 		}

@@ -3,6 +3,7 @@ package com.vincenthuto.hutoslib.common.recipe;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -19,7 +20,7 @@ public class ArmBannerCraftRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingContainer inv) {
+	public ItemStack assemble(CraftingContainer inv, RegistryAccess p_267165_) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		ItemStack itemstack1 = ItemStack.EMPTY;
 
@@ -84,5 +85,6 @@ public class ArmBannerCraftRecipe extends CustomRecipe {
 
 		return !itemstack.isEmpty() && !itemstack1.isEmpty();
 	}
+
 
 }
