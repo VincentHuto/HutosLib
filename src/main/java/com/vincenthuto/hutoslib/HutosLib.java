@@ -80,7 +80,6 @@ public class HutosLib {
 		modEventBus.addListener(this::commonSetup);
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(this::registerCapability);
-		modEventBus.addListener(HLForgeEvents::initKeybinds);
 		modEventBus.addListener(this::buildCreativeTabs);
 		
 		HLItemInit.ITEMS.register(modEventBus);
