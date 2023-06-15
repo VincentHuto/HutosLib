@@ -77,9 +77,9 @@ public class HutosLib {
 		event.register(ForgeRegistries.Keys.ITEMS, helper -> helper.register(item.getFirst(), item.getSecond()));
 	}
 
-	public static final DeferredRegister<CreativeModeTab> HUTOSLIBTABS = DeferredRegister
+	public static final DeferredRegister<CreativeModeTab> CREATIVETABS = DeferredRegister
 			.create(Registries.CREATIVE_MODE_TAB, HutosLib.MOD_ID);
-	public static final RegistryObject<CreativeModeTab> hutoslibtab = HUTOSLIBTABS.register("hutoslibtab",
+	public static final RegistryObject<CreativeModeTab> hutoslibtab = CREATIVETABS.register("hutoslibtab",
 			() -> CreativeModeTab.builder().title(Component.translatable("item_group." + MOD_ID + ".hutoslibtab"))
 					.icon(() -> new ItemStack(HLItemInit.obsidian_flakes.get())).build());
 
@@ -97,7 +97,7 @@ public class HutosLib {
 		HLItemInit.SPECIALITEMS.register(modEventBus);
 		HLItemInit.BANNERPATTERNS.register(modEventBus);
 		HLBlockInit.BLOCKS.register(modEventBus);
-		HUTOSLIBTABS.register(modEventBus);
+		CREATIVETABS.register(modEventBus);
 		HLParticleInit.PARTICLE_TYPES.register(modEventBus);
 		HLBlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
 		HLEnchantInit.ENCHANTS.register(modEventBus);
