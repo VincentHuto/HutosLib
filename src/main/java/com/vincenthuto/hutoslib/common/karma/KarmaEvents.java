@@ -67,7 +67,7 @@ public class KarmaEvents {
 	@SubscribeEvent
 	public static void playerRespawn(PlayerRespawnEvent event) {
 		Player playernew = event.getEntity();
-		if (!playernew.level.isClientSide) {
+		if (!playernew.level().isClientSide) {
 			IKarma bloodVolumeNew = playernew.getCapability(KarmaProvider.KARMA_CAPA)
 					.orElseThrow(NullPointerException::new);
 			HLPacketHandler.MAINCHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playernew),

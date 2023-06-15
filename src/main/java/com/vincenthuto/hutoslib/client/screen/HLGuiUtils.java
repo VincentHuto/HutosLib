@@ -24,6 +24,7 @@ import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -85,17 +86,13 @@ public class HLGuiUtils {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		bufferbuilder.vertex(x + 0, y + height, 1)
-				.uv((textureX + 0) * scaleIn, (textureY + height) * scaleIn)
+		bufferbuilder.vertex(x + 0, y + height, 1).uv((textureX + 0) * scaleIn, (textureY + height) * scaleIn)
 				.endVertex();
-		bufferbuilder.vertex(x + width, y + height, 1)
-				.uv((textureX + width) * scaleIn, (textureY + height) * scaleIn)
+		bufferbuilder.vertex(x + width, y + height, 1).uv((textureX + width) * scaleIn, (textureY + height) * scaleIn)
 				.endVertex();
-		bufferbuilder.vertex(x + width, y + 0, 1)
-				.uv((textureX + width) * scaleIn, (textureY + 0) * scaleIn)
+		bufferbuilder.vertex(x + width, y + 0, 1).uv((textureX + width) * scaleIn, (textureY + 0) * scaleIn)
 				.endVertex();
-		bufferbuilder.vertex(x + 0, y + 0, 1)
-				.uv((textureX + 0) * scaleIn, (textureY + 0) * scaleIn).endVertex();
+		bufferbuilder.vertex(x + 0, y + 0, 1).uv((textureX + 0) * scaleIn, (textureY + 0) * scaleIn).endVertex();
 		tessellator.end();
 	}
 
@@ -120,18 +117,13 @@ public class HLGuiUtils {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		bufferbuilder.vertex(x + 0, y + height, 1)
-				.uv((textureX + 0) * 0.00390625F, (textureY + height) * 0.00390625F)
+		bufferbuilder.vertex(x + 0, y + height, 1).uv((textureX + 0) * 0.00390625F, (textureY + height) * 0.00390625F)
 				.endVertex();
 		bufferbuilder.vertex(x + width, y + height, 1)
-				.uv((textureX + width) * 0.00390625F,
-						(textureY + height) * 0.00390625F)
+				.uv((textureX + width) * 0.00390625F, (textureY + height) * 0.00390625F).endVertex();
+		bufferbuilder.vertex(x + width, y + 0, 1).uv((textureX + width) * 0.00390625F, (textureY + 0) * 0.00390625F)
 				.endVertex();
-		bufferbuilder.vertex(x + width, y + 0, 1)
-				.uv((textureX + width) * 0.00390625F, (textureY + 0) * 0.00390625F)
-				.endVertex();
-		bufferbuilder.vertex(x + 0, y + 0, 1)
-				.uv((textureX + 0) * 0.00390625F, (textureY + 0) * 0.00390625F)
+		bufferbuilder.vertex(x + 0, y + 0, 1).uv((textureX + 0) * 0.00390625F, (textureY + 0) * 0.00390625F)
 				.endVertex();
 		tessellator.end();
 	}
@@ -153,8 +145,9 @@ public class HLGuiUtils {
 	}
 
 	// MATRIX FIXING
-	public static void renderItemStackInGui(PoseStack ms, ItemStack stack, int x, int y) {
-		transferMsToGl(ms, () -> Minecraft.getInstance().getItemRenderer().renderAndDecorateFakeItem(ms,stack, x, y));
+	public static void renderItemStackInGui(GuiGraphics graphics, ItemStack stack, int x, int y) {
+		PoseStack ms = graphics.pose();
+		transferMsToGl(ms, () -> graphics.renderFakeItem(stack, x, y));
 	}
 
 	// MULTIBLOCK STUFF
@@ -179,7 +172,7 @@ public class HLGuiUtils {
 
 	}
 
-	public static void renderPatternInGUI(PoseStack ms, Minecraft mc, MultiblockPattern pattern, double xOff,
+	public static void renderPatternInGUI(GuiGraphics graphics, Minecraft mc, MultiblockPattern pattern, double xOff,
 			double yOff) {
 		PoseStack viewModelPose = RenderSystem.getModelViewStack();
 		viewModelPose.pushPose();
@@ -188,7 +181,7 @@ public class HLGuiUtils {
 		viewModelPose.scale(0.5f, 0.5f, -1f);
 		viewModelPose.mulPose(new Quaternion(Vector3.YP, -5, true).toMoj());
 		for (BlockPosBlockPair pair : patternList) {
-			renderItemStackInGui(ms, new ItemStack(pair.getBlock()), pair.getPos().getX() * -16,
+			renderItemStackInGui(graphics, new ItemStack(pair.getBlock()), pair.getPos().getX() * -16,
 					pair.getPos().getZ() * 16);
 		}
 		viewModelPose.popPose();

@@ -25,6 +25,7 @@ import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -32,27 +33,16 @@ import net.minecraft.world.level.Level;
 
 public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 
-	private static class Bridge extends CraftingMenu {
-		public static void slotChangedCraftingGridAccessor(AbstractContainerMenu container, Level level, Player player,
-				CraftingContainer craftingInventory, ResultContainer craftResultInventory) {
-			CraftingMenu.slotChangedCraftingGrid(container, level, player, craftingInventory, craftResultInventory);
-		}
-
-		private Bridge(int p_39353_, Inventory p_39354_) {
-			super(p_39353_, p_39354_);
-			throw new IllegalStateException("Not instantiable.");
-		}
-	}
-
+	private final IBannerSlot extensionSlot;
+	private final CraftingContainer craftingInventory = new TransientCraftingContainer(this, 2, 2);
+	private final ResultContainer craftResultInventory = new ResultContainer();
+	private final Player player;
+	
 	@SuppressWarnings("unused")
 	private interface SlotFactory<T extends Slot> {
 		T create(IBannerSlot slot, int x, int y);
 	}
 
-	private final IBannerSlot extensionSlot;
-	private final CraftingContainer craftingInventory = new CraftingContainer(this, 2, 2);
-	private final ResultContainer craftResultInventory = new ResultContainer();
-	private final Player player;
 
 	public BannerSlotContainer(int id, Inventory playerInventory) {
 		super(HlContainerInit.banner_slot_container.get(), id);
@@ -131,7 +121,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 
 		this.addSlot(new BannerSlot(BannerSlotContainer.this.extensionSlot, 77, 44));
 
-		if (playerInventory.player.level.isClientSide) {
+		if (playerInventory.player.level().isClientSide) {
 			HLPacketHandler.MAINCHANNEL.sendToServer(new PacketContainerSlot());
 		}
 	}
@@ -254,7 +244,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 
 	@Override
 	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn) {
-		return recipeIn.matches(this.craftingInventory, this.player.level);
+		return recipeIn.matches(this.craftingInventory, this.player.level());
 	}
 
 	@Override
@@ -263,7 +253,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 
 		this.craftResultInventory.clearContent();
 
-		if (!playerIn.level.isClientSide) {
+		if (!playerIn.level().isClientSide) {
 			this.clearContainer(playerIn, this.craftingInventory);
 			BannerFinder.sendSync(playerIn);
 		}
@@ -276,9 +266,22 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 
 	@Override
 	public void slotsChanged(Container inventoryIn) {
-		Bridge.slotChangedCraftingGridAccessor(this, this.player.level, this.player, this.craftingInventory,
+		Bridge.slotChangedCraftingGridAccessor(this, this.player.level(), this.player, this.craftingInventory,
 				this.craftResultInventory);
 	}
+	private static class Bridge extends CraftingMenu {
+		public static void slotChangedCraftingGridAccessor(AbstractContainerMenu container, Level level, Player player,
+				CraftingContainer craftingInventory, ResultContainer craftResultInventory) {
+			CraftingMenu.slotChangedCraftingGrid(container, level, player, craftingInventory, craftResultInventory);
+		}
+
+		private Bridge(int p_39353_, Inventory p_39354_) {
+			super(p_39353_, p_39354_);
+			throw new IllegalStateException("Not instantiable.");
+		}
+	}
+
+
 
 	@Override
 	public boolean stillValid(Player playerIn) {

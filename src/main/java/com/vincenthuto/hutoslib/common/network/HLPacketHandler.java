@@ -26,7 +26,7 @@ public class HLPacketHandler {
 		 * // Register Networking packets
 		 * MAINCHANNEL.messageBuilder(AnimationPacket.class, networkID++,
 		 * NetworkDirection.PLAY_TO_CLIENT)
-		 * .encoder(AnimationPacket::encode).decoder(AnimationPacket::new).consumer(
+		 * .encoder(AnimationPacket::encode).decoder(AnimationPacket::new).consumerNetworkThread(
 		 * AnimationPacket::handle).add();
 		 */
 		MAINCHANNEL.registerMessage(networkID++, PacketSpawnLightningParticle.class,
@@ -35,23 +35,23 @@ public class HLPacketHandler {
 
 		MAINCHANNEL.messageBuilder(PacketSyncBannerSlotContents.class, networkID++, NetworkDirection.PLAY_TO_CLIENT)
 				.encoder(PacketSyncBannerSlotContents::encode).decoder(PacketSyncBannerSlotContents::new)
-				.consumer(PacketSyncBannerSlotContents::handle).add();
+				.consumerNetworkThread(PacketSyncBannerSlotContents::handle).add();
 
 		MAINCHANNEL.messageBuilder(PacketOpenBanner.class, networkID++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new).consumer(PacketOpenBanner::handle)
+				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new).consumerNetworkThread(PacketOpenBanner::handle)
 				.add();
 
 		MAINCHANNEL.messageBuilder(PacketOpenBanner.class, networkID++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new).consumer(PacketOpenBanner::handle)
+				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new).consumerNetworkThread(PacketOpenBanner::handle)
 				.add();
 
 		MAINCHANNEL.messageBuilder(PacketContainerSlot.class, networkID++, NetworkDirection.PLAY_TO_SERVER)
 				.encoder(PacketContainerSlot::encode).decoder(PacketContainerSlot::new)
-				.consumer(PacketContainerSlot::handle).add();
+				.consumerNetworkThread(PacketContainerSlot::handle).add();
 
 		MAINCHANNEL.messageBuilder(PacketBannerChange.class, networkID++, NetworkDirection.PLAY_TO_CLIENT)
 				.encoder(PacketBannerChange::encode).decoder(PacketBannerChange::new)
-				.consumer(PacketBannerChange::handle).add();
+				.consumerNetworkThread(PacketBannerChange::handle).add();
 
 		MAINCHANNEL.registerMessage(networkID++, PacketKarmaClient.class, PacketKarmaClient::encode,
 				PacketKarmaClient::decode, PacketKarmaClient::handle);

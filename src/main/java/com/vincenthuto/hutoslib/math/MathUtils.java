@@ -72,7 +72,7 @@ public final class MathUtils {
 
 		Entity result = null;
 		double distance = range * range;
-		for (Entity entity : shooter.level.getEntities(shooter, shooter.getBoundingBox().inflate(range), filter)) {
+		for (Entity entity : shooter.level().getEntities(shooter, shooter.getBoundingBox().inflate(range), filter)) {
 			Optional<Vec3> opt = entity.getBoundingBox().inflate(0.3).clip(eyes, end);
 			if (opt.isPresent()) {
 				double dist = eyes.distanceToSqr(opt.get());

@@ -10,6 +10,7 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.container.BannerSlotContainer;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
@@ -40,7 +41,7 @@ public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotC
 
 	public BannerSlotScreen(BannerSlotContainer container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title);
-		this.passEvents = true;
+        // FIXME: this.passEvents = true;
 		this.titleLabelX = 97;
 	}
 
@@ -64,37 +65,36 @@ public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotC
 	}
 
 	@Override
-	protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
-		this.font.draw(matrixStack, this.title, (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
+	protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+		graphics.drawString(font, this.title, this.titleLabelX, this.titleLabelY, 4210752);
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground(graphics);
 		if (this.recipeBookComponent.isVisible() && this.widthTooNarrow) {
-			this.renderBg(matrixStack, partialTicks, mouseX, mouseY);
-			this.recipeBookComponent.render(matrixStack, mouseX, mouseY, partialTicks);
+			this.renderBg(graphics, partialTicks, mouseX, mouseY);
+			this.recipeBookComponent.render(graphics, mouseX, mouseY, partialTicks);
 		} else {
-			this.recipeBookComponent.render(matrixStack, mouseX, mouseY, partialTicks);
-			super.render(matrixStack, mouseX, mouseY, partialTicks);
-			this.recipeBookComponent.renderGhostRecipe(matrixStack, this.leftPos, this.topPos, false, partialTicks);
+			this.recipeBookComponent.render(graphics, mouseX, mouseY, partialTicks);
+			super.render(graphics, mouseX, mouseY, partialTicks);
+			this.recipeBookComponent.renderGhostRecipe(graphics, this.leftPos, this.topPos, false, partialTicks);
 		}
 
-		this.renderTooltip(matrixStack, mouseX, mouseY);
-		this.recipeBookComponent.renderTooltip(matrixStack, this.leftPos, this.topPos, mouseX, mouseY);
+		this.renderTooltip(graphics, mouseX, mouseY);
+		this.recipeBookComponent.renderTooltip(graphics, this.leftPos, this.topPos, mouseX, mouseY);
 		this.oldMouseX = (float) mouseX;
 		this.oldMouseY = (float) mouseY;
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, SCREEN_BACKGROUND);
-
+	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+		//RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		//TODO: Change this?
+		//GuiGraphics#setColor()
 		int i = this.leftPos;
 		int j = this.topPos;
-		this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
+		graphics.blit(SCREEN_BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
 		renderEntityInInventory(i + 51, j + 75, 30, (float) (i + 51) - this.oldMouseX,
 				(float) (j + 75 - 50) - this.oldMouseY, this.minecraft.player);
 	}

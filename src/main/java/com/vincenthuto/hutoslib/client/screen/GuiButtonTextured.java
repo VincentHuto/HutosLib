@@ -3,6 +3,7 @@ package com.vincenthuto.hutoslib.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -18,7 +19,7 @@ public class GuiButtonTextured extends Button {
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, Component.literal(""), actionIn, null);
+		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, Component.literal(""), actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -37,7 +38,7 @@ public class GuiButtonTextured extends Button {
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Component text, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, null);
+		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -106,24 +107,20 @@ public class GuiButtonTextured extends Button {
 	}
 
 	@Override
-	public void render(PoseStack matrix, int mouseX, int mouseY, float particks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float particks) {
 		if (visible) {
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			RenderSystem.setShaderTexture(0, texture);
-
 			if (mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width
 					&& mouseY < this.getY() + this.height) {
 				this.isHovered = true;
 				v = newV;
-				this.blit(matrix, posX, posY, u, adjV, width, height);
+				graphics.blit(texture, posX, posY, u, adjV, width, height);
 			} else if (state) {
 				v = newV;
-				this.blit(matrix, posX, posY, u, adjV, width, height);
+				graphics.blit(texture, posX, posY, u, adjV, width, height);
 			} else {
 				this.isHovered = false;
 				newV = v;
-				this.blit(matrix, posX, posY, u, v, width, height);
+				graphics.blit(texture, posX, posY, u, v, width, height);
 			}
 		}
 

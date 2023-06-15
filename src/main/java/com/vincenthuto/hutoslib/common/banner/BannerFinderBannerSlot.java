@@ -48,7 +48,7 @@ public class BannerFinderBannerSlot extends BannerFinder {
 		@Override
 		public void syncToClients() {
 			LivingEntity thePlayer = slot.getContainer().getOwner();
-			if (thePlayer.level.isClientSide)
+			if (thePlayer.level().isClientSide)
 				return;
 			PacketBannerChange message = new PacketBannerChange(thePlayer, "banner_slot", new JsonPrimitive(0),
 					slot.getContents());

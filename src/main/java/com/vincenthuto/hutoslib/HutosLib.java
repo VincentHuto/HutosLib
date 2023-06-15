@@ -23,16 +23,19 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -42,8 +45,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegistryObject;
 
 @Mod("hutoslib")
 @Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.MOD)
@@ -72,6 +77,12 @@ public class HutosLib {
 		event.register(ForgeRegistries.Keys.ITEMS, helper -> helper.register(item.getFirst(), item.getSecond()));
 	}
 
+	public static final DeferredRegister<CreativeModeTab> HUTOSLIBTABS = DeferredRegister
+			.create(Registries.CREATIVE_MODE_TAB, HutosLib.MOD_ID);
+	public static final RegistryObject<CreativeModeTab> hutoslibtab = HUTOSLIBTABS.register("hutoslibtab",
+			() -> CreativeModeTab.builder().title(Component.translatable("item_group." + MOD_ID + ".hutoslibtab"))
+					.icon(() -> new ItemStack(HLItemInit.obsidian_flakes.get())).build());
+
 	@SuppressWarnings("deprecation")
 	public HutosLib() {
 		MinecraftForge.EVENT_BUS.register(this);
@@ -80,13 +91,13 @@ public class HutosLib {
 		modEventBus.addListener(this::commonSetup);
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(this::registerCapability);
-		modEventBus.addListener(HLForgeEvents::initKeybinds);
-		modEventBus.addListener(this::buildCreativeTabs);
-		
+		modEventBus.addListener(this::buildContents);
+
 		HLItemInit.ITEMS.register(modEventBus);
 		HLItemInit.SPECIALITEMS.register(modEventBus);
 		HLItemInit.BANNERPATTERNS.register(modEventBus);
 		HLBlockInit.BLOCKS.register(modEventBus);
+		HUTOSLIBTABS.register(modEventBus);
 		HLParticleInit.PARTICLE_TYPES.register(modEventBus);
 		HLBlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
 		HLEnchantInit.ENCHANTS.register(modEventBus);
@@ -116,7 +127,7 @@ public class HutosLib {
 		BannerFinderBannerSlot.initFinder();
 
 	}
-	
+
 	private void registerCapability(RegisterCapabilitiesEvent event) {
 		event.register(IBannerSlotItem.class);
 		event.register(BannerExtensionSlot.class);
@@ -124,37 +135,31 @@ public class HutosLib {
 		BannerSlotCapability.register(event);
 
 	}
-	
-	private void buildCreativeTabs(CreativeModeTabEvent.Register event) {
-		event.registerCreativeModeTab(new ResourceLocation(MOD_ID, "hutoslibtab"), builder ->
-		// Set name of tab to display
-		builder.title(Component.translatable("item_group." + MOD_ID + ".hutoslibtab"))
-				// Set icon of creative tab
-				.icon(() -> new ItemStack(HLItemInit.obsidian_flakes.get()))
-				.displayItems((params, output) -> {
-					//Items
-					output.accept(HLItemInit.hl_guide_book.get());
 
-					output.accept(HLItemInit.raw_clay_flask.get());
-					output.accept(HLItemInit.cured_clay_flask.get());
-					output.accept(HLItemInit.node_of_actualization.get());
+	public void buildContents(BuildCreativeModeTabContentsEvent output) {
 
-					output.accept(HLItemInit.iron_knapper.get());
-					output.accept(HLItemInit.diamond_knapper.get());
-					output.accept(HLItemInit.obsidian_flakes.get());
+		if (output.getTabKey() == hutoslibtab.getKey()) {
+			output.accept(HLItemInit.hl_guide_book.get());
 
-					output.accept(HLItemInit.leather_arm_banner.get());
-					output.accept(HLItemInit.iron_arm_banner.get());
-					output.accept(HLItemInit.gold_arm_banner.get());
-					output.accept(HLItemInit.diamond_arm_banner.get());
-					output.accept(HLItemInit.obsidian_arm_banner.get());
-					output.accept(HLItemInit.netherite_arm_banner.get());
+			output.accept(HLItemInit.raw_clay_flask.get());
+			output.accept(HLItemInit.cured_clay_flask.get());
+			output.accept(HLItemInit.node_of_actualization.get());
 
-					//Blocks
-					output.accept(HLBlockInit.display_pedestal.get());
-					output.accept(HLBlockInit.display_glass.get());
+			output.accept(HLItemInit.iron_knapper.get());
+			output.accept(HLItemInit.diamond_knapper.get());
+			output.accept(HLItemInit.obsidian_flakes.get());
 
-				}));
+			output.accept(HLItemInit.leather_arm_banner.get());
+			output.accept(HLItemInit.iron_arm_banner.get());
+			output.accept(HLItemInit.gold_arm_banner.get());
+			output.accept(HLItemInit.diamond_arm_banner.get());
+			output.accept(HLItemInit.obsidian_arm_banner.get());
+			output.accept(HLItemInit.netherite_arm_banner.get());
+
+			// Blocks
+			output.accept(HLBlockInit.display_pedestal.get());
+			output.accept(HLBlockInit.display_glass.get());
+		}
 	}
 
 }

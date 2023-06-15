@@ -8,6 +8,8 @@ import com.vincenthuto.hutoslib.math.Quaternion;
 import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderMultiBlockInGui {
@@ -20,7 +22,9 @@ public class RenderMultiBlockInGui {
 		ms.translate(0, 2, 0);
 		for (BlockPosBlockPair pair : patternList) {
 			ms.translate(1, 1, pair.getPos().getZ());
-			mc.getItemRenderer().renderGuiItem(ms,new ItemStack(pair.getBlock()), pair.getPos().getX() * -16,
+		      MultiBufferSource.BufferSource multibuffersource$buffersource =mc.renderBuffers().bufferSource();
+			GuiGraphics graph = new GuiGraphics(mc, multibuffersource$buffersource);
+			graph.renderItem(new ItemStack(pair.getBlock()), pair.getPos().getX() * -16,
 					pair.getPos().getY() * -16);
 
 		}

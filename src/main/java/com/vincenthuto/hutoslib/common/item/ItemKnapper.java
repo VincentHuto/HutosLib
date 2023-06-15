@@ -22,8 +22,6 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -31,7 +29,6 @@ public class ItemKnapper extends DiggerItem {
 	public static final ToolAction KNAPPER_DIG = ToolAction.get("knapper_dig");
 	public static final Set<ToolAction> DEFAULT_KNAPPER_ACTIONS = Stream.of(KNAPPER_DIG)
 			.collect(Collectors.toCollection(Sets::newIdentityHashSet));
-	public static final Material OBSIDIAN = (new Material.Builder(MaterialColor.COLOR_PURPLE)).build();
 	public static TagKey<Block> EFFECTIVE_ON = TagKey.create(Registries.BLOCK,
 			new ResourceLocation("mineable/knapper"));
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.checkerframework.checker.units.qual.g;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,6 +15,7 @@ import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -23,7 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class GuiGuidePage extends Screen {
-	static Component titleComponent =  Component.literal("");
+	static Component titleComponent = Component.literal("");
 	final ResourceLocation texture = HLLocHelper.guiPrefix("page.png");
 	int left, top;
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
@@ -131,7 +133,7 @@ public abstract class GuiGuidePage extends Screen {
 				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));
-		textBox = new EditBox(font, left - guiWidth + 155, top + guiHeight - 227, 14, 14,  Component.literal(""));
+		textBox = new EditBox(font, left - guiWidth + 155, top + guiHeight - 227, 14, 14, Component.literal(""));
 		super.init();
 	}
 
@@ -155,8 +157,9 @@ public abstract class GuiGuidePage extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		PoseStack matrixStack = graphics.pose();
+		this.renderBackground(graphics);
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -164,51 +167,50 @@ public abstract class GuiGuidePage extends Screen {
 		RenderSystem.setShaderTexture(0, texture);
 
 		if (pageNum != 0) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.literal("Pg." + pageNum), left + guiWidth - 26,
+			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + pageNum), left + guiWidth - 26,
 					top + guiHeight - 15, 50, 0xffffff, true);
 		}
 		matrixStack.pushPose();
-		Minecraft.getInstance().getItemRenderer().renderAndDecorateFakeItem(matrixStack, icon, left + guiWidth - 32,
-				top + guiHeight - 220);
+		graphics.renderFakeItem(icon, left + guiWidth - 32, top + guiHeight - 220);
 		matrixStack.popPose();
 		if (!title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(title)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(title)), left - guiWidth + 180,
 					top + guiHeight - 220, 165, 0xffffff, true);
 		}
 		if (!subtitle.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(subtitle)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(subtitle)), left - guiWidth + 180,
 					top + guiHeight - 210, 165, 0xffffff, true);
 		}
 
 		if (!text.isEmpty() && subtitle.isEmpty() && title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(text)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(text)), left - guiWidth + 180,
 					top + guiHeight - 220, 160, 0xffffff, true);
 		} else if (!text.isEmpty() && subtitle.isEmpty() || title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(text)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(text)), left - guiWidth + 180,
 					top + guiHeight - 200, 160, 0xffffff, true);
 		} else if (!text.isEmpty() && !subtitle.isEmpty() && !title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font,  Component.literal(I18n.get(text)), left - guiWidth + 180,
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(text)), left - guiWidth + 180,
 					top + guiHeight - 190, 160, 0xffffff, true);
 		}
 
 		if (pageNum != (getPages().size() - 1)) {
-			arrowF.render(matrixStack, mouseX, mouseY, partialTicks);
+			arrowF.render(graphics, mouseX, mouseY, partialTicks);
 		}
 
 		if (pageNum >= 0) {
-			arrowB.render(matrixStack, mouseX, mouseY, partialTicks);
+			arrowB.render(graphics, mouseX, mouseY, partialTicks);
 		}
 
 		// buttonTitle.renderButton(matrixStack, mouseX, mouseY, partialTicks);
-		buttonCloseTab.render(matrixStack, mouseX, mouseY, partialTicks);
+		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
 
-		textBox.render(matrixStack, mouseX, mouseY, partialTicks);
+		textBox.render(graphics, mouseX, mouseY, partialTicks);
 		if ((mouseX >= left + guiWidth - 32 && mouseX <= left + guiWidth - 10)) {
 			if (mouseY >= top + guiHeight - 220 && mouseY <= top + guiHeight - 200) {
 				List<Component> text = new ArrayList<>();
 				if (!icon.isEmpty()) {
-					text.add( Component.literal(I18n.get(icon.getHoverName().getString())));
-					renderComponentTooltip(matrixStack, text, left + guiWidth - 32, top + guiHeight - 220);
+					text.add(Component.literal(I18n.get(icon.getHoverName().getString())));
+					graphics.renderComponentTooltip(font,text, left + guiWidth - 32, top + guiHeight - 220);
 				}
 			}
 		}
@@ -219,23 +221,20 @@ public abstract class GuiGuidePage extends Screen {
 //			renderComponentTooltip(matrixStack, titlePage, mouseX, mouseY);
 //		}
 		List<Component> ClosePage = new ArrayList<>();
-		ClosePage.add( Component.literal(I18n.get("Close Book")));
+		ClosePage.add(Component.literal(I18n.get("Close Book")));
 		if (buttonCloseTab.isHoveredOrFocused()) {
-			renderComponentTooltip(matrixStack, ClosePage, mouseX, mouseY);
+			graphics.renderComponentTooltip(font, ClosePage, mouseX, mouseY);
 		}
 	}
 
 	@Override
-	public void renderBackground(PoseStack matrixStack) {
-		super.renderBackground(matrixStack);
+	public void renderBackground(GuiGraphics graphics) {
+		super.renderBackground(graphics);
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, texture);
 		int centerX = (width / 2) - guiWidth / 2;
 		int centerY = (height / 2) - guiHeight / 2;
-		this.blit(matrixStack, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
+		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 	}
 
 	public void updateTextBoxes() {

@@ -14,6 +14,7 @@ import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -117,17 +118,13 @@ public abstract class GuiGuideTitlePage extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, this.texture);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		PoseStack matrixStack = graphics.pose();
+		this.renderBackground(graphics);
 		int centerX = (width / 2) - guiWidth / 2;
 		int centerY = (height / 2) - guiHeight / 2;
-		this.blit(matrixStack, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
-		RenderSystem.setShaderTexture(0, this.overlay);
-		this.blit(matrixStack, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
-
+		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
+		graphics.blit(overlay, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 		title.getContents();
 		if (title.getContents() != ComponentContents.EMPTY) {
 			HLGuiUtils.drawMaxWidthString(font, title, centerX + 10, centerY + 10, 165, 0xffffff, true);
@@ -136,20 +133,20 @@ public abstract class GuiGuideTitlePage extends Screen {
 		matrixStack.pushPose();
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
-		Minecraft.getInstance().getItemRenderer().renderAndDecorateFakeItem(matrixStack,icon, left + guiWidth - 48,
-				top + guiHeight - 230);
+		graphics.renderFakeItem(icon, left + guiWidth - 48, top + guiHeight - 230);
 		matrixStack.popPose();
 
 		for (GuiButtonTextured element : buttonList) {
-			element.render(matrixStack, mouseX, mouseY, partialTicks);
+			element.render(graphics, mouseX, mouseY, partialTicks);
 			if (element.isHoveredOrFocused()) {
-				renderTooltip(matrixStack, element.text, element.getX(), element.getY());
+				graphics.renderTooltip(font, element.text, element.getX(), element.getY());
 			}
 		}
 
-		this.buttonclose.render(matrixStack, mouseX, mouseY, partialTicks);
+		this.buttonclose.render(graphics, mouseX, mouseY, partialTicks);
 		if (this.buttonclose.isHoveredOrFocused()) {
-			renderTooltip(matrixStack, Component.translatable("Close"), this.buttonclose.getX(), this.buttonclose.getY());
+			graphics.renderTooltip(font, Component.translatable("Close"), this.buttonclose.getX(),
+					this.buttonclose.getY());
 		}
 	}
 }

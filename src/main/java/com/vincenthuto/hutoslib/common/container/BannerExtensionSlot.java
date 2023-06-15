@@ -55,7 +55,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 					final BannerExtensionSlot extensionContainer = new BannerExtensionSlot((LivingEntity) entity) {
 						@Override
 						public void onContentsChanged(BannerSlotItemHandler slot) {
-							if (!getOwner().level.isClientSide)
+							if (!getOwner().level().isClientSide)
 								syncTo(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(this::getOwner));
 						}
 					};
@@ -98,7 +98,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 		@SubscribeEvent
 		public void joinWorld(PlayerEvent.PlayerChangedDimensionEvent event) {
 			Player target = event.getEntity();
-			if (target.level.isClientSide)
+			if (target.level().isClientSide)
 				return;
 			get(target).ifPresent(BannerExtensionSlot::syncToSelf);
 		}
@@ -106,7 +106,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 		@SubscribeEvent
 		public void joinWorld(PlayerEvent.PlayerLoggedInEvent event) {
 			Player target = event.getEntity();
-			if (target.level.isClientSide)
+			if (target.level().isClientSide)
 				return;
 			get(target).ifPresent(BannerExtensionSlot::syncToSelf);
 		}
@@ -143,7 +143,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 				}
 				if (stack.getCount() > 0) {
 					if (entity instanceof Player player) {
-						if (!entity.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)
+						if (!entity.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)
 								&& !player.isSpectator()) {
 							Collection<ItemEntity> old = entity.captureDrops(event.getDrops());
 							player.drop(stack, true, false);
@@ -161,7 +161,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 		@SubscribeEvent
 		public void track(PlayerEvent.StartTracking event) {
 			Entity target = event.getTarget();
-			if (target.level.isClientSide)
+			if (target.level().isClientSide)
 				return;
 			if (target instanceof Player) {
 				get((LivingEntity) target).ifPresent(BannerExtensionSlot::syncToSelf);
