@@ -21,23 +21,24 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class HLClientEvents {
-	
+
 	@SubscribeEvent
 	public static void skybox(RenderLevelStageEvent event) {
 
 		BoltRenderer.onWorldRenderLast(event.getPartialTick(), event.getPoseStack());
 
 	}
-	
+
 	public static KeyMapping OPEN_BANNER_SLOT_KEYBIND;
 
 	@SubscribeEvent
-	public static void handleKeys(TickEvent.ClientTickEvent ev) {
+	public static void handleKeys(ClientTickEvent ev) {
 		if (ev.phase != TickEvent.Phase.START)
 			return;
 

@@ -1,7 +1,6 @@
 package com.vincenthuto.hutoslib;
 
 import com.mojang.datafixers.util.Pair;
-import com.vincenthuto.hutoslib.client.HLForgeEvents;
 import com.vincenthuto.hutoslib.client.particle.HLParticleInit;
 import com.vincenthuto.hutoslib.client.render.block.RenderTileDisplayPedestal;
 import com.vincenthuto.hutoslib.client.screen.BannerSlotScreen;
@@ -31,7 +30,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;

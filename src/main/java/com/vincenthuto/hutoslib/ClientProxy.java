@@ -28,9 +28,4 @@ public class ClientProxy implements IProxy {
 				HlClientTickHandler.partialTicks);
 	}
 
-	@Override
-	public void openGuideGui() {
-		Minecraft.getInstance().setScreen(new HLTitlePage());
-	}
-
 }

@@ -66,7 +66,8 @@ public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotC
 
 	@Override
 	protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-		graphics.drawString(font, this.title, this.titleLabelX, this.titleLabelY, 4210752);
+		graphics.drawString(font, this.title, this.titleLabelX, this.titleLabelY, 4210752,false);
+
 	}
 
 	@Override

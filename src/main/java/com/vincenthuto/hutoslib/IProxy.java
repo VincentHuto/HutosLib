@@ -18,8 +18,5 @@ public interface IProxy {
 
 	}
 
-	default void openGuideGui() {
-
-	}
 
 }
