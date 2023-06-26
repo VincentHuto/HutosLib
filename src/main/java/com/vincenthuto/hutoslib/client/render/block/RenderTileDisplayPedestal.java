@@ -24,6 +24,16 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 	@Override
 	public void render(DisplayPedestalBlockEntity te, float partialTicks, PoseStack matrixStackIn,
 			MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+		
+
+		renderItems(te, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+
+	}
+
+
+	
+	public void renderItems(DisplayPedestalBlockEntity te, float partialTicks, PoseStack matrixStackIn,
+			MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {		
 		int items = 0;
 		for (int i = 0; i < te.inventorySize(); i++)
 			if (te.getItemHandler().getItem(i).isEmpty())

@@ -58,7 +58,9 @@ public class HLClientEvents {
 			ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V,
 					"key.armbanner.category"));
 		}
-
+		
+		
+	
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		private static <T extends LivingEntity, M extends HumanoidModel<T>, R extends LivingEntityRenderer<T, M>> void addLayerToEntity(
 				EntityRenderersEvent.AddLayers event, EntityType<? extends T> entityType) {

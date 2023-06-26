@@ -1,5 +1,8 @@
 package com.vincenthuto.hutoslib;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.datafixers.util.Pair;
 import com.vincenthuto.hutoslib.client.particle.HLParticleInit;
 import com.vincenthuto.hutoslib.client.render.block.RenderTileDisplayPedestal;
@@ -13,6 +16,7 @@ import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 import com.vincenthuto.hutoslib.common.enchant.HLEnchantInit;
+import com.vincenthuto.hutoslib.common.event.ResourceReloadHandler;
 import com.vincenthuto.hutoslib.common.item.HLItemInit;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
 import com.vincenthuto.hutoslib.common.karma.KarmaEvents;
@@ -33,6 +37,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,6 +56,7 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod("hutoslib")
 @Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.MOD)
 public class HutosLib {
+	public static final Logger LOGGER = LogManager.getLogger();
 
 	public static final String MOD_ID = "hutoslib";
 
@@ -86,6 +92,7 @@ public class HutosLib {
 		MinecraftForge.EVENT_BUS.register(this);
 		DistExecutor.callWhenOn(Dist.CLIENT, () -> () -> proxy = new ClientProxy());
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
 		modEventBus.addListener(this::commonSetup);
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(this::registerCapability);
