@@ -15,8 +15,8 @@ import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
+import com.vincenthuto.hutoslib.common.data.ResourceReloadHandler;
 import com.vincenthuto.hutoslib.common.enchant.HLEnchantInit;
-import com.vincenthuto.hutoslib.common.event.ResourceReloadHandler;
 import com.vincenthuto.hutoslib.common.item.HLItemInit;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
 import com.vincenthuto.hutoslib.common.karma.KarmaEvents;
@@ -148,7 +148,7 @@ public class HutosLib {
 
 			output.accept(HLItemInit.raw_clay_flask.get());
 			output.accept(HLItemInit.cured_clay_flask.get());
-			output.accept(HLItemInit.node_of_actualization.get());
+		//	output.accept(HLItemInit.node_of_actualization.get());
 
 			output.accept(HLItemInit.iron_knapper.get());
 			output.accept(HLItemInit.diamond_knapper.get());

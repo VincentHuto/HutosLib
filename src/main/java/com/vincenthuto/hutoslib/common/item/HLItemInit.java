@@ -38,8 +38,8 @@ public class HLItemInit {
 			() -> new Item(new Item.Properties()));
 
 	// Karma
-	public static final RegistryObject<Item> node_of_actualization = ITEMS.register("node_of_actualization",
-			() -> new ItemNodeOfActualization(new Item.Properties()));
+//	public static final RegistryObject<Item> node_of_actualization = ITEMS.register("node_of_actualization",
+//			() -> new ItemNodeOfActualization(new Item.Properties()));
 
 	// Knappers
 	public static final RegistryObject<Item> iron_knapper = ITEMS.register("iron_knapper",

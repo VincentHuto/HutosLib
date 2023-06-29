@@ -77,7 +77,7 @@ public class GuiButtonTextured extends Button {
 
 	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, Component text, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, null);
+		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;

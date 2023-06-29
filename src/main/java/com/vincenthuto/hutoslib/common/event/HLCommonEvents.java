@@ -1,6 +1,7 @@
 package com.vincenthuto.hutoslib.common.event;
 
 import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.common.data.ResourceReloadHandler;
 
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

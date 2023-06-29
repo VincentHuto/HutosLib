@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.common.event;
+package com.vincenthuto.hutoslib.common.data;
 
 public record Identifier(String modId, String name) {
     public Identifier {
