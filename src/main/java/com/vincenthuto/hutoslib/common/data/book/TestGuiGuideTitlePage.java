@@ -7,17 +7,12 @@ import java.util.Random;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.HLTextUtils;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.client.screen.guide.TomeCategoryTab;
-import com.vincenthuto.hutoslib.client.screen.guide.TomeCategoryTab.TabColor;
-import com.vincenthuto.hutoslib.client.screen.guide.TomeChapter;
-import com.vincenthuto.hutoslib.client.screen.guide.TomeLib;
-import com.vincenthuto.hutoslib.client.screen.guide.lib.HLTitlePage;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -102,9 +97,10 @@ public class TestGuiGuideTitlePage extends Screen {
 		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getChapterOrder(), obj2.getChapterOrder()));
 
 		for (int i = 0; i < chapters.size(); i++) {
-			TomeCategoryTab tab = new TomeCategoryTab(TabColor.BLACK, HLTextUtils.toProperCase(chapters.get(i).title),
-					i, (int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
-					centerY - (i * -25) + 18, (press) -> {
+			TestTomeCategoryTab tab = new TestTomeCategoryTab(chapters.get(i).getChapterRGB(),
+					HLTextUtils.toProperCase(chapters.get(i).title), i,
+					(int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
+					centerY - (i * -25) + 18, 0, 192, (press) -> {
 						if (press instanceof GuiButtonTextured button) {
 							mc.setScreen(new TestGuiGuidePageTOC(chapters.get(button.id)));
 						}
@@ -149,10 +145,20 @@ public class TestGuiGuideTitlePage extends Screen {
 		matrixStack.popPose();
 
 		for (GuiButtonTextured element : buttonList) {
-			element.render(graphics, mouseX, mouseY, partialTicks);
+			if (element instanceof TestTomeCategoryTab tab) {
+				RenderSystem.setShaderColor(tab.color.getRed()/255, tab.color.getGreen()/255, tab.color.getBlue()/255, 1.0F);
+				element.render(graphics, mouseX, mouseY, partialTicks);
+				RenderSystem.setShaderColor(1, 1, 1, 1.0F);
+
+			} else {
+				element.render(graphics, mouseX, mouseY, partialTicks);
+
+			}
+
 			if (element.isHoveredOrFocused()) {
 				graphics.renderTooltip(font, element.text, element.getX(), element.getY());
 			}
+
 		}
 
 		this.buttonclose.render(graphics, mouseX, mouseY, partialTicks);

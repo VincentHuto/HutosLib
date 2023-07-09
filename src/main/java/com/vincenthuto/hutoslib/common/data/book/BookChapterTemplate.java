@@ -1,9 +1,12 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
+import java.util.Arrays;
 import java.util.List;
 
+import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
+import net.minecraft.client.particle.Particle;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,9 +29,8 @@ public class BookChapterTemplate implements DataTemplate {
 	}
 
 	public ItemStack getIconItem() {
-		if (icon != null && icon.contains(":")) {
-			String[] split = icon.split(":");
-			// System.out.println(Arrays.toString(split));
+		if (color != null && icon.contains(",")) {
+			String[] split = icon.split(",");
 			Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
@@ -36,6 +38,20 @@ public class BookChapterTemplate implements DataTemplate {
 
 		}
 		return ItemStack.EMPTY;
+	}
+
+	public ParticleColor getChapterRGB() {
+		if (color != null && color.contains(",")) {
+			String[] split = color.split(",");
+			ParticleColor pc = new ParticleColor(255 * Float.parseFloat(split[0]), 255 * Float.parseFloat(split[1]),
+					255 * Float.parseFloat(split[2]));
+
+			if (pc != null) {
+				return pc;
+			}
+
+		}
+		return new ParticleColor(1, 1, 1);
 	}
 
 	public int getChapterOrder() {
