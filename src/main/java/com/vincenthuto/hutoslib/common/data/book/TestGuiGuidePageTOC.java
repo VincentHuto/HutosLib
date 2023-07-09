@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -23,6 +24,8 @@ public class TestGuiGuidePageTOC extends Screen {
 	protected int left;
 	protected int top;
 	public int guiHeight = 228, guiWidth = 174;
+	GuiButtonTextured buttonTitle, buttonCloseTab;
+	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
 
 	public List<GuiButtonTextured> pageButtons = new ArrayList<>();
 	private BookChapterTemplate chapterTemplate;
@@ -57,7 +60,17 @@ public class TestGuiGuidePageTOC extends Screen {
 		for (GuiButtonTextured pageButton : pageButtons) {
 			this.addRenderableWidget(pageButton);
 		}
+		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
+				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
+					this.onClose();
+				}));
+		
+		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
+				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192, 24, 16, 24, 32, (press) -> {
+					this.onClose();
+				}));
 	}
+	
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
@@ -76,6 +89,21 @@ public class TestGuiGuidePageTOC extends Screen {
 					pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 			HLGuiUtils.drawMaxWidthString(font, Component.literal(chapterTemplate.getPages().get(i).title),
 					pageButtons.get(i).posX + 30, pageButtons.get(i).posY + 2, 150, 0xffffff, true);
+		}
+		
+		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
+
+		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
+		List<Component> titlePage = new ArrayList<Component>();
+		titlePage.add( Component.literal(I18n.get("Title")));
+		titlePage.add( Component.literal(I18n.get("Return to Catagories")));
+		if (buttonTitle.isHovered()) {
+			graphics.renderComponentTooltip(font, titlePage, mouseX, mouseY);
+		}
+		List<Component> ClosePage = new ArrayList<>();
+		ClosePage.add(Component.literal(I18n.get("Close Book")));
+		if (buttonCloseTab.isHoveredOrFocused()) {
+			graphics.renderComponentTooltip(font, ClosePage, mouseX, mouseY);
 		}
 	}
 

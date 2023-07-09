@@ -32,6 +32,7 @@ public class TestGuiGuidePage extends Screen {
 	public int pageNum, guiHeight = 228, guiWidth = 174;
 	GuiButtonBookArrow arrowF, arrowB;
 	GuiButtonTextured buttonTitle, buttonCloseTab;
+	
 	EditBox textBox;
 	protected Minecraft mc = Minecraft.getInstance();
 	BookPageTemplate pageTemplate;
@@ -65,13 +66,13 @@ public class TestGuiGuidePage extends Screen {
 //					}
 //				}));
 
-//		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(LocationHelper.guiPrefix("book_tabs.png"),
-//				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
-//					mc.setScreen(getOwnerTome().getTitle());
-//
-//				}));
+		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
+				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
+					this.onClose();
+				}));
+		
 		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 32, (press) -> {
+				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));
 		textBox = new EditBox(font, left - guiWidth + 155, top + guiHeight - 227, 14, 14, Component.literal(""));
@@ -142,7 +143,8 @@ public class TestGuiGuidePage extends Screen {
 //			arrowB.render(graphics, mouseX, mouseY, partialTicks);
 //		}
 
-		// buttonTitle.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
+
 		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
 
 		textBox.render(graphics, mouseX, mouseY, partialTicks);
@@ -155,12 +157,12 @@ public class TestGuiGuidePage extends Screen {
 				}
 			}
 		}
-//		List<Component> titlePage = new ArrayList<Component>();
-//		titlePage.add( Component.literal(I18n.get("Title")));
-//		titlePage.add( Component.literal(I18n.get("Return to Catagories")));
-//		if (buttonTitle.isHovered()) {
-//			renderComponentTooltip(matrixStack, titlePage, mouseX, mouseY);
-//		}
+		List<Component> titlePage = new ArrayList<Component>();
+		titlePage.add( Component.literal(I18n.get("Title")));
+		titlePage.add( Component.literal(I18n.get("Return to Catagories")));
+		if (buttonTitle.isHovered()) {
+			graphics.renderComponentTooltip(font, titlePage, mouseX, mouseY);
+		}
 		List<Component> ClosePage = new ArrayList<>();
 		ClosePage.add(Component.literal(I18n.get("Close Book")));
 		if (buttonCloseTab.isHoveredOrFocused()) {

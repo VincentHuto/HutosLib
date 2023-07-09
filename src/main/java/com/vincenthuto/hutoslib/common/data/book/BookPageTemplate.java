@@ -24,7 +24,6 @@ public class BookPageTemplate implements DataTemplate {
 	public ItemStack getIconItem() {
 		if (icon != null && icon.contains(":")) {
 			String[] split = icon.split(":");
-			System.out.println(Arrays.toString(split));
 			Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
