@@ -15,6 +15,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 
 public class PacketSpawnLightningParticle {
+
 	public static PacketSpawnLightningParticle decode(FriendlyByteBuf buf) {
 		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle();
 		try {
@@ -31,6 +32,7 @@ public class PacketSpawnLightningParticle {
 		}
 		return msg;
 	}
+
 	public static void encode(PacketSpawnLightningParticle msg, FriendlyByteBuf buf) {
 		buf.writeDouble(msg.getPosition().x);
 		buf.writeDouble(msg.getPosition().y);
@@ -47,6 +49,7 @@ public class PacketSpawnLightningParticle {
 		buf.writeFloat(msg.getMaxOffset());
 
 	}
+
 	public static void handle(PacketSpawnLightningParticle msg, Supplier<NetworkEvent.Context> ctxSupplier) {
 		NetworkEvent.Context ctx = ctxSupplier.get();
 		LogicalSide sideReceived = ctx.getDirection().getReceptionSide();
@@ -58,10 +61,11 @@ public class PacketSpawnLightningParticle {
 		((ClientLevel) clientWorld.get()).addParticle(
 				LightningParticleFactory.createData(msg.color, msg.getSpeed(), msg.maxAge, msg.fract,
 						msg.getMaxOffset()),
-				msg.getPosition().x, msg.getPosition().y, msg.getPosition().z,
-				msg.getSpeedVec().x, msg.getSpeedVec().y, msg.getSpeedVec().z);
+				msg.getPosition().x, msg.getPosition().y, msg.getPosition().z, msg.getSpeedVec().x, msg.getSpeedVec().y,
+				msg.getSpeedVec().z);
 		ctxSupplier.get().setPacketHandled(true);
 	}
+
 	Vec3 startVec;
 	Vec3 endVec;
 	ParticleColor color;

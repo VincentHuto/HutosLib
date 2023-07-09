@@ -1,7 +1,5 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
-import java.util.Arrays;
-
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
 import net.minecraft.resources.ResourceLocation;
@@ -10,19 +8,38 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookTemplate implements DataTemplate {
-	String title, subtitle, text, icon;
+	String title, subtitle, coverLoc, text, icon;
 
-	public BookTemplate(String title, String subtitle, String text, String icon) {
+	public BookTemplate(String title, String subtitle, String coverLoc, String text, String icon) {
 		this.title = title;
 		this.subtitle = subtitle;
+		this.coverLoc = coverLoc;
 		this.text = text;
 		this.icon = icon;
+	}
+	
+	public void setCoverLoc(String coverLoc) {
+		this.coverLoc = coverLoc;
+	}
+	
+	public String getCoverLoc() {
+		return coverLoc;
+	}
+
+	public ResourceLocation getCoverImage() {
+		if (coverLoc != null && coverLoc.contains(":")) {
+			String[] split = coverLoc.split(":");
+			ResourceLocation cover = new ResourceLocation(split[0], split[1]);
+			if (cover != null) {
+				return cover;
+			}
+		}
+		return null;
 	}
 
 	public ItemStack getIconItem() {
 		if (icon != null && icon.contains(":")) {
 			String[] split = icon.split(":");
-			System.out.println(Arrays.toString(split));
 			Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);

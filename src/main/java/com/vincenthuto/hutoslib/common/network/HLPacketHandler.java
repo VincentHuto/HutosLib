@@ -22,13 +22,11 @@ public class HLPacketHandler {
 			.networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
 	public static void registerChannels() {
-		/*
-		 * // Register Networking packets
-		 * MAINCHANNEL.messageBuilder(AnimationPacket.class, networkID++,
-		 * NetworkDirection.PLAY_TO_CLIENT)
-		 * .encoder(AnimationPacket::encode).decoder(AnimationPacket::new).consumerNetworkThread(
-		 * AnimationPacket::handle).add();
-		 */
+
+		MAINCHANNEL.registerMessage(networkID++, ForgeMessageReloadBookContents.class,
+				ForgeMessageReloadBookContents::encode, ForgeMessageReloadBookContents::decode,
+				ForgeMessageReloadBookContents::handle);
+
 		MAINCHANNEL.registerMessage(networkID++, PacketSpawnLightningParticle.class,
 				PacketSpawnLightningParticle::encode, PacketSpawnLightningParticle::decode,
 				PacketSpawnLightningParticle::handle);
@@ -38,12 +36,12 @@ public class HLPacketHandler {
 				.consumerNetworkThread(PacketSyncBannerSlotContents::handle).add();
 
 		MAINCHANNEL.messageBuilder(PacketOpenBanner.class, networkID++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new).consumerNetworkThread(PacketOpenBanner::handle)
-				.add();
+				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new)
+				.consumerNetworkThread(PacketOpenBanner::handle).add();
 
 		MAINCHANNEL.messageBuilder(PacketOpenBanner.class, networkID++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new).consumerNetworkThread(PacketOpenBanner::handle)
-				.add();
+				.encoder(PacketOpenBanner::encode).decoder(PacketOpenBanner::new)
+				.consumerNetworkThread(PacketOpenBanner::handle).add();
 
 		MAINCHANNEL.messageBuilder(PacketContainerSlot.class, networkID++, NetworkDirection.PLAY_TO_SERVER)
 				.encoder(PacketContainerSlot::encode).decoder(PacketContainerSlot::new)
@@ -81,9 +79,8 @@ public class HLPacketHandler {
 			ParticleColor color, float speed, int maxAge, int fract, float maxOff) {
 		PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle(entVec, endVec, color, speed, maxAge, fract,
 				maxOff);
-		MAINCHANNEL.send(PacketDistributor.NEAR.with(
-				() -> new PacketDistributor.TargetPoint(entVec.x, entVec.y, entVec.z, radius, dimension)),
-				msg);
+		MAINCHANNEL.send(PacketDistributor.NEAR
+				.with(() -> new PacketDistributor.TargetPoint(entVec.x, entVec.y, entVec.z, radius, dimension)), msg);
 
 	}
 }

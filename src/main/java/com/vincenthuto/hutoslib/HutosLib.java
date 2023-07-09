@@ -15,7 +15,6 @@ import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
-import com.vincenthuto.hutoslib.common.data.ResourceReloadHandler;
 import com.vincenthuto.hutoslib.common.enchant.HLEnchantInit;
 import com.vincenthuto.hutoslib.common.item.HLItemInit;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
@@ -37,8 +36,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -130,7 +130,8 @@ public class HutosLib {
 		HLPacketHandler.registerChannels();
 		BannerExtensionSlot.register();
 		BannerFinderBannerSlot.initFinder();
-
+		MinecraftForge.EVENT_BUS
+				.addListener((OnDatapackSyncEvent e) -> ReloadContentsHandler.dataReloaded());
 	}
 
 	private void registerCapability(RegisterCapabilitiesEvent event) {
@@ -148,7 +149,7 @@ public class HutosLib {
 
 			output.accept(HLItemInit.raw_clay_flask.get());
 			output.accept(HLItemInit.cured_clay_flask.get());
-		//	output.accept(HLItemInit.node_of_actualization.get());
+			// output.accept(HLItemInit.node_of_actualization.get());
 
 			output.accept(HLItemInit.iron_knapper.get());
 			output.accept(HLItemInit.diamond_knapper.get());

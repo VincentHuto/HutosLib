@@ -38,12 +38,12 @@ public class HLLib extends TomeLib {
 
 	@Override
 	public void registerChapters() {
-		introChapter = new TomeChapter("Intro", TabColor.WHITE, introPages);
-		knapperChapter = new TomeChapter("Knappers", TabColor.BLUE, knapperPages);
-		bannerChapter = new TomeChapter("Arm Banners", TabColor.CYAN, bannerPages);
-		itemChapter = new TomeChapter("Misc Items", TabColor.YELLOW, itemsPages);
-		blockChapter = new TomeChapter("Misc Blocks", TabColor.GREEN, blocksPages);
-		enchantChapter = new TomeChapter("Enchantments", TabColor.PURPLE, enchantPages);
+		introChapter = new TomeChapter("Intro", TabColor.WHITE, new HLGuideTOC("Intro"), introPages);
+		knapperChapter = new TomeChapter("Knappers", TabColor.BLUE, new HLGuideTOC("Knappers"), knapperPages);
+		bannerChapter = new TomeChapter("Arm Banners", TabColor.CYAN, new HLGuideTOC("Arm Banners"), bannerPages);
+		itemChapter = new TomeChapter("Misc Items", TabColor.YELLOW, new HLGuideTOC("Misc Items"), itemsPages);
+		blockChapter = new TomeChapter("Misc Blocks", TabColor.GREEN, new HLGuideTOC("Misc Blocks"), blocksPages);
+		enchantChapter = new TomeChapter("Enchantments", TabColor.PURPLE, new HLGuideTOC("Enchantments"), enchantPages);
 		Collections.addAll(chapters, introChapter, knapperChapter, bannerChapter, itemChapter, blockChapter,
 				enchantChapter);
 	}

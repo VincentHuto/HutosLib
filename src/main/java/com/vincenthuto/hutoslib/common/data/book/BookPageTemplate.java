@@ -11,18 +11,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookPageTemplate implements DataTemplate {
 	int page;
-	String chapter, title, subtitle, text, icon;
+	String title, chapter, subtitle, text, icon;
 
-
-	public BookPageTemplate(int page, String chapter, String title, String subtitle, String text, String icon) {
+	public BookPageTemplate(int page, String title, String subtitle, String text, String icon) {
 		this.page = page;
-		this.chapter = chapter;
 		this.title = title;
 		this.subtitle = subtitle;
 		this.text = text;
 		this.icon = icon;
 	}
-
 
 	public ItemStack getIconItem() {
 		if (icon != null && icon.contains(":")) {
@@ -37,65 +34,52 @@ public class BookPageTemplate implements DataTemplate {
 		return ItemStack.EMPTY;
 	}
 
-
-	public int getPage() {
-		return page;
-	}
-
-
-	public void setPage(int page) {
-		this.page = page;
-	}
-
-
 	public String getChapter() {
 		return chapter;
 	}
-
 
 	public void setChapter(String chapter) {
 		this.chapter = chapter;
 	}
 
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
 
 	public String getTitle() {
 		return title;
 	}
 
-
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
 
 	public String getSubtitle() {
 		return subtitle;
 	}
 
-
 	public void setSubtitle(String subtitle) {
 		this.subtitle = subtitle;
 	}
-
 
 	public String getText() {
 		return text;
 	}
 
-
 	public void setText(String text) {
 		this.text = text;
 	}
-
 
 	public String getIcon() {
 		return icon;
 	}
 
-
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-	
 
 }

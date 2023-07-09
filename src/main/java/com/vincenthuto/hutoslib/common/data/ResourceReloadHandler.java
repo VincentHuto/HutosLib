@@ -21,10 +21,11 @@ public class ResourceReloadHandler implements  PreparableReloadListener {
             reloadProfiler.startTick();
             reloadProfiler.push("listener");
             new BookManager().reload(resourceManager);
-            
             HutosLib.LOGGER.info("Reloading from HutosLib");
             reloadProfiler.pop();
             reloadProfiler.endTick();
         }, gameExecutor);
     }
+    
+    
 }

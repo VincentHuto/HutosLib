@@ -5,9 +5,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Sets;
+import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.client.screen.guide.lib.HLTitlePage;
+import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.common.data.book.BookManager;
+import com.vincenthuto.hutoslib.common.data.book.TestGuiGuidePage;
+import com.vincenthuto.hutoslib.common.data.book.TestGuiGuideTitlePage;
 
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -40,6 +46,22 @@ public class ItemKnapper extends DiggerItem {
 	}
 
 	@Override
+	public InteractionResultHolder<ItemStack> use(Level lvl, Player p_41433_, InteractionHand p_41434_) {
+
+		BookCodeModel book = BookManager.getBookByTitle(new ResourceLocation(HutosLib.MOD_ID, "book1"));
+
+		if (book != null) {
+			if (lvl.isClientSide()) {
+				TestGuiGuideTitlePage guide = new TestGuiGuideTitlePage(book, book.getChapters().get(0).getTitle());
+				guide.openScreenViaItem(book);
+			}
+
+		}
+
+		return super.use(lvl, p_41433_, p_41434_);
+	}
+
+	@Override
 	public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
 		return DEFAULT_KNAPPER_ACTIONS.contains(toolAction);
 	}
@@ -60,9 +82,4 @@ public class ItemKnapper extends DiggerItem {
 		return super.mineBlock(stack, worldIn, state, pos, entityLiving);
 	}
 
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level lvl, Player p_41433_, InteractionHand p_41434_) {
-		return super.use(lvl, p_41433_, p_41434_);
-
-	}
 }

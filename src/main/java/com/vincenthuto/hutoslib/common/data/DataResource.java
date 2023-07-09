@@ -28,8 +28,9 @@ public record DataResource<T>(ResourceLocation resourceLocation, Resource resour
 		Matcher matcher = pattern.matcher(input);
 		if (matcher.find()) {
 			String match = matcher.group();
+
 			return match;
-		}
+		} 
 		return null;
 	}
 

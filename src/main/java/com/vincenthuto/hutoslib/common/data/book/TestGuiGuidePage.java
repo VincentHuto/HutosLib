@@ -1,10 +1,9 @@
-package com.vincenthuto.hutoslib.client.screen.guide;
+package com.vincenthuto.hutoslib.common.data.book;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.checkerframework.checker.units.qual.g;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -12,6 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
+import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow;
 import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
 
 import net.minecraft.client.Minecraft;
@@ -24,83 +24,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class GuiGuidePage extends Screen {
-	static Component titleComponent = Component.literal("");
+public class TestGuiGuidePage extends Screen {
 	protected final ResourceLocation texture = HLLocHelper.guiPrefix("page.png");
 	protected int left;
 	protected int top;
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
 	public int pageNum, guiHeight = 228, guiWidth = 174;
-	public String title;
-	String subtitle;
-	String text;
-	ItemStack icon;
 	GuiButtonBookArrow arrowF, arrowB;
 	GuiButtonTextured buttonTitle, buttonCloseTab;
 	EditBox textBox;
-	String catagory;
 	protected Minecraft mc = Minecraft.getInstance();
+	BookPageTemplate pageTemplate;
 
-	public GuiGuidePage(int pageNumIn, String catagoryIn) {
-		this(pageNumIn, catagoryIn, "", "", ItemStack.EMPTY, "");
-	}
-
-	public GuiGuidePage(int pageNumIn, String catagoryIn, String textIn) {
-		this(pageNumIn, catagoryIn, "", "", ItemStack.EMPTY, textIn);
-	}
-
-	public GuiGuidePage(int pageNumIn, String catagoryIn, String titleIn, ItemStack iconIn) {
-		this(pageNumIn, catagoryIn, titleIn, "", iconIn, "");
-	}
-
-	public GuiGuidePage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn) {
-		this(pageNumIn, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, "");
-	}
-
-	public GuiGuidePage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn, ItemStack iconIn) {
-		this(pageNumIn, catagoryIn, titleIn, subtitleIn, iconIn, "");
-	}
-
-	public GuiGuidePage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn, ItemStack iconIn,
-			String textIn) {
-		super(titleComponent);
-		this.title = titleIn;
-		this.subtitle = subtitleIn;
-		this.icon = iconIn;
-		this.text = textIn;
-		this.pageNum = pageNumIn;
-		this.catagory = catagoryIn;
-	}
-
-	public GuiGuidePage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn, String textIn) {
-		this(pageNumIn, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, textIn);
-	}
-
-	public GuiGuidePage(String catagoryIn) {
-		this(0, catagoryIn, "", "", ItemStack.EMPTY, "");
-	}
-
-	public GuiGuidePage(String catagoryIn, String titleIn) {
-		this(0, catagoryIn, titleIn, "", ItemStack.EMPTY, "");
-	}
-
-	public GuiGuidePage(String catagoryIn, String titleIn, String subtitleIn) {
-		this(0, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, "");
-	}
-
-	public GuiGuidePage(String catagoryIn, String titleIn, String subtitleIn, String textIn) {
-		this(0, catagoryIn, titleIn, subtitleIn, ItemStack.EMPTY, textIn);
-	}
-
-	public String getCatagory() {
-		return catagory;
-	}
-
-	public abstract TomeLib getOwnerTome();
-
-	public List<GuiGuidePage> getPages() {
-		return getOwnerTome().getMatchingChapters(getCatagory()).pages;
-
+	public TestGuiGuidePage(BookPageTemplate pageTemplate) {
+		super(Component.literal(pageTemplate.title));
+		this.pageTemplate = pageTemplate;
 	}
 
 	@Override
@@ -108,24 +46,24 @@ public abstract class GuiGuidePage extends Screen {
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
 		this.clearWidgets();
-		if (pageNum != (getPages().size() - 1)) {
-			this.addRenderableWidget(arrowF = new GuiButtonBookArrow(ArrowDirection.FORWARD, ARROWF,
-					left + guiWidth - 18, top + guiHeight - 7, (press) -> {
-						if (pageNum != (getPages().size() - 1)) {
-							mc.setScreen(getPages().get((pageNum + 1)));
-						} else {
-							mc.setScreen(getPages().get((pageNum)));
-						}
-					}));
-		}
-		this.addRenderableWidget(
-				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
-					if (pageNum > 0) {
-						mc.setScreen(getPages().get((pageNum - 1)));
-					} else {
-						mc.setScreen(getOwnerTome().getTitle());
-					}
-				}));
+//		if (pageNum != (getPages().size() - 1)) {
+//			this.addRenderableWidget(arrowF = new GuiButtonBookArrow(ArrowDirection.FORWARD, ARROWF,
+//					left + guiWidth - 18, top + guiHeight - 7, (press) -> {
+//						if (pageNum != (getPages().size() - 1)) {
+//							mc.setScreen(getPages().get((pageNum + 1)));
+//						} else {
+//							mc.setScreen(getPages().get((pageNum)));
+//						}
+//					}));
+//		}
+//		this.addRenderableWidget(
+//				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
+//					if (pageNum > 0) {
+//						mc.setScreen(getPages().get((pageNum - 1)));
+//					} else {
+//						mc.setScreen(getOwnerTome().getTitle());
+//					}
+//				}));
 
 //		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(LocationHelper.guiPrefix("book_tabs.png"),
 //				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
@@ -174,35 +112,35 @@ public abstract class GuiGuidePage extends Screen {
 					top + guiHeight - 15, 50, 0xffffff, true);
 		}
 		matrixStack.pushPose();
-		graphics.renderFakeItem(icon, left + guiWidth - 32, top + guiHeight - 220);
+		graphics.renderFakeItem(pageTemplate.getIconItem(), left + guiWidth - 32, top + guiHeight - 220);
 		matrixStack.popPose();
-		if (!title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(title)), left - guiWidth + 180,
+		if (!pageTemplate.title.isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.title)), left - guiWidth + 180,
 					top + guiHeight - 220, 165, 0xffffff, true);
 		}
-		if (!subtitle.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(subtitle)), left - guiWidth + 180,
+		if (!pageTemplate.subtitle.isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.subtitle)), left - guiWidth + 180,
 					top + guiHeight - 210, 165, 0xffffff, true);
 		}
 
-		if (!text.isEmpty() && subtitle.isEmpty() && title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(text)), left - guiWidth + 180,
+		if (!pageTemplate.text.isEmpty() && pageTemplate.subtitle.isEmpty() && pageTemplate.title.isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.text)), left - guiWidth + 180,
 					top + guiHeight - 220, 160, 0xffffff, true);
-		} else if (!text.isEmpty() && subtitle.isEmpty() || title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(text)), left - guiWidth + 180,
+		} else if (!pageTemplate.text.isEmpty() && pageTemplate.subtitle.isEmpty() || pageTemplate.title.isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.text)), left - guiWidth + 180,
 					top + guiHeight - 200, 160, 0xffffff, true);
-		} else if (!text.isEmpty() && !subtitle.isEmpty() && !title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(text)), left - guiWidth + 180,
+		} else if (!pageTemplate.text.isEmpty() && !pageTemplate.subtitle.isEmpty() && !pageTemplate.title.isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.text)), left - guiWidth + 180,
 					top + guiHeight - 190, 160, 0xffffff, true);
 		}
 
-		if (pageNum != (getPages().size() - 1)) {
-			arrowF.render(graphics, mouseX, mouseY, partialTicks);
-		}
-
-		if (pageNum >= 0) {
-			arrowB.render(graphics, mouseX, mouseY, partialTicks);
-		}
+//		if (pageNum != (getPages().size() - 1)) {
+//			arrowF.render(graphics, mouseX, mouseY, partialTicks);
+//		}
+//
+//		if (pageNum >= 0) {
+//			arrowB.render(graphics, mouseX, mouseY, partialTicks);
+//		}
 
 		// buttonTitle.renderButton(matrixStack, mouseX, mouseY, partialTicks);
 		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
@@ -211,9 +149,9 @@ public abstract class GuiGuidePage extends Screen {
 		if ((mouseX >= left + guiWidth - 32 && mouseX <= left + guiWidth - 10)) {
 			if (mouseY >= top + guiHeight - 220 && mouseY <= top + guiHeight - 200) {
 				List<Component> text = new ArrayList<>();
-				if (!icon.isEmpty()) {
-					text.add(Component.literal(I18n.get(icon.getHoverName().getString())));
-					graphics.renderComponentTooltip(font,text, left + guiWidth - 32, top + guiHeight - 220);
+				if (!pageTemplate.getIconItem().isEmpty()) {
+					text.add(Component.literal(I18n.get(pageTemplate.getIconItem().getHoverName().getString())));
+					graphics.renderComponentTooltip(font, text, left + guiWidth - 32, top + guiHeight - 220);
 				}
 			}
 		}
@@ -241,15 +179,15 @@ public abstract class GuiGuidePage extends Screen {
 	}
 
 	public void updateTextBoxes() {
-		if (!textBox.getValue().isEmpty()) {
-			if (NumberUtils.isCreatable(textBox.getValue())) {
-				int searchNum = (Integer.parseInt(textBox.getValue()));
-				if (searchNum < getPages().size()) {
-					mc.setScreen(getPages().get(searchNum));
-				} else if (searchNum >= getPages().size()) {
-					mc.setScreen(getPages().get(getPages().size() - 1));
-				}
-			}
-		}
+//		if (!textBox.getValue().isEmpty()) {
+//			if (NumberUtils.isCreatable(textBox.getValue())) {
+//				int searchNum = (Integer.parseInt(textBox.getValue()));
+//				if (searchNum < getPages().size()) {
+//					mc.setScreen(getPages().get(searchNum));
+//				} else if (searchNum >= getPages().size()) {
+//					mc.setScreen(getPages().get(getPages().size() - 1));
+//				}
+//			}
+//		}
 	}
 }

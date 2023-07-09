@@ -1,6 +1,7 @@
 {
   "title" : "HutosLib",
-  "subtitle" : "A Library Mod+",
-  "text" : "",
-  "icon" : "hutoslib:diamond_knapper"
+  "subtitle" : "a Library Mod+",
+  "coverLoc" : "hutoslib:textures/gui/guide/guide_overlay.png",
+  "text" : "reee",
+  "icon" : "diamond_knapper"
 }
