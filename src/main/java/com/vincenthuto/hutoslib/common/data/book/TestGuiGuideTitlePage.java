@@ -13,6 +13,7 @@ import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.HLTextUtils;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -38,7 +39,6 @@ public class TestGuiGuideTitlePage extends Screen {
 	GuiButtonTextured buttonclose;
 	public List<BookChapterTemplate> chapters = new ArrayList<>();
 	public List<GuiButtonTextured> buttonList = new ArrayList<>();
-	private String chapterTitle;
 	private BookCodeModel book;
 
 	public void openScreenViaItem(BookCodeModel book) {
@@ -52,16 +52,6 @@ public class TestGuiGuideTitlePage extends Screen {
 		screen = new TestGuiGuideTitlePage(book);
 
 		Minecraft.getInstance().setScreen(screen);
-	}
-
-	public TestGuiGuideTitlePage(BookCodeModel book2, String chaptertitle) {
-		super(Component.translatable(""));
-		this.book = book2;
-		this.icon = book.template.getIconItem();
-		this.titleComponent = Component.literal(book.template.title);
-		this.chapterTitle = chaptertitle;
-		this.chapters = book.chapters;
-		this.overlay = book.template.getCoverImage();
 	}
 
 	public TestGuiGuideTitlePage(BookCodeModel book) {
@@ -146,7 +136,8 @@ public class TestGuiGuideTitlePage extends Screen {
 
 		for (GuiButtonTextured element : buttonList) {
 			if (element instanceof TestTomeCategoryTab tab) {
-				RenderSystem.setShaderColor(tab.color.getRed()/255, tab.color.getGreen()/255, tab.color.getBlue()/255, 1.0F);
+				RenderSystem.setShaderColor(tab.color.getRed() / 255, tab.color.getGreen() / 255,
+						tab.color.getBlue() / 255, 1.0F);
 				element.render(graphics, mouseX, mouseY, partialTicks);
 				RenderSystem.setShaderColor(1, 1, 1, 1.0F);
 
