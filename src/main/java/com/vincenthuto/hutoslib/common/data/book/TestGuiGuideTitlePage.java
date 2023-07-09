@@ -38,8 +38,8 @@ public class TestGuiGuideTitlePage extends Screen {
 	GuiButtonTextured buttonclose;
 	public List<BookChapterTemplate> chapters = new ArrayList<>();
 	public List<GuiButtonTextured> buttonList = new ArrayList<>();
-	private BookCodeModel book;
 	private String chapterTitle;
+	private BookCodeModel book;
 
 	public void openScreenViaItem(BookCodeModel book) {
 		openScreen(book, true);
@@ -102,7 +102,7 @@ public class TestGuiGuideTitlePage extends Screen {
 					(int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
 					centerY - (i * -25) + 18, 0, 192, (press) -> {
 						if (press instanceof GuiButtonTextured button) {
-							mc.setScreen(new TestGuiGuidePageTOC(chapters.get(button.id)));
+							mc.setScreen(new TestGuiGuidePageTOC(book, chapters.get(button.id)));
 						}
 					});
 			buttonList.add(tab);

@@ -10,6 +10,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
+import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow;
+import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -28,14 +30,17 @@ public class TestGuiGuidePageTOC extends Screen {
 	public int guiHeight = 228, guiWidth = 174;
 	GuiButtonTextured buttonTitle, buttonCloseTab;
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
-
+	GuiButtonBookArrow arrowF, arrowB;
 	public List<GuiButtonTextured> pageButtons = new ArrayList<>();
 	private BookChapterTemplate chapterTemplate;
 	protected Minecraft mc = Minecraft.getInstance();
+	private BookCodeModel book;
 
-	public TestGuiGuidePageTOC(BookChapterTemplate chapterTemplate) {
+	public TestGuiGuidePageTOC(BookCodeModel book, BookChapterTemplate chapterTemplate) {
 		super(Component.literal(chapterTemplate.title));
 		this.chapterTemplate = chapterTemplate;
+		this.book = book;
+
 	}
 
 	@Override
@@ -53,26 +58,34 @@ public class TestGuiGuidePageTOC extends Screen {
 			pageButtons.add(new GuiButtonTextured(texture, i, sideLoc - (guiWidth - 5),
 					(verticalLoc - 210) + ((i) * 15), 163, 14, 5, 228, (press) -> {
 						if (press instanceof GuiButtonTextured button) {
-							mc.setScreen(new TestGuiGuidePage(chapterTemplate.getPages().get(button.getId())));
+							mc.setScreen(new TestGuiGuidePage(button.getId(), book, chapterTemplate));
 						}
 					}));
 		}
 
-
 		for (GuiButtonTextured pageButton : pageButtons) {
 			this.addRenderableWidget(pageButton);
 		}
-		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
-					this.onClose();
+		this.addRenderableWidget(arrowF = new GuiButtonBookArrow(ArrowDirection.FORWARD, ARROWF, left + guiWidth - 18,
+				top + guiHeight - 7, (press) -> {
+					mc.setScreen(new TestGuiGuidePage(0, book, chapterTemplate));
+				}));
+
+		this.addRenderableWidget(
+				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
+					mc.setScreen(new TestGuiGuideTitlePage(book));
 				}));
 		
+		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
+				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
+					mc.setScreen(new TestGuiGuideTitlePage(book));
+				}));
+
 		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
 				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));
 	}
-	
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
@@ -92,13 +105,13 @@ public class TestGuiGuidePageTOC extends Screen {
 			HLGuiUtils.drawMaxWidthString(font, Component.literal(chapterTemplate.getPages().get(i).title),
 					pageButtons.get(i).posX + 30, pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
-		
+
 		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
 
 		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
 		List<Component> titlePage = new ArrayList<Component>();
-		titlePage.add( Component.literal(I18n.get("Title")));
-		titlePage.add( Component.literal(I18n.get("Return to Catagories")));
+		titlePage.add(Component.literal(I18n.get("Title")));
+		titlePage.add(Component.literal(I18n.get("Return to Catagories")));
 		if (buttonTitle.isHovered()) {
 			graphics.renderComponentTooltip(font, titlePage, mouseX, mouseY);
 		}
@@ -107,6 +120,9 @@ public class TestGuiGuidePageTOC extends Screen {
 		if (buttonCloseTab.isHoveredOrFocused()) {
 			graphics.renderComponentTooltip(font, ClosePage, mouseX, mouseY);
 		}
+		arrowF.render(graphics, mouseX, mouseY, partialTicks);
+		arrowB.render(graphics, mouseX, mouseY, partialTicks);
+
 	}
 
 	@Override

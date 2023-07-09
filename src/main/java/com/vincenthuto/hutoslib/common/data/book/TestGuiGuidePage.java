@@ -11,6 +11,7 @@ import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow;
+import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,14 +30,21 @@ public class TestGuiGuidePage extends Screen {
 	public int pageNum, guiHeight = 228, guiWidth = 174;
 	GuiButtonBookArrow arrowF, arrowB;
 	GuiButtonTextured buttonTitle, buttonCloseTab;
-	
+
 	EditBox textBox;
 	protected Minecraft mc = Minecraft.getInstance();
 	BookPageTemplate pageTemplate;
+	private BookCodeModel book;
+	private BookChapterTemplate chapter;
 
-	public TestGuiGuidePage(BookPageTemplate pageTemplate) {
-		super(Component.literal(pageTemplate.title));
-		this.pageTemplate = pageTemplate;
+	public TestGuiGuidePage(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
+		super(Component.literal(chapter.getPages().get(pageNum).title));
+		this.pageNum = pageNum;
+		this.book = book;
+		this.chapter = chapter;
+		this.pageTemplate =  chapter.getPages().get(pageNum);
+
+
 	}
 
 	@Override
@@ -44,30 +52,34 @@ public class TestGuiGuidePage extends Screen {
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
 		this.clearWidgets();
-//		if (pageNum != (getPages().size() - 1)) {
-//			this.addRenderableWidget(arrowF = new GuiButtonBookArrow(ArrowDirection.FORWARD, ARROWF,
-//					left + guiWidth - 18, top + guiHeight - 7, (press) -> {
-//						if (pageNum != (getPages().size() - 1)) {
-//							mc.setScreen(getPages().get((pageNum + 1)));
-//						} else {
-//							mc.setScreen(getPages().get((pageNum)));
-//						}
-//					}));
-//		}
-//		this.addRenderableWidget(
-//				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
-//					if (pageNum > 0) {
-//						mc.setScreen(getPages().get((pageNum - 1)));
-//					} else {
-//						mc.setScreen(getOwnerTome().getTitle());
-//					}
-//				}));
+		if (pageNum != (chapter.getPages().size() - 1)) {
+			this.addRenderableWidget(arrowF = new GuiButtonBookArrow(ArrowDirection.FORWARD, ARROWF,
+					left + guiWidth - 18, top + guiHeight - 7, (press) -> {
+						if (pageNum != (chapter.getPages().size() - 1)) {
+
+							mc.setScreen(new TestGuiGuidePage(pageNum + 1, book, chapter));
+
+						} else {
+							mc.setScreen(new TestGuiGuidePage(pageNum,book, chapter));
+
+						}
+					}));
+		}
+		this.addRenderableWidget(
+				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
+					
+					if (pageNum > 0) {
+						mc.setScreen(new TestGuiGuidePage(pageNum - 1,book, chapter));
+					} else {
+						mc.setScreen(new TestGuiGuidePageTOC(book, chapter) );
+					}
+				}));
 
 		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
 				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
-					this.onClose();
+					mc.setScreen(new TestGuiGuideTitlePage(book));
 				}));
-		
+
 		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
 				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192, 24, 16, 24, 32, (press) -> {
 					this.onClose();
@@ -117,8 +129,8 @@ public class TestGuiGuidePage extends Screen {
 					top + guiHeight - 220, 165, 0xffffff, true);
 		}
 		if (!pageTemplate.subtitle.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.subtitle)), left - guiWidth + 180,
-					top + guiHeight - 210, 165, 0xffffff, true);
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.subtitle)),
+					left - guiWidth + 180, top + guiHeight - 210, 165, 0xffffff, true);
 		}
 
 		if (!pageTemplate.text.isEmpty() && pageTemplate.subtitle.isEmpty() && pageTemplate.title.isEmpty()) {
@@ -132,13 +144,13 @@ public class TestGuiGuidePage extends Screen {
 					top + guiHeight - 190, 160, 0xffffff, true);
 		}
 
-//		if (pageNum != (getPages().size() - 1)) {
-//			arrowF.render(graphics, mouseX, mouseY, partialTicks);
-//		}
-//
-//		if (pageNum >= 0) {
-//			arrowB.render(graphics, mouseX, mouseY, partialTicks);
-//		}
+		if (pageNum != (chapter.getPages().size() - 1)) {
+			arrowF.render(graphics, mouseX, mouseY, partialTicks);
+		}
+
+		if (pageNum >= 0) {
+			arrowB.render(graphics, mouseX, mouseY, partialTicks);
+		}
 
 		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
 
@@ -155,8 +167,8 @@ public class TestGuiGuidePage extends Screen {
 			}
 		}
 		List<Component> titlePage = new ArrayList<Component>();
-		titlePage.add( Component.literal(I18n.get("Title")));
-		titlePage.add( Component.literal(I18n.get("Return to Catagories")));
+		titlePage.add(Component.literal(I18n.get("Title")));
+		titlePage.add(Component.literal(I18n.get("Return to Catagories")));
 		if (buttonTitle.isHovered()) {
 			graphics.renderComponentTooltip(font, titlePage, mouseX, mouseY);
 		}
