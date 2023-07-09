@@ -130,7 +130,6 @@ public class BookManager {
 					if (chapters.get(j).getTitle().equals(title)) {
 						for (Object chapObj : chapters.get(j).data()) {
 							if (chapObj instanceof BookChapterTemplate chaptemp) {
-								System.out.println(chapters.get(j).getChapter());
 								List<BookPageTemplate> pages1 = new ArrayList<BookPageTemplate>();
 								for (int k = 0; k < pages.size(); k++) {
 									boolean doesBelongToBook = pages.get(k).getTitle().equals(title);
