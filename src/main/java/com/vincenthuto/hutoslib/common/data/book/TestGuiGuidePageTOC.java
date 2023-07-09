@@ -75,12 +75,12 @@ public class TestGuiGuidePageTOC extends Screen {
 				}));
 		
 		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
+				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210-16, 24, 16, 24, 0, (press) -> {
 					mc.setScreen(new TestGuiGuideTitlePage(book));
 				}));
 
 		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192, 24, 16, 24, 32, (press) -> {
+				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192-16, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));
 	}

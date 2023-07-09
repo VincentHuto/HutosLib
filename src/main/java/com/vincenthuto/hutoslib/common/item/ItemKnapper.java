@@ -48,7 +48,7 @@ public class ItemKnapper extends DiggerItem {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level lvl, Player p_41433_, InteractionHand p_41434_) {
 
-		BookCodeModel book = BookManager.getBookByTitle(new ResourceLocation(HutosLib.MOD_ID, "book1"));
+		BookCodeModel book = BookManager.getBookByTitle(new ResourceLocation(HutosLib.MOD_ID, "guide"));
 
 		if (book != null) {
 			if (lvl.isClientSide()) {

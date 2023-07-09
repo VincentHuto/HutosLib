@@ -3,8 +3,6 @@ package com.vincenthuto.hutoslib.common.data.book;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
@@ -15,7 +13,6 @@ import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDire
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
@@ -31,7 +28,6 @@ public class TestGuiGuidePage extends Screen {
 	GuiButtonBookArrow arrowF, arrowB;
 	GuiButtonTextured buttonTitle, buttonCloseTab;
 
-	EditBox textBox;
 	protected Minecraft mc = Minecraft.getInstance();
 	BookPageTemplate pageTemplate;
 	private BookCodeModel book;
@@ -42,8 +38,7 @@ public class TestGuiGuidePage extends Screen {
 		this.pageNum = pageNum;
 		this.book = book;
 		this.chapter = chapter;
-		this.pageTemplate =  chapter.getPages().get(pageNum);
-
+		this.pageTemplate = chapter.getPages().get(pageNum);
 
 	}
 
@@ -60,31 +55,30 @@ public class TestGuiGuidePage extends Screen {
 							mc.setScreen(new TestGuiGuidePage(pageNum + 1, book, chapter));
 
 						} else {
-							mc.setScreen(new TestGuiGuidePage(pageNum,book, chapter));
+							mc.setScreen(new TestGuiGuidePage(pageNum, book, chapter));
 
 						}
 					}));
 		}
 		this.addRenderableWidget(
 				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
-					
+
 					if (pageNum > 0) {
-						mc.setScreen(new TestGuiGuidePage(pageNum - 1,book, chapter));
+						mc.setScreen(new TestGuiGuidePage(pageNum - 1, book, chapter));
 					} else {
-						mc.setScreen(new TestGuiGuidePageTOC(book, chapter) );
+						mc.setScreen(new TestGuiGuidePageTOC(book, chapter));
 					}
 				}));
 
 		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210, 24, 16, 24, 0, (press) -> {
+				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210-16, 24, 16, 24, 0, (press) -> {
 					mc.setScreen(new TestGuiGuideTitlePage(book));
 				}));
 
 		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192, 24, 16, 24, 32, (press) -> {
+				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192-16, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));
-		textBox = new EditBox(font, left - guiWidth + 155, top + guiHeight - 227, 14, 14, Component.literal(""));
 		super.init();
 	}
 
@@ -95,16 +89,7 @@ public class TestGuiGuidePage extends Screen {
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		textBox.setValue(GLFW.glfwGetKeyName(keyCode, scanCode));
-		updateTextBoxes();
 		return super.keyPressed(keyCode, scanCode, modifiers);
-	}
-
-	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		textBox.mouseClicked(mouseX, mouseY, mouseButton);
-		updateTextBoxes();
-		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
@@ -156,7 +141,6 @@ public class TestGuiGuidePage extends Screen {
 
 		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
 
-		textBox.render(graphics, mouseX, mouseY, partialTicks);
 		if ((mouseX >= left + guiWidth - 32 && mouseX <= left + guiWidth - 10)) {
 			if (mouseY >= top + guiHeight - 220 && mouseY <= top + guiHeight - 200) {
 				List<Component> text = new ArrayList<>();
@@ -189,16 +173,4 @@ public class TestGuiGuidePage extends Screen {
 		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 	}
 
-	public void updateTextBoxes() {
-//		if (!textBox.getValue().isEmpty()) {
-//			if (NumberUtils.isCreatable(textBox.getValue())) {
-//				int searchNum = (Integer.parseInt(textBox.getValue()));
-//				if (searchNum < getPages().size()) {
-//					mc.setScreen(getPages().get(searchNum));
-//				} else if (searchNum >= getPages().size()) {
-//					mc.setScreen(getPages().get(getPages().size() - 1));
-//				}
-//			}
-//		}
-	}
 }

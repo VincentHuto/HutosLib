@@ -62,6 +62,6 @@ public class TestGuiGuideMultiblockPage extends TestGuiGuidePage {
 		HLGuiUtils.renderMultiBlock(matrices, pattern, HLClientUtils.getPartialTicks(), new ScreenBlockTintGetter(),
 				left - guiWidth + 260, top + guiHeight - 65);
 
-	} 
+	}
 
 }
