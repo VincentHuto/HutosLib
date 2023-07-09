@@ -2,6 +2,7 @@
 package com.vincenthuto.hutoslib.common.network;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -58,6 +59,7 @@ public class ForgeMessageReloadBookContents {
 
 			// Write chapter jsons
 			for (BookChapterTemplate chapter : b.getChapters()) {
+				buf.writeInt(chapter.getChapterOrder());
 				buf.writeUtf(chapter.getColor());
 				buf.writeUtf(chapter.getTitle());
 				buf.writeUtf(chapter.getSubtitle());
@@ -68,7 +70,7 @@ public class ForgeMessageReloadBookContents {
 
 				// Write page jsons
 				for (BookPageTemplate page : chapter.getPages()) {
-					buf.writeInt(page.getPage());
+					buf.writeInt(page.getPageOrder());
 					buf.writeUtf(page.getTitle());
 					buf.writeUtf(page.getSubtitle());
 					buf.writeUtf(page.getText());
@@ -100,6 +102,7 @@ public class ForgeMessageReloadBookContents {
 
 				List<BookChapterTemplate> chapters = new ArrayList<BookChapterTemplate>();
 				for (int j = 0; j < chapterCount; j++) {
+					int chapterNum = buf.readInt();
 					String chapterColor = buf.readUtf();
 					String chapterTitle = buf.readUtf();
 					String chapterSubtitle = buf.readUtf();
@@ -117,8 +120,13 @@ public class ForgeMessageReloadBookContents {
 						BookPageTemplate pageTemp = new BookPageTemplate(pageNum, pageTitle, pageSubtitle, pageText,
 								pageIcon);
 						pages.add(pageTemp);
+
 					}
-					BookChapterTemplate chapterTemp = new BookChapterTemplate(chapterColor, chapterTitle,
+					Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getChapterOrder(), obj2.getChapterOrder()));
+
+					Collections.sort(pages, (obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
+
+					BookChapterTemplate chapterTemp = new BookChapterTemplate(chapterNum,chapterColor, chapterTitle,
 							chapterSubtitle, chapterIcon, pages);
 
 					chapters.add(chapterTemp);

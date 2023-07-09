@@ -10,11 +10,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookPageTemplate implements DataTemplate {
-	int page;
+	int pageOrder;
 	String title, chapter, subtitle, text, icon;
 
-	public BookPageTemplate(int page, String title, String subtitle, String text, String icon) {
-		this.page = page;
+	public BookPageTemplate(int pageOrder, String title, String subtitle, String text, String icon) {
+		this.pageOrder = pageOrder;
 		this.title = title;
 		this.subtitle = subtitle;
 		this.text = text;
@@ -42,12 +42,12 @@ public class BookPageTemplate implements DataTemplate {
 		this.chapter = chapter;
 	}
 
-	public int getPage() {
-		return page;
+	public int getPageOrder() {
+		return pageOrder;
 	}
 
-	public void setPage(int page) {
-		this.page = page;
+	public void setPageOrder(int page) {
+		this.pageOrder = page;
 	}
 
 	public String getTitle() {
@@ -80,6 +80,10 @@ public class BookPageTemplate implements DataTemplate {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+	@Override
+	public String toString() {
+		return "Page number: " + pageOrder + ", Title: " + title;
 	}
 
 }

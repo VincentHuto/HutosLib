@@ -1,7 +1,7 @@
 {
-  "page" : 3,
-  "title" : "page",
+  "pageOrder" : 5,
+  "title" : "page5",
   "subtitle" : "whatevenisthis",
   "text" : "loremipsumdolorsitamet",
-  "icon" : "display_pedestal"
+  "icon" : "hutoslib:display_pedestal"
 }

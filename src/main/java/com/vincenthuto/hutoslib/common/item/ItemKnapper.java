@@ -52,7 +52,7 @@ public class ItemKnapper extends DiggerItem {
 
 		if (book != null) {
 			if (lvl.isClientSide()) {
-				TestGuiGuideTitlePage guide = new TestGuiGuideTitlePage(book, book.getChapters().get(0).getTitle());
+				TestGuiGuideTitlePage guide = new TestGuiGuideTitlePage(book);
 				guide.openScreenViaItem(book);
 			}
 

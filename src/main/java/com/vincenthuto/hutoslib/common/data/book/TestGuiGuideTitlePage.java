@@ -1,6 +1,7 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -98,6 +99,8 @@ public class TestGuiGuideTitlePage extends Screen {
 							onClose();
 						}));
 
+		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getChapterOrder(), obj2.getChapterOrder()));
+
 		for (int i = 0; i < chapters.size(); i++) {
 			TomeCategoryTab tab = new TomeCategoryTab(TabColor.BLACK, HLTextUtils.toProperCase(chapters.get(i).title),
 					i, (int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
@@ -130,6 +133,8 @@ public class TestGuiGuideTitlePage extends Screen {
 		this.renderBackground(graphics);
 		int centerX = (width / 2) - guiWidth / 2;
 		int centerY = (height / 2) - guiHeight / 2;
+		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getChapterOrder(), obj2.getChapterOrder()));
+
 		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 		graphics.blit(overlay, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 		title.getContents();

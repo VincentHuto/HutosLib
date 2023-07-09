@@ -1,6 +1,7 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -23,7 +24,7 @@ public class TestGuiGuidePageTOC extends Screen {
 	protected int top;
 	public int guiHeight = 228, guiWidth = 174;
 
-	public List<GuiButtonTextured> chapterButtons = new ArrayList<>();
+	public List<GuiButtonTextured> pageButtons = new ArrayList<>();
 	private BookChapterTemplate chapterTemplate;
 	protected Minecraft mc = Minecraft.getInstance();
 
@@ -39,18 +40,22 @@ public class TestGuiGuidePageTOC extends Screen {
 		int sideLoc = left + guiWidth;
 		int verticalLoc = top + guiHeight;
 		this.clearWidgets();
-		chapterButtons.clear();
+		pageButtons.clear();
 		super.init();
+		Collections.sort(pageButtons, (obj1, obj2) -> Integer.compare(obj1.getId(), obj2.getId()));
+
 		for (int i = 0; i < chapterTemplate.getPages().size(); i++) {
-			chapterButtons.add(new GuiButtonTextured(texture, i, sideLoc - (guiWidth - 5),
-					(verticalLoc - 210) + (i * 15), 163, 14, 5, 228, (press) -> {
+			pageButtons.add(new GuiButtonTextured(texture, i, sideLoc - (guiWidth - 5),
+					(verticalLoc - 210) + ((i) * 15), 163, 14, 5, 228, (press) -> {
 						if (press instanceof GuiButtonTextured button) {
 							mc.setScreen(new TestGuiGuidePage(chapterTemplate.getPages().get(button.getId())));
 						}
 					}));
 		}
-		for (GuiButtonTextured chapterButton : chapterButtons) {
-			this.addRenderableWidget(chapterButton);
+
+
+		for (GuiButtonTextured pageButton : pageButtons) {
+			this.addRenderableWidget(pageButton);
 		}
 	}
 
@@ -63,12 +68,14 @@ public class TestGuiGuidePageTOC extends Screen {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, texture);
-		for (int i = 1; i < chapterButtons.size(); i++) {
-			chapterButtons.get(i).render(graphics, mouseX, mouseY, partialTicks);
-			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + i), chapterButtons.get(i).posX + 5,
-					chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
+		Collections.sort(pageButtons, (obj1, obj2) -> Integer.compare(obj1.getId(), obj2.getId()));
+
+		for (int i = 0; i < pageButtons.size(); i++) {
+			pageButtons.get(i).render(graphics, mouseX, mouseY, partialTicks);
+			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + i), pageButtons.get(i).posX + 5,
+					pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 			HLGuiUtils.drawMaxWidthString(font, Component.literal(chapterTemplate.getPages().get(i).title),
-					chapterButtons.get(i).posX + 30, chapterButtons.get(i).posY + 2, 150, 0xffffff, true);
+					pageButtons.get(i).posX + 30, pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
 	}
 

@@ -1,6 +1,7 @@
 {
+  "chapterOrder" : 0,
   "color" : "a627f1",
   "title" : "Intro To Everything!",
   "subtitle" : "what even is this?",
-  "icon" : "display_pedestal"
+  "icon" : "hutoslib:display_pedestal"
 }

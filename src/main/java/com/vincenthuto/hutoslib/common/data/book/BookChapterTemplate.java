@@ -11,10 +11,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookChapterTemplate implements DataTemplate {
 
+	int chapterOrder;
 	String color, title, subtitle, icon;
 	List<BookPageTemplate> pages;
 
-	public BookChapterTemplate(String color, String title, String subtitle, String icon, List<BookPageTemplate> pages) {
+	public BookChapterTemplate(int chapterOrder, String color, String title, String subtitle, String icon,
+			List<BookPageTemplate> pages) {
+		this.chapterOrder = chapterOrder;
 		this.color = color;
 		this.title = title;
 		this.subtitle = subtitle;
@@ -33,6 +36,14 @@ public class BookChapterTemplate implements DataTemplate {
 
 		}
 		return ItemStack.EMPTY;
+	}
+
+	public int getChapterOrder() {
+		return chapterOrder;
+	}
+
+	public void setChapterOrder(int chapterOrder) {
+		this.chapterOrder = chapterOrder;
 	}
 
 	public List<BookPageTemplate> getPages() {
@@ -84,6 +95,11 @@ public class BookChapterTemplate implements DataTemplate {
 		}
 
 		return count;
+	}
+
+	@Override
+	public String toString() {
+		return "Chapter Title: " + title + ", Has " + pages.size() + " pages.";
 	}
 
 }

@@ -3,6 +3,7 @@ package com.vincenthuto.hutoslib.common.data.book;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -111,40 +112,43 @@ public class BookManager {
 		for (DataResource<?> dr : dataResourceList) {
 			if (dr.getPage() != null) {
 				pages.add(dr);
-				// System.out.println("this is a Page: " + dr);
 			} else if (dr.getChapter() != null) {
 				chapters.add(dr);
-				// System.out.println("this is a Chapter: " + dr);
 			} else if (dr.getTitle() != null) {
 				titles.add(dr);
-				// System.out.println("this is a Title: " + dr);
 			}
 		}
+
 		// Bind books
 		for (int i = 0; i < titles.size(); i++) {
 			if (titles.get(i).data().get(0) instanceof BookTemplate b) {
-				List<BookChapterTemplate> chapters1 = new ArrayList<BookChapterTemplate>();
-				List<BookPageTemplate> pages1 = new ArrayList<BookPageTemplate>();
 				String title = titles.get(i).getTitle();
+				BookCodeModel book = new BookCodeModel(
+						new ResourceLocation(titles.get(i).resourceLocation().getNamespace(), title), b, null);
+				List<BookChapterTemplate> chapters1 = new ArrayList<BookChapterTemplate>();
 				for (int j = 0; j < chapters.size(); j++) {
 					if (chapters.get(j).getTitle().equals(title)) {
-						BookChapterTemplate chap = ((BookChapterTemplate) chapters.get(j).data().get(0));
-						for (int k = 0; k < pages.size(); k++) {
-							boolean doesBelongToBook = pages.get(k).getTitle().equals(title)
-									&& pages.get(k).getChapter().equals(chapters.get(j).getChapter());
-							if (doesBelongToBook) {
-								pages1.add((BookPageTemplate) pages.get(k).data().get(0));
+						for (Object chapObj : chapters.get(j).data()) {
+							if (chapObj instanceof BookChapterTemplate chaptemp) {
+								System.out.println(chapters.get(j).getChapter());
+								List<BookPageTemplate> pages1 = new ArrayList<BookPageTemplate>();
+								for (int k = 0; k < pages.size(); k++) {
+									boolean doesBelongToBook = pages.get(k).getTitle().equals(title);
+									boolean doesBelongToChapter = pages.get(k).getChapter().equals(chapters.get(j).getChapter());
+									if (doesBelongToChapter && doesBelongToBook) {
+										pages1.add((BookPageTemplate) pages.get(k).data().get(0));
+									}
+								}
+								Collections.sort(pages1,
+										(obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
+								chaptemp.setPages(pages1);
+								chapters1.add(chaptemp);
+								
 							}
 						}
-						chap.setPages(pages1);
-						chapters1.add(chap);
 					}
 				}
-
-				BookCodeModel book = new BookCodeModel(
-						new ResourceLocation(titles.get(i).resourceLocation().getNamespace(), title), b, chapters1);
-				System.out.println(book);
-
+				book.setChapters(chapters1);
 				books.add(book);
 			}
 		}

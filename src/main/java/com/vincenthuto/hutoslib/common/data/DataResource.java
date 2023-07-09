@@ -27,8 +27,7 @@ public record DataResource<T>(ResourceLocation resourceLocation, Resource resour
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(input);
 		if (matcher.find()) {
-			String match = matcher.group();
-
+			String match = matcher.group(); 
 			return match;
 		} 
 		return null;
