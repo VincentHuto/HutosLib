@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import com.vincenthuto.hutoslib.common.data.DataTemplate;
+import com.vincenthuto.hutoslib.common.data.DataTemplateInit;
 import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookManager;
@@ -19,6 +21,7 @@ import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.RegistryManager;
 
 public class ForgeMessageReloadBookContents {
 
@@ -42,39 +45,22 @@ public class ForgeMessageReloadBookContents {
 	public static void encode(ForgeMessageReloadBookContents msg, FriendlyByteBuf buf) {
 		List<BookCodeModel> books = BookManager.books;
 		buf.writeInt(books.size());
-
 		for (BookCodeModel b : books) {
 			// Write Book location
 			buf.writeResourceLocation(b.getResourceLocation());
-
 			// Write book json
-			buf.writeUtf(b.getTemplate().getTitle());
-			buf.writeUtf(b.getTemplate().getSubtitle());
-			buf.writeUtf(b.getTemplate().getCoverLoc());
-			buf.writeUtf(b.getTemplate().getText());
-			buf.writeUtf(b.getTemplate().getIcon());
-
+			b.getTemplate().serializeToJson(buf);
 			// Write chapter size
 			buf.writeInt(b.getChapters().size());
-
 			// Write chapter jsons
 			for (BookChapterTemplate chapter : b.getChapters()) {
-				buf.writeInt(chapter.getChapterOrder());
-				buf.writeUtf(chapter.getColor());
-				buf.writeUtf(chapter.getTitle());
-				buf.writeUtf(chapter.getSubtitle());
-				buf.writeUtf(chapter.getIcon());
-
+				chapter.serializeToJson(buf);
 				// Write Page size
 				buf.writeInt(chapter.getPages().size());
-
 				// Write page jsons
 				for (BookPageTemplate page : chapter.getPages()) {
-					buf.writeInt(page.getPageOrder());
-					buf.writeUtf(page.getTitle());
-					buf.writeUtf(page.getSubtitle());
-					buf.writeUtf(page.getText());
-					buf.writeUtf(page.getIcon());
+					buf.writeUtf(page.getProcessor());
+					page.serializeToJson(buf);
 				}
 			}
 		}
@@ -89,50 +75,35 @@ public class ForgeMessageReloadBookContents {
 			int bookCount = buf.readInt();
 			for (int i = 0; i < bookCount; i++) {
 				ResourceLocation loc = buf.readResourceLocation();
-
-				String bookTitle = buf.readUtf();
-				String bookSubtitle = buf.readUtf();
-				String bookCoverLoc = buf.readUtf();
-				String bookText = buf.readUtf();
-				String bookIcon = buf.readUtf();
-
-				BookTemplate bookTemp = new BookTemplate(bookTitle, bookSubtitle, bookCoverLoc, bookText, bookIcon);
-
+				BookTemplate bookTemp = new BookTemplate();
+				bookTemp = bookTemp.deserializeFromJson(buf);
 				int chapterCount = buf.readInt();
-
 				List<BookChapterTemplate> chapters = new ArrayList<BookChapterTemplate>();
 				for (int j = 0; j < chapterCount; j++) {
-					int chapterNum = buf.readInt();
-					String chapterColor = buf.readUtf();
-					String chapterTitle = buf.readUtf();
-					String chapterSubtitle = buf.readUtf();
-					String chapterIcon = buf.readUtf();
-
-					int pageCount = buf.readInt();
+					BookChapterTemplate chapterTemp = new BookChapterTemplate();
+					chapterTemp = chapterTemp.deserializeFromJson(buf);
 					List<BookPageTemplate> pages = new ArrayList<BookPageTemplate>();
+					int pageCount = buf.readInt();
 					for (int k = 0; k < pageCount; k++) {
-						int pageNum = buf.readInt();
-						String pageTitle = buf.readUtf();
-						String pageSubtitle = buf.readUtf();
-						String pageText = buf.readUtf();
-						String pageIcon = buf.readUtf();
-
-						BookPageTemplate pageTemp = new BookPageTemplate(pageNum, pageTitle, pageSubtitle, pageText,
-								pageIcon);
-						pages.add(pageTemp);
-
+						String pk = buf.readUtf();
+						String[] pksplit = pk.split(":");
+						ResourceLocation rl = new ResourceLocation(pksplit[0],pksplit[1]);
+						DataTemplate dt = DataTemplateInit.DATA_TEMPLATES.get().getValue(rl);
+						if (dt != null) {
+							DataTemplate d = dt.deserializeFromJson(buf);
+							if (d instanceof BookPageTemplate page)
+								pages.add(page);
+						}
+						Collections.sort(pages,
+								(obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
 					}
-					Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getChapterOrder(), obj2.getChapterOrder()));
-
-					Collections.sort(pages, (obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
-
-					BookChapterTemplate chapterTemp = new BookChapterTemplate(chapterNum,chapterColor, chapterTitle,
-							chapterSubtitle, chapterIcon, pages);
-
+					chapterTemp.setPages(pages);
 					chapters.add(chapterTemp);
 				}
-				BookCodeModel book = new BookCodeModel(loc, bookTemp, chapters);
+				Collections.sort(chapters,
+						(obj1, obj2) -> Integer.compare(obj1.getChapterOrder(), obj2.getChapterOrder()));
 
+				BookCodeModel book = new BookCodeModel(loc, bookTemp, chapters);
 				decodedBooks.add(book);
 
 			}

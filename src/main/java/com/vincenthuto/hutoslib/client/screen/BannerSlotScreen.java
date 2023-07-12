@@ -27,7 +27,7 @@ import net.minecraft.world.inventory.Slot;
 
 public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotContainer>
 		implements RecipeUpdateListener {
-	private static final ResourceLocation SCREEN_BACKGROUND = new ResourceLocation(HutosLib.MOD_ID,
+	private static final ResourceLocation SCREEN_BACKGROUND = HutosLib.rloc(
 			"textures/gui/banner_slot.png");
 	private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation(
 			"textures/gui/recipe_button.png");
@@ -41,7 +41,7 @@ public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotC
 
 	public BannerSlotScreen(BannerSlotContainer container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title);
-        // FIXME: this.passEvents = true;
+//		this.passEvents = true;
 		this.titleLabelX = 97;
 	}
 
@@ -66,7 +66,7 @@ public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotC
 
 	@Override
 	protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-		graphics.drawString(font, this.title, this.titleLabelX, this.titleLabelY, 4210752,false);
+		graphics.drawString(font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
 
 	}
 
@@ -90,9 +90,9 @@ public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotC
 
 	@Override
 	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-		//RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		//TODO: Change this?
-		//GuiGraphics#setColor()
+		// RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		// TODO: Change this?
+		// GuiGraphics#setColor()
 		int i = this.leftPos;
 		int j = this.topPos;
 		graphics.blit(SCREEN_BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);

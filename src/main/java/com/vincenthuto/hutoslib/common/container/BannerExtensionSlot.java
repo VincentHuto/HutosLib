@@ -169,7 +169,7 @@ public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<C
 		}
 	}
 
-	private static final ResourceLocation CAPABILITY_ID = new ResourceLocation(HutosLib.MOD_ID, "banner_slot");
+	private static final ResourceLocation CAPABILITY_ID = HutosLib.rloc( "banner_slot");
 
 	public static final Capability<BannerExtensionSlot> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
 	});

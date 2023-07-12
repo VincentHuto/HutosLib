@@ -1,4 +1,5 @@
 {
+  "processor" : "hutoslib:text_page",
   "pageOrder" : 2,
   "title" : "Tiers",
   "subtitle" : "Upgrade as you go",

@@ -6,13 +6,10 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Sets;
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.screen.guide.lib.HLTitlePage;
+import com.vincenthuto.hutoslib.client.screen.guide.TestGuiGuideTitlePage;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookManager;
-import com.vincenthuto.hutoslib.common.data.book.TestGuiGuidePage;
-import com.vincenthuto.hutoslib.common.data.book.TestGuiGuideTitlePage;
 
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -43,22 +40,6 @@ public class ItemKnapper extends DiggerItem {
 	public ItemKnapper(float speedIn, float attackDamageIn, float attackSpeedIn, Tier tier, Properties builderIn) {
 		super(attackDamageIn, -2.8f, tier, EFFECTIVE_ON, builderIn);
 		this.speed = speedIn;
-	}
-
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level lvl, Player p_41433_, InteractionHand p_41434_) {
-
-		BookCodeModel book = BookManager.getBookByTitle(new ResourceLocation(HutosLib.MOD_ID, "guide"));
-
-		if (book != null) {
-			if (lvl.isClientSide()) {
-				TestGuiGuideTitlePage guide = new TestGuiGuideTitlePage(book);
-				guide.openScreenViaItem(book);
-			}
-
-		}
-
-		return super.use(lvl, p_41433_, p_41434_);
 	}
 
 	@Override

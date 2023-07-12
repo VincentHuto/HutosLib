@@ -25,7 +25,7 @@ public class HLItemInit {
 			new ResourceLocation("hutoslib:knappers"));
 
 	// Test Tome
-	public static ResourceLocation hl_guide_book_text = new ResourceLocation(HutosLib.MOD_ID,
+	public static ResourceLocation hl_guide_book_text = HutosLib.rloc(
 			"textures/gui/guide/hl_guide_model.png");
 	public static final RegistryObject<Item> hl_guide_book = SPECIALITEMS.register("hl_guide_book",
 			() -> new ItemHLGuideBook(new Item.Properties().stacksTo(1),
@@ -58,28 +58,28 @@ public class HLItemInit {
 	public static final RegistryObject<Item> logo_pattern = ITEMS.register("logo_pattern",
 			() -> new BannerPatternItem(
 					TagKey.create(Registries.BANNER_PATTERN,
-							new ResourceLocation(HutosLib.MOD_ID, "pattern_item/hutoslib_logo")),
+							HutosLib.rloc( "pattern_item/hutoslib_logo")),
 					new Item.Properties()));
 
 	public static final RegistryObject<Item> leather_arm_banner = SPECIALITEMS.register("leather_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.LEATHER,
-					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/leather_arm_banner.png")));
+					HutosLib.rloc( "textures/entity/arm_banner/leather_arm_banner.png")));
 	public static final RegistryObject<Item> iron_arm_banner = SPECIALITEMS.register("iron_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.IRON,
-					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/iron_arm_banner.png")));
+					HutosLib.rloc( "textures/entity/arm_banner/iron_arm_banner.png")));
 	public static final RegistryObject<Item> gold_arm_banner = SPECIALITEMS.register("gold_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.GOLD,
-					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/gold_arm_banner.png")));
+					HutosLib.rloc( "textures/entity/arm_banner/gold_arm_banner.png")));
 	public static final RegistryObject<Item> diamond_arm_banner = SPECIALITEMS.register("diamond_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.DIAMOND,
-					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/diamond_arm_banner.png")));
+					HutosLib.rloc( "textures/entity/arm_banner/diamond_arm_banner.png")));
 
 	public static final RegistryObject<Item> obsidian_arm_banner = SPECIALITEMS.register("obsidian_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.DIAMOND,
-					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/obsidian_arm_banner.png")));
+					HutosLib.rloc( "textures/entity/arm_banner/obsidian_arm_banner.png")));
 
 	public static final RegistryObject<Item> netherite_arm_banner = SPECIALITEMS.register("netherite_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.NETHERITE,
-					new ResourceLocation(HutosLib.MOD_ID, "textures/entity/arm_banner/netherite_arm_banner.png")));
+					HutosLib.rloc( "textures/entity/arm_banner/netherite_arm_banner.png")));
 
 }

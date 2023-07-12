@@ -1,4 +1,5 @@
 {
+  "processor" : "hutoslib:text_page",
   "pageOrder" : 1,
   "title" : "Intro",
   "subtitle" : "What even is this?",

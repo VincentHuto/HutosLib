@@ -7,7 +7,6 @@ import com.mojang.datafixers.util.Pair;
 import com.vincenthuto.hutoslib.client.particle.HLParticleInit;
 import com.vincenthuto.hutoslib.client.render.block.RenderTileDisplayPedestal;
 import com.vincenthuto.hutoslib.client.screen.BannerSlotScreen;
-import com.vincenthuto.hutoslib.client.screen.guide.lib.HLLib;
 import com.vincenthuto.hutoslib.common.banner.BannerFinderBannerSlot;
 import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
 import com.vincenthuto.hutoslib.common.block.HLBlockInit;
@@ -15,6 +14,7 @@ import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
+import com.vincenthuto.hutoslib.common.data.DataTemplateInit;
 import com.vincenthuto.hutoslib.common.enchant.HLEnchantInit;
 import com.vincenthuto.hutoslib.common.item.HLItemInit;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
@@ -38,7 +38,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -97,7 +96,7 @@ public class HutosLib {
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(this::registerCapability);
 		modEventBus.addListener(this::buildContents);
-
+		DataTemplateInit.TEMPLATES.register(modEventBus);
 		HLItemInit.ITEMS.register(modEventBus);
 		HLItemInit.SPECIALITEMS.register(modEventBus);
 		HLItemInit.BANNERPATTERNS.register(modEventBus);
@@ -121,8 +120,6 @@ public class HutosLib {
 		event.enqueueWork(() -> {
 			MenuScreens.register(HlContainerInit.banner_slot_container.get(), BannerSlotScreen::new);
 		});
-		HLLib hl = new HLLib();
-		hl.registerTome();
 
 	}
 
@@ -167,5 +164,7 @@ public class HutosLib {
 			output.accept(HLBlockInit.display_glass.get());
 		}
 	}
-
+	public static ResourceLocation rloc(String path) {
+		return new ResourceLocation(MOD_ID, path);
+	}
 }

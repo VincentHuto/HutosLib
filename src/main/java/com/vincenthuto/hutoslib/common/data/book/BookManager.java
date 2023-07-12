@@ -48,6 +48,7 @@ public class BookManager {
 			BookChapterTemplate page = GSON.fromJson(bufferedReader, BookChapterTemplate.class);
 			data.add(page);
 		} else if (test.length == 5) {
+			
 			BookPageTemplate page = GSON.fromJson(bufferedReader, BookPageTemplate.class);
 			String input = resourceLocation.getPath();
 			String regex = "(?<=\\/\\w+\\/)(.*?)(?=\\/\\w+)";
@@ -75,7 +76,9 @@ public class BookManager {
 
 	public void reload(ResourceManager resourceManager) {
 		HutosLib.LOGGER.info("Reloading book data:");
-		books.clear();
+		if(books != null) {
+			books.clear();
+		}
 		bindBooks(resourceManager);
 	}
 

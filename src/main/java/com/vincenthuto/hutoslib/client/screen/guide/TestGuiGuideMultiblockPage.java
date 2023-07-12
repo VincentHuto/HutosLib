@@ -1,10 +1,11 @@
-package com.vincenthuto.hutoslib.common.data.book;
+package com.vincenthuto.hutoslib.client.screen.guide;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLClientUtils;
-import com.vincenthuto.hutoslib.client.render.block.MultiblockPattern;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.client.screen.guide.ScreenBlockTintGetter;
+import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
+import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.math.MultiblockPattern;
 import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.gui.GuiGraphics;

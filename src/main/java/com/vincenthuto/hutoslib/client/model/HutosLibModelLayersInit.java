@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 public class HutosLibModelLayersInit {
 
 	public static final ModelLayerLocation arm_banner = new ModelLayerLocation(
-			new ResourceLocation(HutosLib.MOD_ID, "arm_banner"), "main");
+			HutosLib.rloc( "arm_banner"), "main");
 
 	@SubscribeEvent
 	public static void registerModelLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {

@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.common.data.book;
+package com.vincenthuto.hutoslib.client.screen.guide;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,8 +8,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow;
 import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
+import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
+import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -35,7 +36,7 @@ public class TestGuiGuidePageTOC extends Screen {
 	private BookCodeModel book;
 
 	public TestGuiGuidePageTOC(BookCodeModel book, BookChapterTemplate chapterTemplate) {
-		super(Component.literal(chapterTemplate.title));
+		super(Component.literal(chapterTemplate.getTitle()));
 		this.chapterTemplate = chapterTemplate;
 		this.book = book;
 
@@ -98,9 +99,9 @@ public class TestGuiGuidePageTOC extends Screen {
 
 		for (int i = 0; i < pageButtons.size(); i++) {
 			pageButtons.get(i).render(graphics, mouseX, mouseY, partialTicks);
-			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + i), pageButtons.get(i).posX + 5,
+			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (i+1)), pageButtons.get(i).posX + 5,
 					pageButtons.get(i).posY + 2, 150, 0xffffff, true);
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(chapterTemplate.getPages().get(i).title),
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(chapterTemplate.getPages().get(i).getTitle()),
 					pageButtons.get(i).posX + 30, pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
 

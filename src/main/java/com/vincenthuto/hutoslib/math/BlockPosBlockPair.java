@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.client.render.block;
+package com.vincenthuto.hutoslib.math;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 

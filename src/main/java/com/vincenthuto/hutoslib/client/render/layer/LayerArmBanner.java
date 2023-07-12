@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 
 public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
 
-	public static final ResourceLocation fallback = new ResourceLocation(HutosLib.MOD_ID,
+	public static final ResourceLocation fallback = HutosLib.rloc(
 			"textures/entity/arm_banner/arm_banner.png");
 
 	@SuppressWarnings("rawtypes")

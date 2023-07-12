@@ -1,25 +1,32 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
-import java.util.Arrays;
 import java.util.List;
 
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
-import net.minecraft.client.particle.Particle;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class BookChapterTemplate implements DataTemplate {
+public class BookChapterTemplate extends DataTemplate {
 
 	int chapterOrder;
 	String color, title, subtitle, icon;
 	List<BookPageTemplate> pages;
 
+	public BookChapterTemplate() {
+		super("chapter");
+	}
+
 	public BookChapterTemplate(int chapterOrder, String color, String title, String subtitle, String icon,
 			List<BookPageTemplate> pages) {
+		super("chapter");
 		this.chapterOrder = chapterOrder;
 		this.color = color;
 		this.title = title;
@@ -116,6 +123,37 @@ public class BookChapterTemplate implements DataTemplate {
 	@Override
 	public String toString() {
 		return "Chapter Title: " + title + ", Has " + pages.size() + " pages.";
+	}
+
+	@Override
+	public void serializeToJson(FriendlyByteBuf buf) {
+		buf.writeInt(getChapterOrder());
+		buf.writeUtf(getColor());
+		buf.writeUtf(getTitle());
+		buf.writeUtf(getSubtitle());
+		buf.writeUtf(getIcon());
+
+	
+	}
+
+	@Override
+	public BookChapterTemplate deserializeFromJson(FriendlyByteBuf buf) {
+		int chapterNum = buf.readInt();
+		String chapterColor = buf.readUtf();
+		String chapterTitle = buf.readUtf();
+		String chapterSubtitle = buf.readUtf();
+		String chapterIcon = buf.readUtf();
+
+
+		BookChapterTemplate chapterTemp = new BookChapterTemplate(chapterNum, chapterColor, chapterTitle,
+				chapterSubtitle, chapterIcon, null);
+		return chapterTemp;
+	}
+
+	@Override
+	public void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight, int mouseX,
+			int mouseY, float partialTicks) {
+		
 	}
 
 }

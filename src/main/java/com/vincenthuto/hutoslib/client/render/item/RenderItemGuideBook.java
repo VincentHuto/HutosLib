@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
-	public static ResourceLocation defaultText = new ResourceLocation(HutosLib.MOD_ID,
+	public static ResourceLocation defaultText = HutosLib.rloc(
 			"textures/gui/hl_guide_book_text_default.png");
 	public BookModel model;
 

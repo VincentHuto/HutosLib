@@ -17,7 +17,7 @@ public class HLPacketHandler {
 	private static final String PROTOCOL_VERSION = "1";
 
 	public static final SimpleChannel MAINCHANNEL = NetworkRegistry.ChannelBuilder
-			.named(new ResourceLocation(HutosLib.MOD_ID, "mainchannel"))
+			.named(HutosLib.rloc( "mainchannel"))
 			.clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals)
 			.networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 

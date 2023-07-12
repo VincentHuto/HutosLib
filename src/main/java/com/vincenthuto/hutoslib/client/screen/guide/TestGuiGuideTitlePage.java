@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.common.data.book;
+package com.vincenthuto.hutoslib.client.screen.guide;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +13,8 @@ import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.HLTextUtils;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
+import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
+import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -57,10 +59,10 @@ public class TestGuiGuideTitlePage extends Screen {
 	public TestGuiGuideTitlePage(BookCodeModel book) {
 		super(Component.translatable(""));
 		this.book = book;
-		this.icon = book.template.getIconItem();
-		this.titleComponent = Component.literal(book.template.title);
-		this.chapters = book.chapters;
-		this.overlay = book.template.getCoverImage();
+		this.icon = book.getTemplate().getIconItem();
+		this.titleComponent = Component.literal(book.getTemplate().getTitle());
+		this.chapters = book.getChapters();
+		this.overlay = book.getTemplate().getCoverImage();
 	}
 
 	public void setBook(BookCodeModel book) {
@@ -88,7 +90,7 @@ public class TestGuiGuideTitlePage extends Screen {
 
 		for (int i = 0; i < chapters.size(); i++) {
 			TestTomeCategoryTab tab = new TestTomeCategoryTab(chapters.get(i).getChapterRGB(),
-					HLTextUtils.toProperCase(chapters.get(i).title), i,
+					HLTextUtils.toProperCase(chapters.get(i).getTitle()), i,
 					(int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
 					centerY - (i * -25) + 18, 0, 192, (press) -> {
 						if (press instanceof GuiButtonTextured button) {

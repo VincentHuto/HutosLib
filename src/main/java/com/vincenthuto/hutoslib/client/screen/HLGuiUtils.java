@@ -17,8 +17,8 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.math.Transformation;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
-import com.vincenthuto.hutoslib.client.render.block.BlockPosBlockPair;
-import com.vincenthuto.hutoslib.client.render.block.MultiblockPattern;
+import com.vincenthuto.hutoslib.math.BlockPosBlockPair;
+import com.vincenthuto.hutoslib.math.MultiblockPattern;
 import com.vincenthuto.hutoslib.math.Quaternion;
 import com.vincenthuto.hutoslib.math.Vector3;
 

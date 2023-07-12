@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.common.data.book;
+package com.vincenthuto.hutoslib.client.screen.guide;
 
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;

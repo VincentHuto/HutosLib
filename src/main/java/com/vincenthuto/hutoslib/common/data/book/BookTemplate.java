@@ -1,27 +1,36 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class BookTemplate implements DataTemplate {
+public class BookTemplate extends DataTemplate {
 	String title, subtitle, coverLoc, text, icon;
 
+	public BookTemplate() {
+		super("book");
+	}
+
 	public BookTemplate(String title, String subtitle, String coverLoc, String text, String icon) {
+		super("book");
 		this.title = title;
 		this.subtitle = subtitle;
 		this.coverLoc = coverLoc;
 		this.text = text;
 		this.icon = icon;
 	}
-	
+
 	public void setCoverLoc(String coverLoc) {
 		this.coverLoc = coverLoc;
 	}
-	
+
 	public String getCoverLoc() {
 		return coverLoc;
 	}
@@ -79,6 +88,37 @@ public class BookTemplate implements DataTemplate {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	@Override
+	public void serializeToJson(FriendlyByteBuf buf) {
+
+		// Write book json
+		buf.writeUtf(getTitle());
+		buf.writeUtf(getSubtitle());
+		buf.writeUtf(getCoverLoc());
+		buf.writeUtf(getText());
+		buf.writeUtf(getIcon());
+	}
+
+	@Override
+	public BookTemplate deserializeFromJson(FriendlyByteBuf buf) {
+		String bookTitle = buf.readUtf();
+		String bookSubtitle = buf.readUtf();
+		String bookCoverLoc = buf.readUtf();
+		String bookText = buf.readUtf();
+		String bookIcon = buf.readUtf();
+
+		BookTemplate bookTemp = new BookTemplate(bookTitle, bookSubtitle, bookCoverLoc, bookText, bookIcon);
+
+		return bookTemp;
+	}
+
+	@Override
+	public void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight, int mouseX,
+			int mouseY, float partialTicks) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

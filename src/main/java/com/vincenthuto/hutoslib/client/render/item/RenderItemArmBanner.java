@@ -34,7 +34,7 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 
 public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 
-	public static final ResourceLocation fallback = new ResourceLocation(HutosLib.MOD_ID,
+	public static final ResourceLocation fallback = HutosLib.rloc(
 			"textures/entity/arm_banner/iron_arm_banner.png");
 	public static void render_plate(PoseStack ms, MultiBufferSource buffer, int combinedLight, int combinedOverlay,
 			ModelPart parts, Material material, boolean p_241717_6_, List<Pair<BannerPattern, DyeColor>> list,

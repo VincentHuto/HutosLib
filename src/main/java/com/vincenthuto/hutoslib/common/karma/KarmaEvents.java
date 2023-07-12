@@ -20,7 +20,7 @@ public class KarmaEvents {
 	public static void attachCapabilitiesEntity(final AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof Player) {
 			KarmaProvider provider = new KarmaProvider();
-			event.addCapability(new ResourceLocation(HutosLib.MOD_ID, "karma"), provider);
+			event.addCapability(HutosLib.rloc( "karma"), provider);
 		}
 	}
 

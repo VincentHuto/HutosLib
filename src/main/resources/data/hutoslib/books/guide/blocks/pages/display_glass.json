@@ -1,4 +1,5 @@
 {
+  "processor" : "hutoslib:text_page",
   "pageOrder" : 1,
   "title" : "Display Glass",
   "subtitle" : "Like A Petting Zoo",

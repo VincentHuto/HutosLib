@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.common.data.book;
+package com.vincenthuto.hutoslib.client.screen.guide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow;
 import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
+import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
+import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.common.data.book.BookPageTemplate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -34,7 +36,7 @@ public class TestGuiGuidePage extends Screen {
 	private BookChapterTemplate chapter;
 
 	public TestGuiGuidePage(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
-		super(Component.literal(chapter.getPages().get(pageNum).title));
+		super(Component.literal(chapter.getPages().get(pageNum).getTitle()));
 		this.pageNum = pageNum;
 		this.book = book;
 		this.chapter = chapter;
@@ -71,12 +73,12 @@ public class TestGuiGuidePage extends Screen {
 				}));
 
 		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210-16, 24, 16, 24, 0, (press) -> {
+				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0, (press) -> {
 					mc.setScreen(new TestGuiGuideTitlePage(book));
 				}));
 
 		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192-16, 24, 16, 24, 32, (press) -> {
+				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));
 		super.init();
@@ -102,32 +104,10 @@ public class TestGuiGuidePage extends Screen {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, texture);
 
-		if (pageNum != 0) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + pageNum), left + guiWidth - 26,
-					top + guiHeight - 15, 50, 0xffffff, true);
-		}
-		matrixStack.pushPose();
-		graphics.renderFakeItem(pageTemplate.getIconItem(), left + guiWidth - 32, top + guiHeight - 220);
-		matrixStack.popPose();
-		if (!pageTemplate.title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.title)), left - guiWidth + 180,
-					top + guiHeight - 220, 165, 0xffffff, true);
-		}
-		if (!pageTemplate.subtitle.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.subtitle)),
-					left - guiWidth + 180, top + guiHeight - 210, 165, 0xffffff, true);
-		}
-
-		if (!pageTemplate.text.isEmpty() && pageTemplate.subtitle.isEmpty() && pageTemplate.title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.text)), left - guiWidth + 180,
-					top + guiHeight - 220, 160, 0xffffff, true);
-		} else if (!pageTemplate.text.isEmpty() && pageTemplate.subtitle.isEmpty() || pageTemplate.title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.text)), left - guiWidth + 180,
-					top + guiHeight - 200, 160, 0xffffff, true);
-		} else if (!pageTemplate.text.isEmpty() && !pageTemplate.subtitle.isEmpty() && !pageTemplate.title.isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(pageTemplate.text)), left - guiWidth + 180,
-					top + guiHeight - 190, 160, 0xffffff, true);
-		}
+		HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (pageNum + 1)), left + guiWidth - 26,
+				top + guiHeight - 15, 50, 0xffffff, true);
+		
+		pageTemplate.renderInGui(graphics, font, left, top, guiWidth, guiHeight, mouseX, mouseY, partialTicks);
 
 		if (pageNum != (chapter.getPages().size() - 1)) {
 			arrowF.render(graphics, mouseX, mouseY, partialTicks);

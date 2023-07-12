@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class BannerSlot extends Slot {
-	public static final ResourceLocation SLOT_BACKGROUND = new ResourceLocation(HutosLib.MOD_ID,
+	public static final ResourceLocation SLOT_BACKGROUND = HutosLib.rloc(
 			"gui/empty_banner_slot_background");
 
 	private static Container emptyInventory = new SimpleContainer(0);
