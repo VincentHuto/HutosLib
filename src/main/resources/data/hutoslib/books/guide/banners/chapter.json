@@ -1,7 +1,8 @@
 {
-  "ordinality" : 2,
-  "color" : "0,1,1",
-  "title" : "Arm Banners",
-  "subtitle" : "Display your fealty!",
-  "icon" : "hutoslib:iron_arm_banner"
+  "ordinality": 2,
+  "texture": "hutoslib:textures/gui/guide/page.png",
+  "color": "0,1,1",
+  "title": "Arm Banners",
+  "subtitle": "Display your fealty!",
+  "icon": "hutoslib:iron_arm_banner"
 }

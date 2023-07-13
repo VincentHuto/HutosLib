@@ -151,7 +151,7 @@ public class TestGuiGuidePage extends Screen {
 		top = height / 2 - guiHeight / 2;
 		int centerX = (width / 2) - guiWidth / 2;
 		int centerY = (height / 2) - guiHeight / 2;
-		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
+		graphics.blit(((BookPageTemplate)pageTemplate).getTextureLocation(), centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 	}
 
 }

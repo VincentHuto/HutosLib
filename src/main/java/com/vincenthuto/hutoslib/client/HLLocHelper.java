@@ -11,12 +11,11 @@ public class HLLocHelper {
 	}
 
 	public static ResourceLocation guiPrefix(String loc) {
-		return HutosLib.rloc( "textures/gui/" + loc);
+		return HutosLib.rloc( "textures/gui/guide/" + loc);
 	}
 
 	public static ResourceLocation texturePrefix(String loc) {
 		return HutosLib.rloc( "textures/" + loc);
 	}
 
-	ResourceLocation test = HutosLib.rloc( "textures/gui/title_tab.png");
 }

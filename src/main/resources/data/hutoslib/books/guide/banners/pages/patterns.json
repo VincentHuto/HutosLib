@@ -1,8 +1,9 @@
 {
-  "processor" : "hutoslib:text_page",
-  "ordinality" : 2,
-  "title" : "Patterns",
-  "subtitle" : "Custom Designs",
-  "text" : "Hutoslib and other mods using it also tend to include craftable banner designs as well!  These are made with paper and another resource and work at the standard loom for application.",
-  "icon" : "hutoslib:logo_pattern"
+  "processor": "hutoslib:text_page",
+  "ordinality": 2,
+  "texture": "hutoslib:textures/gui/guide/page.png",
+  "title": "Patterns",
+  "subtitle": "Custom Designs",
+  "text": "Hutoslib and other mods using it also tend to include craftable banner designs as well!  These are made with paper and another resource and work at the standard loom for application.",
+  "icon": "hutoslib:logo_pattern"
 }

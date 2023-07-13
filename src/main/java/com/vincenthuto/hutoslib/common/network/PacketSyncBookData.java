@@ -86,8 +86,8 @@ public class PacketSyncBookData {
 						String pk = buf.readUtf();
 						String[] pksplit = pk.split(":");
 						ResourceLocation rl = new ResourceLocation(pksplit[0], pksplit[1]);
-						DataTemplateInit.DATA_TEMPLATES.get().getEntries()
-								.forEach(e -> System.out.println(e.getValue().getProcessorKey()));
+//						DataTemplateInit.DATA_TEMPLATES.get().getEntries()
+//								.forEach(e -> System.out.println(e.getValue().getProcessorKey()));
 						DataTemplate dt = DataTemplateInit.DATA_TEMPLATES.get().getValue(rl);
 
 						if (dt != null) {

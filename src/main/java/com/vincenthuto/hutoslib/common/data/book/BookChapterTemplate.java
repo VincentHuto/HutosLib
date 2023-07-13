@@ -17,16 +17,17 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookChapterTemplate extends DataTemplate {
 
-	String color, title, subtitle, icon;
+	String color, title, subtitle, icon, texture;
 	List<DataTemplate> pages;
 
 	public BookChapterTemplate() {
 		super("chapter", 0);
 	}
 
-	public BookChapterTemplate(int ordinality, String color, String title, String subtitle, String icon,
+	public BookChapterTemplate(int ordinality, String texture, String color, String title, String subtitle, String icon,
 			List<DataTemplate> pages) {
 		super("chapter", ordinality);
+		this.texture = texture;
 		this.color = color;
 		this.title = title;
 		this.subtitle = subtitle;
@@ -58,6 +59,14 @@ public class BookChapterTemplate extends DataTemplate {
 
 		}
 		return new ParticleColor(1, 1, 1);
+	}
+
+	public String getTexture() {
+		return texture;
+	}
+
+	public void setTexture(String texture) {
+		this.texture = texture;
 	}
 
 	public List<DataTemplate> getPages() {
@@ -119,6 +128,7 @@ public class BookChapterTemplate extends DataTemplate {
 	@Override
 	public void serializeToJson(FriendlyByteBuf buf) {
 		buf.writeInt(getOrdinality());
+		buf.writeUtf(getTexture());
 		buf.writeUtf(getColor());
 		buf.writeUtf(getTitle());
 		buf.writeUtf(getSubtitle());
@@ -128,13 +138,14 @@ public class BookChapterTemplate extends DataTemplate {
 	@Override
 	public BookChapterTemplate deserializeFromJson(FriendlyByteBuf buf) {
 		int chapterNum = buf.readInt();
+		String chapterTexture = buf.readUtf();
 		String chapterColor = buf.readUtf();
 		String chapterTitle = buf.readUtf();
 		String chapterSubtitle = buf.readUtf();
 		String chapterIcon = buf.readUtf();
 
-		BookChapterTemplate chapterTemp = new BookChapterTemplate(chapterNum, chapterColor, chapterTitle,
-				chapterSubtitle, chapterIcon, null);
+		BookChapterTemplate chapterTemp = new BookChapterTemplate(chapterNum, chapterTexture, chapterColor,
+				chapterTitle, chapterSubtitle, chapterIcon, null);
 		return chapterTemp;
 	}
 

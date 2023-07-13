@@ -9,6 +9,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
@@ -23,14 +24,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookPageTemplate extends DataTemplate {
-	String title, chapter, subtitle, text, icon;
+	String title, chapter, subtitle, text, icon, texture;
 
 	public BookPageTemplate(String processor) {
 		super(processor, 0);
 	}
 
-	public BookPageTemplate(String processor, int ordinality, String title, String subtitle, String text, String icon) {
+	public BookPageTemplate(String processor, int ordinality, String texture, String title, String subtitle,
+			String text, String icon) {
 		super(processor, ordinality);
+		this.texture = texture;
 		this.title = title;
 		this.subtitle = subtitle;
 		this.text = text;
@@ -49,6 +52,26 @@ public class BookPageTemplate extends DataTemplate {
 		return ItemStack.EMPTY;
 	}
 
+	public ResourceLocation getTextureLocation() {
+
+		if (texture != null && texture.contains(":")) {
+			String[] split = texture.split(":");
+			ResourceLocation rl = new ResourceLocation(split[0], split[1]);
+			if (rl != null) {
+				return rl;
+			}
+		}
+		return HutosLib.rloc(texture);
+	}
+
+	public String getTexture() {
+		return texture;
+	}
+
+	public void setTexture(String texture) {
+		this.texture = texture;
+	}
+
 	public String getChapter() {
 		return chapter;
 	}
@@ -56,7 +79,6 @@ public class BookPageTemplate extends DataTemplate {
 	public void setChapter(String chapter) {
 		this.chapter = chapter;
 	}
-
 
 	public String getTitle() {
 		return title;
@@ -99,6 +121,7 @@ public class BookPageTemplate extends DataTemplate {
 	public void serializeToJson(FriendlyByteBuf buf) {
 		buf.writeUtf(getProcessor());
 		buf.writeInt(getOrdinality());
+		buf.writeUtf(getTexture());
 		buf.writeUtf(getTitle());
 		buf.writeUtf(getSubtitle());
 		buf.writeUtf(getText());
@@ -109,11 +132,13 @@ public class BookPageTemplate extends DataTemplate {
 	public BookPageTemplate deserializeFromJson(FriendlyByteBuf buf) {
 		String pagePK = buf.readUtf();
 		int pageNum = buf.readInt();
+		String pageTexture = buf.readUtf();
 		String pageTitle = buf.readUtf();
 		String pageSubtitle = buf.readUtf();
 		String pageText = buf.readUtf();
 		String pageIcon = buf.readUtf();
-		BookPageTemplate pageTemp = new BookPageTemplate(pagePK, pageNum, pageTitle, pageSubtitle, pageText, pageIcon);
+		BookPageTemplate pageTemp = new BookPageTemplate(pagePK, pageNum, pageTexture, pageTitle, pageSubtitle,
+				pageText, pageIcon);
 		return pageTemp;
 	}
 
@@ -160,13 +185,13 @@ public class BookPageTemplate extends DataTemplate {
 			String processor = (String) map.get("processor");
 			double ordinalityd = (double) map.get("ordinality");
 			int ordinality = (int) ordinalityd;
-
+			String tex = (String) map.get("texture");
 			String title = (String) map.get("title");
 			String subtitle = (String) map.get("subtitle");
 			String text = (String) map.get("text");
 			String icon = (String) map.get("icon");
 
-			return new BookPageTemplate(processor, ordinality, title, subtitle, text, icon);
+			return new BookPageTemplate(processor, ordinality, tex, title, subtitle, text, icon);
 		}
 	}
 }

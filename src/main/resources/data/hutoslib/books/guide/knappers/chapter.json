@@ -1,7 +1,8 @@
 {
-  "ordinality" : 1,
-  "color" : "0,0,1",
-  "title" : "Knappers!",
-  "subtitle" : "A useful tool?",
-  "icon" : "hutoslib:iron_knapper"
+  "ordinality": 1,
+  "texture": "hutoslib:textures/gui/guide/page.png",
+  "color": "0,0,1",
+  "title": "Knappers!",
+  "subtitle": "A useful tool?",
+  "icon": "hutoslib:iron_knapper"
 }
