@@ -2,6 +2,7 @@ package com.vincenthuto.hutoslib.client.screen.guide;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -11,6 +12,7 @@ import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
 import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.common.data.book.BookPageTemplate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -74,14 +76,14 @@ public class TestGuiGuidePageTOC extends Screen {
 				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
 					mc.setScreen(new TestGuiGuideTitlePage(book));
 				}));
-		
+
 		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210-16, 24, 16, 24, 0, (press) -> {
+				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0, (press) -> {
 					mc.setScreen(new TestGuiGuideTitlePage(book));
 				}));
 
 		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192-16, 24, 16, 24, 32, (press) -> {
+				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));
 	}
@@ -99,12 +101,15 @@ public class TestGuiGuidePageTOC extends Screen {
 
 		for (int i = 0; i < pageButtons.size(); i++) {
 			pageButtons.get(i).render(graphics, mouseX, mouseY, partialTicks);
-			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (i+1)), pageButtons.get(i).posX + 5,
+			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (i + 1)), pageButtons.get(i).posX + 5,
 					pageButtons.get(i).posY + 2, 150, 0xffffff, true);
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(chapterTemplate.getPages().get(i).getTitle()),
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(((BookPageTemplate)chapterTemplate.getPages().get(i)).getTitle()),
 					pageButtons.get(i).posX + 30, pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
-
+//		for (BookPageTemplate p : chapterTemplate.getPages()) {
+//			System.out.println(p.getClass());
+//
+//		}
 		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
 
 		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);

@@ -1,7 +1,14 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
@@ -147,4 +154,29 @@ public class BookPageTemplate extends DataTemplate {
 		}
 	}
 
+	@Override
+	public JsonDeserializer getTypeAdapter() {
+		return new BookPageTemplateDeserializer();
+	}
+
+	class BookPageTemplateDeserializer implements JsonDeserializer<BookPageTemplate> {
+		@Override
+		public BookPageTemplate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+				throws JsonParseException {
+			Gson gson = new Gson();
+			HashMap<String, Object> map = gson.fromJson(json, HashMap.class);
+		//	System.out.println("JSON" +map);
+			String processor = (String) map.get("processor");
+			double pageOrderd= (double) map.get("pageOrder"); 
+			int pageOrder= (int) pageOrderd; 
+
+			String title= (String) map.get("title");
+			String subtitle= (String) map.get("subtitle");
+			String text= (String) map.get("text");
+			String icon= (String) map.get("icon");
+
+			
+			return new BookPageTemplate(processor, pageOrder, title, subtitle, text, icon);
+		}
+	}
 }

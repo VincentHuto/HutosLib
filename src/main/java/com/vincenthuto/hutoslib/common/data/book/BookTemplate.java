@@ -1,5 +1,6 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
+import com.google.gson.JsonDeserializer;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
@@ -117,6 +118,18 @@ public class BookTemplate extends DataTemplate {
 	@Override
 	public void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight, int mouseX,
 			int mouseY, float partialTicks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public JsonDeserializer getTypeAdapter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChapter(String chapterName) {
 		// TODO Auto-generated method stub
 		
 	}

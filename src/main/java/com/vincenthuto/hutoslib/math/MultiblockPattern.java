@@ -91,7 +91,6 @@ public class MultiblockPattern {
 		List<Block> blockList = new ArrayList<>();
 		for (String[] currentAisle : patternArray) {
 			int height = currentAisle.length;
-			System.out.println();
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < currentAisle[i].toCharArray().length; j++) {
 					blockList.add(symbolList.get(String.valueOf(currentAisle[i].toCharArray()[j])));

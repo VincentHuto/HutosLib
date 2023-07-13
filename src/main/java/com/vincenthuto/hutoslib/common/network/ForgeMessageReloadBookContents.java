@@ -12,7 +12,6 @@ import com.vincenthuto.hutoslib.common.data.DataTemplateInit;
 import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookManager;
-import com.vincenthuto.hutoslib.common.data.book.BookPageTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookTemplate;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,7 +20,6 @@ import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.RegistryManager;
 
 public class ForgeMessageReloadBookContents {
 
@@ -58,7 +56,7 @@ public class ForgeMessageReloadBookContents {
 				// Write Page size
 				buf.writeInt(chapter.getPages().size());
 				// Write page jsons
-				for (BookPageTemplate page : chapter.getPages()) {
+				for (DataTemplate page : chapter.getPages()) {
 					buf.writeUtf(page.getProcessor());
 					page.serializeToJson(buf);
 				}
@@ -82,20 +80,22 @@ public class ForgeMessageReloadBookContents {
 				for (int j = 0; j < chapterCount; j++) {
 					BookChapterTemplate chapterTemp = new BookChapterTemplate();
 					chapterTemp = chapterTemp.deserializeFromJson(buf);
-					List<BookPageTemplate> pages = new ArrayList<BookPageTemplate>();
+					List<DataTemplate> pages = new ArrayList<DataTemplate>();
 					int pageCount = buf.readInt();
 					for (int k = 0; k < pageCount; k++) {
 						String pk = buf.readUtf();
 						String[] pksplit = pk.split(":");
-						ResourceLocation rl = new ResourceLocation(pksplit[0],pksplit[1]);
+						ResourceLocation rl = new ResourceLocation(pksplit[0], pksplit[1]);
+						DataTemplateInit.DATA_TEMPLATES.get().getEntries()
+								.forEach(e -> System.out.println(e.getValue().getProcessorKey()));
 						DataTemplate dt = DataTemplateInit.DATA_TEMPLATES.get().getValue(rl);
+
 						if (dt != null) {
 							DataTemplate d = dt.deserializeFromJson(buf);
-							if (d instanceof BookPageTemplate page)
-								pages.add(page);
+							pages.add(d);
 						}
-						Collections.sort(pages,
-								(obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
+//						Collections.sort(pages,
+//								(obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
 					}
 					chapterTemp.setPages(pages);
 					chapters.add(chapterTemp);

@@ -146,7 +146,6 @@ public class HLTextUtils {
 			return "";
 		}
 
-		System.out.println(stringValue);
 		String outputString = "";
 		ChatFormatting[] karmicColors = { ChatFormatting.RED, ChatFormatting.DARK_RED, ChatFormatting.BLUE,
 				ChatFormatting.AQUA };

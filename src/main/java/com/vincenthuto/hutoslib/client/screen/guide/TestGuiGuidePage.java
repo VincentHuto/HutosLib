@@ -9,6 +9,7 @@ import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
+import com.vincenthuto.hutoslib.common.data.DataTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookPageTemplate;
@@ -31,12 +32,12 @@ public class TestGuiGuidePage extends Screen {
 	GuiButtonTextured buttonTitle, buttonCloseTab;
 
 	protected Minecraft mc = Minecraft.getInstance();
-	BookPageTemplate pageTemplate;
+	DataTemplate pageTemplate;
 	private BookCodeModel book;
 	private BookChapterTemplate chapter;
 
 	public TestGuiGuidePage(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
-		super(Component.literal(chapter.getPages().get(pageNum).getTitle()));
+		super(Component.literal(((BookPageTemplate) chapter.getPages().get(pageNum)).getTitle()));
 		this.pageNum = pageNum;
 		this.book = book;
 		this.chapter = chapter;
@@ -108,7 +109,7 @@ public class TestGuiGuidePage extends Screen {
 				top + guiHeight - 15, 50, 0xffffff, true);
 		
 		pageTemplate.renderInGui(graphics, font, left, top, guiWidth, guiHeight, mouseX, mouseY, partialTicks);
-
+		//System.out.println(pageTemplate.getClass());
 		if (pageNum != (chapter.getPages().size() - 1)) {
 			arrowF.render(graphics, mouseX, mouseY, partialTicks);
 		}
@@ -124,8 +125,8 @@ public class TestGuiGuidePage extends Screen {
 		if ((mouseX >= left + guiWidth - 32 && mouseX <= left + guiWidth - 10)) {
 			if (mouseY >= top + guiHeight - 220 && mouseY <= top + guiHeight - 200) {
 				List<Component> text = new ArrayList<>();
-				if (!pageTemplate.getIconItem().isEmpty()) {
-					text.add(Component.literal(I18n.get(pageTemplate.getIconItem().getHoverName().getString())));
+				if (!((BookPageTemplate)pageTemplate).getIconItem().isEmpty()) {
+					text.add(Component.literal(I18n.get(((BookPageTemplate)pageTemplate).getIconItem().getHoverName().getString())));
 					graphics.renderComponentTooltip(font, text, left + guiWidth - 32, top + guiHeight - 220);
 				}
 			}

@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.common.data.book;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,9 +11,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mojang.authlib.minecraft.client.ObjectMapper;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.data.DataResource;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
+import com.vincenthuto.hutoslib.common.data.DataTemplateInit;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -48,20 +51,29 @@ public class BookManager {
 			BookChapterTemplate page = GSON.fromJson(bufferedReader, BookChapterTemplate.class);
 			data.add(page);
 		} else if (test.length == 5) {
-			
-			BookPageTemplate page = GSON.fromJson(bufferedReader, BookPageTemplate.class);
-			String input = resourceLocation.getPath();
-			String regex = "(?<=\\/\\w+\\/)(.*?)(?=\\/\\w+)";
-			Pattern pattern = Pattern.compile(regex);
-			Matcher matcher = pattern.matcher(input);
-			String chapterName = "";
-			if (matcher.find()) {
-				String match = matcher.group(1);
-				chapterName = match;
+			Gson gson = new Gson();
+			HashMap<String, Object> json = gson.fromJson(bufferedReader, HashMap.class);
+			String jObject = new ObjectMapper(gson).writeValueAsString(json);
+			if (json.get("processor") instanceof String s) {
+				String[] rl = s.split(":");
+				DataTemplate dt = DataTemplateInit.DATA_TEMPLATES.get().getValue(new ResourceLocation(rl[0], rl[1]));
+				Gson dgson = new GsonBuilder().registerTypeAdapter(dt.getClass(), dt.getTypeAdapter()).create();
+				DataTemplate page = dgson.fromJson(jObject, dt.getClass());
+				String input = resourceLocation.getPath();
+				String regex = "(?<=\\/\\w+\\/)(.*?)(?=\\/\\w+)";
+				Pattern pattern = Pattern.compile(regex);
+				Matcher matcher = pattern.matcher(input);
+				String chapterName = "";
+				if (matcher.find()) {
+					String match = matcher.group(1);
+					chapterName = match;
+				}
+				page.setChapter(chapterName);
+				data.add(page);
 			}
-			page.setChapter(chapterName);
-			data.add(page);
+
 		}
+	//	System.out.println("DATA"+data);
 		return data;
 	}
 
@@ -76,7 +88,7 @@ public class BookManager {
 
 	public void reload(ResourceManager resourceManager) {
 		HutosLib.LOGGER.info("Reloading book data:");
-		if(books != null) {
+		if (books != null) {
 			books.clear();
 		}
 		bindBooks(resourceManager);
@@ -133,19 +145,20 @@ public class BookManager {
 					if (chapters.get(j).getTitle().equals(title)) {
 						for (Object chapObj : chapters.get(j).data()) {
 							if (chapObj instanceof BookChapterTemplate chaptemp) {
-								List<BookPageTemplate> pages1 = new ArrayList<BookPageTemplate>();
+								List<DataTemplate> pages1 = new ArrayList<DataTemplate>();
 								for (int k = 0; k < pages.size(); k++) {
 									boolean doesBelongToBook = pages.get(k).getTitle().equals(title);
-									boolean doesBelongToChapter = pages.get(k).getChapter().equals(chapters.get(j).getChapter());
+									boolean doesBelongToChapter = pages.get(k).getChapter()
+											.equals(chapters.get(j).getChapter());
 									if (doesBelongToChapter && doesBelongToBook) {
-										pages1.add((BookPageTemplate) pages.get(k).data().get(0));
+										 pages1.add((DataTemplate) pages.get(k).data().get(0));
 									}
 								}
-								Collections.sort(pages1,
-										(obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
+//								Collections.sort(pages1,
+//										(obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
 								chaptemp.setPages(pages1);
 								chapters1.add(chaptemp);
-								
+
 							}
 						}
 					}
@@ -155,6 +168,7 @@ public class BookManager {
 			}
 		}
 		HutosLib.LOGGER.info(books.size() + " Books bound!");
+		System.out.println(books);
 		resources = dataResourceList;
 		return dataResourceList;
 	}

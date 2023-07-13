@@ -8,7 +8,6 @@ import com.vincenthuto.hutoslib.common.data.book.BookPageTemplate;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
@@ -26,5 +25,6 @@ public class DataTemplateInit {
 
 	public static final RegistryObject<DataTemplate> text_page = TEMPLATES.register("text_page",
 			() -> new BookPageTemplate("text_page"));
+
 
 }

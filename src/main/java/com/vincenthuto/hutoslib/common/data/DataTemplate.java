@@ -1,14 +1,17 @@
 package com.vincenthuto.hutoslib.common.data;
 
+import java.lang.reflect.Type;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.vincenthuto.hutoslib.HutosLib;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class DataTemplate {
 	String processor;
@@ -46,4 +49,15 @@ public abstract class DataTemplate {
 	public abstract void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight,
 			int mouseX, int mouseY, float partialTicks);
 
+	public  class PayloadJsonDeserializer implements JsonDeserializer<DataTemplate> {
+		@Override
+		public DataTemplate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+				throws JsonParseException {
+			return null;
+		}
+	}
+
+	public abstract JsonDeserializer getTypeAdapter();
+
+	public abstract void setChapter(String chapterName);
 }

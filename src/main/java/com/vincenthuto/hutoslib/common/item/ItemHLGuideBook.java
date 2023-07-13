@@ -20,7 +20,7 @@ public class ItemHLGuideBook extends ItemGuideBook {
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level lvl, Player p_41433_, InteractionHand p_41434_) {
-		BookCodeModel book = BookManager.getBookByTitle(HutosLib.rloc( "guide"));
+		BookCodeModel book = BookManager.getBookByTitle(HutosLib.rloc("guide"));
 
 		if (book != null) {
 			if (lvl.isClientSide()) {

@@ -2,6 +2,8 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import java.util.List;
 
+import com.vincenthuto.hutoslib.common.data.DataTemplate;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -45,7 +47,7 @@ public class BookCodeModel {
 		if (chapters != null) {
 			for (BookChapterTemplate chapter : chapters) {
 				if (chapter.getPages() != null) {
-					for (BookPageTemplate page : chapter.getPages()) {
+					for (DataTemplate page : chapter.getPages()) {
 						count++;
 					}
 				}
@@ -72,28 +74,7 @@ public class BookCodeModel {
 		buf.writeUtf(template.text);
 		buf.writeUtf(template.icon);
 		
-//		// Write chapter size
-//		buf.writeInt(getChapters().size());
-//		
-//		// Write chapter jsons
-//		for (BookChapterTemplate chapter : getChapters()) {
-//			buf.writeUtf(chapter.color);
-//			buf.writeUtf(chapter.title);
-//			buf.writeUtf(chapter.subtitle);
-//			buf.writeUtf(chapter.icon);
-//			
-//			// Write Page size
-//			buf.writeInt(chapter.getPages().size());
-//			
-//			// Write page jsons
-//			for (BookPageTemplate page : chapter.getPages()) {
-//				buf.writeInt(page.page);
-//				buf.writeUtf(page.title);
-//				buf.writeUtf(page.subtitle);
-//				buf.writeUtf(page.text);
-//				buf.writeUtf(page.icon);
-//			}
-//		}
+
 	}
 
 }

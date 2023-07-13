@@ -2,6 +2,7 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import java.util.List;
 
+import com.google.gson.JsonDeserializer;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
@@ -18,14 +19,14 @@ public class BookChapterTemplate extends DataTemplate {
 
 	int chapterOrder;
 	String color, title, subtitle, icon;
-	List<BookPageTemplate> pages;
+	List<DataTemplate> pages;
 
 	public BookChapterTemplate() {
 		super("chapter");
 	}
 
 	public BookChapterTemplate(int chapterOrder, String color, String title, String subtitle, String icon,
-			List<BookPageTemplate> pages) {
+			List<DataTemplate> pages) {
 		super("chapter");
 		this.chapterOrder = chapterOrder;
 		this.color = color;
@@ -69,12 +70,12 @@ public class BookChapterTemplate extends DataTemplate {
 		this.chapterOrder = chapterOrder;
 	}
 
-	public List<BookPageTemplate> getPages() {
+	public List<DataTemplate> getPages() {
 		return pages;
 	}
 
-	public void setPages(List<BookPageTemplate> pages) {
-		this.pages = pages;
+	public void setPages(List<DataTemplate> pages2) {
+		this.pages = pages2;
 	}
 
 	public String getColor() {
@@ -112,7 +113,7 @@ public class BookChapterTemplate extends DataTemplate {
 	public int getPageCount() {
 		int count = 0;
 		if (getPages() != null) {
-			for (BookPageTemplate page : getPages()) {
+			for (DataTemplate page : getPages()) {
 				count++;
 			}
 		}
@@ -122,7 +123,7 @@ public class BookChapterTemplate extends DataTemplate {
 
 	@Override
 	public String toString() {
-		return "Chapter Title: " + title + ", Has " + pages.size() + " pages.";
+		return "Chapter Title: " + title + ", Has " + this.pages != null ? this.getPageCount() +"" : "0" + " pages.";
 	}
 
 	@Override
@@ -132,8 +133,6 @@ public class BookChapterTemplate extends DataTemplate {
 		buf.writeUtf(getTitle());
 		buf.writeUtf(getSubtitle());
 		buf.writeUtf(getIcon());
-
-	
 	}
 
 	@Override
@@ -153,6 +152,17 @@ public class BookChapterTemplate extends DataTemplate {
 	@Override
 	public void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight, int mouseX,
 			int mouseY, float partialTicks) {
+		
+	}
+
+	@Override
+	public JsonDeserializer getTypeAdapter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChapter(String chapterName) {
 		
 	}
 
