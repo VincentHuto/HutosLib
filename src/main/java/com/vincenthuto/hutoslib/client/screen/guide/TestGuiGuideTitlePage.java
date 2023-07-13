@@ -86,7 +86,7 @@ public class TestGuiGuideTitlePage extends Screen {
 							onClose();
 						}));
 
-		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getChapterOrder(), obj2.getChapterOrder()));
+		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
 
 		for (int i = 0; i < chapters.size(); i++) {
 			TestTomeCategoryTab tab = new TestTomeCategoryTab(chapters.get(i).getChapterRGB(),
@@ -121,7 +121,7 @@ public class TestGuiGuideTitlePage extends Screen {
 		this.renderBackground(graphics);
 		int centerX = (width / 2) - guiWidth / 2;
 		int centerY = (height / 2) - guiHeight / 2;
-		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getChapterOrder(), obj2.getChapterOrder()));
+		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
 
 		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 		graphics.blit(overlay, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);

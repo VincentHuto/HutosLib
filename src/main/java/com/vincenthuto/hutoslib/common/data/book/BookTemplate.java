@@ -16,11 +16,11 @@ public class BookTemplate extends DataTemplate {
 	String title, subtitle, coverLoc, text, icon;
 
 	public BookTemplate() {
-		super("book");
+		super("book",0);
 	}
 
 	public BookTemplate(String title, String subtitle, String coverLoc, String text, String icon) {
-		super("book");
+		super("book",0);
 		this.title = title;
 		this.subtitle = subtitle;
 		this.coverLoc = coverLoc;

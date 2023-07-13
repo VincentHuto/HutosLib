@@ -14,12 +14,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public abstract class DataTemplate {
+	int ordinality;
 	String processor;
 
 	// So GSON.toJson doesnt like nonprimatives so imma split this like Im doing the
 	// icon item thing
-	public DataTemplate(String processor2) {
-		this.processor = processor2;
+	public DataTemplate(String processor, int ordinality) {
+		this.processor = processor;
+		this.ordinality = ordinality;
 	}
 
 	public String getProcessor() {
@@ -38,6 +40,14 @@ public abstract class DataTemplate {
 		return HutosLib.rloc(processor);
 	}
 
+	public int getOrdinality() {
+		return ordinality;
+	}
+
+	public void setOrdinality(int ordinality) {
+		this.ordinality = ordinality;
+	}
+
 	public void setProcessor(String processor) {
 		this.processor = processor;
 	}
@@ -49,7 +59,7 @@ public abstract class DataTemplate {
 	public abstract void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight,
 			int mouseX, int mouseY, float partialTicks);
 
-	public  class PayloadJsonDeserializer implements JsonDeserializer<DataTemplate> {
+	public class PayloadJsonDeserializer implements JsonDeserializer<DataTemplate> {
 		@Override
 		public DataTemplate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {

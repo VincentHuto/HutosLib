@@ -3,6 +3,7 @@ package com.vincenthuto.hutoslib.common.data.book;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,8 +155,8 @@ public class BookManager {
 										 pages1.add((DataTemplate) pages.get(k).data().get(0));
 									}
 								}
-//								Collections.sort(pages1,
-//										(obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
+								Collections.sort(pages1,
+										(obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
 								chaptemp.setPages(pages1);
 								chapters1.add(chaptemp);
 

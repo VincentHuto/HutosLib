@@ -1,6 +1,6 @@
 {
   "processor" : "hutoslib:text_page",
-  "pageOrder" : 2,
+  "ordinality" : 2,
   "title" : "Flakes",
   "subtitle" : "Control",
   "text" : "Flakes are biproducts of using knappers, currently obsidian are the only kind available and serve as a slight bonus to using the proper tool, 4 flakes can be combinded to reform their parent block. ",

@@ -23,9 +23,9 @@ public class HLPacketHandler {
 
 	public static void registerChannels() {
 
-		MAINCHANNEL.registerMessage(networkID++, ForgeMessageReloadBookContents.class,
-				ForgeMessageReloadBookContents::encode, ForgeMessageReloadBookContents::decode,
-				ForgeMessageReloadBookContents::handle);
+		MAINCHANNEL.registerMessage(networkID++, PacketSyncBookData.class,
+				PacketSyncBookData::encode, PacketSyncBookData::decode,
+				PacketSyncBookData::handle);
 
 		MAINCHANNEL.registerMessage(networkID++, PacketSpawnLightningParticle.class,
 				PacketSpawnLightningParticle::encode, PacketSpawnLightningParticle::decode,

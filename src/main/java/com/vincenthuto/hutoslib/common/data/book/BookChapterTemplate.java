@@ -17,18 +17,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookChapterTemplate extends DataTemplate {
 
-	int chapterOrder;
 	String color, title, subtitle, icon;
 	List<DataTemplate> pages;
 
 	public BookChapterTemplate() {
-		super("chapter");
+		super("chapter", 0);
 	}
 
-	public BookChapterTemplate(int chapterOrder, String color, String title, String subtitle, String icon,
+	public BookChapterTemplate(int ordinality, String color, String title, String subtitle, String icon,
 			List<DataTemplate> pages) {
-		super("chapter");
-		this.chapterOrder = chapterOrder;
+		super("chapter", ordinality);
 		this.color = color;
 		this.title = title;
 		this.subtitle = subtitle;
@@ -60,14 +58,6 @@ public class BookChapterTemplate extends DataTemplate {
 
 		}
 		return new ParticleColor(1, 1, 1);
-	}
-
-	public int getChapterOrder() {
-		return chapterOrder;
-	}
-
-	public void setChapterOrder(int chapterOrder) {
-		this.chapterOrder = chapterOrder;
 	}
 
 	public List<DataTemplate> getPages() {
@@ -123,12 +113,12 @@ public class BookChapterTemplate extends DataTemplate {
 
 	@Override
 	public String toString() {
-		return "Chapter Title: " + title + ", Has " + this.pages != null ? this.getPageCount() +"" : "0" + " pages.";
+		return "Chapter Title: " + title + ", Has " + this.pages != null ? this.getPageCount() + "" : "0" + " pages.";
 	}
 
 	@Override
 	public void serializeToJson(FriendlyByteBuf buf) {
-		buf.writeInt(getChapterOrder());
+		buf.writeInt(getOrdinality());
 		buf.writeUtf(getColor());
 		buf.writeUtf(getTitle());
 		buf.writeUtf(getSubtitle());
@@ -143,7 +133,6 @@ public class BookChapterTemplate extends DataTemplate {
 		String chapterSubtitle = buf.readUtf();
 		String chapterIcon = buf.readUtf();
 
-
 		BookChapterTemplate chapterTemp = new BookChapterTemplate(chapterNum, chapterColor, chapterTitle,
 				chapterSubtitle, chapterIcon, null);
 		return chapterTemp;
@@ -152,7 +141,7 @@ public class BookChapterTemplate extends DataTemplate {
 	@Override
 	public void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight, int mouseX,
 			int mouseY, float partialTicks) {
-		
+
 	}
 
 	@Override
@@ -163,7 +152,7 @@ public class BookChapterTemplate extends DataTemplate {
 
 	@Override
 	public void setChapter(String chapterName) {
-		
+
 	}
 
 }

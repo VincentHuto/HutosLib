@@ -1,6 +1,6 @@
 {
   "processor" : "hutoslib:text_page",
-  "pageOrder" : 1,
+  "ordinality" : 1,
   "title" : "Display Pedestal",
   "subtitle" : "Show off your Gear",
   "text" : "Display pedestals are a one item/block storage pedestal that simply shows off in a nice lazy susan style to display around your base. They come in many flavors aside from the standard stone brick to fit whatever base design you may have!",

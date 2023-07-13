@@ -1,6 +1,6 @@
 {
   "processor" : "hutoslib:text_page",
-  "pageOrder" : 1,
+  "ordinality" : 1,
   "title" : "Flasks",
   "subtitle" : "Control",
   "text" : "Flasks serve as a smaller unit of liquid containment, currently unused in their base state, but used by other mods.",

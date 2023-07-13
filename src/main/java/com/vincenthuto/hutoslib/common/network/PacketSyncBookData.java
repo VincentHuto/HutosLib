@@ -21,14 +21,14 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
-public class ForgeMessageReloadBookContents {
+public class PacketSyncBookData {
 
 	List<BookCodeModel> books;
 
-	public ForgeMessageReloadBookContents() {
+	public PacketSyncBookData() {
 	}
 
-	public ForgeMessageReloadBookContents(List<BookCodeModel> books) {
+	public PacketSyncBookData(List<BookCodeModel> books) {
 		this.books = books;
 	}
 
@@ -40,7 +40,7 @@ public class ForgeMessageReloadBookContents {
 		this.books = books;
 	}
 
-	public static void encode(ForgeMessageReloadBookContents msg, FriendlyByteBuf buf) {
+	public static void encode(PacketSyncBookData msg, FriendlyByteBuf buf) {
 		List<BookCodeModel> books = BookManager.books;
 		buf.writeInt(books.size());
 		for (BookCodeModel b : books) {
@@ -64,9 +64,9 @@ public class ForgeMessageReloadBookContents {
 		}
 	}
 
-	public static ForgeMessageReloadBookContents decode(FriendlyByteBuf buf) {
+	public static PacketSyncBookData decode(FriendlyByteBuf buf) {
 
-		ForgeMessageReloadBookContents msg = new ForgeMessageReloadBookContents();
+		PacketSyncBookData msg = new PacketSyncBookData();
 		try {
 			List<BookCodeModel> decodedBooks = new ArrayList<BookCodeModel>();
 
@@ -94,14 +94,14 @@ public class ForgeMessageReloadBookContents {
 							DataTemplate d = dt.deserializeFromJson(buf);
 							pages.add(d);
 						}
-//						Collections.sort(pages,
-//								(obj1, obj2) -> Integer.compare(obj1.getPageOrder(), obj2.getPageOrder()));
+						Collections.sort(pages,
+								(obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
 					}
 					chapterTemp.setPages(pages);
 					chapters.add(chapterTemp);
 				}
 				Collections.sort(chapters,
-						(obj1, obj2) -> Integer.compare(obj1.getChapterOrder(), obj2.getChapterOrder()));
+						(obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
 
 				BookCodeModel book = new BookCodeModel(loc, bookTemp, chapters);
 				decodedBooks.add(book);
@@ -117,7 +117,7 @@ public class ForgeMessageReloadBookContents {
 		return msg;
 	}
 
-	public static void handle(ForgeMessageReloadBookContents msg, Supplier<NetworkEvent.Context> ctxSupplier) {
+	public static void handle(PacketSyncBookData msg, Supplier<NetworkEvent.Context> ctxSupplier) {
 		NetworkEvent.Context ctx = ctxSupplier.get();
 		LogicalSide sideReceived = ctx.getDirection().getReceptionSide();
 		Optional<?> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
@@ -129,7 +129,7 @@ public class ForgeMessageReloadBookContents {
 	}
 
 	public static void sendToAll() {
-		HLPacketHandler.MAINCHANNEL.send(PacketDistributor.ALL.noArg(), new ForgeMessageReloadBookContents());
+		HLPacketHandler.MAINCHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncBookData());
 	}
 
 }

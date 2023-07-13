@@ -23,16 +23,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookPageTemplate extends DataTemplate {
-	int pageOrder;
 	String title, chapter, subtitle, text, icon;
 
 	public BookPageTemplate(String processor) {
-		super(processor);
+		super(processor, 0);
 	}
 
-	public BookPageTemplate(String processor, int pageOrder, String title, String subtitle, String text, String icon) {
-		super(processor);
-		this.pageOrder = pageOrder;
+	public BookPageTemplate(String processor, int ordinality, String title, String subtitle, String text, String icon) {
+		super(processor, ordinality);
 		this.title = title;
 		this.subtitle = subtitle;
 		this.text = text;
@@ -59,13 +57,6 @@ public class BookPageTemplate extends DataTemplate {
 		this.chapter = chapter;
 	}
 
-	public int getPageOrder() {
-		return pageOrder;
-	}
-
-	public void setPageOrder(int page) {
-		this.pageOrder = page;
-	}
 
 	public String getTitle() {
 		return title;
@@ -101,13 +92,13 @@ public class BookPageTemplate extends DataTemplate {
 
 	@Override
 	public String toString() {
-		return "Page number: " + pageOrder + ", Title: " + title + ", Processor: " + getProcessor();
+		return "Page number: " + getOrdinality() + ", Title: " + title + ", Processor: " + getProcessor();
 	}
 
 	@Override
 	public void serializeToJson(FriendlyByteBuf buf) {
 		buf.writeUtf(getProcessor());
-		buf.writeInt(getPageOrder());
+		buf.writeInt(getOrdinality());
 		buf.writeUtf(getTitle());
 		buf.writeUtf(getSubtitle());
 		buf.writeUtf(getText());
@@ -165,18 +156,17 @@ public class BookPageTemplate extends DataTemplate {
 				throws JsonParseException {
 			Gson gson = new Gson();
 			HashMap<String, Object> map = gson.fromJson(json, HashMap.class);
-		//	System.out.println("JSON" +map);
+			// System.out.println("JSON" +map);
 			String processor = (String) map.get("processor");
-			double pageOrderd= (double) map.get("pageOrder"); 
-			int pageOrder= (int) pageOrderd; 
+			double ordinalityd = (double) map.get("ordinality");
+			int ordinality = (int) ordinalityd;
 
-			String title= (String) map.get("title");
-			String subtitle= (String) map.get("subtitle");
-			String text= (String) map.get("text");
-			String icon= (String) map.get("icon");
+			String title = (String) map.get("title");
+			String subtitle = (String) map.get("subtitle");
+			String text = (String) map.get("text");
+			String icon = (String) map.get("icon");
 
-			
-			return new BookPageTemplate(processor, pageOrder, title, subtitle, text, icon);
+			return new BookPageTemplate(processor, ordinality, title, subtitle, text, icon);
 		}
 	}
 }
