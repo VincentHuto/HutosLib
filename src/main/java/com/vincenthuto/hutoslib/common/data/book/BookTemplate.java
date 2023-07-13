@@ -2,6 +2,7 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import com.google.gson.JsonDeserializer;
 import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
 import net.minecraft.client.gui.Font;
@@ -13,19 +14,28 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookTemplate extends DataTemplate {
-	String title, subtitle, coverLoc, text, icon;
+	String title, subtitle, coverLoc, overlayLoc, text, icon;
 
 	public BookTemplate() {
-		super("book",0);
+		super("book", 0);
 	}
 
-	public BookTemplate(String title, String subtitle, String coverLoc, String text, String icon) {
-		super("book",0);
+	public BookTemplate( String coverLoc, String overlayLoc,String title, String subtitle, String text, String icon) {
+		super("book", 0);
+		this.coverLoc = coverLoc;
+		this.overlayLoc = overlayLoc;
 		this.title = title;
 		this.subtitle = subtitle;
-		this.coverLoc = coverLoc;
 		this.text = text;
 		this.icon = icon;
+	}
+
+	public String getOverlayLoc() {
+		return overlayLoc;
+	}
+
+	public void setOverlayLoc(String overlayLoc) {
+		this.overlayLoc = overlayLoc;
 	}
 
 	public void setCoverLoc(String coverLoc) {
@@ -36,15 +46,13 @@ public class BookTemplate extends DataTemplate {
 		return coverLoc;
 	}
 
+	public ResourceLocation getOverlayImage() {
+		return HLLocHelper.getBySplit(overlayLoc);
+	}
+
 	public ResourceLocation getCoverImage() {
-		if (coverLoc != null && coverLoc.contains(":")) {
-			String[] split = coverLoc.split(":");
-			ResourceLocation cover = new ResourceLocation(split[0], split[1]);
-			if (cover != null) {
-				return cover;
-			}
-		}
-		return null;
+		return HLLocHelper.getBySplit(coverLoc);
+
 	}
 
 	public ItemStack getIconItem() {
@@ -95,22 +103,25 @@ public class BookTemplate extends DataTemplate {
 	public void serializeToJson(FriendlyByteBuf buf) {
 
 		// Write book json
+		buf.writeUtf(getCoverLoc());
+		buf.writeUtf(getOverlayLoc());
 		buf.writeUtf(getTitle());
 		buf.writeUtf(getSubtitle());
-		buf.writeUtf(getCoverLoc());
 		buf.writeUtf(getText());
 		buf.writeUtf(getIcon());
 	}
 
 	@Override
 	public BookTemplate deserializeFromJson(FriendlyByteBuf buf) {
+		String bookCoverLoc = buf.readUtf();
+		String bookOverlayLoc = buf.readUtf();
 		String bookTitle = buf.readUtf();
 		String bookSubtitle = buf.readUtf();
-		String bookCoverLoc = buf.readUtf();
 		String bookText = buf.readUtf();
 		String bookIcon = buf.readUtf();
 
-		BookTemplate bookTemp = new BookTemplate(bookTitle, bookSubtitle, bookCoverLoc, bookText, bookIcon);
+		BookTemplate bookTemp = new BookTemplate(bookCoverLoc,
+				bookOverlayLoc,bookTitle, bookSubtitle, bookText, bookIcon);
 
 		return bookTemp;
 	}
@@ -119,7 +130,7 @@ public class BookTemplate extends DataTemplate {
 	public void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight, int mouseX,
 			int mouseY, float partialTicks) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -131,7 +142,7 @@ public class BookTemplate extends DataTemplate {
 	@Override
 	public void setChapter(String chapterName) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

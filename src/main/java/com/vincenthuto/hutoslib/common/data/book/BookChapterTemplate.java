@@ -64,11 +64,23 @@ public class BookChapterTemplate extends DataTemplate {
 	public String getTexture() {
 		return texture;
 	}
+	
 
 	public void setTexture(String texture) {
 		this.texture = texture;
 	}
 
+	public ResourceLocation getTextureLocation() {
+
+		if (texture != null && texture.contains(":")) {
+			String[] split = texture.split(":");
+			ResourceLocation rl = new ResourceLocation(split[0], split[1]);
+			if (rl != null) {
+				return rl;
+			}
+		}
+		return HutosLib.rloc(texture);
+	}
 	public List<DataTemplate> getPages() {
 		return pages;
 	}

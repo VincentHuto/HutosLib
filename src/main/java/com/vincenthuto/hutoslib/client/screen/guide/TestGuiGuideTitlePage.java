@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 public class TestGuiGuideTitlePage extends Screen {
 
 	private static TestGuiGuideTitlePage screen;
-	final ResourceLocation texture = HLLocHelper.guiPrefix("title.png");
+	final ResourceLocation texture;
 	final ResourceLocation overlay;
 	Minecraft mc = Minecraft.getInstance();
 	int guiWidth = 186;
@@ -62,7 +62,8 @@ public class TestGuiGuideTitlePage extends Screen {
 		this.icon = book.getTemplate().getIconItem();
 		this.titleComponent = Component.literal(book.getTemplate().getTitle());
 		this.chapters = book.getChapters();
-		this.overlay = book.getTemplate().getCoverImage();
+		this.texture = book.getTemplate().getCoverImage();
+		this.overlay = book.getTemplate().getOverlayImage();
 	}
 
 	public void setBook(BookCodeModel book) {

@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
@@ -54,14 +55,8 @@ public class BookPageTemplate extends DataTemplate {
 
 	public ResourceLocation getTextureLocation() {
 
-		if (texture != null && texture.contains(":")) {
-			String[] split = texture.split(":");
-			ResourceLocation rl = new ResourceLocation(split[0], split[1]);
-			if (rl != null) {
-				return rl;
-			}
-		}
-		return HutosLib.rloc(texture);
+		return HLLocHelper.getBySplit(texture);
+
 	}
 
 	public String getTexture() {

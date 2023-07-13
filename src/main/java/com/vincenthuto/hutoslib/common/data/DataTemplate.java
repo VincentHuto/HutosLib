@@ -7,6 +7,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.client.HLLocHelper;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,15 +30,7 @@ public abstract class DataTemplate {
 	}
 
 	public ResourceLocation getProcessorKey() {
-
-		if (processor != null && processor.contains(":")) {
-			String[] split = processor.split(":");
-			ResourceLocation processorKey = new ResourceLocation(split[0], split[1]);
-			if (processorKey != null) {
-				return processorKey;
-			}
-		}
-		return HutosLib.rloc(processor);
+		return HLLocHelper.getBySplit(processor);
 	}
 
 	public int getOrdinality() {

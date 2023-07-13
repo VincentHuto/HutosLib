@@ -56,7 +56,7 @@ public class TestGuiGuidePageTOC extends Screen {
 		Collections.sort(pageButtons, (obj1, obj2) -> Integer.compare(obj1.getId(), obj2.getId()));
 
 		for (int i = 0; i < chapterTemplate.getPages().size(); i++) {
-			pageButtons.add(new GuiButtonTextured(texture, i, sideLoc - (guiWidth - 5),
+			pageButtons.add(new GuiButtonTextured(chapterTemplate.getTextureLocation(), i, sideLoc - (guiWidth - 5),
 					(verticalLoc - 210) + ((i) * 15), 163, 14, 5, 228, (press) -> {
 						if (press instanceof GuiButtonTextured button) {
 							mc.setScreen(new TestGuiGuidePage(button.getId(), book, chapterTemplate));
@@ -96,7 +96,7 @@ public class TestGuiGuidePageTOC extends Screen {
 		top = height / 2 - guiHeight / 2;
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, texture);
+		RenderSystem.setShaderTexture(0, chapterTemplate.getTextureLocation());
 		Collections.sort(pageButtons, (obj1, obj2) -> Integer.compare(obj1.getId(), obj2.getId()));
 
 		for (int i = 0; i < pageButtons.size(); i++) {
@@ -136,7 +136,7 @@ public class TestGuiGuidePageTOC extends Screen {
 		top = height / 2 - guiHeight / 2;
 		int centerX = (width / 2) - guiWidth / 2;
 		int centerY = (height / 2) - guiHeight / 2;
-		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
+		graphics.blit(chapterTemplate.getTextureLocation(), centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 	}
 
 	@Override

@@ -68,9 +68,10 @@ public class BookCodeModel {
 		buf.writeResourceLocation(resourceLocation);
 
 		// Write book json
+		buf.writeUtf(template.coverLoc);
+		buf.writeUtf(template.overlayLoc);
 		buf.writeUtf(template.title);
 		buf.writeUtf(template.subtitle);
-		buf.writeUtf(template.coverLoc);
 		buf.writeUtf(template.text);
 		buf.writeUtf(template.icon);
 		

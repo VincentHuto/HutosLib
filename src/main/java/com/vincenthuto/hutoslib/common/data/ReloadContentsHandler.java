@@ -1,5 +1,6 @@
-package com.vincenthuto.hutoslib;
+package com.vincenthuto.hutoslib.common.data;
 
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.network.PacketSyncBookData;
 
 import net.minecraft.server.MinecraftServer;

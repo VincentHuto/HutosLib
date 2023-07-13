@@ -15,6 +15,7 @@ import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 import com.vincenthuto.hutoslib.common.data.DataTemplateInit;
+import com.vincenthuto.hutoslib.common.data.ReloadContentsHandler;
 import com.vincenthuto.hutoslib.common.enchant.HLEnchantInit;
 import com.vincenthuto.hutoslib.common.item.HLItemInit;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
