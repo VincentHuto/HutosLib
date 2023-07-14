@@ -25,7 +25,10 @@ import net.minecraft.resources.ResourceLocation;
 public class TestGuiGuidePageTOC extends Screen {
 	GuiButtonTextured buttonTOC;
 	protected final ResourceLocation texture = HLLocHelper.guiPrefix("page.png");
-
+	double xDragPos = 0;
+	double yDragPos = 0;
+	public double dragLeftRight = 0;
+	public double dragUpDown = 0;
 	protected int left;
 	protected int top;
 	public int guiHeight = 228, guiWidth = 174;
@@ -144,4 +147,12 @@ public class TestGuiGuidePageTOC extends Screen {
 		return false;
 	}
 
+	@Override
+	public boolean mouseDragged(double xPos, double yPos, int button, double dragLeftRight, double dragUpDown) {
+		xDragPos = xPos;
+		yDragPos = yPos;
+		this.dragLeftRight += dragLeftRight / 2;
+		this.dragUpDown -= dragUpDown / 2;
+		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
+	}
 }

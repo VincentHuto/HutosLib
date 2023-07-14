@@ -26,6 +26,10 @@ public class TestGuiGuidePage extends Screen {
 	protected final ResourceLocation texture = HLLocHelper.guiPrefix("page.png");
 	protected int left;
 	protected int top;
+	double xDragPos = 0;
+	double yDragPos = 0;
+	public double dragLeftRight = 0;
+	public double dragUpDown = 0;
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
 	public int pageNum, guiHeight = 228, guiWidth = 174;
 	GuiButtonBookArrow arrowF, arrowB;
@@ -152,6 +156,15 @@ public class TestGuiGuidePage extends Screen {
 		int centerX = (width / 2) - guiWidth / 2;
 		int centerY = (height / 2) - guiHeight / 2;
 		graphics.blit(((BookPageTemplate)pageTemplate).getTextureLocation(), centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
+	}
+	
+	@Override
+	public boolean mouseDragged(double xPos, double yPos, int button, double dragLeftRight, double dragUpDown) {
+		xDragPos = xPos;
+		yDragPos = yPos;
+		this.dragLeftRight += dragLeftRight / 2;
+		this.dragUpDown -= dragUpDown / 2;
+		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
 	}
 
 }

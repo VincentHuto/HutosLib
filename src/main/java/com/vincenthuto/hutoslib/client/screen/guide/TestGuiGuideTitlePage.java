@@ -9,7 +9,6 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.HLTextUtils;
 import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
@@ -32,6 +31,10 @@ public class TestGuiGuideTitlePage extends Screen {
 	Minecraft mc = Minecraft.getInstance();
 	int guiWidth = 186;
 	int guiHeight = 240;
+	double xDragPos = 0;
+	double yDragPos = 0;
+	public double dragLeftRight = 0;
+	public double dragUpDown = 0;
 	int left, top;
 	final int BUTTONCLOSE = 30;
 	Component titleComponent;
@@ -160,5 +163,14 @@ public class TestGuiGuideTitlePage extends Screen {
 			graphics.renderTooltip(font, Component.translatable("Close"), this.buttonclose.getX(),
 					this.buttonclose.getY());
 		}
+	}
+
+	@Override
+	public boolean mouseDragged(double xPos, double yPos, int button, double dragLeftRight, double dragUpDown) {
+		xDragPos = xPos;
+		yDragPos = yPos;
+		this.dragLeftRight += dragLeftRight / 2;
+		this.dragUpDown -= dragUpDown / 2;
+		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
 	}
 }
