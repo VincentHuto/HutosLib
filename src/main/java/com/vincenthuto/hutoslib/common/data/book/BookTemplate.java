@@ -128,7 +128,7 @@ public class BookTemplate extends DataTemplate {
 
 	@Override
 	public void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight, int mouseX,
-			int mouseY, float partialTicks) {
+			int mouseY, double dragUpDown, double dragLeftRight, float partialTicks) {
 		// TODO Auto-generated method stub
 
 	}

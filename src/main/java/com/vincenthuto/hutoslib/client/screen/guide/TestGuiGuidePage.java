@@ -112,7 +112,7 @@ public class TestGuiGuidePage extends Screen {
 		HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (pageNum + 1)), left + guiWidth - 26,
 				top + guiHeight - 15, 50, 0xffffff, true);
 		
-		pageTemplate.renderInGui(graphics, font, left, top, guiWidth, guiHeight, mouseX, mouseY, partialTicks);
+		pageTemplate.renderInGui(graphics, font, left, top, guiWidth, guiHeight, mouseX, mouseY, dragUpDown, dragLeftRight, partialTicks);
 		//System.out.println(pageTemplate.getClass());
 		if (pageNum != (chapter.getPages().size() - 1)) {
 			arrowF.render(graphics, mouseX, mouseY, partialTicks);

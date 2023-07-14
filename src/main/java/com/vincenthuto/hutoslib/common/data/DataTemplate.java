@@ -50,7 +50,7 @@ public abstract class DataTemplate {
 	public abstract DataTemplate deserializeFromJson(FriendlyByteBuf buf);
 
 	public abstract void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight,
-			int mouseX, int mouseY, float partialTicks);
+			int mouseX, int mouseY, double dragUpDown, double dragLeftRight, float partialTicks);
 
 	public class PayloadJsonDeserializer implements JsonDeserializer<DataTemplate> {
 		@Override

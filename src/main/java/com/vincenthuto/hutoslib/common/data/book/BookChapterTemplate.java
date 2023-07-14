@@ -64,7 +64,6 @@ public class BookChapterTemplate extends DataTemplate {
 	public String getTexture() {
 		return texture;
 	}
-	
 
 	public void setTexture(String texture) {
 		this.texture = texture;
@@ -81,6 +80,7 @@ public class BookChapterTemplate extends DataTemplate {
 		}
 		return HutosLib.rloc(texture);
 	}
+
 	public List<DataTemplate> getPages() {
 		return pages;
 	}
@@ -163,8 +163,7 @@ public class BookChapterTemplate extends DataTemplate {
 
 	@Override
 	public void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight, int mouseX,
-			int mouseY, float partialTicks) {
-
+			int mouseY, double dragUpDown, double dragLeftRight, float partialTicks) {
 	}
 
 	@Override
