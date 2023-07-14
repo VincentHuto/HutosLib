@@ -72,17 +72,17 @@ public class TestGuiGuidePageTOC extends Screen {
 		}
 		this.addRenderableWidget(arrowF = new GuiButtonBookArrow(ArrowDirection.FORWARD, ARROWF, left + guiWidth - 18,
 				top + guiHeight - 7, (press) -> {
-					mc.setScreen(new TestGuiGuidePage(0, book, chapterTemplate));
+					mc.setScreen(chapterTemplate.getPages().get(0).getPageScreen(0, book, chapterTemplate));
 				}));
 
 		this.addRenderableWidget(
 				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
-					mc.setScreen(new TestGuiGuideTitlePage(book));
+					mc.setScreen(book.getTemplate().getPageScreen(0, book, null));
 				}));
 
 		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
 				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0, (press) -> {
-					mc.setScreen(new TestGuiGuideTitlePage(book));
+					mc.setScreen(book.getTemplate().getPageScreen(0, book, null));
 				}));
 
 		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
@@ -106,7 +106,8 @@ public class TestGuiGuidePageTOC extends Screen {
 			pageButtons.get(i).render(graphics, mouseX, mouseY, partialTicks);
 			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (i + 1)), pageButtons.get(i).posX + 5,
 					pageButtons.get(i).posY + 2, 150, 0xffffff, true);
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(((BookPageTemplate)chapterTemplate.getPages().get(i)).getTitle()),
+			HLGuiUtils.drawMaxWidthString(font,
+					Component.literal(((BookPageTemplate) chapterTemplate.getPages().get(i)).getTitle()),
 					pageButtons.get(i).posX + 30, pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
 //		for (BookPageTemplate p : chapterTemplate.getPages()) {

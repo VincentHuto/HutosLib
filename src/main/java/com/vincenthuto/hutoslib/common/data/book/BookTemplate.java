@@ -3,10 +3,12 @@ package com.vincenthuto.hutoslib.common.data.book;
 import com.google.gson.JsonDeserializer;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
+import com.vincenthuto.hutoslib.client.screen.guide.TestGuiGuideTitlePage;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -143,6 +145,11 @@ public class BookTemplate extends DataTemplate {
 	public void setChapter(String chapterName) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Screen getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
+		return new TestGuiGuideTitlePage(book);
 	}
 
 }

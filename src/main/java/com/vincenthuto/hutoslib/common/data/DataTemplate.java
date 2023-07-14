@@ -6,11 +6,13 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
+import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
+import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -63,4 +65,6 @@ public abstract class DataTemplate {
 	public abstract JsonDeserializer getTypeAdapter();
 
 	public abstract void setChapter(String chapterName);
+	
+	public abstract Screen getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter);
 }

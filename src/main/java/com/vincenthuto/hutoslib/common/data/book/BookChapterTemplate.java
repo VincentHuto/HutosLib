@@ -5,10 +5,12 @@ import java.util.List;
 import com.google.gson.JsonDeserializer;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+import com.vincenthuto.hutoslib.client.screen.guide.TestGuiGuidePageTOC;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -175,6 +177,11 @@ public class BookChapterTemplate extends DataTemplate {
 	@Override
 	public void setChapter(String chapterName) {
 
+	}
+
+	@Override
+	public Screen getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
+		return new TestGuiGuidePageTOC(book, chapter);
 	}
 
 }

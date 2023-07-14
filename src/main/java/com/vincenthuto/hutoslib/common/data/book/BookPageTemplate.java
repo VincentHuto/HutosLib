@@ -12,10 +12,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
+import com.vincenthuto.hutoslib.client.screen.guide.TestGuiGuidePage;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -188,5 +190,10 @@ public class BookPageTemplate extends DataTemplate {
 
 			return new BookPageTemplate(processor, ordinality, tex, title, subtitle, text, icon);
 		}
+	}
+
+	@Override
+	public Screen getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
+		return new TestGuiGuidePage(pageNum, book, chapter);
 	}
 }

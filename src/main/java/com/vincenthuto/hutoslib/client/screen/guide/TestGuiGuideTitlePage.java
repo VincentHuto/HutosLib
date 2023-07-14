@@ -98,7 +98,7 @@ public class TestGuiGuideTitlePage extends Screen {
 					(int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
 					centerY - (i * -25) + 18, 0, 192, (press) -> {
 						if (press instanceof GuiButtonTextured button) {
-							mc.setScreen(new TestGuiGuidePageTOC(book, chapters.get(button.id)));
+							mc.setScreen(chapters.get(button.id).getPageScreen(0, book, chapters.get(button.id)));
 						}
 					});
 			buttonList.add(tab);
