@@ -8,19 +8,12 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
-import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.client.screen.guide.TestGuiGuidePage;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -137,34 +130,6 @@ public class BookPageTemplate extends DataTemplate {
 		BookPageTemplate pageTemp = new BookPageTemplate(pagePK, pageNum, pageTexture, pageTitle, pageSubtitle,
 				pageText, pageIcon);
 		return pageTemp;
-	}
-
-	@Override
-	public void renderInGui(GuiGraphics graphics, Font font, int left, int top, int guiWidth, int guiHeight, int mouseX,
-			int mouseY, double dragUpDown, double dragLeftRight, float partialTicks) {
-		PoseStack matrixStack = graphics.pose();
-		matrixStack.pushPose();
-		graphics.renderFakeItem(getIconItem(), left + guiWidth - 32, top + guiHeight - 220);
-		matrixStack.popPose();
-		if (!getTitle().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(getTitle())), left - guiWidth + 180,
-					top + guiHeight - 220, 165, 0xffffff, true);
-		}
-		if (!getSubtitle().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(getSubtitle())), left - guiWidth + 180,
-					top + guiHeight - 210, 165, 0xffffff, true);
-		}
-
-		if (!getText().isEmpty() && getSubtitle().isEmpty() && getTitle().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(getText())), left - guiWidth + 180,
-					top + guiHeight - 220, 160, 0xffffff, true);
-		} else if (!getText().isEmpty() && getSubtitle().isEmpty() || getTitle().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(getText())), left - guiWidth + 180,
-					top + guiHeight - 200, 160, 0xffffff, true);
-		} else if (!getText().isEmpty() && !getSubtitle().isEmpty() && !getTitle().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(getText())), left - guiWidth + 180,
-					top + guiHeight - 190, 160, 0xffffff, true);
-		}
 	}
 
 	@Override

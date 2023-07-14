@@ -112,7 +112,31 @@ public class TestGuiGuidePage extends Screen {
 		HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (pageNum + 1)), left + guiWidth - 26,
 				top + guiHeight - 15, 50, 0xffffff, true);
 		
-		pageTemplate.renderInGui(graphics, font, left, top, guiWidth, guiHeight, mouseX, mouseY, dragUpDown, dragLeftRight, partialTicks);
+		matrixStack.pushPose();
+		graphics.renderFakeItem(((BookPageTemplate)pageTemplate).getIconItem(), left + guiWidth - 32, top + guiHeight - 220);
+		matrixStack.popPose();
+		if (!((BookPageTemplate)pageTemplate).getTitle().isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(((BookPageTemplate)pageTemplate).getTitle())), left - guiWidth + 180,
+					top + guiHeight - 220, 165, 0xffffff, true);
+		}
+		if (!((BookPageTemplate)pageTemplate).getSubtitle().isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(((BookPageTemplate)pageTemplate).getSubtitle())), left - guiWidth + 180,
+					top + guiHeight - 210, 165, 0xffffff, true);
+		}
+
+		if (!((BookPageTemplate)pageTemplate).getText().isEmpty() && ((BookPageTemplate)pageTemplate).getSubtitle().isEmpty() && ((BookPageTemplate)pageTemplate).getTitle().isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(((BookPageTemplate)pageTemplate).getText())), left - guiWidth + 180,
+					top + guiHeight - 220, 160, 0xffffff, true);
+		} else if (!((BookPageTemplate)pageTemplate).getText().isEmpty() && ((BookPageTemplate)pageTemplate).getSubtitle().isEmpty() || ((BookPageTemplate)pageTemplate).getTitle().isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(((BookPageTemplate)pageTemplate).getText())), left - guiWidth + 180,
+					top + guiHeight - 200, 160, 0xffffff, true);
+		} else if (!((BookPageTemplate)pageTemplate).getText().isEmpty() && !((BookPageTemplate)pageTemplate).getSubtitle().isEmpty() && !((BookPageTemplate)pageTemplate).getTitle().isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(((BookPageTemplate)pageTemplate).getText())), left - guiWidth + 180,
+					top + guiHeight - 190, 160, 0xffffff, true);
+		}		
+		
+		
+		
 		//System.out.println(pageTemplate.getClass());
 		if (pageNum != (chapter.getPages().size() - 1)) {
 			arrowF.render(graphics, mouseX, mouseY, partialTicks);
