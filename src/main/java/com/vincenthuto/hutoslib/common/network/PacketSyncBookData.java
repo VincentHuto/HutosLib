@@ -100,8 +100,7 @@ public class PacketSyncBookData {
 					chapterTemp.setPages(pages);
 					chapters.add(chapterTemp);
 				}
-				Collections.sort(chapters,
-						(obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
+				Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
 
 				BookCodeModel book = new BookCodeModel(loc, bookTemp, chapters);
 				decodedBooks.add(book);
@@ -118,18 +117,11 @@ public class PacketSyncBookData {
 	}
 
 	public static void handle(PacketSyncBookData msg, Supplier<NetworkEvent.Context> ctxSupplier) {
-		NetworkEvent.Context ctx = ctxSupplier.get();
-		LogicalSide sideReceived = ctx.getDirection().getReceptionSide();
-		Optional<?> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
-		if (!clientWorld.isPresent()) {
-			return;
-		}
 		BookManager.setBooks(msg.books);
 		ctxSupplier.get().setPacketHandled(true);
 	}
 
 	public static void sendToAll() {
-		HLPacketHandler.MAINCHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncBookData());
 	}
 
 }

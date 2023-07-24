@@ -5,8 +5,10 @@ import org.lwjgl.glfw.GLFW;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.particle.BoltRenderer;
 import com.vincenthuto.hutoslib.client.render.layer.LayerArmBanner;
+import com.vincenthuto.hutoslib.common.data.book.BookManager;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.network.PacketOpenBanner;
+import com.vincenthuto.hutoslib.common.network.PacketSyncBookData;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -24,6 +27,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class HLClientEvents {
@@ -34,6 +38,19 @@ public class HLClientEvents {
 		BoltRenderer.onWorldRenderLast(event.getPartialTick(), event.getPoseStack());
 
 	}
+	
+
+	@SubscribeEvent
+	public static void clearData(ClientPlayerNetworkEvent.LoggingOut e) {
+		BookManager.books.clear();
+	}
+	
+	@SubscribeEvent
+	public static void loadData(ClientPlayerNetworkEvent.LoggingIn e) {
+	    //HLPacketHandler.MAINCHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncBookData());
+	}
+	
+
 
 	public static KeyMapping OPEN_BANNER_SLOT_KEYBIND;
 

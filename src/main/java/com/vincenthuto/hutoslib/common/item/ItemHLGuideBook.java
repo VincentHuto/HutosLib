@@ -4,6 +4,8 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookManager;
+import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
+import com.vincenthuto.hutoslib.common.network.PacketSyncBookData;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -11,6 +13,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.PacketDistributor;
 
 public class ItemHLGuideBook extends ItemGuideBook {
 
@@ -23,7 +26,9 @@ public class ItemHLGuideBook extends ItemGuideBook {
 		BookCodeModel book = BookManager.getBookByTitle(HutosLib.rloc("guide"));
 
 		if (book != null) {
+
 			if (lvl.isClientSide) { 
+				
 				HLGuiGuideTitlePage.openScreenViaItem(book);
 			}
 		}

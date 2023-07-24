@@ -26,7 +26,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 public class BookManager {
 	private static final Gson GSON = new Gson();
 	public static List<BookCodeModel> books = new ArrayList<BookCodeModel>();
-	public static List<BookCodeModel> clientBooks = new ArrayList<BookCodeModel>();
 
 	public static List<DataResource<DataTemplate>> resources = new ArrayList<DataResource<DataTemplate>>();
 

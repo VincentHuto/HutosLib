@@ -129,7 +129,7 @@ public class HutosLib {
 		BannerExtensionSlot.register();
 		BannerFinderBannerSlot.initFinder();
 		MinecraftForge.EVENT_BUS
-				.addListener((OnDatapackSyncEvent e) -> ReloadContentsHandler.dataReloaded());
+				.addListener((OnDatapackSyncEvent e) -> ReloadContentsHandler.dataReloaded(e.getPlayer()));
 	}
 
 	private void registerCapability(RegisterCapabilitiesEvent event) {
