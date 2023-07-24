@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLTextUtils;
-import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
+import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
@@ -23,9 +23,9 @@ import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public class TestGuiGuideTitlePage extends Screen {
+public class HLGuiGuideTitlePage extends Screen {
 
-	private static TestGuiGuideTitlePage screen;
+	private static HLGuiGuideTitlePage screen;
 	final ResourceLocation texture;
 	final ResourceLocation overlay;
 	Minecraft mc = Minecraft.getInstance();
@@ -41,25 +41,24 @@ public class TestGuiGuideTitlePage extends Screen {
 	Component subtitleComponent;
 
 	public ItemStack icon;
-	GuiButtonTextured buttonclose;
+	HLButtonTextured buttonclose;
 	public List<BookChapterTemplate> chapters = new ArrayList<>();
-	public List<GuiButtonTextured> buttonList = new ArrayList<>();
+	public List<HLButtonTextured> buttonList = new ArrayList<>();
 	private BookCodeModel book;
 
-	public void openScreenViaItem(BookCodeModel book) {
+	public static void openScreenViaItem(BookCodeModel book) {
 		openScreen(book, true);
 	}
 
-	public void openScreen(BookCodeModel book, boolean ignoreNextMouseClick) {
+	public static void openScreen(BookCodeModel book, boolean ignoreNextMouseClick) {
 		if (screen == null) {
-			screen = new TestGuiGuideTitlePage(book);
+			screen = new HLGuiGuideTitlePage(book);
 		}
-		screen = new TestGuiGuideTitlePage(book);
-
+		screen = new HLGuiGuideTitlePage(book);
 		Minecraft.getInstance().setScreen(screen);
 	}
 
-	public TestGuiGuideTitlePage(BookCodeModel book) {
+	public HLGuiGuideTitlePage(BookCodeModel book) {
 		super(Component.translatable(""));
 		this.book = book;
 		this.icon = book.getTemplate().getIconItem();
@@ -85,7 +84,7 @@ public class TestGuiGuideTitlePage extends Screen {
 		this.buttonList.clear();
 		this.clearWidgets();
 		this.addRenderableWidget(
-				buttonclose = new GuiButtonTextured(overlay, BUTTONCLOSE, (int) (centerX + (guiWidth * 0.05f)),
+				buttonclose = new HLButtonTextured(overlay, BUTTONCLOSE, (int) (centerX + (guiWidth * 0.05f)),
 						(int) (centerY + (guiHeight * 0.78f)), 32, 32, 209, 32, (press) -> {
 							onClose();
 						}));
@@ -93,12 +92,12 @@ public class TestGuiGuideTitlePage extends Screen {
 		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
 
 		for (int i = 0; i < chapters.size(); i++) {
-			TestTomeCategoryTab tab = new TestTomeCategoryTab(chapters.get(i).getChapterRGB(),
+			HLTomeCategoryTab tab = new HLTomeCategoryTab(chapters.get(i).getChapterRGB(),
 					HLTextUtils.toProperCase(chapters.get(i).getTitle()), i,
 					(int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
 					centerY - (i * -25) + 18, 0, 192, (press) -> {
-						if (press instanceof GuiButtonTextured button) {
-							mc.setScreen(chapters.get(button.id).getPageScreen(0, book, chapters.get(button.id)));
+						if (press instanceof HLButtonTextured button) {
+							chapters.get(button.id).getPageScreen(0, book, chapters.get(button.id));
 						}
 					});
 			buttonList.add(tab);
@@ -140,8 +139,8 @@ public class TestGuiGuideTitlePage extends Screen {
 		graphics.renderFakeItem(icon, left + guiWidth - 48, top + guiHeight - 230);
 		matrixStack.popPose();
 
-		for (GuiButtonTextured element : buttonList) {
-			if (element instanceof TestTomeCategoryTab tab) {
+		for (HLButtonTextured element : buttonList) {
+			if (element instanceof HLTomeCategoryTab tab) {
 				RenderSystem.setShaderColor(tab.color.getRed() / 255, tab.color.getGreen() / 255,
 						tab.color.getBlue() / 255, 1.0F);
 				element.render(graphics, mouseX, mouseY, partialTicks);
@@ -172,5 +171,10 @@ public class TestGuiGuideTitlePage extends Screen {
 		this.dragLeftRight += dragLeftRight / 2;
 		this.dragUpDown -= dragUpDown / 2;
 		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
+	}
+	
+	public static void openScreenViaItem(int pNum, BookCodeModel pBook, BookChapterTemplate pChapterTemplate) {
+		Minecraft mc = Minecraft.getInstance();
+		mc.setScreen(new HLGuiGuideTitlePage(pBook));
 	}
 }

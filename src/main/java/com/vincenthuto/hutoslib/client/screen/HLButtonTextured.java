@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class GuiButtonTextured extends Button {
+public class HLButtonTextured extends Button {
 
 	public final ResourceLocation texture;
 	public int id, posX, posY, buttonWidth, buttonHeight, u, v, adjV, newV;
@@ -17,7 +17,7 @@ public class GuiButtonTextured extends Button {
 	public Button.OnPress action;
 	public Component text;
 
-	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
+	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Button.OnPress actionIn) {
 		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, Component.literal(""), actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
@@ -36,7 +36,7 @@ public class GuiButtonTextured extends Button {
 
 	}
 
-	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
+	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Component text, Button.OnPress actionIn) {
 		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
@@ -69,13 +69,13 @@ public class GuiButtonTextured extends Button {
 	 * @param actionIn       On Pressed Action
 	 */
 
-	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
+	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, Button.OnPress actionIn) {
 		this(texIn, idIn, posXIn, posYIn, buttonWidthIn, buttonHeightIn, uIn, vIn, false, actionIn);
 
 	}
 
-	public GuiButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
+	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, Component text, Button.OnPress actionIn) {
 		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;

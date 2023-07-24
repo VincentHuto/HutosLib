@@ -1,4 +1,4 @@
-package com.vincenthuto.hutoslib.client.screen.guide;
+package com.vincenthuto.hutoslib.client.screen;
 
 import javax.annotation.Nullable;
 

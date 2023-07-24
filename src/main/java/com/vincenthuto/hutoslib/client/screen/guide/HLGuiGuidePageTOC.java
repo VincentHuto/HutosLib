@@ -2,14 +2,14 @@ package com.vincenthuto.hutoslib.client.screen.guide;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
-import com.vincenthuto.hutoslib.client.screen.GuiButtonTextured;
+import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
+import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
+import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.client.screen.guide.GuiButtonBookArrow.ArrowDirection;
 import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookPageTemplate;
@@ -22,8 +22,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class TestGuiGuidePageTOC extends Screen {
-	GuiButtonTextured buttonTOC;
+public class HLGuiGuidePageTOC extends Screen {
+	HLButtonTextured buttonTOC;
 	protected final ResourceLocation texture = HLLocHelper.guiPrefix("page.png");
 	double xDragPos = 0;
 	double yDragPos = 0;
@@ -32,15 +32,15 @@ public class TestGuiGuidePageTOC extends Screen {
 	protected int left;
 	protected int top;
 	public int guiHeight = 228, guiWidth = 174;
-	GuiButtonTextured buttonTitle, buttonCloseTab;
+	HLButtonTextured buttonTitle, buttonCloseTab;
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
-	GuiButtonBookArrow arrowF, arrowB;
-	public List<GuiButtonTextured> pageButtons = new ArrayList<>();
+	HLButtonArrow arrowF, arrowB;
+	public List<HLButtonTextured> pageButtons = new ArrayList<>();
 	private BookChapterTemplate chapterTemplate;
 	protected Minecraft mc = Minecraft.getInstance();
 	private BookCodeModel book;
 
-	public TestGuiGuidePageTOC(BookCodeModel book, BookChapterTemplate chapterTemplate) {
+	public HLGuiGuidePageTOC(BookCodeModel book, BookChapterTemplate chapterTemplate) {
 		super(Component.literal(chapterTemplate.getTitle()));
 		this.chapterTemplate = chapterTemplate;
 		this.book = book;
@@ -59,34 +59,34 @@ public class TestGuiGuidePageTOC extends Screen {
 		Collections.sort(pageButtons, (obj1, obj2) -> Integer.compare(obj1.getId(), obj2.getId()));
 
 		for (int i = 0; i < chapterTemplate.getPages().size(); i++) {
-			pageButtons.add(new GuiButtonTextured(chapterTemplate.getTextureLocation(), i, sideLoc - (guiWidth - 5),
+			pageButtons.add(new HLButtonTextured(chapterTemplate.getTextureLocation(), i, sideLoc - (guiWidth - 5),
 					(verticalLoc - 210) + ((i) * 15), 163, 14, 5, 228, (press) -> {
-						if (press instanceof GuiButtonTextured button) {
-							mc.setScreen(chapterTemplate.getPages().get(button.getId()).getPageScreen(button.getId(),
-									book, chapterTemplate));
+						if (press instanceof HLButtonTextured button) {
+							chapterTemplate.getPages().get(button.getId()).getPageScreen(button.getId(), book,
+									chapterTemplate);
 						}
 					}));
 		}
 
-		for (GuiButtonTextured pageButton : pageButtons) {
+		for (HLButtonTextured pageButton : pageButtons) {
 			this.addRenderableWidget(pageButton);
 		}
-		this.addRenderableWidget(arrowF = new GuiButtonBookArrow(ArrowDirection.FORWARD, ARROWF, left + guiWidth - 18,
+		this.addRenderableWidget(arrowF = new HLButtonArrow(ArrowDirection.FORWARD, ARROWF, left + guiWidth - 18,
 				top + guiHeight - 7, (press) -> {
-					mc.setScreen(chapterTemplate.getPages().get(0).getPageScreen(0, book, chapterTemplate));
+					chapterTemplate.getPages().get(0).getPageScreen(0, book, chapterTemplate);
 				}));
 
 		this.addRenderableWidget(
-				arrowB = new GuiButtonBookArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
-					mc.setScreen(book.getTemplate().getPageScreen(0, book, null));
+				arrowB = new HLButtonArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
+					book.getTemplate().getPageScreen(0, book, null);
 				}));
 
-		this.addRenderableWidget(buttonTitle = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0, (press) -> {
-					mc.setScreen(book.getTemplate().getPageScreen(0, book, null));
+		this.addRenderableWidget(buttonTitle = new HLButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"), TITLEBUTTON,
+				left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0, (press) -> {
+					book.getTemplate().getPageScreen(0, book, null);
 				}));
 
-		this.addRenderableWidget(buttonCloseTab = new GuiButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
+		this.addRenderableWidget(buttonCloseTab = new HLButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
 				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32, (press) -> {
 					this.onClose();
 				}));
@@ -111,10 +111,6 @@ public class TestGuiGuidePageTOC extends Screen {
 					Component.literal(((BookPageTemplate) chapterTemplate.getPages().get(i)).getTitle()),
 					pageButtons.get(i).posX + 30, pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
-//		for (BookPageTemplate p : chapterTemplate.getPages()) {
-//			System.out.println(p.getClass());
-//
-//		}
 		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
 
 		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
@@ -156,5 +152,11 @@ public class TestGuiGuidePageTOC extends Screen {
 		this.dragLeftRight += dragLeftRight / 2;
 		this.dragUpDown -= dragUpDown / 2;
 		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
+	}
+
+	public static void openScreenViaItem(int pNum, BookCodeModel pBook, BookChapterTemplate pChapterTemplate) {
+		Minecraft mc = Minecraft.getInstance();
+		mc.setScreen(new HLGuiGuidePageTOC(pBook, pChapterTemplate));
+
 	}
 }

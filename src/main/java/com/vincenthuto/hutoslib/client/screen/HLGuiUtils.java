@@ -35,7 +35,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class HLGuiUtils {
 
 	private static void drawLine(PoseStack stack, double x1, double y1, double x2, double y2, ParticleColor color,

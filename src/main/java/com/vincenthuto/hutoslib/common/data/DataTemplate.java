@@ -63,5 +63,5 @@ public abstract class DataTemplate {
 
 	public abstract void setChapter(String chapterName);
 	
-	public abstract Screen getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter);
+	public abstract void getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter);
 }

@@ -1,7 +1,7 @@
 package com.vincenthuto.hutoslib.common.item;
 
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.screen.guide.TestGuiGuideTitlePage;
+import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookManager;
 
@@ -23,11 +23,9 @@ public class ItemHLGuideBook extends ItemGuideBook {
 		BookCodeModel book = BookManager.getBookByTitle(HutosLib.rloc("guide"));
 
 		if (book != null) {
-			if (lvl.isClientSide()) {
-				TestGuiGuideTitlePage guide = new TestGuiGuideTitlePage(book);
-				guide.openScreenViaItem(book);
+			if (lvl.isClientSide) { 
+				HLGuiGuideTitlePage.openScreenViaItem(book);
 			}
-
 		}
 		return super.use(lvl, p_41433_, p_41434_);
 	}

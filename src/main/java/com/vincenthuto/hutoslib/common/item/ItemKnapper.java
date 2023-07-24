@@ -5,20 +5,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Sets;
-import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.screen.guide.TestGuiGuideTitlePage;
-import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
-import com.vincenthuto.hutoslib.common.data.book.BookManager;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;

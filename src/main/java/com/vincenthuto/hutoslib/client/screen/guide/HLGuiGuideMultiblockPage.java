@@ -3,16 +3,18 @@ package com.vincenthuto.hutoslib.client.screen.guide;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLClientUtils;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
+import com.vincenthuto.hutoslib.client.screen.ScreenBlockTintGetter;
+import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
+import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.math.MultiblockPattern;
 import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
+public class HLGuiGuideMultiblockPage extends HLGuiGuidePage {
 
 	double xDragPos = 0;
 	double yDragPos = 0;
@@ -20,41 +22,9 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 	private double dragUpDown = 0;
 	private MultiblockPattern pattern;
 
-	public GuiGuideMultiblockPage(int pageNumIn, String catagoryIn, MultiblockPattern pattern) {
-		super(pageNumIn, catagoryIn);
-		this.pattern = pattern;
-	}
-
-	public GuiGuideMultiblockPage(int pageNumIn, String categoryIn, String titleIn, ItemStack iconIn,
+	public HLGuiGuideMultiblockPage(int pageNum, BookCodeModel book, BookChapterTemplate chapter,
 			MultiblockPattern pattern) {
-		super(pageNumIn, categoryIn, titleIn, "", iconIn);
-		this.pattern = pattern;
-
-	}
-
-	public GuiGuideMultiblockPage(int pageNumIn, String catagoryIn, String titleIn, MultiblockPattern pattern) {
-		super(pageNumIn, catagoryIn, titleIn, "", "");
-		this.pattern = pattern;
-
-	}
-
-	public GuiGuideMultiblockPage(int pageNumIn, String catagoryIn, String titleIn, String textIn,
-			MultiblockPattern pattern) {
-		super(pageNumIn, catagoryIn, titleIn, "", textIn);
-		this.pattern = pattern;
-
-	}
-
-	public GuiGuideMultiblockPage(int pageNumIn, String categoryIn, String titleIn, String subtitleIn, String textIn,
-			ItemStack iconIn, MultiblockPattern pattern) {
-		super(pageNumIn, categoryIn, titleIn, subtitleIn, iconIn, textIn);
-		this.pattern = pattern;
-
-	}
-
-	public GuiGuideMultiblockPage(int pageNumIn, String catagoryIn, String titleIn, String subtitleIn, String textIn,
-			MultiblockPattern pattern) {
-		super(pageNumIn, catagoryIn, titleIn, subtitleIn, textIn);
+		super(pageNum, book, chapter);
 		this.pattern = pattern;
 
 	}
@@ -84,8 +54,6 @@ public abstract class GuiGuideMultiblockPage extends GuiGuidePage {
 							I18n.get(block.getDescriptionId()) + ": " + pattern.getBlockCount(false).get(block)),
 					(int) (left - guiWidth + 180), (int) (top + guiHeight - 140) - line * -10, 160, 0xffffff, true);
 			line++;
-			// System.out.println(I18n.get(block.getDescriptionId()) + ": " +
-			// pattern.getBlockCount(false).get(block));
 		}
 
 		PoseStack matrices = graphics.pose();

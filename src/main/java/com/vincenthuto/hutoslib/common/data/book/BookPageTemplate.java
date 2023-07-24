@@ -9,7 +9,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
-import com.vincenthuto.hutoslib.client.screen.guide.TestGuiGuidePage;
+import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuidePage;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
 import net.minecraft.client.gui.screens.Screen;
@@ -158,7 +158,7 @@ public class BookPageTemplate extends DataTemplate {
 	}
 
 	@Override
-	public Screen getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
-		return new TestGuiGuidePage(pageNum, book, chapter);
+	public void getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
+		  HLGuiGuidePage.openScreenViaItem(pageNum, book, chapter);
 	}
 }

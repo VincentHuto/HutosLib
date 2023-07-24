@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.common.data.book;
 import com.google.gson.JsonDeserializer;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
-import com.vincenthuto.hutoslib.client.screen.guide.TestGuiGuideTitlePage;
+import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
 
 import net.minecraft.client.gui.Font;
@@ -141,8 +141,8 @@ public class BookTemplate extends DataTemplate {
 	}
 
 	@Override
-	public Screen getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
-		return new TestGuiGuideTitlePage(book);
+	public void getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
+		HLGuiGuideTitlePage.openScreenViaItem(pageNum, book, chapter);
 	}
 
-}
+}	

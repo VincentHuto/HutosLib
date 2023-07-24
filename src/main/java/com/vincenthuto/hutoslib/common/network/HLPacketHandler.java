@@ -22,7 +22,7 @@ public class HLPacketHandler {
 			.networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
 	public static void registerChannels() {
-
+//
 		MAINCHANNEL.registerMessage(networkID++, PacketSyncBookData.class,
 				PacketSyncBookData::encode, PacketSyncBookData::decode,
 				PacketSyncBookData::handle);
