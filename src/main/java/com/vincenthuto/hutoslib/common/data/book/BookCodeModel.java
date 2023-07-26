@@ -10,12 +10,11 @@ import net.minecraft.resources.ResourceLocation;
 public class BookCodeModel {
 	ResourceLocation resourceLocation;
 	BookTemplate template;
-	List<BookChapterTemplate> chapters;
+	List<ChapterTemplate> chapters;
 
-	public BookCodeModel(ResourceLocation resourceLocation, BookTemplate template, List<BookChapterTemplate> chapters) {
+	public BookCodeModel(ResourceLocation resourceLocation, BookTemplate template) {
 		this.resourceLocation = resourceLocation;
 		this.template = template;
-		this.chapters = chapters;
 	}
 
 	public BookTemplate getTemplate() {
@@ -26,13 +25,14 @@ public class BookCodeModel {
 		this.template = template;
 	}
 
-	public List<BookChapterTemplate> getChapters() {
+	public List<ChapterTemplate> getChapters() {
 		return chapters;
 	}
 
-	public void setChapters(List<BookChapterTemplate> chapters) {
+	public void setChapters(List<ChapterTemplate> chapters) {
 		this.chapters = chapters;
 	}
+
 
 	public ResourceLocation getResourceLocation() {
 		return resourceLocation;
@@ -45,7 +45,7 @@ public class BookCodeModel {
 	public int getTotalPages() {
 		int count = 0;
 		if (chapters != null) {
-			for (BookChapterTemplate chapter : chapters) {
+			for (ChapterTemplate chapter : chapters) {
 				if (chapter.getPages() != null) {
 					for (DataTemplate page : chapter.getPages()) {
 						count++;
@@ -57,12 +57,12 @@ public class BookCodeModel {
 		return count;
 	}
 
+
 	@Override
 	public String toString() {
 		return "Book Title: " + resourceLocation.getPath() + ", Book Name: " + template.getTitle() + " it has "
 				+ chapters.size() + " Chapters, and " + getTotalPages() + " pages.";
 	}
-
 	public void encodeToBuf(FriendlyByteBuf buf) {
 		// Write Book location
 		buf.writeResourceLocation(resourceLocation);
@@ -74,7 +74,6 @@ public class BookCodeModel {
 		buf.writeUtf(template.subtitle);
 		buf.writeUtf(template.text);
 		buf.writeUtf(template.icon);
-		
 
 	}
 

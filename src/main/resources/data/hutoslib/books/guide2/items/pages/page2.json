@@ -1,6 +1,6 @@
 {
   "type": "hutoslib:page",
-  "ordinality": 1,
+  "ordinality": 2,
   "texture": "hutoslib:textures/gui/guide/page.png",
   "title": "Intro",
   "subtitle": "What even is this?",

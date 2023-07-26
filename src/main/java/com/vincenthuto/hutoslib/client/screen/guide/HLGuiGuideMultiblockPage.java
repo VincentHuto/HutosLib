@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLClientUtils;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.client.screen.ScreenBlockTintGetter;
-import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import com.vincenthuto.hutoslib.math.MultiblockPattern;
 import com.vincenthuto.hutoslib.math.Vector3;
 
@@ -22,7 +22,7 @@ public class HLGuiGuideMultiblockPage extends HLGuiGuidePage {
 	private double dragUpDown = 0;
 	private MultiblockPattern pattern;
 
-	public HLGuiGuideMultiblockPage(int pageNum, BookCodeModel book, BookChapterTemplate chapter,
+	public HLGuiGuideMultiblockPage(int pageNum, BookCodeModel book, ChapterTemplate chapter,
 			MultiblockPattern pattern) {
 		super(pageNum, book, chapter);
 		this.pattern = pattern;

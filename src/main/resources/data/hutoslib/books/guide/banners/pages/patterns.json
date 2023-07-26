@@ -1,5 +1,5 @@
 {
-  "processor": "hutoslib:text_page",
+  "type": "hutoslib:page",
   "ordinality": 2,
   "texture": "hutoslib:textures/gui/guide/page.png",
   "title": "Patterns",

@@ -14,8 +14,7 @@ import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
-import com.vincenthuto.hutoslib.common.data.DataTemplateInit;
-import com.vincenthuto.hutoslib.common.data.ReloadContentsHandler;
+import com.vincenthuto.hutoslib.common.data.shadow.BookPlaceboReloadListener;
 import com.vincenthuto.hutoslib.common.enchant.HLEnchantInit;
 import com.vincenthuto.hutoslib.common.item.HLItemInit;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
@@ -38,7 +37,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -97,7 +95,6 @@ public class HutosLib {
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(this::registerCapability);
 		modEventBus.addListener(this::buildContents);
-		DataTemplateInit.TEMPLATES.register(modEventBus);
 		HLItemInit.ITEMS.register(modEventBus);
 		HLItemInit.SPECIALITEMS.register(modEventBus);
 		HLItemInit.BANNERPATTERNS.register(modEventBus);
@@ -125,11 +122,15 @@ public class HutosLib {
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
+		BookPlaceboReloadListener.INSTANCE.registerToBus();
+
 		HLPacketHandler.registerChannels();
 		BannerExtensionSlot.register();
 		BannerFinderBannerSlot.initFinder();
-		MinecraftForge.EVENT_BUS
-				.addListener((OnDatapackSyncEvent e) -> ReloadContentsHandler.dataReloaded(e.getPlayer()));
+
+//		MinecraftForge.EVENT_BUS
+//				.addListener((OnDatapackSyncEvent e) -> ResourceReloadHandler.dataReloaded(e.getPlayer()));
+
 	}
 
 	private void registerCapability(RegisterCapabilitiesEvent event) {

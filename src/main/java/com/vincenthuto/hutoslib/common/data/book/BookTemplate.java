@@ -1,29 +1,34 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
-import com.google.gson.JsonDeserializer;
-import com.vincenthuto.hutoslib.HutosLib;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
+import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookTemplate extends DataTemplate {
+
+	public static final Codec<BookTemplate> CODEC = RecordCodecBuilder
+			.create(inst -> inst
+					.group(Codec.STRING.fieldOf("coverLoc").forGetter(BookTemplate::getCoverLoc),
+							Codec.STRING.fieldOf("overlayLoc").forGetter(BookTemplate::getOverlayLoc),
+							Codec.STRING.fieldOf("title").forGetter(BookTemplate::getTitle),
+							Codec.STRING.fieldOf("subtitle").forGetter(BookTemplate::getSubtitle),
+							Codec.STRING.fieldOf("text").forGetter(BookTemplate::getText),
+							Codec.STRING.fieldOf("icon").forGetter(BookTemplate::getIcon))
+					.apply(inst, BookTemplate::new));
+	public static final PSerializer<BookTemplate> SERIALIZER = PSerializer.fromCodec("book", CODEC);
+
 	String title, subtitle, coverLoc, overlayLoc, text, icon;
 
-	public BookTemplate() {
-		super("book", 0);
-	}
-
-	public BookTemplate( String coverLoc, String overlayLoc,String title, String subtitle, String text, String icon) {
-		super("book", 0);
+	public BookTemplate(String coverLoc, String overlayLoc, String title, String subtitle, String text, String icon) {
+		super(0);
 		this.coverLoc = coverLoc;
 		this.overlayLoc = overlayLoc;
 		this.title = title;
@@ -102,47 +107,17 @@ public class BookTemplate extends DataTemplate {
 	}
 
 	@Override
-	public void serializeToJson(FriendlyByteBuf buf) {
-
-		// Write book json
-		buf.writeUtf(getCoverLoc());
-		buf.writeUtf(getOverlayLoc());
-		buf.writeUtf(getTitle());
-		buf.writeUtf(getSubtitle());
-		buf.writeUtf(getText());
-		buf.writeUtf(getIcon());
-	}
-
-	@Override
-	public BookTemplate deserializeFromJson(FriendlyByteBuf buf) {
-		String bookCoverLoc = buf.readUtf();
-		String bookOverlayLoc = buf.readUtf();
-		String bookTitle = buf.readUtf();
-		String bookSubtitle = buf.readUtf();
-		String bookText = buf.readUtf();
-		String bookIcon = buf.readUtf();
-
-		BookTemplate bookTemp = new BookTemplate(bookCoverLoc,
-				bookOverlayLoc,bookTitle, bookSubtitle, bookText, bookIcon);
-
-		return bookTemp;
-	}
-
-	@Override
-	public JsonDeserializer getTypeAdapter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void setChapter(String chapterName) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
+	public void getPageScreen(int pageNum, BookCodeModel book, ChapterTemplate chapter) {
 		HLGuiGuideTitlePage.openScreenViaItem(pageNum, book, chapter);
 	}
 
-}	
+	@Override
+	public PSerializer<? extends DataTemplate> getSerializer() {
+		return SERIALIZER;
+	}
+
+}

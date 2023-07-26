@@ -10,9 +10,9 @@ import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
 import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
-import com.vincenthuto.hutoslib.common.data.book.BookPageTemplate;
+import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
+import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,11 +36,11 @@ public class HLGuiGuidePageTOC extends Screen {
 	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
 	HLButtonArrow arrowF, arrowB;
 	public List<HLButtonTextured> pageButtons = new ArrayList<>();
-	private BookChapterTemplate chapterTemplate;
+	private ChapterTemplate chapterTemplate;
 	protected Minecraft mc = Minecraft.getInstance();
 	private BookCodeModel book;
 
-	public HLGuiGuidePageTOC(BookCodeModel book, BookChapterTemplate chapterTemplate) {
+	public HLGuiGuidePageTOC(BookCodeModel book, ChapterTemplate chapterTemplate) {
 		super(Component.literal(chapterTemplate.getTitle()));
 		this.chapterTemplate = chapterTemplate;
 		this.book = book;
@@ -108,7 +108,7 @@ public class HLGuiGuidePageTOC extends Screen {
 			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (i + 1)), pageButtons.get(i).posX + 5,
 					pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 			HLGuiUtils.drawMaxWidthString(font,
-					Component.literal(((BookPageTemplate) chapterTemplate.getPages().get(i)).getTitle()),
+					Component.literal(((PageTemplate) chapterTemplate.getPages().get(i)).getTitle()),
 					pageButtons.get(i).posX + 30, pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
 		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
@@ -154,9 +154,8 @@ public class HLGuiGuidePageTOC extends Screen {
 		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
 	}
 
-	public static void openScreenViaItem(int pNum, BookCodeModel pBook, BookChapterTemplate pChapterTemplate) {
+	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {
 		Minecraft mc = Minecraft.getInstance();
 		mc.setScreen(new HLGuiGuidePageTOC(pBook, pChapterTemplate));
-
 	}
 }

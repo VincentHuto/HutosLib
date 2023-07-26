@@ -1,7 +1,5 @@
 package com.vincenthuto.hutoslib.client.render.block;
 
-import org.joml.Vector3f;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.vincenthuto.hutoslib.client.HLClientUtils;

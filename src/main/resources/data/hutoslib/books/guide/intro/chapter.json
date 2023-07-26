@@ -1,4 +1,5 @@
 {
+  "type": "hutoslib:chapter",
   "ordinality": 0,
   "texture": "hutoslib:textures/gui/guide/page.png",
   "color": "1,1,1",

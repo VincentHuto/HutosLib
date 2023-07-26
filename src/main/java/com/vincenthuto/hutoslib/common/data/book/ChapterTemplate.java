@@ -2,35 +2,49 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import java.util.List;
 
-import com.google.gson.JsonDeserializer;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuidePageTOC;
 import com.vincenthuto.hutoslib.common.data.DataTemplate;
+import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class BookChapterTemplate extends DataTemplate {
+public class ChapterTemplate extends DataTemplate {
+
+	public static final Codec<ChapterTemplate> CODEC = RecordCodecBuilder.create(inst -> inst
+			.group(Codec.INT.fieldOf("ordinality").forGetter(ChapterTemplate::getOrdinality),
+					Codec.STRING.fieldOf("texture").forGetter(ChapterTemplate::getTexture),
+					Codec.STRING.fieldOf("color").forGetter(ChapterTemplate::getColor),
+					Codec.STRING.fieldOf("title").forGetter(ChapterTemplate::getTitle),
+					Codec.STRING.fieldOf("subtitle").forGetter(ChapterTemplate::getSubtitle),
+					Codec.STRING.fieldOf("icon").forGetter(ChapterTemplate::getIcon))
+			.apply(inst, ChapterTemplate::new));
+	public static final PSerializer<ChapterTemplate> SERIALIZER = PSerializer.fromCodec("chapter", CODEC);
 
 	String color, title, subtitle, icon, texture;
+
 	List<DataTemplate> pages;
 
-	public BookChapterTemplate() {
-		super("chapter", 0);
-	}
-
-	public BookChapterTemplate(int ordinality, String texture, String color, String title, String subtitle, String icon,
-			List<DataTemplate> pages) {
-		super("chapter", ordinality);
+	public ChapterTemplate(int ordinality, String texture, String color, String title, String subtitle, String icon) {
+		super(ordinality);
 		this.texture = texture;
 		this.color = color;
 		this.title = title;
 		this.subtitle = subtitle;
 		this.icon = icon;
+	}
+
+	public List<DataTemplate> getPages() {
+		return pages;
+	}
+
+	public void setPages(List<DataTemplate> pages) {
 		this.pages = pages;
 	}
 
@@ -80,14 +94,6 @@ public class BookChapterTemplate extends DataTemplate {
 		return HutosLib.rloc(texture);
 	}
 
-	public List<DataTemplate> getPages() {
-		return pages;
-	}
-
-	public void setPages(List<DataTemplate> pages2) {
-		this.pages = pages2;
-	}
-
 	public String getColor() {
 		return color;
 	}
@@ -120,6 +126,8 @@ public class BookChapterTemplate extends DataTemplate {
 		this.icon = icon;
 	}
 
+
+	@SuppressWarnings("unused")
 	public int getPageCount() {
 		int count = 0;
 		if (getPages() != null) {
@@ -137,43 +145,18 @@ public class BookChapterTemplate extends DataTemplate {
 	}
 
 	@Override
-	public void serializeToJson(FriendlyByteBuf buf) {
-		buf.writeInt(getOrdinality());
-		buf.writeUtf(getTexture());
-		buf.writeUtf(getColor());
-		buf.writeUtf(getTitle());
-		buf.writeUtf(getSubtitle());
-		buf.writeUtf(getIcon());
-	}
-
-	@Override
-	public BookChapterTemplate deserializeFromJson(FriendlyByteBuf buf) {
-		int chapterNum = buf.readInt();
-		String chapterTexture = buf.readUtf();
-		String chapterColor = buf.readUtf();
-		String chapterTitle = buf.readUtf();
-		String chapterSubtitle = buf.readUtf();
-		String chapterIcon = buf.readUtf();
-
-		BookChapterTemplate chapterTemp = new BookChapterTemplate(chapterNum, chapterTexture, chapterColor,
-				chapterTitle, chapterSubtitle, chapterIcon, null);
-		return chapterTemp;
-	}
-
-	@Override
-	public JsonDeserializer getTypeAdapter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void setChapter(String chapterName) {
 
 	}
 
 	@Override
-	public void getPageScreen(int pageNum, BookCodeModel book, BookChapterTemplate chapter) {
-		 HLGuiGuidePageTOC.openScreenViaItem(pageNum, book, chapter);
+	public void getPageScreen(int pageNum, BookCodeModel book, ChapterTemplate chapter) {
+		HLGuiGuidePageTOC.openScreenViaItem(pageNum, book, chapter);
+	}
+
+	@Override
+	public PSerializer<? extends DataTemplate> getSerializer() {
+		return SERIALIZER;
 	}
 
 }

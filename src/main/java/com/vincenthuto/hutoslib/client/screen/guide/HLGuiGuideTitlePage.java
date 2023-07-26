@@ -12,8 +12,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLTextUtils;
 import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.common.data.book.BookChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,7 +42,7 @@ public class HLGuiGuideTitlePage extends Screen {
 
 	public ItemStack icon;
 	HLButtonTextured buttonclose;
-	public List<BookChapterTemplate> chapters = new ArrayList<>();
+	public List<ChapterTemplate> chapters = new ArrayList<>();
 	public List<HLButtonTextured> buttonList = new ArrayList<>();
 	private BookCodeModel book;
 
@@ -66,6 +66,7 @@ public class HLGuiGuideTitlePage extends Screen {
 		this.chapters = book.getChapters();
 		this.texture = book.getTemplate().getCoverImage();
 		this.overlay = book.getTemplate().getOverlayImage();
+
 	}
 
 	public void setBook(BookCodeModel book) {
@@ -173,7 +174,7 @@ public class HLGuiGuideTitlePage extends Screen {
 		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
 	}
 	
-	public static void openScreenViaItem(int pNum, BookCodeModel pBook, BookChapterTemplate pChapterTemplate) {
+	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {
 		Minecraft mc = Minecraft.getInstance();
 		mc.setScreen(new HLGuiGuideTitlePage(pBook));
 	}

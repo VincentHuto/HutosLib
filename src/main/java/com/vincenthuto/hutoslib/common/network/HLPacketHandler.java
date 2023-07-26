@@ -2,9 +2,14 @@ package com.vincenthuto.hutoslib.common.network;
 
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+import com.vincenthuto.hutoslib.common.network.shadow.MessageHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkDirection;
@@ -22,10 +27,10 @@ public class HLPacketHandler {
 			.networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
 	public static void registerChannels() {
-//
-		MAINCHANNEL.registerMessage(networkID++, PacketSyncBookData.class,
-				PacketSyncBookData::encode, PacketSyncBookData::decode,
-				PacketSyncBookData::handle);
+		MessageHelper.registerMessage(MAINCHANNEL, networkID++, new ReloadListenerPacket.Start(""));
+		MessageHelper.registerMessage(MAINCHANNEL, networkID++, new ReloadListenerPacket.Content<>("", null, null));
+		MessageHelper.registerMessage(MAINCHANNEL, networkID++, new ReloadListenerPacket.End(""));
+		
 
 		MAINCHANNEL.registerMessage(networkID++, PacketSpawnLightningParticle.class,
 				PacketSpawnLightningParticle::encode, PacketSpawnLightningParticle::decode,
@@ -82,5 +87,28 @@ public class HLPacketHandler {
 		MAINCHANNEL.send(PacketDistributor.NEAR
 				.with(() -> new PacketDistributor.TargetPoint(entVec.x, entVec.y, entVec.z, radius, dimension)), msg);
 
+	}
+	
+	/**
+	 * Sends a packet to all players who are watching a specific chunk.
+	 */
+	public static void sendToTracking(SimpleChannel channel, Object packet, ServerLevel world, BlockPos pos) {
+		world.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p -> {
+			channel.sendTo(packet, p.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+		});
+	}
+
+	/**
+	 * Sends a packet to a specific player.
+	 */
+	public static void sendTo(SimpleChannel channel, Object packet, Player player) {
+		channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), packet);
+	}
+
+	/**
+	 * Sends a packet to all players on the server.
+	 */
+	public static void sendToAll(SimpleChannel channel, Object packet) {
+		channel.send(PacketDistributor.ALL.noArg(), packet);
 	}
 }
