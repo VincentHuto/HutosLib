@@ -6,10 +6,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.model.HutosLibModelLayersInit;
 import com.vincenthuto.hutoslib.client.model.item.ModelArmBanner;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
 import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
+import com.vincenthuto.hutoslib.common.registry.HutosLibModelLayersInit;
 import com.vincenthuto.hutoslib.math.Quaternion;
 import com.vincenthuto.hutoslib.math.Vector3;
 

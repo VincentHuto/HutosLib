@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "N": {
+      "tag": "forge:rods/wooden"
+    },
+    "P": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "pattern": [
+    "  P",
+    " N ",
+    "N  "
+  ],
+  "result": {
+    "item": "hutoslib:diamond_knapper"
+  },
+  "show_notification": true
+}

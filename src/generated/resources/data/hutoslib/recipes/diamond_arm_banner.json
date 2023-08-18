@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "forge:slimeballs"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    },
+    "X": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "pattern": [
+    "XXB",
+    " XS"
+  ],
+  "result": {
+    "item": "hutoslib:diamond_arm_banner"
+  },
+  "show_notification": true
+}

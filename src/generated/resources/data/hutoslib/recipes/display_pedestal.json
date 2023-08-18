@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "minecraft:chiseled_stone_bricks"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "S": {
+      "item": "minecraft:stone_bricks"
+    }
+  },
+  "pattern": [
+    "CSC",
+    "ESE",
+    "CSC"
+  ],
+  "result": {
+    "item": "hutoslib:display_pedestal"
+  },
+  "show_notification": true
+}

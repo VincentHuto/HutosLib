@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Sets;
+import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;

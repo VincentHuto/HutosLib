@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_obsidian_flakes": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hutoslib:obsidian_flakes"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "hutoslib:obsidian_from_flakes"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_obsidian_flakes",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hutoslib:obsidian_from_flakes"
+    ]
+  },
+  "sends_telemetry_event": false
+}

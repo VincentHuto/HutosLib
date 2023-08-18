@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hutoslib:item/raw_clay_flask"
+  }
+}

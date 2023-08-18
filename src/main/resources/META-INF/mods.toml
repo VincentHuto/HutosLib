@@ -9,7 +9,7 @@ issueTrackerURL="https://github.com/VincentHuto/HutosLib/issues" #optional
 [[mods]] #mandatory
 modId="hutoslib" #mandatory
 
-version="5.1.0" #mandatory
+version="5.2.1" #mandatory
 displayName="HutosLib" #mandatory
 
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
@@ -20,7 +20,7 @@ logoFile="logo.png" #optional
 
 # A text field displayed in the mod UI
 credits='''
-Huto,blusunrize(fluid GUI code)
+Huto,blusunrize(fluid GUI),shadows_of_fire(data sync)
 '''
 
 # A text field displayed in the mod UI

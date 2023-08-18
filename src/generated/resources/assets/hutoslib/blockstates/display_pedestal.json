@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "hutoslib:block/display_pedestal",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "hutoslib:block/display_pedestal"
+    },
+    "facing=south": {
+      "model": "hutoslib:block/display_pedestal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hutoslib:block/display_pedestal",
+      "y": 270
+    }
+  }
+}

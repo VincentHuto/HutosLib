@@ -1,7 +1,7 @@
 package com.vincenthuto.hutoslib.common.block.entity;
 
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.common.block.HLBlockInit;
+import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;

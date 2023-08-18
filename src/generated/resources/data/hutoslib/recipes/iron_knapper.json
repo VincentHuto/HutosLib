@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "N": {
+      "tag": "forge:rods/wooden"
+    },
+    "P": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "pattern": [
+    "  P",
+    " N ",
+    "N  "
+  ],
+  "result": {
+    "item": "hutoslib:iron_knapper"
+  },
+  "show_notification": true
+}
