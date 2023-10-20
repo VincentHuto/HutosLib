@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuidePage;
-import com.vincenthuto.hutoslib.common.data.DataTemplate;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
 import net.minecraft.resources.ResourceLocation;
@@ -12,7 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class PageTemplate extends DataTemplate {
+public class PageTemplate extends BookDataTemplate {
 
 	public static final Codec<PageTemplate> CODEC = RecordCodecBuilder
 			.create(inst -> inst
@@ -117,7 +116,7 @@ public class PageTemplate extends DataTemplate {
 	}
 
 	@Override
-	public PSerializer<? extends DataTemplate> getSerializer() {
+	public PSerializer<? extends BookDataTemplate> getSerializer() {
 		return SERIALIZER;
 	}
 }

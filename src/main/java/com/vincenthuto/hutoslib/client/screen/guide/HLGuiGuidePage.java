@@ -10,8 +10,8 @@ import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
 import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.common.data.DataTemplate;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.common.data.book.BookDataTemplate;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
 
@@ -35,7 +35,7 @@ public class HLGuiGuidePage extends Screen {
 	HLButtonTextured buttonTitle, buttonCloseTab;
 
 	protected Minecraft mc = Minecraft.getInstance();
-	DataTemplate pageTemplate;
+	BookDataTemplate pageTemplate;
 	private BookCodeModel book;
 	private ChapterTemplate chapter;
 
@@ -199,11 +199,11 @@ public class HLGuiGuidePage extends Screen {
 		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
 	}
 
-	public DataTemplate getPageTemplate() {
+	public BookDataTemplate getPageTemplate() {
 		return pageTemplate;
 	}
 
-	public void setPageTemplate(DataTemplate pageTemplate) {
+	public void setPageTemplate(BookDataTemplate pageTemplate) {
 		this.pageTemplate = pageTemplate;
 	}
 

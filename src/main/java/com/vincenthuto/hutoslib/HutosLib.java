@@ -12,8 +12,9 @@ import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
-import com.vincenthuto.hutoslib.common.data.DataGeneration;
-import com.vincenthuto.hutoslib.common.data.shadow.BookPlaceboReloadListener;
+import com.vincenthuto.hutoslib.common.data.HLDataGeneration;
+import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
+import com.vincenthuto.hutoslib.common.data.skilltree.SkillTreePlaceboReloadListener;
 import com.vincenthuto.hutoslib.common.enchant.HLEnchantInit;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
 import com.vincenthuto.hutoslib.common.karma.KarmaEvents;
@@ -87,7 +88,6 @@ public class HutosLib {
 			() -> CreativeModeTab.builder().title(Component.translatable("item_group." + MOD_ID + ".hutoslibtab"))
 					.icon(() -> new ItemStack(HLItemInit.obsidian_flakes.get())).build());
 
-	@SuppressWarnings("deprecation")
 	public HutosLib() {
 		MinecraftForge.EVENT_BUS.register(this);
 		DistExecutor.callWhenOn(Dist.CLIENT, () -> () -> proxy = new ClientProxy());
@@ -96,7 +96,7 @@ public class HutosLib {
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(this::registerCapability);
 		modEventBus.addListener(this::buildContents);
-		modEventBus.addListener(DataGeneration::generate);
+		modEventBus.addListener(HLDataGeneration::generate);
 		HLItemInit.ITEMS.register(modEventBus);
 		HLItemInit.HANDHELDITEMS.register(modEventBus);
 		HLItemInit.SPECIALITEMS.register(modEventBus);
@@ -127,6 +127,8 @@ public class HutosLib {
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
 		BookPlaceboReloadListener.INSTANCE.registerToBus();
+		SkillTreePlaceboReloadListener.INSTANCE.registerToBus();
+
 		HLPacketHandler.registerChannels();
 		BannerExtensionSlot.register();
 		BannerFinderBannerSlot.initFinder();
@@ -149,7 +151,6 @@ public class HutosLib {
 			HLItemInit.ITEMS.getEntries().forEach(i -> output.accept(i.get()));
 			HLItemInit.HANDHELDITEMS.getEntries().forEach(i -> output.accept(i.get()));
 			HLItemInit.SPECIALITEMS.getEntries().forEach(i -> output.accept(i.get()));
-
 			// Blocks
 			HLBlockInit.BLOCKS.getEntries().forEach(i -> output.accept(i.get()));
 			HLBlockInit.MODELEDBLOCKS.getEntries().forEach(i -> output.accept(i.get()));

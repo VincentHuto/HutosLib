@@ -2,8 +2,6 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import java.util.List;
 
-import com.vincenthuto.hutoslib.common.data.DataTemplate;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -47,7 +45,7 @@ public class BookCodeModel {
 		if (chapters != null) {
 			for (ChapterTemplate chapter : chapters) {
 				if (chapter.getPages() != null) {
-					for (DataTemplate page : chapter.getPages()) {
+					for (BookDataTemplate page : chapter.getPages()) {
 						count++;
 					}
 				}

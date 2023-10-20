@@ -7,7 +7,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuidePageTOC;
-import com.vincenthuto.hutoslib.common.data.DataTemplate;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ChapterTemplate extends DataTemplate {
+public class ChapterTemplate extends BookDataTemplate {
 
 	public static final Codec<ChapterTemplate> CODEC = RecordCodecBuilder.create(inst -> inst
 			.group(Codec.INT.fieldOf("ordinality").forGetter(ChapterTemplate::getOrdinality),
@@ -29,7 +28,7 @@ public class ChapterTemplate extends DataTemplate {
 
 	String color, title, subtitle, icon, texture;
 
-	List<DataTemplate> pages;
+	List<BookDataTemplate> pages;
 
 	public ChapterTemplate(int ordinality, String texture, String color, String title, String subtitle, String icon) {
 		super(ordinality);
@@ -40,11 +39,11 @@ public class ChapterTemplate extends DataTemplate {
 		this.icon = icon;
 	}
 
-	public List<DataTemplate> getPages() {
+	public List<BookDataTemplate> getPages() {
 		return pages;
 	}
 
-	public void setPages(List<DataTemplate> pages) {
+	public void setPages(List<BookDataTemplate> pages) {
 		this.pages = pages;
 	}
 
@@ -131,7 +130,7 @@ public class ChapterTemplate extends DataTemplate {
 	public int getPageCount() {
 		int count = 0;
 		if (getPages() != null) {
-			for (DataTemplate page : getPages()) {
+			for (BookDataTemplate page : getPages()) {
 				count++;
 			}
 		}
@@ -155,7 +154,7 @@ public class ChapterTemplate extends DataTemplate {
 	}
 
 	@Override
-	public PSerializer<? extends DataTemplate> getSerializer() {
+	public PSerializer<? extends BookDataTemplate> getSerializer() {
 		return SERIALIZER;
 	}
 

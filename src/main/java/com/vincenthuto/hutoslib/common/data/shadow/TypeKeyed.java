@@ -28,7 +28,7 @@ public interface TypeKeyed<V extends TypeKeyed<V>> extends PSerializable<V> {
 	 * @param <V> This
 	 */
 	public static abstract class TypeKeyedBase<V extends TypeKeyed<V>> implements TypeKeyed<V> {
-		protected ResourceLocation id;
+		public ResourceLocation id;
 
 		@Override
 		public void setId(ResourceLocation id) {
