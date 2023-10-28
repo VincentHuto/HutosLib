@@ -26,38 +26,24 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class CraftingRecipeTemplate extends BookDataTemplate implements IPageTemplate{
+public class CraftingRecipeTemplate extends PageTemplate {
 	private final Supplier<RecipeHelper> recipeHelper = new LazySupplier<>(RecipeHelper::new);
 
 	public static final Codec<CraftingRecipeTemplate> CODEC = RecordCodecBuilder.create(inst -> inst
-			.group(Codec.INT.fieldOf("ordinality").forGetter(CraftingRecipeTemplate::getOrdinality),
-					Codec.STRING.fieldOf("texture").forGetter(CraftingRecipeTemplate::getTexture),
-					Codec.STRING.fieldOf("title").forGetter(CraftingRecipeTemplate::getTitle),
-					Codec.STRING.fieldOf("subtitle").forGetter(CraftingRecipeTemplate::getSubtitle),
-					Codec.STRING.fieldOf("text").forGetter(CraftingRecipeTemplate::getText),
-					Codec.STRING.fieldOf("icon").forGetter(CraftingRecipeTemplate::getIcon))
+			.group(Codec.INT.fieldOf("ordinality").forGetter(PageTemplate::getOrdinality),
+					Codec.STRING.fieldOf("texture").forGetter(PageTemplate::getTexture),
+					Codec.STRING.fieldOf("title").forGetter(PageTemplate::getTitle),
+					Codec.STRING.fieldOf("subtitle").forGetter(PageTemplate::getSubtitle),
+					Codec.STRING.fieldOf("text").forGetter(PageTemplate::getText),
+					Codec.STRING.fieldOf("icon").forGetter(PageTemplate::getIcon))
 			.apply(inst, CraftingRecipeTemplate::new));
-	public static final PSerializer<CraftingRecipeTemplate> SERIALIZER = PSerializer.fromCodec("craftingpage",
-			CODEC);
-
-	String title, chapter, subtitle, text, icon, texture;
-
-	public CraftingRecipeTemplate(int ordinality) {
-		super(0);
-
-	}
+	public static final PSerializer<CraftingRecipeTemplate> SERIALIZER = PSerializer.fromCodec("craftingpage", CODEC);
 
 	public CraftingRecipeTemplate(int ordinality, String texture, String title, String subtitle, String text,
 			String icon) {
-		super(ordinality);
-		this.texture = texture;
-		this.title = title;
-		this.subtitle = subtitle;
-		this.text = text;
-		this.icon = icon;
-
+		super(ordinality, texture, title, subtitle, text, icon);
 	}
-	
+
 	public GhostRecipe getItemRecipe() {
 		ClientLevel world = Objects.requireNonNull(Minecraft.getInstance().level);
 
@@ -139,59 +125,6 @@ public class CraftingRecipeTemplate extends BookDataTemplate implements IPageTem
 		return index;
 	}
 
-	public ResourceLocation getTextureLocation() {
-
-		return HLLocHelper.getBySplit(texture);
-
-	}
-
-	public String getTexture() {
-		return texture;
-	}
-
-	public void setTexture(String texture) {
-		this.texture = texture;
-	}
-
-	public String getChapter() {
-		return chapter;
-	}
-
-	public void setChapter(String chapter) {
-		this.chapter = chapter;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getSubtitle() {
-		return subtitle;
-	}
-
-	public void setSubtitle(String subtitle) {
-		this.subtitle = subtitle;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
 
 	@Override
 	public String toString() {

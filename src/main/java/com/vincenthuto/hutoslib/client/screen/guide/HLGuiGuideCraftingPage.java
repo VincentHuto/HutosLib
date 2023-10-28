@@ -9,7 +9,7 @@ import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.CraftingRecipeTemplate;
-import com.vincenthuto.hutoslib.common.data.book.IPageTemplate;
+import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,22 +36,22 @@ public class HLGuiGuideCraftingPage extends HLGuiGuidePage {
 		top = height / 2 - guiHeight / 2;
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, ((IPageTemplate) pageTemplate).getTextureLocation());
+		RenderSystem.setShaderTexture(0, ((PageTemplate) pageTemplate).getTextureLocation());
 
 		HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (pageNum + 1)), left + guiWidth - 26,
 				top + guiHeight - 15, 50, 0xffffff, true);
 
 		matrixStack.pushPose();
-		graphics.renderFakeItem(((IPageTemplate) pageTemplate).getIconItem(), left + guiWidth - 32,
+		graphics.renderFakeItem(((PageTemplate) pageTemplate).getIconItem(), left + guiWidth - 32,
 				top + guiHeight - 220);
 		matrixStack.popPose();
-		if (!((IPageTemplate) pageTemplate).getTitle().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(((IPageTemplate) pageTemplate).getTitle())),
+		if (!((PageTemplate) pageTemplate).getTitle().isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(((PageTemplate) pageTemplate).getTitle())),
 					left - guiWidth + 180, top + guiHeight - 220, 165, 0xffffff, true);
 		}
-		if (!((IPageTemplate) pageTemplate).getSubtitle().isEmpty()) {
+		if (!((PageTemplate) pageTemplate).getSubtitle().isEmpty()) {
 			HLGuiUtils.drawMaxWidthString(font,
-					Component.literal(I18n.get(((IPageTemplate) pageTemplate).getSubtitle())), left - guiWidth + 180,
+					Component.literal(I18n.get(((PageTemplate) pageTemplate).getSubtitle())), left - guiWidth + 180,
 					top + guiHeight - 210, 165, 0xffffff, true);
 		}
 
@@ -73,9 +73,9 @@ public class HLGuiGuideCraftingPage extends HLGuiGuidePage {
 		if ((mouseX >= left + guiWidth - 32 && mouseX <= left + guiWidth - 10)) {
 			if (mouseY >= top + guiHeight - 220 && mouseY <= top + guiHeight - 200) {
 				List<Component> text = new ArrayList<>();
-				if (!((IPageTemplate) pageTemplate).getIconItem().isEmpty()) {
+				if (!((PageTemplate) pageTemplate).getIconItem().isEmpty()) {
 					text.add(Component
-							.literal(I18n.get(((IPageTemplate) pageTemplate).getIconItem().getHoverName().getString())));
+							.literal(I18n.get(((PageTemplate) pageTemplate).getIconItem().getHoverName().getString())));
 					graphics.renderComponentTooltip(font, text, left + guiWidth - 32, top + guiHeight - 220);
 				}
 			}

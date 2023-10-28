@@ -12,7 +12,7 @@ import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
-import com.vincenthuto.hutoslib.common.data.book.IPageTemplate;
+import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -108,7 +108,7 @@ public class HLGuiGuidePageTOC extends Screen {
 			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (i + 1)), pageButtons.get(i).posX + 5,
 					pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 			HLGuiUtils.drawMaxWidthString(font,
-					Component.literal(((IPageTemplate) chapterTemplate.getPages().get(i)).getTitle()),
+					Component.literal(((PageTemplate) chapterTemplate.getPages().get(i)).getTitle()),
 					pageButtons.get(i).posX + 30, pageButtons.get(i).posY + 2, 150, 0xffffff, true);
 		}
 		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
