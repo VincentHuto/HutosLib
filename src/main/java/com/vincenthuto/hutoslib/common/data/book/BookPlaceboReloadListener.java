@@ -47,6 +47,8 @@ public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDat
 		this.registerSerializer(HutosLib.rloc("book"), BookTemplate.SERIALIZER);
 		this.registerSerializer(HutosLib.rloc("chapter"), ChapterTemplate.SERIALIZER);
 		this.registerSerializer(HutosLib.rloc("page"), PageTemplate.SERIALIZER);
+		this.registerSerializer(HutosLib.rloc("craftingrecipe"), CraftingRecipeTemplate.SERIALIZER);
+
 	}
 
 	public Map<ResourceLocation, BookDataTemplate> getTypeMap() {

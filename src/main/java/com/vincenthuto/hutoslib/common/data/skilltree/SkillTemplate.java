@@ -1,7 +1,6 @@
 package com.vincenthuto.hutoslib.common.data.skilltree;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -1,7 +1,7 @@
 package com.vincenthuto.hutoslib.common.item;
 
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.screen.skillttree.HLSkillTree;
+import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
 
@@ -25,7 +25,9 @@ public class ItemHLGuideBook extends ItemGuideBook {
 		if (test != null) {
 			if (lvl.isClientSide) {
 				if(book != null) {
-					HLSkillTree.openScreenViaItem();
+					HLGuiGuideTitlePage.openScreenViaItem(book);
+					//HLSkillTree.openScreenViaItem();
+
 				}
 			}
 		}

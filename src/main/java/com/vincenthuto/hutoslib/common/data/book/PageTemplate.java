@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class PageTemplate extends BookDataTemplate {
+public class PageTemplate extends BookDataTemplate implements IPageTemplate{
 
 	public static final Codec<PageTemplate> CODEC = RecordCodecBuilder
 			.create(inst -> inst
