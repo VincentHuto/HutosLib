@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.player.Player;
 
-public class RenderShapes {
+public class HLRenderShapes {
 	public static double getSpeed(Player e) {
 		Vector3 lastPos = new Vector3(e.xOld, e.yOld, e.zOld);
 		Vector3 vertex = new Vector3(e.getX(), e.getY(), e.getZ());
