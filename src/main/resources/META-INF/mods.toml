@@ -9,7 +9,7 @@ issueTrackerURL="https://github.com/VincentHuto/HutosLib/issues" #optional
 [[mods]] #mandatory
 modId="hutoslib" #mandatory
 
-version="5.2.1" #mandatory
+version="5.2.3" #mandatory
 displayName="HutosLib" #mandatory
 
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/

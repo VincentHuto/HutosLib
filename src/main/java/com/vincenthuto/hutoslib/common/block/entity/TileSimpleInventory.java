@@ -49,14 +49,14 @@ public abstract class TileSimpleInventory extends TileMod {
 	}
 
 	@Override
-	public void readPacketNBT(CompoundTag tag) {
+	public void load(CompoundTag tag) {
 		NonNullList<ItemStack> tmp = NonNullList.withSize(inventorySize(), ItemStack.EMPTY);
 		ContainerHelper.loadAllItems(tag, tmp);
 		copyToInv(tmp, itemHandler);
 	}
 
 	@Override
-	public void writePacketNBT(CompoundTag tag) {
+	public void saveAdditional(CompoundTag tag) {
 		ContainerHelper.saveAllItems(tag, copyFromInv(itemHandler));
 	}
 }
