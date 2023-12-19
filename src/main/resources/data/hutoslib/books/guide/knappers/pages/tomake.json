@@ -1,0 +1,9 @@
+{
+  "type": "hutoslib:craftingrecipe",
+  "ordinality": 2,
+  "texture": "hutoslib:textures/gui/guide/crafting_page.png",
+  "title": "AGGGGGG",
+  "subtitle": "Smash all the things!",
+  "text": "This only loads with PageTemplate.SERIALIZER",
+  "icon": "hutoslib:iron_knapper"
+}

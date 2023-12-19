@@ -1,0 +1,8 @@
+{
+    "sources": [
+        {
+            "type": "single",
+            "resource": "hutoslib:gui/empty_banner_slot_background"
+        }
+    ]
+}
