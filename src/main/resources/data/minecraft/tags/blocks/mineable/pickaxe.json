@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+	"hutoslib:display_pedestal",
+	"hutoslib:display_glass"
+  ]
+}

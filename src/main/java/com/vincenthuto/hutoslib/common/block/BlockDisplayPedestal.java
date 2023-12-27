@@ -11,8 +11,11 @@ import com.vincenthuto.hutoslib.common.network.VanillaPacketDispatcher;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -30,6 +33,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -97,6 +101,21 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 	public BlockState rotate(BlockState state, Rotation rot) {
 		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
+	
+	@Override
+	public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos worldPosition, Player player, boolean willHarvest,
+			FluidState fluid) {
+		DisplayPedestalBlockEntity te = (DisplayPedestalBlockEntity) level.getBlockEntity(worldPosition);
+		if (!te.inventory.isEmpty()) {
+			double d0 = (double) Mth.randomBetween(level.random, -0.2F, 0.2F);
+			double d1 = (double) Mth.randomBetween(level.random, -0.2F, 0.2F);
+			double d2 = (double) Mth.randomBetween(level.random, -0.2F, 0.2F);
+			level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1,
+					worldPosition.getZ(), te.inventory.get(0), d0, d1, d2));
+		}
+		
+		return super.onDestroyedByPlayer(state, level, worldPosition, player, willHarvest, fluid);
+	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
@@ -106,7 +125,7 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 		ItemStack stack = player.getItemInHand(hand);
 
 		if (player.isShiftKeyDown()) {
-			HLInvHelper.withdrawFromInventory(te,player);
+			HLInvHelper.withdrawFromInventory(te, player);
 			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(te);
 			return InteractionResult.SUCCESS;
 		} else if (!stack.isEmpty()) {
