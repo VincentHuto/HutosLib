@@ -60,7 +60,6 @@ public class HutosLib {
 
 	public static final String MOD_ID = "hutoslib";
 
-
 	public static IProxy proxy = new IProxy() {
 	};
 
