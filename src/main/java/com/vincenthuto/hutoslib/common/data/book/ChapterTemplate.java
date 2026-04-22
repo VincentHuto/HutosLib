@@ -12,7 +12,7 @@ import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class ChapterTemplate extends BookDataTemplate {
 

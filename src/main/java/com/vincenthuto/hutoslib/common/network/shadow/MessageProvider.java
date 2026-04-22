@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.common.network.shadow;
 import java.util.function.Supplier;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 /**
  * A Message Provider encapsulates the default components that make up a SimpleChannel message.

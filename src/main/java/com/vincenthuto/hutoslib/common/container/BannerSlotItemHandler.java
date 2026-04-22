@@ -6,7 +6,7 @@ import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class BannerSlotItemHandler implements IBannerSlot {
 	protected final IBannerContainer owner;

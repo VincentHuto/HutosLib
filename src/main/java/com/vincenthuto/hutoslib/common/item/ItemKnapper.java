@@ -19,8 +19,8 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.ToolAction;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class ItemKnapper extends DiggerItem {
 	public static final ToolAction KNAPPER_DIG = ToolAction.get("knapper_dig");
@@ -37,7 +37,7 @@ public class ItemKnapper extends DiggerItem {
 	}
 
 	@Override
-	public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
+	public boolean canPerformAction(ItemStack stack, net.neoforged.neoforge.common.ToolAction toolAction) {
 		return DEFAULT_KNAPPER_ACTIONS.contains(toolAction);
 	}
 

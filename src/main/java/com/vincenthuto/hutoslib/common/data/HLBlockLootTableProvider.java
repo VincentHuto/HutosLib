@@ -8,7 +8,7 @@ import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class HLBlockLootTableProvider extends VanillaBlockLoot {
 

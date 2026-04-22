@@ -7,7 +7,7 @@ import com.vincenthuto.hutoslib.common.karma.KarmaProvider;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public class PacketKarmaServer {
 	public static PacketKarmaServer decode(final FriendlyByteBuf packetBuffer) {

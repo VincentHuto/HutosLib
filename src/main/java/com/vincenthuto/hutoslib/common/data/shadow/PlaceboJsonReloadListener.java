@@ -25,13 +25,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.ICondition.IContext;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
+import net.neoforged.neoforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.crafting.conditions.ICondition.IContext;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 /**
  * A Placebo JSON Reload Listener is a big pile of boilerplate for registering
@@ -293,7 +293,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	public void registerToBus() {
 		if (this.synced)
 			registerForSync(this);
-		MinecraftForge.EVENT_BUS.addListener(this::addReloader);
+		NeoForge.EVENT_BUS.addListener(this::addReloader);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -328,7 +328,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 				throw new RuntimeException("Attempted to register the JSON Reload Listener for syncing " + listener.path
 						+ " but one already exists!");
 			SYNC_REGISTRY.put(listener.path, listener);
-			MinecraftForge.EVENT_BUS.addListener(listener::sync);
+			NeoForge.EVENT_BUS.addListener(listener::sync);
 		}
 	}
 

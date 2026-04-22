@@ -32,7 +32,7 @@
 //		super(1024, 2560);
 //		minecraft = Minecraft.getInstance();
 //		setupEntries();
-//		// MinecraftForge.EVENT_BUS.post(new SetupMalumCodexEntriesEvent());
+//		// NeoForge.EVENT_BUS.post(new SetupMalumCodexEntriesEvent());
 //		setupObjects();
 //	}
 //

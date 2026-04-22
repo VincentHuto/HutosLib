@@ -5,8 +5,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.fml.loading.StringUtils;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.loading.StringUtils;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class HLTextUtils {
 
