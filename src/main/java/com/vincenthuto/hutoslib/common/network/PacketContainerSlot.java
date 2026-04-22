@@ -5,6 +5,7 @@ import com.vincenthuto.hutoslib.HutosLib;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class PacketContainerSlot implements CustomPacketPayload {
@@ -25,7 +26,12 @@ public void encode(FriendlyByteBuf buf) {
 }
 
 public static void handle(PacketContainerSlot msg, IPayloadContext ctx) {
-ctx.sender().containerMenu.sendAllDataToRemote();
+ctx.enqueueWork(() -> {
+ServerPlayer sender = ctx.sender();
+if (sender != null) {
+sender.containerMenu.sendAllDataToRemote();
+}
+});
 }
 
 @Override

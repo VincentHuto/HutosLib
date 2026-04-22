@@ -26,7 +26,7 @@ public static final ToolAction KNAPPER_DIG = ToolAction.get("knapper_dig");
 public static final Set<ToolAction> DEFAULT_KNAPPER_ACTIONS = Stream.of(KNAPPER_DIG)
 .collect(Collectors.toCollection(Sets::newIdentityHashSet));
 public static TagKey<Block> EFFECTIVE_ON = TagKey.create(Registries.BLOCK,
-new ResourceLocation("mineable/knapper"));
+ResourceLocation.fromNamespaceAndPath("minecraft", "mineable/knapper"));
 
 private float speed;
 

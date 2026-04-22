@@ -1,7 +1,6 @@
 package com.vincenthuto.hutoslib.client.render.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.model.item.ModelArmBanner;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
@@ -14,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -26,6 +24,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
@@ -73,15 +72,15 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 					matrixStack.pushPose();
 					matrixStack.scale(1.0F, -1.0F, -1.0F);
 					Material material = flag ? ModelBakery.SHIELD_BASE : ModelBakery.NO_PATTERN_SHIELD;
-					VertexConsumer vertexconsumer = material.sprite().wrap(ItemRenderer.getFoilBufferDirect(buffer,
-							this.modelPauldron.renderType(material.atlasLocation()), true, banner.hasFoil()));
 					if (flag) {
 						matrixStack.mulPose(new Quaternion(Vector3.YN, 90, true).toMoj());
 						matrixStack.mulPose(new Quaternion(Vector3.ZP, 180, true).toMoj());
 						matrixStack.translate(0, 0.3, -0.55);
 						matrixStack.scale(0.5f, 0.5f, 0.5f);
+						DyeColor bannerColor = banner.get(DataComponents.BASE_COLOR);
+						DyeColor baseColor = bannerColor != null ? bannerColor : DyeColor.WHITE;
 						BannerRenderer.renderPatterns(matrixStack, buffer, lightness, OverlayTexture.NO_OVERLAY,
-								this.modelPauldron.plate(), material, false, patterns.layers(), banner.hasFoil());
+								this.modelPauldron.plate(), material, false, baseColor, patterns, banner.hasFoil());
 					}
 					matrixStack.popPose();
 					matrixStack.popPose();

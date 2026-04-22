@@ -87,7 +87,7 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 			matrixStack.translate(-0.21, 0.02, -0.53);
 			matrixStack.mulPose(new Quaternion(Vector3.ZP, -105f, true).toMoj());
 			matrixStack.mulPose(new Quaternion(Vector3.YP, -90, true).toMoj());
-			modelPauldron.renderToBuffer(matrixStack, vb, combinedLight, OverlayTexture.NO_OVERLAY);
+			modelPauldron.renderToBuffer(matrixStack, vb, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 			matrixStack.popPose();
 
 			boolean flag = stack.get(DataComponents.BANNER_PATTERNS) != null

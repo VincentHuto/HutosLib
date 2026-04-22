@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.client;
 
-import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.event.tick.ClientTickEvent;
 import org.lwjgl.glfw.GLFW;
 
 import com.vincenthuto.hutoslib.HutosLib;

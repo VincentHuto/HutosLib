@@ -7,6 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -28,9 +29,14 @@ public void encode(FriendlyByteBuf buf) {
 }
 
 public static void handle(PacketOpenBanner msg, IPayloadContext ctx) {
-ctx.sender().openMenu(new SimpleMenuProvider(
+ctx.enqueueWork(() -> {
+ServerPlayer sender = ctx.sender();
+if (sender != null) {
+sender.openMenu(new SimpleMenuProvider(
 (i, playerInventory, playerEntity) -> new BannerSlotContainer(i, playerInventory),
 Component.translatable("container.crafting")));
+}
+});
 }
 
 @Override
