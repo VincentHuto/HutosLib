@@ -5,13 +5,11 @@ import java.util.function.Supplier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 
-@SuppressWarnings("deprecation")
 public enum HLModTiers implements Tier {
 
 	WOOD(3, 59, 2.0F, 0.0F, 15, () -> {
@@ -28,21 +26,19 @@ public enum HLModTiers implements Tier {
 		return Ingredient.of(Items.NETHERITE_INGOT);
 	});
 
-	private final int harvestLevel;
 	private final int maxUses;
 	private final float efficiency;
 	private final float attackDamage;
 	private final int enchantability;
-	private final LazyLoadedValue<Ingredient> repairMaterial;
+	private final Supplier<Ingredient> repairMaterial;
 
-	private HLModTiers(int harvestLevelIn, int maxUsesIn, float efficiencyIn, float attackDamageIn,
+	HLModTiers(int harvestLevelIn, int maxUsesIn, float efficiencyIn, float attackDamageIn,
 			int enchantabilityIn, Supplier<Ingredient> repairMaterialIn) {
-		this.harvestLevel = harvestLevelIn;
 		this.maxUses = maxUsesIn;
 		this.efficiency = efficiencyIn;
 		this.attackDamage = attackDamageIn;
 		this.enchantability = enchantabilityIn;
-		this.repairMaterial = new LazyLoadedValue<>(repairMaterialIn);
+		this.repairMaterial = repairMaterialIn;
 	}
 
 	@Override
@@ -53,11 +49,6 @@ public enum HLModTiers implements Tier {
 	@Override
 	public int getEnchantmentValue() {
 		return this.enchantability;
-	}
-
-	@Override
-	public int getLevel() {
-		return this.harvestLevel;
 	}
 
 	@Override

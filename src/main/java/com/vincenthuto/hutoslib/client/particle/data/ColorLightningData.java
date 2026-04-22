@@ -1,53 +1,54 @@
 package com.vincenthuto.hutoslib.client.particle.data;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public class ColorLightningData implements ParticleOptions {
 
-	public static final Codec<ColorLightningData> CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
+	public static final MapCodec<ColorLightningData> CODEC = RecordCodecBuilder.mapCodec(
+			instance -> instance.group(Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
 					Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
 					Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
-					Codec.FLOAT.fieldOf("s").forGetter(d -> d.speed), Codec.INT.fieldOf("a").forGetter(d -> d.maxAge),
+					Codec.FLOAT.fieldOf("s").forGetter(d -> d.speed),
+					Codec.INT.fieldOf("a").forGetter(d -> d.maxAge),
 					Codec.INT.fieldOf("f").forGetter(d -> d.fract),
 					Codec.FLOAT.fieldOf("o").forGetter(d -> d.maxOffset)).apply(instance, ColorLightningData::new));
-	@SuppressWarnings("deprecation")
-	public static final ParticleOptions.Deserializer<ColorLightningData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-		@Override
-		public ColorLightningData fromCommand(ParticleType<ColorLightningData> type, StringReader reader)
-				throws CommandSyntaxException {
-			reader.expect(' ');
-			return new ColorLightningData(type, ParticleColor.deserialize(reader.readString()), reader.readInt(),
-					reader.readInt(), reader.readInt(), reader.readFloat());
-		}
 
-		@Override
-		public ColorLightningData fromNetwork(ParticleType<ColorLightningData> type, FriendlyByteBuf buffer) {
-			return new ColorLightningData(type, ParticleColor.deserialize(buffer.readUtf()), buffer.readInt(),
-					buffer.readInt(), buffer.readInt(), buffer.readFloat());
-		}
-	};
+	public static final StreamCodec<RegistryFriendlyByteBuf, ColorLightningData> STREAM_CODEC =
+			StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, d -> d.color.serialize(),
+					ByteBufCodecs.FLOAT, d -> d.speed,
+					ByteBufCodecs.INT, d -> d.maxAge,
+					ByteBufCodecs.INT, d -> d.fract,
+					ByteBufCodecs.FLOAT, d -> d.maxOffset,
+					(s, sp, a, f, o) -> new ColorLightningData(ParticleColor.deserialize(s), sp, a, f, o));
 
 	private ParticleType<ColorLightningData> type;
 	public ParticleColor color;
 	public float speed;
 	public int maxAge, fract;
-
 	public float maxOffset;
 
 	public ColorLightningData(float r, float g, float b, float s, int a, int f, float o) {
 		this.color = new ParticleColor(r, g, b);
+		this.type = HLParticleInit.lightning_bolt.get();
+		this.speed = s;
+		this.maxAge = a;
+		this.fract = f;
+		this.maxOffset = o;
+	}
+
+	public ColorLightningData(ParticleColor color, float s, int a, int f, float o) {
+		this.color = color;
 		this.type = HLParticleInit.lightning_bolt.get();
 		this.speed = s;
 		this.maxAge = a;
@@ -68,22 +69,6 @@ public class ColorLightningData implements ParticleOptions {
 	@Override
 	public ParticleType<ColorLightningData> getType() {
 		return type;
-	}
-
-	@Override
-	public void writeToNetwork(FriendlyByteBuf packetBuffer) {
-		packetBuffer.writeUtf(color.serialize());
-		packetBuffer.writeFloat(speed);
-		packetBuffer.writeInt(maxAge);
-		packetBuffer.writeInt(fract);
-		packetBuffer.writeFloat(maxOffset);
-
-	}
-
-	@Override
-	public String writeToString() {
-		return BuiltInRegistries.PARTICLE_TYPE.getKey(type).toString() + " " + color.serialize() + " " + speed + " " + maxAge + " " + fract
-				+ " " + maxOffset;
 	}
 
 }

@@ -70,8 +70,7 @@ public class ParticleLightningStorage {
 
 	}
 
-	@Override
-	public void finalize() {
+	public void finish() {
 		if (this.finalized) {
 			return;
 		}

@@ -1,5 +1,6 @@
 package com.vincenthuto.hutoslib.client;
 
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import org.lwjgl.glfw.GLFW;
 
 import com.vincenthuto.hutoslib.HutosLib;
@@ -21,7 +22,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.tick.ClientTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.NEOFORGE)
@@ -68,6 +68,7 @@ if (render instanceof LivingEntityRenderer livingRenderer) {
 livingRenderer.addLayer(new LayerArmBanner<>(livingRenderer));
 }
 }
+
 
 @SubscribeEvent
 public static void constructLayers(EntityRenderersEvent.AddLayers event) {

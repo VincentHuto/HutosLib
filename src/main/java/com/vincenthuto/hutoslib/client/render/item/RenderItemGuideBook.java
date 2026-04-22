@@ -1,7 +1,6 @@
 package com.vincenthuto.hutoslib.client.render.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.item.ItemGuideBook;
@@ -72,10 +71,8 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 			float f5 = Mth.frac(f3 + 0.75F) * 1.6F - 0.3F;
 			this.model.setupAnim(f, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), item.close);
 
-			MultiBufferSource.BufferSource irendertypebuffer$impl = MultiBufferSource
-					.immediate(Tesselator.getInstance().getBuilder());
 			if (item.getTexture() != null) {
-				VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(model.renderType(item.getTexture()));
+				VertexConsumer ivertexbuilder = buffers.getBuffer(model.renderType(item.getTexture()));
 				ms.scale(0.75f, 0.75f, 0.75f);
 				if (transform == ItemDisplayContext.GUI) {
 					ms.translate(0.15, 0.03, 0);
@@ -85,12 +82,11 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 
 				}
 
-				model.renderToBuffer(ms, ivertexbuilder, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+				model.renderToBuffer(ms, ivertexbuilder, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 
-				irendertypebuffer$impl.endBatch();
 				ms.popPose();
 			} else {
-				VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(model.renderType(defaultText));
+				VertexConsumer ivertexbuilder = buffers.getBuffer(model.renderType(defaultText));
 				ms.scale(0.75f, 0.75f, 0.75f);
 				if (transform == ItemDisplayContext.GUI) {
 					ms.translate(0.15, 0.03, 0);
@@ -101,9 +97,8 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 
 				}
 
-				model.renderToBuffer(ms, ivertexbuilder, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+				model.renderToBuffer(ms, ivertexbuilder, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 
-				irendertypebuffer$impl.endBatch();
 				ms.popPose();
 			}
 

@@ -1,4 +1,3 @@
-
 package com.vincenthuto.hutoslib.client.particle;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -25,14 +24,8 @@ public class ParticleLightning extends TextureSheetParticle {
 	private static final ParticleRenderType LIGHTNING_BOLT_RENDER = new ParticleRenderType() {
 
 		@Override
-		public void begin(BufferBuilder bufferBuilder, TextureManager textureManager) {
-			ParticleLightning.beginRenderCommon(bufferBuilder, textureManager);
-		}
-
-		@Override
-		public void end(Tesselator tessellator) {
-			tessellator.end();
-			ParticleLightning.endRenderCommon();
+		public BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
+			return ParticleLightning.beginRenderCommon(tesselator, textureManager);
 		}
 
 		@Override
@@ -42,18 +35,18 @@ public class ParticleLightning extends TextureSheetParticle {
 
 	};
 	@SuppressWarnings("deprecation")
-	private static void beginRenderCommon(BufferBuilder buffer, TextureManager textureManager) {
+	private static BufferBuilder beginRenderCommon(Tesselator tesselator, TextureManager textureManager) {
 		RenderSystem.depthMask(false);
 		RenderSystem.disableCull();
 		RenderSystem.enableBlend();
 		RenderSystem.blendFunc(770, 1);
-	    RenderSystem.setShader(GameRenderer::getParticleShader);
+		RenderSystem.setShader(GameRenderer::getParticleShader);
 		RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-		buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+		return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 	}
 	@SuppressWarnings("deprecation")
 	private static void endRenderCommon() {
-		Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_PARTICLES).restoreLastBlurMipmap();
+		Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES).restoreLastBlurMipmap();
 		// RenderSystem.alphaFunc((int) 516, (float) 0.1f);
 		RenderSystem.disableBlend();
 		RenderSystem.enableCull();
@@ -192,32 +185,27 @@ public class ParticleLightning extends TextureSheetParticle {
 			float maxU = this.getU1();
 			float minV = this.getV0();
 			float maxV = this.getV1();
-			int j = 0xF00000;
-			buffer.vertex(avector3f[3].x, avector3f[3].y, avector3f[3].z).uv(maxU, maxV)
-					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex(avector3f[2].x, avector3f[2].y, avector3f[2].z).uv(maxU, minV)
-					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex(avector3f[0].x, avector3f[0].y, avector3f[0].z).uv(minU, minV)
-					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex(avector3f[1].x, avector3f[1].y, avector3f[1].z).uv(minU, maxV)
-					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex(avector3f[3].x, avector3f[3].y, avector3f[3].z).uv(maxU, maxV)
-					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex(avector3f[2].x, avector3f[2].y, avector3f[2].z).uv(maxU, minV)
-					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex(avector3f[0].x, avector3f[0].y, avector3f[0].z).uv(minU, minV)
-					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-			buffer.vertex(avector3f[1].x, avector3f[1].y, avector3f[1].z).uv(minU, maxV)
-					.color(this.colorR, this.colorG, this.colorB, this.alpha).uv2(j).endVertex();
-
+			int j = 240;
+			buffer.addVertex((float)avector3f[3].x, (float)avector3f[3].y, (float)avector3f[3].z).setUv(maxU, maxV)
+					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
+			buffer.addVertex((float)avector3f[2].x, (float)avector3f[2].y, (float)avector3f[2].z).setUv(maxU, minV)
+					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
+			buffer.addVertex((float)avector3f[0].x, (float)avector3f[0].y, (float)avector3f[0].z).setUv(minU, minV)
+					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
+			buffer.addVertex((float)avector3f[1].x, (float)avector3f[1].y, (float)avector3f[1].z).setUv(minU, maxV)
+					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
+			buffer.addVertex((float)avector3f[3].x, (float)avector3f[3].y, (float)avector3f[3].z).setUv(maxU, maxV)
+					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
+			buffer.addVertex((float)avector3f[2].x, (float)avector3f[2].y, (float)avector3f[2].z).setUv(maxU, minV)
+					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
+			buffer.addVertex((float)avector3f[0].x, (float)avector3f[0].y, (float)avector3f[0].z).setUv(minU, minV)
+					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
+			buffer.addVertex((float)avector3f[1].x, (float)avector3f[1].y, (float)avector3f[1].z).setUv(minU, maxV)
+					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
 			++count;
 		}
 	}
 
-	@Override
-	public boolean shouldCull() {
-		return false;
-	}
 
 	@Override
 	@SuppressWarnings("unused")

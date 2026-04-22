@@ -59,8 +59,8 @@ public class ModelArmBanner<T extends LivingEntity> extends EntityModel<T> {
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
-			float red, float green, float blue, float alpha) {
-		leftShoulder.render(poseStack, buffer, packedLight, packedOverlay);
+			int color) {
+		leftShoulder.render(poseStack, buffer, packedLight, packedOverlay, color);
 	}
 
 	@Override

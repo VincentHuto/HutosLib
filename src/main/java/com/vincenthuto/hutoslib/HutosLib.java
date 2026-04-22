@@ -17,7 +17,6 @@ import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -59,9 +58,9 @@ public static void onRegisterItems(final RegisterEvent event) {
 if (event.getRegistryKey() != Registries.ITEM) {
 return;
 }
-HLBlockInit.BLOCKS.getEntries().stream().map(m -> new Pair<>(m.get(), m.getId())).map(t -> createItemBlock(t))
+HLBlockInit.BLOCKS.getEntries().stream().map(m -> new Pair<Block, ResourceLocation>(m.get(), m.getId())).map(t -> createItemBlock(t))
 .forEach(item -> registerBlockItem(event, item));
-HLBlockInit.MODELEDBLOCKS.getEntries().stream().map(m -> new Pair<>(m.get(), m.getId()))
+HLBlockInit.MODELEDBLOCKS.getEntries().stream().map(m -> new Pair<Block, ResourceLocation>(m.get(), m.getId()))
 .map(t -> createItemBlock(t)).forEach(item -> registerBlockItem(event, item));
 }
 
@@ -97,12 +96,14 @@ HlContainerInit.RECIPESERIALIZERS.register(modEventBus);
 HLAttachmentTypes.register(modEventBus);
 }
 
-private void clientSetup(final FMLClientSetupEvent event) {
-BlockEntityRenderers.register(HLBlockEntityInit.display_pedestal.get(), RenderTileDisplayPedestal::new);
-event.enqueueWork(() -> {
-MenuScreens.register(HlContainerInit.banner_slot_container.get(), BannerSlotScreen::new);
-});
-}
+	private void clientSetup(final FMLClientSetupEvent event) {
+		BlockEntityRenderers.register(HLBlockEntityInit.display_pedestal.get(), RenderTileDisplayPedestal::new);
+	}
+
+	@SubscribeEvent
+	public static void onRegisterMenuScreens(final net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {
+		event.register(HlContainerInit.banner_slot_container.get(), BannerSlotScreen::new);
+	}
 
 private void commonSetup(final FMLCommonSetupEvent event) {
 BookPlaceboReloadListener.INSTANCE.registerToBus();
@@ -121,6 +122,6 @@ HLBlockInit.MODELEDBLOCKS.getEntries().forEach(i -> output.accept(i.get()));
 }
 
 public static ResourceLocation rloc(String path) {
-return new ResourceLocation(MOD_ID, path);
+return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
 }
 }

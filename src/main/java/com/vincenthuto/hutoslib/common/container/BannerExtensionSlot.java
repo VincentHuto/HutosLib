@@ -10,6 +10,7 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.network.PacketSyncBannerSlotContents;
 import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +33,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.NEOFORGE)
+@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<CompoundTag> {
 
 @SubscribeEvent
@@ -122,7 +123,7 @@ banner.onContentsChanged();
 };
 
 private final BannerSlotItemHandler banner = new BannerSlotItemHandler(this,
-new ResourceLocation("hutoslib", "banner"), inventory, 0);
+ResourceLocation.fromNamespaceAndPath("hutoslib", "banner"), inventory, 0);
 
 private final ImmutableList<BannerSlotItemHandler> slots = ImmutableList.of(banner);
 
@@ -130,10 +131,10 @@ public BannerExtensionSlot(LivingEntity owner) {
 this.owner = owner;
 }
 
-@Override
-public void deserializeNBT(CompoundTag nbt) {
-inventory.deserializeNBT(nbt);
-}
+	@Override
+	public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+		inventory.deserializeNBT(provider, nbt);
+	}
 
 @Nonnull
 public BannerSlotItemHandler getBanner() {
@@ -159,10 +160,10 @@ syncToTracking();
 }
 }
 
-@Override
-public CompoundTag serializeNBT() {
-return inventory.serializeNBT();
-}
+	@Override
+	public CompoundTag serializeNBT(HolderLookup.Provider provider) {
+		return inventory.serializeNBT(provider);
+	}
 
 public void setAll(NonNullList<ItemStack> stacks) {
 List<BannerSlotItemHandler> slotList = getSlots();

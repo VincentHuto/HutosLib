@@ -4,12 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.common.block.entity.DisplayPedestalBlockEntity;
 import com.vincenthuto.hutoslib.math.Vector3;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
@@ -47,7 +45,6 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 		for (int i = 0; i < angles.length; i++)
 			angles[i] = totalAngle += anglePer;
 
-		Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS);
 		for (int i = 0; i < te.inventory.size(); i++) {
 			matrixStackIn.pushPose();
 			matrixStackIn.translate(0.5F, 1.55F, 0.5F);

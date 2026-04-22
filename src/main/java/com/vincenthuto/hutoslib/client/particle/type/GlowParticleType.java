@@ -1,17 +1,24 @@
 package com.vincenthuto.hutoslib.client.particle.type;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.vincenthuto.hutoslib.client.particle.data.ColorParticleData;
 
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 public class GlowParticleType extends ParticleType<ColorParticleData> {
 	public GlowParticleType() {
-		super(false, ColorParticleData.DESERIALIZER);
+		super(false);
 	}
 
 	@Override
-	public Codec<ColorParticleData> codec() {
+	public MapCodec<ColorParticleData> codec() {
 		return ColorParticleData.CODEC;
+	}
+
+	@Override
+	public StreamCodec<? super RegistryFriendlyByteBuf, ColorParticleData> streamCodec() {
+		return ColorParticleData.STREAM_CODEC;
 	}
 }

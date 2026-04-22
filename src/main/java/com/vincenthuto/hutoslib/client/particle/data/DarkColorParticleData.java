@@ -1,16 +1,16 @@
 package com.vincenthuto.hutoslib.client.particle.data;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.serialization.Codec;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 
 /**
@@ -20,33 +20,28 @@ import net.minecraft.network.FriendlyByteBuf;
 
 public class DarkColorParticleData implements ParticleOptions {
 
-	public static final Codec<DarkColorParticleData> CODEC = RecordCodecBuilder.create(instance -> instance
+	public static final MapCodec<DarkColorParticleData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
 			.group(Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
 					Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
 					Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()))
 			.apply(instance, DarkColorParticleData::new));
-	public static final ParticleOptions.Deserializer<DarkColorParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
 
-		@Override
-		public DarkColorParticleData fromCommand(ParticleType<DarkColorParticleData> type, StringReader reader)
-				throws CommandSyntaxException {
-			reader.expect(' ');
-			return new DarkColorParticleData(type, ParticleColor.deserialize(reader.readString()));
-		}
+	public static final StreamCodec<RegistryFriendlyByteBuf, DarkColorParticleData> STREAM_CODEC =
+			ByteBufCodecs.STRING_UTF8.map(
+					s -> new DarkColorParticleData(ParticleColor.deserialize(s)),
+					d -> d.color.serialize()
+			).cast();
 
-		@Override
-		public DarkColorParticleData fromNetwork(ParticleType<DarkColorParticleData> type,
-				FriendlyByteBuf p_123736_) {
-			return new DarkColorParticleData(type, ParticleColor.deserialize(p_123736_.readUtf()));
-		}
-	};
-
-	private  ParticleType<DarkColorParticleData> type;
-
+	private ParticleType<DarkColorParticleData> type;
 	public ParticleColor color;
 
 	public DarkColorParticleData(float r, float g, float b) {
 		this.color = new ParticleColor(r, g, b);
+		this.type = HLParticleInit.dark_glow.get();
+	}
+
+	public DarkColorParticleData(ParticleColor color) {
+		this.color = color;
 		this.type = HLParticleInit.dark_glow.get();
 	}
 
@@ -59,15 +54,5 @@ public class DarkColorParticleData implements ParticleOptions {
 	public ParticleType<DarkColorParticleData> getType() {
 		return type;
 	}
-
-	@Override
-	public void writeToNetwork(FriendlyByteBuf packetBuffer) {
-		packetBuffer.writeUtf(color.serialize());
-	}
-
-	@Override
-	public String writeToString() {
-		return BuiltInRegistries.PARTICLE_TYPE.getKey(type).toString() + " " + color.serialize();
-	}
-
 }
+

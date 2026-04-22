@@ -1,7 +1,6 @@
 package com.vincenthuto.hutoslib.common.item;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
@@ -56,15 +55,15 @@ public ResourceLocation getTexture() {
 return modellocation;
 }
 
-@Override
-public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-super.initializeClient(consumer);
-consumer.accept(RenderPropArmBanner.INSTANCE);
+	@Override
+	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+return repair.is(ItemTags.PLANKS) || super.isValidRepairItem(toRepair, repair);
 }
 
+@SuppressWarnings("deprecation")
 @Override
-public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-return repair.is(ItemTags.PLANKS) || super.isValidRepairItem(toRepair, repair);
+public void initializeClient(java.util.function.Consumer<IClientItemExtensions> consumer) {
+consumer.accept(RenderPropArmBanner.INSTANCE);
 }
 
 @Override
@@ -75,7 +74,7 @@ return InteractionResultHolder.consume(itemstack);
 }
 }
 
-class RenderPropArmBanner implements IClientItemExtensions {
+public class RenderPropArmBanner implements IClientItemExtensions {
 
 public static RenderPropArmBanner INSTANCE = new RenderPropArmBanner();
 
