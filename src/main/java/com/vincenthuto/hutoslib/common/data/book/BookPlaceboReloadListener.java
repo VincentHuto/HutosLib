@@ -91,8 +91,10 @@ public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDat
 		for (int i = 0; i < bookNames.size(); i++) {
 			if (bookNames.get(i).template() instanceof BookTemplate b) {
 				String bookTitle = bookNames.get(i).getBook();
-				BookCodeModel book = new BookCodeModel(new ResourceLocation(
-						bookNames.get(i).resourceLocation().getNamespace(), bookNames.get(i).getBook()), b);
+				BookCodeModel book = new BookCodeModel(
+						ResourceLocation.fromNamespaceAndPath(bookNames.get(i).resourceLocation().getNamespace(),
+								bookNames.get(i).getBook()),
+						b);
 				List<ChapterTemplate> chapters = new ArrayList<ChapterTemplate>();
 				for (int j = 0; j < chapterNames.size(); j++) {
 					String chapterTitle = chapterNames.get(j).getSplitPath()[1];

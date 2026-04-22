@@ -50,7 +50,10 @@ public class BranchTemplate extends TreeDataTemplate {
 	public ItemStack getIconItem() {
 		if (color != null && icon.contains(",")) {
 			String[] split = icon.split(",");
-			Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(split[0], split[1]));
+			if (split.length < 2) {
+				return ItemStack.EMPTY;
+			}
+			Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
 			}
@@ -84,8 +87,11 @@ public class BranchTemplate extends TreeDataTemplate {
 	public ResourceLocation getTextureLocation() {
 
 		if (texture != null && texture.contains(":")) {
-			String[] split = texture.split(":");
-			ResourceLocation rl = new ResourceLocation(split[0], split[1]);
+			String[] split = texture.split(":", 2);
+			if (split.length < 2) {
+				return HutosLib.rloc(texture);
+			}
+			ResourceLocation rl = ResourceLocation.fromNamespaceAndPath(split[0], split[1]);
 			if (rl != null) {
 				return rl;
 			}

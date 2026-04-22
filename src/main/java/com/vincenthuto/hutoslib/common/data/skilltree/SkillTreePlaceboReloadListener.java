@@ -89,8 +89,10 @@ public class SkillTreePlaceboReloadListener extends PlaceboJsonReloadListener<Tr
 		for (int i = 0; i < treeNames.size(); i++) {
 			if (treeNames.get(i).template() instanceof TreeTemplate b) {
 				String treeTitle = treeNames.get(i).getTree();
-				TreeCodeModel tree = new TreeCodeModel(new ResourceLocation(
-						treeNames.get(i).resourceLocation().getNamespace(), treeNames.get(i).getTree()), b);
+				TreeCodeModel tree = new TreeCodeModel(
+						ResourceLocation.fromNamespaceAndPath(treeNames.get(i).resourceLocation().getNamespace(),
+								treeNames.get(i).getTree()),
+						b);
 				List<BranchTemplate> branchs = new ArrayList<BranchTemplate>();
 				for (int j = 0; j < branchNames.size(); j++) {
 					String branchTitle = branchNames.get(j).getSplitPath()[1];
