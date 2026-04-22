@@ -74,8 +74,7 @@ return false;
 itemstack1 = itemstack2;
 } else {
 if (!(itemstack2.getItem() instanceof ItemArmBanner)
-|| !itemstack.isEmpty()
-|| itemstack2.get(DataComponents.BANNER_PATTERNS) != null) {
+|| !itemstack.isEmpty()) {
 return false;
 }
 itemstack = itemstack2;
