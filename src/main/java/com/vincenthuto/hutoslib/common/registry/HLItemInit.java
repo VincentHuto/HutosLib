@@ -14,14 +14,14 @@ import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import net.neoforged.neoforge.registries.RegistryObject;
 
 public class HLItemInit {
 
-	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, HutosLib.MOD_ID);
-	public static final DeferredRegister<Item> HANDHELDITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, HutosLib.MOD_ID);
-	public static final DeferredRegister<Item> SPECIALITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,
+	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, HutosLib.MOD_ID);
+	public static final DeferredRegister<Item> HANDHELDITEMS = DeferredRegister.create(Registries.ITEM, HutosLib.MOD_ID);
+	public static final DeferredRegister<Item> SPECIALITEMS = DeferredRegister.create(Registries.ITEM,
 			HutosLib.MOD_ID);
 	public static final DeferredRegister<BannerPattern> BANNERPATTERNS = DeferredRegister
 			.create(Registries.BANNER_PATTERN, HutosLib.MOD_ID);

@@ -1,55 +1,65 @@
 package com.vincenthuto.hutoslib.common.network;
 
-import java.util.function.Supplier;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class PacketBannerChange {
-	public int player;
-	public String where;
-	public JsonElement slot;
-	public ItemStack stack;
+public class PacketBannerChange implements CustomPacketPayload {
 
-	public PacketBannerChange(FriendlyByteBuf buf) {
-		player = buf.readVarInt();
-		where = buf.readUtf();
-		slot = (new JsonParser()).parse(buf.readUtf(2048));
-		stack = buf.readItem();
-	}
+public static final CustomPacketPayload.Type<PacketBannerChange> TYPE =
+new CustomPacketPayload.Type<>(HutosLib.rloc("packet_banner_change"));
 
-	public PacketBannerChange(LivingEntity player, String where, JsonElement slot, ItemStack stack) {
-		this.player = player.getId();
-		this.where = where;
-		this.slot = slot;
-		this.stack = stack.copy();
-	}
+public static final StreamCodec<FriendlyByteBuf, PacketBannerChange> CODEC = StreamCodec.of(
+(buf, msg) -> msg.encode(buf), PacketBannerChange::new);
 
-	public void encode(FriendlyByteBuf buf) {
-		buf.writeVarInt(player);
-		buf.writeUtf(where);
-		buf.writeUtf(slot.toString(), 2048);
-		buf.writeItem(stack);
-	}
+public int player;
+public String where;
+public JsonElement slot;
+public ItemStack stack;
 
-	public boolean handle(Supplier<NetworkEvent.Context> context) {
-		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.execute(() -> {
-			Entity entity = minecraft.level.getEntity(this.player);
-			if (!(entity instanceof Player))
-				return;
-			Player player = (Player) entity;
-			BannerFinder.setBannerFromPacket(player, this.where, this.slot, this.stack);
-		});
-		return true;
-	}
+public PacketBannerChange(FriendlyByteBuf buf) {
+player = buf.readVarInt();
+where = buf.readUtf();
+slot = (new JsonParser()).parse(buf.readUtf(2048));
+stack = buf.readItem();
+}
+
+public PacketBannerChange(LivingEntity player, String where, JsonElement slot, ItemStack stack) {
+this.player = player.getId();
+this.where = where;
+this.slot = slot;
+this.stack = stack.copy();
+}
+
+public void encode(FriendlyByteBuf buf) {
+buf.writeVarInt(player);
+buf.writeUtf(where);
+buf.writeUtf(slot.toString(), 2048);
+buf.writeItem(stack);
+}
+
+public static void handle(PacketBannerChange msg, IPayloadContext ctx) {
+ctx.enqueueWork(() -> {
+Minecraft minecraft = Minecraft.getInstance();
+Entity entity = minecraft.level.getEntity(msg.player);
+if (!(entity instanceof Player)) return;
+BannerFinder.setBannerFromPacket((Player) entity, msg.where, msg.slot, msg.stack);
+});
+}
+
+@Override
+public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+return TYPE;
+}
 }

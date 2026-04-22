@@ -20,41 +20,39 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ToolAction;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class ItemKnapper extends DiggerItem {
-	public static final ToolAction KNAPPER_DIG = ToolAction.get("knapper_dig");
-	public static final Set<ToolAction> DEFAULT_KNAPPER_ACTIONS = Stream.of(KNAPPER_DIG)
-			.collect(Collectors.toCollection(Sets::newIdentityHashSet));
-	public static TagKey<Block> EFFECTIVE_ON = TagKey.create(Registries.BLOCK,
-			new ResourceLocation("mineable/knapper"));
+public static final ToolAction KNAPPER_DIG = ToolAction.get("knapper_dig");
+public static final Set<ToolAction> DEFAULT_KNAPPER_ACTIONS = Stream.of(KNAPPER_DIG)
+.collect(Collectors.toCollection(Sets::newIdentityHashSet));
+public static TagKey<Block> EFFECTIVE_ON = TagKey.create(Registries.BLOCK,
+new ResourceLocation("mineable/knapper"));
 
-	private float speed;
+private float speed;
 
-	public ItemKnapper(float speedIn, float attackDamageIn, float attackSpeedIn, Tier tier, Properties builderIn) {
-		super(attackDamageIn, -2.8f, tier, EFFECTIVE_ON, builderIn);
-		this.speed = speedIn;
-	}
+public ItemKnapper(float speedIn, float attackDamageIn, float attackSpeedIn, Tier tier, Properties builderIn) {
+super(attackDamageIn, -2.8f, tier, EFFECTIVE_ON, builderIn);
+this.speed = speedIn;
+}
 
-	@Override
-	public boolean canPerformAction(ItemStack stack, net.neoforged.neoforge.common.ToolAction toolAction) {
-		return DEFAULT_KNAPPER_ACTIONS.contains(toolAction);
-	}
+@Override
+public boolean canPerformAction(ItemStack stack, net.neoforged.neoforge.common.ToolAction toolAction) {
+return DEFAULT_KNAPPER_ACTIONS.contains(toolAction);
+}
 
-	@Override
-	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		return ForgeRegistries.BLOCKS.tags().getTag(EFFECTIVE_ON).contains(state.getBlock()) ? speed : 0.5f;
-	}
+@Override
+public float getDestroySpeed(ItemStack stack, BlockState state) {
+return state.is(EFFECTIVE_ON) ? speed : 0.5f;
+}
 
-	@Override
-	public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos,
-			LivingEntity entityLiving) {
-		if (ForgeRegistries.BLOCKS.tags().getTag(EFFECTIVE_ON).contains(state.getBlock())) {
-			ItemEntity ent = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5,
-					new ItemStack(HLItemInit.obsidian_flakes.get(), worldIn.random.nextInt(3)));
-			worldIn.addFreshEntity(ent);
-		}
-		return super.mineBlock(stack, worldIn, state, pos, entityLiving);
-	}
-
+@Override
+public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos,
+LivingEntity entityLiving) {
+if (state.is(EFFECTIVE_ON)) {
+ItemEntity ent = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5,
+new ItemStack(HLItemInit.obsidian_flakes.get(), worldIn.random.nextInt(3)));
+worldIn.addFreshEntity(ent);
+}
+return super.mineBlock(stack, worldIn, state, pos, entityLiving);
+}
 }

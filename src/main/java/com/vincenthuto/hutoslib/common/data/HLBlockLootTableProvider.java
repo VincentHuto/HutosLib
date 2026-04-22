@@ -8,7 +8,7 @@ import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 
 public class HLBlockLootTableProvider extends VanillaBlockLoot {
 
@@ -21,7 +21,7 @@ public class HLBlockLootTableProvider extends VanillaBlockLoot {
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return ForgeRegistries.BLOCKS.getEntries().stream()
+        return HLBlockInit.BLOCKS.getEntries().stream()
                 .filter(e -> e.getKey().location().getNamespace().equals(HutosLib.MOD_ID))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());

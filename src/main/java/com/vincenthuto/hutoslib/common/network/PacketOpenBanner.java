@@ -1,30 +1,40 @@
 package com.vincenthuto.hutoslib.common.network;
 
-import java.util.function.Supplier;
-
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.container.BannerSlotContainer;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.SimpleMenuProvider;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class PacketOpenBanner {
+public class PacketOpenBanner implements CustomPacketPayload {
 
-	public PacketOpenBanner() {
-	}
+public static final CustomPacketPayload.Type<PacketOpenBanner> TYPE =
+new CustomPacketPayload.Type<>(HutosLib.rloc("packet_open_banner"));
 
-	public PacketOpenBanner(FriendlyByteBuf buf) {
-	}
+public static final StreamCodec<FriendlyByteBuf, PacketOpenBanner> CODEC = StreamCodec.of(
+(buf, msg) -> msg.encode(buf), PacketOpenBanner::new);
 
-	public void encode(FriendlyByteBuf buf) {
-	}
+public PacketOpenBanner() {
+}
 
-	public boolean handle(Supplier<NetworkEvent.Context> context) {
-		context.get().getSender()
-				.openMenu(new SimpleMenuProvider(
-						(i, playerInventory, playerEntity) -> new BannerSlotContainer(i, playerInventory),
-						Component.translatable("container.crafting")));
-		return true;
-	}
+public PacketOpenBanner(FriendlyByteBuf buf) {
+}
+
+public void encode(FriendlyByteBuf buf) {
+}
+
+public static void handle(PacketOpenBanner msg, IPayloadContext ctx) {
+ctx.sender().openMenu(new SimpleMenuProvider(
+(i, playerInventory, playerEntity) -> new BannerSlotContainer(i, playerInventory),
+Component.translatable("container.crafting")));
+}
+
+@Override
+public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+return TYPE;
+}
 }

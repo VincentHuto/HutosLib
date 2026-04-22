@@ -26,7 +26,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.neoforge.common.crafting.conditions.ICondition;
 import net.neoforged.neoforge.common.crafting.conditions.ICondition.IContext;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
@@ -179,20 +178,17 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	private final void sync(OnDatapackSyncEvent e) {
 		ServerPlayer player = e.getPlayer();
 		if (player == null) {
-			HLPacketHandler.sendToAll(HLPacketHandler.MAINCHANNEL, new ReloadListenerPacket.Start(this.path));
+			HLPacketHandler.sendToAll(new ReloadListenerPacket.Start(this.path));
 			this.registry.forEach((k, v) -> {
-				HLPacketHandler.sendToAll(HLPacketHandler.MAINCHANNEL,
-						new ReloadListenerPacket.Content<>(this.path, k, v));
+				HLPacketHandler.sendToAll(new ReloadListenerPacket.Content<>(this.path, k, v));
 			});
-			HLPacketHandler.sendToAll(HLPacketHandler.MAINCHANNEL, new ReloadListenerPacket.End(this.path));
+			HLPacketHandler.sendToAll(new ReloadListenerPacket.End(this.path));
 		} else {
-			HLPacketHandler.sendTo(HLPacketHandler.MAINCHANNEL, new ReloadListenerPacket.Start(this.path), player);
+			HLPacketHandler.sendTo(new ReloadListenerPacket.Start(this.path), player);
 			this.registry.forEach((k, v) -> {
-				HLPacketHandler.sendTo(HLPacketHandler.MAINCHANNEL, new ReloadListenerPacket.Content<>(this.path, k, v),
-						player);
+				HLPacketHandler.sendTo(new ReloadListenerPacket.Content<>(this.path, k, v), player);
 			});
-			
-			HLPacketHandler.sendTo(HLPacketHandler.MAINCHANNEL, new ReloadListenerPacket.End(this.path), player);
+			HLPacketHandler.sendTo(new ReloadListenerPacket.End(this.path), player);
 		}
 	}
 
@@ -271,10 +267,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	 */
 	public static boolean checkConditions(JsonElement e, ResourceLocation id, String type, Logger logger,
 			IContext context) {
-		if (e.isJsonObject() && !CraftingHelper.processConditions(e.getAsJsonObject(), "conditions", context)) {
-			logger.trace("Skipping loading {} item with id {} as it's conditions were not met", type, id);
-			return false;
-		}
+		// TODO: Update condition checking for NeoForge 1.21.1 when ConditionalOps API is stable
 		return true;
 	}
 

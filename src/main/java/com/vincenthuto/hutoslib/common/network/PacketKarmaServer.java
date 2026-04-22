@@ -1,48 +1,57 @@
 package com.vincenthuto.hutoslib.common.network;
 
-import java.util.function.Supplier;
-
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
-import com.vincenthuto.hutoslib.common.karma.KarmaProvider;
+import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class PacketKarmaServer {
-	public static PacketKarmaServer decode(final FriendlyByteBuf packetBuffer) {
-		return new PacketKarmaServer(packetBuffer.readBoolean(), packetBuffer.readFloat());
-	}
-	public static void encode(final PacketKarmaServer msg, final FriendlyByteBuf packetBuffer) {
-		packetBuffer.writeBoolean(msg.active);
-		packetBuffer.writeFloat(msg.volume);
-	}
+public class PacketKarmaServer implements CustomPacketPayload {
 
-	public static void handle(final PacketKarmaServer msg, Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> {
+public static final CustomPacketPayload.Type<PacketKarmaServer> TYPE =
+new CustomPacketPayload.Type<>(HutosLib.rloc("packet_karma_server"));
 
-			if (Minecraft.getInstance().player != null) {
-				IKarma capa = Minecraft.getInstance().player.getCapability(KarmaProvider.KARMA_CAPA)
-						.orElseThrow(NullPointerException::new);
-				capa.setActive(msg.active);
-				capa.setKarma(msg.volume);
-			}
+public static final StreamCodec<FriendlyByteBuf, PacketKarmaServer> CODEC = StreamCodec.of(
+PacketKarmaServer::encode, PacketKarmaServer::decode);
 
-		});
-		ctx.get().setPacketHandled(true);
-	}
+public static PacketKarmaServer decode(final FriendlyByteBuf buf) {
+return new PacketKarmaServer(buf.readBoolean(), buf.readFloat());
+}
 
-	private boolean active;
+public static void encode(final PacketKarmaServer msg, final FriendlyByteBuf buf) {
+buf.writeBoolean(msg.active);
+buf.writeFloat(msg.volume);
+}
 
-	private float volume;
+public static void handle(final PacketKarmaServer msg, IPayloadContext ctx) {
+ctx.enqueueWork(() -> {
+if (Minecraft.getInstance().player != null) {
+IKarma capa = Minecraft.getInstance().player.getData(HLAttachmentTypes.KARMA.get());
+capa.setActive(msg.active);
+capa.setKarma(msg.volume);
+}
+});
+}
 
-	public PacketKarmaServer(boolean active, float volumeIn) {
-		this.active = active;
-		this.volume = volumeIn;
-	}
+private final boolean active;
+private final float volume;
 
-	public PacketKarmaServer(IKarma volume) {
-		this.active = volume.isActive();
-		this.volume = volume.getKarma();
-	}
+public PacketKarmaServer(boolean active, float volumeIn) {
+this.active = active;
+this.volume = volumeIn;
+}
+
+public PacketKarmaServer(IKarma volume) {
+this.active = volume.isActive();
+this.volume = volume.getKarma();
+}
+
+@Override
+public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+return TYPE;
+}
 }

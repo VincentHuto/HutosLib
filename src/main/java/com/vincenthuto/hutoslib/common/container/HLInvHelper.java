@@ -12,52 +12,47 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 
 public class HLInvHelper {
 
-	// Combined a few methods into one more generic one
-	public static ItemStack findItemInPlayerInv(Player player, Class<? extends Item> item) {
-		if (item.isInstance(player.getOffhandItem().getItem()))
-			return player.getMainHandItem();
-		if (item.isInstance(player.getMainHandItem().getItem()))
-			return player.getOffhandItem();
-		Inventory inventory = player.getInventory();
-		for (int i = 0; i <= 35; i++) {
-			ItemStack stack = inventory.getItem(i);
-			if (item.isInstance(stack.getItem()))
-				return stack;
-		}
-		return ItemStack.EMPTY;
-	}
+public static ItemStack findItemInPlayerInv(Player player, Class<? extends Item> item) {
+if (item.isInstance(player.getOffhandItem().getItem()))
+return player.getMainHandItem();
+if (item.isInstance(player.getMainHandItem().getItem()))
+return player.getOffhandItem();
+Inventory inventory = player.getInventory();
+for (int i = 0; i <= 35; i++) {
+ItemStack stack = inventory.getItem(i);
+if (item.isInstance(stack.getItem()))
+return stack;
+}
+return ItemStack.EMPTY;
+}
 
-	@Nullable
-	public static IItemHandler getInventory(Level world, BlockPos pos, Direction side) {
-		BlockEntity te = world.getBlockEntity(pos);
+@Nullable
+public static IItemHandler getInventory(Level world, BlockPos pos, Direction side) {
+BlockEntity te = world.getBlockEntity(pos);
+if (te == null) {
+return null;
+}
+IItemHandler ret = world.getCapability(Capabilities.ItemHandler.BLOCK, pos, world.getBlockState(pos), te, side);
+if (ret == null) {
+ret = world.getCapability(Capabilities.ItemHandler.BLOCK, pos, world.getBlockState(pos), te, null);
+}
+return ret;
+}
 
-		if (te == null) {
-			return null;
-		}
-
-		LazyOptional<IItemHandler> ret = te.getCapability(ForgeCapabilities.ITEM_HANDLER, side);
-		if (!ret.isPresent()) {
-			ret = te.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-		}
-		return ret.orElse(null);
-	}
-
-	public static void withdrawFromInventory(SimpleInventoryBlockEntity inv, Player player) {
-		for (int i =inv.inventory.size() - 1; i >= 0; i--) {
-			ItemStack stackAt = inv.inventory.get(i);
-			if (!stackAt.isEmpty()) {
-				ItemStack copy = stackAt.copy();
-				player.getInventory().placeItemBackInInventory(copy);
-				inv.inventory.set(i, ItemStack.EMPTY);
-				break;
-			}
-		}
-	}
-
+public static void withdrawFromInventory(SimpleInventoryBlockEntity inv, Player player) {
+for (int i = inv.inventory.size() - 1; i >= 0; i--) {
+ItemStack stackAt = inv.inventory.get(i);
+if (!stackAt.isEmpty()) {
+ItemStack copy = stackAt.copy();
+player.getInventory().placeItemBackInInventory(copy);
+inv.inventory.set(i, ItemStack.EMPTY);
+break;
+}
+}
+}
 }
