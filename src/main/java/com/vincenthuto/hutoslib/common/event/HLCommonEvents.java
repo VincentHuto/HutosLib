@@ -1,15 +1,15 @@
 package com.vincenthuto.hutoslib.common.event;
 
-import com.vincenthuto.hutoslib.HutosLib;
+/**
+ * Reserved for future common events.
+ *
+ * NOTE: Do not annotate this class with @EventBusSubscriber unless it contains
+ * at least one static @SubscribeEvent handler.
+ */
+public final class HLCommonEvents {
 
-import net.neoforged.fml.common.EventBusSubscriber;
-
-@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-public class HLCommonEvents {
-
-	@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-	public static class ModBusEvents {
-
+	private HLCommonEvents() {
+		// Utility class
 	}
 
 }
