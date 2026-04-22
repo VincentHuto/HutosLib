@@ -151,8 +151,8 @@ public class SerializerMap<V extends PSerializable<V>> {
 	}
 
 	private ResourceLocation defaultedReloc(String reloc) {
-		if (reloc.indexOf(':') != -1) return new ResourceLocation(reloc);
-		return new ResourceLocation(this.defaultDomain, reloc);
+		if (reloc.indexOf(':') != -1) return ResourceLocation.parse(reloc);
+		return ResourceLocation.fromNamespaceAndPath(this.defaultDomain, reloc);
 	}
 
 }

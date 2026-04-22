@@ -51,7 +51,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	/**
 	 * The Default key is used when subtypes are not enabled.
 	 */
-	public static final ResourceLocation DEFAULT = new ResourceLocation("default");
+	public static final ResourceLocation DEFAULT = ResourceLocation.fromNamespaceAndPath("minecraft", "default");
 
 	private static final Map<String, PlaceboJsonReloadListener<?>> SYNC_REGISTRY = new HashMap<>();
 
