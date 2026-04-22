@@ -2,11 +2,9 @@ package com.vincenthuto.hutoslib.common.container;
 
 import javax.annotation.Nonnull;
 
-import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class BannerSlotItemHandler implements IBannerSlot {
 	protected final IBannerContainer owner;
@@ -41,15 +39,15 @@ public class BannerSlotItemHandler implements IBannerSlot {
 	}
 
 	private void notifyEquip(ItemStack stack) {
-		stack.getCapability(BannerSlotCapability.INSTANCE, null).ifPresent((extItem) -> {
+		if (stack.getItem() instanceof IBannerSlotItem extItem) {
 			extItem.onEquipped(stack, this);
-		});
+		}
 	}
 
 	private void notifyUnequip(ItemStack stack) {
-		stack.getCapability(BannerSlotCapability.INSTANCE, null).ifPresent((extItem) -> {
+		if (stack.getItem() instanceof IBannerSlotItem extItem) {
 			extItem.onUnequipped(stack, this);
-		});
+		}
 	}
 
 	@Override
@@ -61,9 +59,9 @@ public class BannerSlotItemHandler implements IBannerSlot {
 		ItemStack stack = getContents();
 		if (stack.isEmpty())
 			return;
-		stack.getCapability(BannerSlotCapability.INSTANCE, null).ifPresent((extItem) -> {
+		if (stack.getItem() instanceof IBannerSlotItem extItem) {
 			extItem.onWornTick(stack, this);
-		});
+		}
 	}
 
 	@Override

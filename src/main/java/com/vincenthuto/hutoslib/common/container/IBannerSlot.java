@@ -5,9 +5,9 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableSet;
 import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 public interface IBannerSlot {
@@ -18,16 +18,23 @@ public interface IBannerSlot {
 	}
 
 	default boolean canEquip(@Nonnull ItemStack stack) {
-		return stack.getCapability(BannerSlotCapability.INSTANCE, null)
-				.map((extItem) -> IBannerSlot.isAcceptableSlot(this, stack, extItem) && extItem.canEquip(stack, this))
-				.orElse(false);
+		if (stack.getItem() instanceof IBannerSlotItem extItem) {
+			return IBannerSlot.isAcceptableSlot(this, stack, extItem) && extItem.canEquip(stack, this);
+		}
+		return false;
 	}
 
 	default boolean canUnequip(@Nonnull ItemStack stack) {
-		return stack.getCapability(BannerSlotCapability.INSTANCE, null)
-				.map((extItem) -> extItem.canUnequip(stack, this)
-						&& EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, stack) <= 0)
-				.orElse(true);
+		if (stack.getItem() instanceof IBannerSlotItem extItem) {
+			return extItem.canUnequip(stack, this) && !hasCurseOfBinding(stack);
+		}
+		return true;
+	}
+
+	private static boolean hasCurseOfBinding(ItemStack stack) {
+		var enchantments = stack.get(DataComponents.ENCHANTMENTS);
+		if (enchantments == null) return false;
+		return enchantments.keySet().stream().anyMatch(h -> h.is(Enchantments.BINDING_CURSE));
 	}
 
 	@Nonnull

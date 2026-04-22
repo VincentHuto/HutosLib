@@ -1,23 +1,17 @@
 package com.vincenthuto.hutoslib.common.banner;
 
 import com.google.common.collect.ImmutableSet;
-import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
+import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.attachment.AttachmentType;
 
 public class BannerSlotCapability {
 
-	public static final ResourceLocation ANY_SLOT = new ResourceLocation("forge:any");
-	public static final ImmutableSet<ResourceLocation> ANY_SLOT_LIST = ImmutableSet.of(ANY_SLOT);
+public static final ResourceLocation ANY_SLOT = new ResourceLocation("neoforge:any");
+public static final ImmutableSet<ResourceLocation> ANY_SLOT_LIST = ImmutableSet.of(ANY_SLOT);
 
-    public static final Capability<IBannerSlotItem> INSTANCE = CapabilityManager.get(new CapabilityToken<>(){});
-
-    public static void register(RegisterCapabilitiesEvent event)
-    {
-        event.register(BannerSlotCapability.class);
-    }
+public static AttachmentType<?> getBannerSlotAttachmentType() {
+return HLAttachmentTypes.BANNER_SLOT.get();
+}
 }

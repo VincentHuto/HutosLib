@@ -4,259 +4,201 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.network.PacketSyncBannerSlotContents;
+import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
 
-import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameRules;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.Mod.EventBusSubscriber.Bus;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 
-@Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.MOD)
+@Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.NEOFORGE)
 public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<CompoundTag> {
 
-	public static class AttachHandlers {
-		@SubscribeEvent
-		public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-			final Entity entity = event.getObject();
-			if (entity instanceof Player || entity instanceof ArmorStand) {
-				event.addCapability(CAPABILITY_ID, new ICapabilitySerializable<CompoundTag>() {
-					final BannerExtensionSlot extensionContainer = new BannerExtensionSlot((LivingEntity) entity) {
-						@Override
-						public void onContentsChanged(BannerSlotItemHandler slot) {
-							if (!getOwner().level().isClientSide)
-								syncTo(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(this::getOwner));
-						}
-					};
+@SubscribeEvent
+public static void entityTick(PlayerTickEvent.Post event) {
+get(event.getEntity()).tickAllSlots();
+}
 
-					final LazyOptional<BannerExtensionSlot> extensionContainerSupplier = LazyOptional
-							.of(() -> extensionContainer);
+@SubscribeEvent
+public static void joinWorld(PlayerEvent.PlayerChangedDimensionEvent event) {
+Player target = event.getEntity();
+if (target.level().isClientSide) return;
+get(target).syncToSelf();
+}
 
-					@Override
-					public void deserializeNBT(CompoundTag nbt) {
-						extensionContainer.deserializeNBT(nbt);
-					}
+@SubscribeEvent
+public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+Player target = event.getEntity();
+if (target.level().isClientSide) return;
+get(target).syncToSelf();
+}
 
-					@Override
-					public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability,
-							@Nullable Direction facing) {
-						if (CAPABILITY == capability)
-							return extensionContainerSupplier.cast();
+@SubscribeEvent
+public static void playerClone(PlayerEvent.Clone event) {
+Player oldPlayer = event.getOriginal();
+Player newPlayer = event.getEntity();
+BannerExtensionSlot oldSlot = get(oldPlayer);
+BannerExtensionSlot newSlot = get(newPlayer);
+ItemStack stack = oldSlot.getBanner().getContents();
+newSlot.getBanner().setContents(stack.copy());
+}
 
-						return LazyOptional.empty();
-					}
+@SubscribeEvent
+public static void playerDeath(LivingDropsEvent event) {
+LivingEntity entity = event.getEntity();
+if (!(entity instanceof Player) && !(entity instanceof ArmorStand)) return;
 
-					@Override
-					public CompoundTag serializeNBT() {
-						return extensionContainer.serializeNBT();
-					}
-				});
-			}
-		}
-	}
+BannerExtensionSlot instance = get(entity);
+BannerSlotItemHandler banner = instance.getBanner();
+ItemStack stack = banner.getContents();
+if (hasVanishingCurse(stack)) {
+stack = ItemStack.EMPTY;
+banner.setContents(stack);
+}
+if (stack.getCount() > 0) {
+if (entity instanceof Player player) {
+if (!entity.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)
+&& !player.isSpectator()) {
+Collection<ItemEntity> old = entity.captureDrops(event.getDrops());
+player.drop(stack, true, false);
+entity.captureDrops(old);
+banner.setContents(ItemStack.EMPTY);
+}
+} else {
+entity.spawnAtLocation(stack);
+banner.setContents(ItemStack.EMPTY);
+}
+}
+}
 
-	public static class EventHandlers {
-		@SubscribeEvent
-		public void entityTick(TickEvent.PlayerTickEvent event) {
-			if (event.phase != TickEvent.Phase.END)
-				return;
+@SubscribeEvent
+public static void track(PlayerEvent.StartTracking event) {
+Entity target = event.getTarget();
+if (target.level().isClientSide) return;
+if (target instanceof LivingEntity living) {
+get(living).syncToSelf();
+}
+}
 
-			get(event.player).ifPresent(BannerExtensionSlot::tickAllSlots);
-		}
+public static BannerExtensionSlot get(LivingEntity entity) {
+BannerExtensionSlot slot = entity.getData(HLAttachmentTypes.BANNER_SLOT.get());
+if (slot.owner == null) {
+slot.owner = entity;
+}
+return slot;
+}
 
-		@SubscribeEvent
-		public void joinWorld(PlayerEvent.PlayerChangedDimensionEvent event) {
-			Player target = event.getEntity();
-			if (target.level().isClientSide)
-				return;
-			get(target).ifPresent(BannerExtensionSlot::syncToSelf);
-		}
+public static final String BANNER_KEY = "hutoslib:banner";
 
-		@SubscribeEvent
-		public void joinWorld(PlayerEvent.PlayerLoggedInEvent event) {
-			Player target = event.getEntity();
-			if (target.level().isClientSide)
-				return;
-			get(target).ifPresent(BannerExtensionSlot::syncToSelf);
-		}
+private LivingEntity owner;
 
-		@SubscribeEvent
-		public void playerClone(PlayerEvent.Clone event) {
-			Player oldPlayer = event.getOriginal();
-			oldPlayer.revive();
-			Player newPlayer = event.getEntity();
-			get(oldPlayer).ifPresent((oldBanner) -> {
-				ItemStack stack = oldBanner.getBanner().getContents();
-				get(newPlayer).map(newBanner -> {
-					newBanner.getBanner().setContents(stack);
-					return Unit.INSTANCE;
-				}).orElseGet(() -> {
-					if (stack.getCount() > 0) {
-						oldPlayer.drop(stack, true, false);
-					}
-					return Unit.INSTANCE;
-				});
-			});
-		}
+private final ItemStackHandler inventory = new ItemStackHandler(1) {
+@Override
+protected void onContentsChanged(int slot) {
+super.onContentsChanged(slot);
+banner.onContentsChanged();
+}
+};
 
-		@SubscribeEvent
-		public void playerDeath(LivingDropsEvent event) {
-			LivingEntity entity = event.getEntity();
+private final BannerSlotItemHandler banner = new BannerSlotItemHandler(this,
+new ResourceLocation("hutoslib", "banner"), inventory, 0);
 
-			get(entity).ifPresent((instance) -> {
-				BannerSlotItemHandler banner = instance.getBanner();
-				ItemStack stack = banner.getContents();
-				if (EnchantmentHelper.hasVanishingCurse(stack)) {
-					stack = ItemStack.EMPTY;
-					banner.setContents(stack);
-				}
-				if (stack.getCount() > 0) {
-					if (entity instanceof Player player) {
-						if (!entity.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)
-								&& !player.isSpectator()) {
-							Collection<ItemEntity> old = entity.captureDrops(event.getDrops());
-							player.drop(stack, true, false);
-							entity.captureDrops(old);
-							banner.setContents(ItemStack.EMPTY);
-						}
-					} else {
-						entity.spawnAtLocation(stack);
-						banner.setContents(ItemStack.EMPTY);
-					}
-				}
-			});
-		}
+private final ImmutableList<BannerSlotItemHandler> slots = ImmutableList.of(banner);
 
-		@SubscribeEvent
-		public void track(PlayerEvent.StartTracking event) {
-			Entity target = event.getTarget();
-			if (target.level().isClientSide)
-				return;
-			if (target instanceof Player) {
-				get((LivingEntity) target).ifPresent(BannerExtensionSlot::syncToSelf);
-			}
-		}
-	}
+public BannerExtensionSlot(LivingEntity owner) {
+this.owner = owner;
+}
 
-	private static final ResourceLocation CAPABILITY_ID = HutosLib.rloc( "banner_slot");
+@Override
+public void deserializeNBT(CompoundTag nbt) {
+inventory.deserializeNBT(nbt);
+}
 
-	public static final Capability<BannerExtensionSlot> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
-	});
+@Nonnull
+public BannerSlotItemHandler getBanner() {
+return banner;
+}
 
-	public static final ResourceLocation BANNER = new ResourceLocation("hutoslib", "banner");
+@Nonnull
+@Override
+public LivingEntity getOwner() {
+return owner;
+}
 
-	public static LazyOptional<BannerExtensionSlot> get(LivingEntity player) {
-		return player.getCapability(CAPABILITY);
-	}
+@Nonnull
+@Override
+public ImmutableList<BannerSlotItemHandler> getSlots() {
+return slots;
+}
 
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new AttachHandlers());
-		MinecraftForge.EVENT_BUS.register(new EventHandlers());
-	}
+@Override
+public void onContentsChanged(BannerSlotItemHandler slot) {
+if (owner != null && !owner.level().isClientSide) {
+syncToTracking();
+}
+}
 
-	private final LivingEntity owner;
+@Override
+public CompoundTag serializeNBT() {
+return inventory.serializeNBT();
+}
 
-	private final ItemStackHandler inventory = new ItemStackHandler(1) {
-		@Override
-		protected void onContentsChanged(int slot) {
-			super.onContentsChanged(slot);
-			banner.onContentsChanged();
-		}
-	};
+public void setAll(NonNullList<ItemStack> stacks) {
+List<BannerSlotItemHandler> slotList = getSlots();
+for (int i = 0; i < slotList.size(); i++) {
+slotList.get(i).setContents(stacks.get(i));
+}
+}
 
-	private final BannerSlotItemHandler banner = new BannerSlotItemHandler(this, BANNER, inventory, 0);
+protected void syncToTracking() {
+if (owner == null) return;
+PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
+PacketDistributor.sendToPlayersTrackingEntityAndSelf(owner, message);
+}
 
-	private final ImmutableList<BannerSlotItemHandler> slots = ImmutableList.of(banner);
-	private BannerExtensionSlot(LivingEntity owner) {
-		this.owner = owner;
-	}
-	@Override
-	public void deserializeNBT(CompoundTag nbt) {
-		inventory.deserializeNBT(nbt);
-	}
-	@Nonnull
-	public BannerSlotItemHandler getBanner() {
-		return banner;
-	}
+protected void syncTo(Player target) {
+PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
+PacketDistributor.sendToPlayer((ServerPlayer) target, message);
+}
 
-	@Nonnull
-	@Override
-	public LivingEntity getOwner() {
-		return owner;
-	}
+protected void syncToSelf() {
+if (owner instanceof Player player) {
+syncTo(player);
+}
+}
 
-	@Nonnull
-	@Override
-	public ImmutableList<BannerSlotItemHandler> getSlots() {
-		return slots;
-	}
+private void tickAllSlots() {
+for (BannerSlotItemHandler slot : slots) {
+slot.onWornTick();
+}
+}
 
-	@Override
-	public void onContentsChanged(BannerSlotItemHandler slot) {
-
-	}
-
-	@Override
-	public CompoundTag serializeNBT() {
-		return inventory.serializeNBT();
-	}
-
-	public void setAll(NonNullList<ItemStack> stacks) {
-		List<BannerSlotItemHandler> slots = getSlots();
-		for (int i = 0; i < slots.size(); i++) {
-			slots.get(i).setContents(stacks.get(i));
-		}
-	}
-
-	protected void syncTo(PacketDistributor.PacketTarget target) {
-		PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
-		HLPacketHandler.MAINCHANNEL.send(target, message);
-	}
-
-	protected void syncTo(Player target) {
-		PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
-		HLPacketHandler.MAINCHANNEL.sendTo(message, ((ServerPlayer) target).connection.connection,
-				NetworkDirection.PLAY_TO_CLIENT);
-	}
-
-	private void syncToSelf() {
-		syncTo((Player) owner);
-	}
-
-	private void tickAllSlots() {
-		for (BannerSlotItemHandler slot : slots) {
-			slot.onWornTick();
-		}
-	}
+private static boolean hasVanishingCurse(ItemStack stack) {
+var enchantments = stack.get(DataComponents.ENCHANTMENTS);
+if (enchantments == null) return false;
+return enchantments.keySet().stream()
+    .anyMatch(h -> h.is(Enchantments.VANISHING_CURSE));
+}
 }

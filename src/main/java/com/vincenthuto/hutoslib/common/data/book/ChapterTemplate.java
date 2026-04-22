@@ -9,10 +9,11 @@ import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuidePageTOC;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+
 
 public class ChapterTemplate extends BookDataTemplate {
 
@@ -50,7 +51,7 @@ public class ChapterTemplate extends BookDataTemplate {
 	public ItemStack getIconItem() {
 		if (color != null && icon.contains(",")) {
 			String[] split = icon.split(",");
-			Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
+			Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
 			}

@@ -1,98 +1,106 @@
 package com.vincenthuto.hutoslib.common.network;
 
-import java.util.function.Supplier;
-
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.data.shadow.PlaceboJsonReloadListener;
 import com.vincenthuto.hutoslib.common.data.shadow.TypeKeyed;
-import com.vincenthuto.hutoslib.common.network.shadow.MessageHelper;
-import com.vincenthuto.hutoslib.common.network.shadow.MessageProvider;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public abstract class ReloadListenerPacket<T extends ReloadListenerPacket<T>> implements MessageProvider<T> {
+public abstract class ReloadListenerPacket {
 
-	final String path;
+final String path;
 
-	public ReloadListenerPacket(String path) {
-		this.path = path;
-	}
+public ReloadListenerPacket(String path) {
+this.path = path;
+}
 
-	public static class Start extends ReloadListenerPacket<Start> {
+public static class Start extends ReloadListenerPacket implements CustomPacketPayload {
 
-		public Start(String path) {
-			super(path);
-		}
+public static final CustomPacketPayload.Type<Start> TYPE =
+new CustomPacketPayload.Type<>(HutosLib.rloc("reload_listener_start"));
 
-		@Override
-		public void write(Start msg, FriendlyByteBuf buf) {
-			buf.writeUtf(msg.path, 50);
-		}
+public static final StreamCodec<FriendlyByteBuf, Start> CODEC = StreamCodec.of(
+(buf, msg) -> buf.writeUtf(msg.path, 50),
+buf -> new Start(buf.readUtf(50)));
 
-		@Override
-		public Start read(FriendlyByteBuf buf) {
-			return new Start(buf.readUtf(50));
-		}
+public Start(String path) {
+super(path);
+}
 
-		@Override
-		public void handle(Start msg, Supplier<Context> ctx) {
-			MessageHelper.handlePacket(() -> () -> PlaceboJsonReloadListener.initSync(msg.path), ctx);
-		}
-	}
+public static void handle(Start msg, IPayloadContext ctx) {
+ctx.enqueueWork(() -> PlaceboJsonReloadListener.initSync(msg.path));
+}
 
-	public static class Content<V extends TypeKeyed<V>> extends ReloadListenerPacket<Content<V>> {
+@Override
+public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+return TYPE;
+}
+}
 
-		final ResourceLocation key;
-		final V item;
+public static class Content<V extends TypeKeyed<V>> extends ReloadListenerPacket implements CustomPacketPayload {
 
-		public Content(String path, ResourceLocation key, V item) {
-			super(path);
-			this.key = key;
-			this.item = item;
-		}
+@SuppressWarnings("rawtypes")
+public static final CustomPacketPayload.Type<Content> TYPE =
+new CustomPacketPayload.Type<>(HutosLib.rloc("reload_listener_content"));
 
-		@Override
-		public void write(Content<V> msg, FriendlyByteBuf buf) {
-			buf.writeUtf(msg.path, 50);
-			buf.writeResourceLocation(msg.key);
-			PlaceboJsonReloadListener.writeItem(msg.path, msg.item, buf);
-		}
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public static final StreamCodec<FriendlyByteBuf, Content> CODEC = StreamCodec.of(
+(buf, msg) -> {
+buf.writeUtf(msg.path, 50);
+buf.writeResourceLocation(msg.key);
+PlaceboJsonReloadListener.writeItem(msg.path, (TypeKeyed<?>) msg.item, buf);
+},
+buf -> {
+String path = buf.readUtf(50);
+ResourceLocation key = buf.readResourceLocation();
+Object item = PlaceboJsonReloadListener.readItem(path, key, buf);
+return new Content<>(path, key, (TypeKeyed) item);
+});
 
-		@Override
-		public Content<V> read(FriendlyByteBuf buf) {
-			String path = buf.readUtf(50);
-			ResourceLocation key = buf.readResourceLocation();
-			V item = PlaceboJsonReloadListener.readItem(path, key, buf);
-			return new Content<>(path, key, item);
-		}
+final ResourceLocation key;
+final V item;
 
-		@Override
-		public void handle(Content<V> msg, Supplier<Context> ctx) {
-			MessageHelper.handlePacket(() -> () -> PlaceboJsonReloadListener.acceptItem(msg.path, msg.item), ctx);
-		}
-	}
+public Content(String path, ResourceLocation key, V item) {
+super(path);
+this.key = key;
+this.item = item;
+}
 
-	public static class End extends ReloadListenerPacket<End> {
+public static void handle(Content<?> msg, IPayloadContext ctx) {
+ctx.enqueueWork(() -> PlaceboJsonReloadListener.acceptItem(msg.path, msg.item));
+}
 
-		public End(String path) {
-			super(path);
-		}
+@Override
+@SuppressWarnings("rawtypes")
+public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+return TYPE;
+}
+}
 
-		@Override
-		public void write(End msg, FriendlyByteBuf buf) {
-			buf.writeUtf(msg.path, 50);
-		}
+public static class End extends ReloadListenerPacket implements CustomPacketPayload {
 
-		@Override
-		public End read(FriendlyByteBuf buf) {
-			return new End(buf.readUtf(50));
-		}
+public static final CustomPacketPayload.Type<End> TYPE =
+new CustomPacketPayload.Type<>(HutosLib.rloc("reload_listener_end"));
 
-		@Override
-		public void handle(End msg, Supplier<Context> ctx) {
-			
-			MessageHelper.handlePacket(() -> () -> PlaceboJsonReloadListener.endSync(msg.path), ctx);
-		}
-	}
+public static final StreamCodec<FriendlyByteBuf, End> CODEC = StreamCodec.of(
+(buf, msg) -> buf.writeUtf(msg.path, 50),
+buf -> new End(buf.readUtf(50)));
+
+public End(String path) {
+super(path);
+}
+
+public static void handle(End msg, IPayloadContext ctx) {
+ctx.enqueueWork(() -> PlaceboJsonReloadListener.endSync(msg.path));
+}
+
+@Override
+public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+return TYPE;
+}
+}
 }

@@ -5,57 +5,52 @@ import com.vincenthuto.hutoslib.HutosLib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.RenderTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.ClientTickEvent;
+import net.neoforged.neoforge.event.tick.RenderTickEvent;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.NEOFORGE)
 public final class HlClientTickHandler {
 
-	public static int ticksWithLexicaOpen = 0;
+public static int ticksWithLexicaOpen = 0;
+public static int pageFlipTicks = 0;
+public static int ticksInGame = 0;
+public static float partialTicks = 0;
+public static float delta = 0;
+public static float total = 0;
 
-	public static int pageFlipTicks = 0;
-	public static int ticksInGame = 0;
-	public static float partialTicks = 0;
-	public static float delta = 0;
-	public static float total = 0;
-	private static void calcDelta() {
-		float oldTotal = total;
-		total = ticksInGame + partialTicks;
-		delta = total - oldTotal;
-	}
+private static void calcDelta() {
+float oldTotal = total;
+total = ticksInGame + partialTicks;
+delta = total - oldTotal;
+}
 
-	@SubscribeEvent
-	public static void clientTickEnd(ClientTickEvent event) {
-		if (event.phase == Phase.END) {
-			Screen gui = Minecraft.getInstance().screen;
-			if (gui == null || !gui.isPauseScreen()) {
-				ticksInGame++;
-				partialTicks = 0;
+@SubscribeEvent
+public static void clientTickEnd(ClientTickEvent.Post event) {
+Screen gui = Minecraft.getInstance().screen;
+if (gui == null || !gui.isPauseScreen()) {
+ticksInGame++;
+partialTicks = 0;
 
-				Player player = Minecraft.getInstance().player;
-				if (player != null) {
+Player player = Minecraft.getInstance().player;
+if (player != null) {
+}
+}
+calcDelta();
+}
 
-				}
-			}
-		}
+@SubscribeEvent
+public static void renderTickPre(RenderTickEvent.Pre event) {
+partialTicks = event.getPartialTick();
+}
 
-		calcDelta();
-	}
+@SubscribeEvent
+public static void renderTickPost(RenderTickEvent.Post event) {
+calcDelta();
+}
 
-	@SubscribeEvent
-	public static void renderTick(RenderTickEvent event) {
-		if (event.phase == Phase.START)
-			partialTicks = event.renderTickTime;
-		else {
-			calcDelta();
-		}
-	}
-
-	private HlClientTickHandler() {
-	}
-
+private HlClientTickHandler() {
+}
 }

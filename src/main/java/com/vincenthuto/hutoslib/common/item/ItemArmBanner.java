@@ -3,16 +3,13 @@ package com.vincenthuto.hutoslib.common.item;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -26,93 +23,65 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 public class ItemArmBanner extends Item implements IBannerSlotItem {
-	public static final Capability<IBannerSlotItem> BANNER_SLOT_ITEM = CapabilityManager.get(new CapabilityToken<>() {
-	});
 
-	public static DyeColor getColor(ItemStack stack) {
-		return DyeColor.byId(stack.getOrCreateTagElement("BlockEntityTag").getInt("Base"));
-	}
-	public ArmorMaterial material;
+public static DyeColor getColor(ItemStack stack) {
+DyeColor color = stack.get(DataComponents.BASE_COLOR);
+return color != null ? color : DyeColor.WHITE;
+}
 
-	ResourceLocation modellocation;
+public Holder<ArmorMaterial> material;
+ResourceLocation modellocation;
 
-	public ItemArmBanner(Properties prop, ArmorMaterial materialIn, ResourceLocation modellocation) {
-		super(prop.stacksTo(1));
-		this.material = materialIn;
-		this.modellocation = modellocation;
-	}
+public ItemArmBanner(Properties prop, Holder<ArmorMaterial> materialIn, ResourceLocation modellocation) {
+super(prop.stacksTo(1));
+this.material = materialIn;
+this.modellocation = modellocation;
+}
 
-	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
-	}
+@Override
+public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
+}
 
-	@Override
-	public String getDescriptionId(ItemStack stack) {
-		return stack.getTagElement("BlockEntityTag") != null ? this.getDescriptionId() + '.' + getColor(stack).getName()
-				: super.getDescriptionId(stack);
-	}
+@Override
+public String getDescriptionId(ItemStack stack) {
+DyeColor color = stack.get(DataComponents.BASE_COLOR);
+return color != null ? this.getDescriptionId() + '.' + color.getName() : super.getDescriptionId(stack);
+}
 
-	public ResourceLocation getTexture() {
+public ResourceLocation getTexture() {
+return modellocation;
+}
 
-		return modellocation;
-	}
+@Override
+public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+super.initializeClient(consumer);
+consumer.accept(RenderPropArmBanner.INSTANCE);
+}
 
-	@Override
-	public ICapabilityProvider initCapabilities(final ItemStack stack, CompoundTag nbt) {
-		return new ICapabilityProvider() {
-			final LazyOptional<IBannerSlotItem> extensionSlotInstance = LazyOptional.of(() -> ItemArmBanner.this);
+@Override
+public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+return repair.is(ItemTags.PLANKS) || super.isValidRepairItem(toRepair, repair);
+}
 
-			@Override
-			@Nonnull
-			public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, final @Nullable Direction side) {
-				if (cap == BANNER_SLOT_ITEM)
-					return extensionSlotInstance.cast();
-				return LazyOptional.empty();
-			}
-		};
-	}
-
-	@Override
-	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-		super.initializeClient(consumer);
-		consumer.accept(RenderPropArmBanner.INSTANCE);
-
-	}
-
-	@Override
-	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-
-		return ForgeRegistries.ITEMS.tags().getTag(ItemTags.PLANKS).contains(repair.getItem())
-				|| super.isValidRepairItem(toRepair, repair);
-	}
-
-	@Override
-
-	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-		ItemStack itemstack = playerIn.getItemInHand(handIn);
-		playerIn.startUsingItem(handIn);
-		return InteractionResultHolder.consume(itemstack);
-	}
+@Override
+public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+ItemStack itemstack = playerIn.getItemInHand(handIn);
+playerIn.startUsingItem(handIn);
+return InteractionResultHolder.consume(itemstack);
+}
 }
 
 class RenderPropArmBanner implements IClientItemExtensions {
 
-	public static RenderPropArmBanner INSTANCE = new RenderPropArmBanner();
+public static RenderPropArmBanner INSTANCE = new RenderPropArmBanner();
 
-	@Override
-	public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-		return new RenderItemArmBanner(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-				Minecraft.getInstance().getEntityModels());
-	}
-
+@Override
+public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+return new RenderItemArmBanner(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
+Minecraft.getInstance().getEntityModels());
+}
 }

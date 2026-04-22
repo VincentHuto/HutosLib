@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import com.vincenthuto.hutoslib.common.network.PacketContainerSlot;
 
 import net.minecraft.client.RecipeBookCategories;
@@ -122,7 +123,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingContainer> {
 		this.addSlot(new BannerSlot(BannerSlotContainer.this.extensionSlot, 77, 44));
 
 		if (playerInventory.player.level().isClientSide) {
-			HLPacketHandler.MAINCHANNEL.sendToServer(new PacketContainerSlot());
+			PacketDistributor.sendToServer(new PacketContainerSlot());
 		}
 	}
 

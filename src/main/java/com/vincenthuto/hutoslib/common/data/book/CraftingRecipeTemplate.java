@@ -18,13 +18,14 @@ import com.vincenthuto.hutoslib.common.data.shadow.RecipeHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.registries.ForgeRegistries;
+
 
 public class CraftingRecipeTemplate extends PageTemplate {
 	private final Supplier<RecipeHelper> recipeHelper = new LazySupplier<>(RecipeHelper::new);

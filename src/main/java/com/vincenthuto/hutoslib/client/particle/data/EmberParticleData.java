@@ -9,8 +9,9 @@ import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.registries.ForgeRegistries;
+
 
 /**
  * Simplified verison of ElementalCraft
@@ -81,7 +82,7 @@ public class EmberParticleData implements ParticleOptions {
 
 	@Override
 	public String writeToString() {
-		return ForgeRegistries.PARTICLE_TYPES.getKey(type).toString() + " " + color.serialize() + " " + alpha + " " + scale + " " + life;
+		return BuiltInRegistries.PARTICLE_TYPE.getKey(type).toString() + " " + color.serialize() + " " + alpha + " " + scale + " " + life;
 	}
 
 }

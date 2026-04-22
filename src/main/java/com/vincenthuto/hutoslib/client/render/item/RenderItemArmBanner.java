@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatterns;
 
 public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 
@@ -99,7 +101,8 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 			impl.endBatch();
 			matrixStack.popPose();
 
-			boolean flag = stack.getTagElement("BlockEntityTag") != null;
+			boolean flag = stack.get(DataComponents.BANNER_PATTERNS) != null
+					&& !stack.get(DataComponents.BANNER_PATTERNS).layers().isEmpty();
 			matrixStack.pushPose();
 			matrixStack.scale(1.0F, -1.0F, -1.0F);
 
@@ -110,8 +113,9 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 				matrixStack.translate(0, 0.05, -0.25);
 				matrixStack.mulPose(new Quaternion(Vector3.ZN, 75, true).toMoj());
 				matrixStack.scale(1.7f, 1.7f, 1.7f);
+				BannerPatterns patterns = stack.get(DataComponents.BANNER_PATTERNS);
 				List<Pair<Holder<BannerPattern>, DyeColor>> list = BannerBlockEntity
-						.createPatterns(ItemArmBanner.getColor(stack), BannerBlockEntity.getItemPatterns(stack));
+						.createPatterns(ItemArmBanner.getColor(stack), patterns);
 				BannerRenderer.renderPatterns(matrixStack, buffer, combinedLight, combinedOverlay,
 						this.modelPauldron.plate(), material, false, list, stack.hasFoil());
 			} else {

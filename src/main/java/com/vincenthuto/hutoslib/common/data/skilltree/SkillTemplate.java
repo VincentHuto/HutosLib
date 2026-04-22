@@ -7,10 +7,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+
 
 public class SkillTemplate extends TreeDataTemplate {
 
@@ -59,7 +60,7 @@ public class SkillTemplate extends TreeDataTemplate {
 	public ItemStack getIconItem() {
 		if (icon != null && icon.contains(":")) {
 			String[] split = icon.split(":");
-			Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
+			Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
 			}
