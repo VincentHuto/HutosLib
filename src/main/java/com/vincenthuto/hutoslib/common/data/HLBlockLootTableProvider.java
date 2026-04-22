@@ -1,29 +1,34 @@
 package com.vincenthuto.hutoslib.common.data;
 
-import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 
-import net.minecraft.data.loot.packs.VanillaBlockLoot;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.registries.RegistryObject;
 
+public class HLBlockLootTableProvider extends BlockLootSubProvider {
 
-public class HLBlockLootTableProvider extends VanillaBlockLoot {
+    public HLBlockLootTableProvider(HolderLookup.Provider provider) {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), provider);
+    }
 
     @Override
     protected void generate() {
         dropSelf(HLBlockInit.display_glass.get());
         dropSelf(HLBlockInit.display_pedestal.get());
-
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return HLBlockInit.BLOCKS.getEntries().stream()
-                .filter(e -> e.getKey().location().getNamespace().equals(HutosLib.MOD_ID))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
+        return Stream.concat(
+            HLBlockInit.BLOCKS.getEntries().stream().map(e -> e.get()),
+            HLBlockInit.MODELEDBLOCKS.getEntries().stream().map(e -> e.get())
+        ).collect(Collectors.toList());
     }
 }

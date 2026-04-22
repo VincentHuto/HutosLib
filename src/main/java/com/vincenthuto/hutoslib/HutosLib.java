@@ -12,15 +12,12 @@ import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.data.HLDataGeneration;
 import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
 import com.vincenthuto.hutoslib.common.data.skilltree.SkillTreePlaceboReloadListener;
-import com.vincenthuto.hutoslib.common.enchant.HLEnchantInit;
 import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -95,7 +92,6 @@ HLBlockInit.MODELEDBLOCKS.register(modEventBus);
 CREATIVETABS.register(modEventBus);
 HLParticleInit.PARTICLE_TYPES.register(modEventBus);
 HLBlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
-HLEnchantInit.ENCHANTS.register(modEventBus);
 HlContainerInit.CONTAINERS.register(modEventBus);
 HlContainerInit.RECIPESERIALIZERS.register(modEventBus);
 HLAttachmentTypes.register(modEventBus);
@@ -103,9 +99,6 @@ HLAttachmentTypes.register(modEventBus);
 
 private void clientSetup(final FMLClientSetupEvent event) {
 BlockEntityRenderers.register(HLBlockEntityInit.display_pedestal.get(), RenderTileDisplayPedestal::new);
-if (FMLEnvironment.dist == Dist.CLIENT) {
-ItemBlockRenderTypes.setRenderLayer(HLBlockInit.display_glass.get(), RenderType.cutoutMipped());
-}
 event.enqueueWork(() -> {
 MenuScreens.register(HlContainerInit.banner_slot_container.get(), BannerSlotScreen::new);
 });

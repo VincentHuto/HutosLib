@@ -10,6 +10,7 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.network.PacketSyncBannerSlotContents;
 import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +21,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameRules;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -72,7 +73,7 @@ if (!(entity instanceof Player) && !(entity instanceof ArmorStand)) return;
 BannerExtensionSlot instance = get(entity);
 BannerSlotItemHandler banner = instance.getBanner();
 ItemStack stack = banner.getContents();
-if (EnchantmentHelper.hasVanishingCurse(stack)) {
+if (hasVanishingCurse(stack)) {
 stack = ItemStack.EMPTY;
 banner.setContents(stack);
 }
@@ -192,5 +193,12 @@ private void tickAllSlots() {
 for (BannerSlotItemHandler slot : slots) {
 slot.onWornTick();
 }
+}
+
+private static boolean hasVanishingCurse(ItemStack stack) {
+var enchantments = stack.get(DataComponents.ENCHANTMENTS);
+if (enchantments == null) return false;
+return enchantments.keySet().stream()
+    .anyMatch(h -> h.is(Enchantments.VANISHING_CURSE));
 }
 }

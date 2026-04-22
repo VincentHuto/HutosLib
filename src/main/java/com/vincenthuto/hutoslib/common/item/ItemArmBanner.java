@@ -3,13 +3,13 @@ package com.vincenthuto.hutoslib.common.item;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
-
 import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
 import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -28,27 +28,28 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 public class ItemArmBanner extends Item implements IBannerSlotItem {
 
 public static DyeColor getColor(ItemStack stack) {
-return DyeColor.byId(stack.getOrCreateTagElement("BlockEntityTag").getInt("Base"));
+DyeColor color = stack.get(DataComponents.BASE_COLOR);
+return color != null ? color : DyeColor.WHITE;
 }
 
-public ArmorMaterial material;
+public Holder<ArmorMaterial> material;
 ResourceLocation modellocation;
 
-public ItemArmBanner(Properties prop, ArmorMaterial materialIn, ResourceLocation modellocation) {
+public ItemArmBanner(Properties prop, Holder<ArmorMaterial> materialIn, ResourceLocation modellocation) {
 super(prop.stacksTo(1));
 this.material = materialIn;
 this.modellocation = modellocation;
 }
 
 @Override
-public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
 BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
 }
 
 @Override
 public String getDescriptionId(ItemStack stack) {
-return stack.getTagElement("BlockEntityTag") != null ? this.getDescriptionId() + '.' + getColor(stack).getName()
-: super.getDescriptionId(stack);
+DyeColor color = stack.get(DataComponents.BASE_COLOR);
+return color != null ? this.getDescriptionId() + '.' + color.getName() : super.getDescriptionId(stack);
 }
 
 public ResourceLocation getTexture() {

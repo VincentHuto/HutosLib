@@ -27,7 +27,7 @@ return 0;
 @SuppressWarnings("DataFlowIssue")
 @Override
 public Optional<ResourceLocation> getRegistryNameForRecipe(Recipe<?> recipe) {
-ResourceLocation id = recipe.getId();
-return Optional.ofNullable(id);
+	// Recipe.getId() was removed in 1.21.1 — ID is tracked in RecipeHolder externally
+	return Optional.empty();
 }
 }

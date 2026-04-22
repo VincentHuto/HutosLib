@@ -5,9 +5,9 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableSet;
 import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 public interface IBannerSlotItem {
@@ -16,7 +16,12 @@ public interface IBannerSlotItem {
 	}
 
 	default boolean canUnequip(@Nonnull ItemStack stack, @Nonnull IBannerSlot slot) {
-		return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BINDING_CURSE, stack) <= 0;
+		var enchantments = stack.get(DataComponents.ENCHANTMENTS);
+		if (enchantments != null) {
+			return enchantments.keySet().stream()
+				.noneMatch(h -> h.is(Enchantments.BINDING_CURSE));
+		}
+		return true;
 	}
 
 	@Nonnull

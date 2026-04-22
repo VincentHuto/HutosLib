@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,6 +34,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatterns;
 
 public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
 
@@ -76,7 +78,9 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 								1.0f, 1.0f);
 
 					}
-					boolean flag = banner.getTagElement("BlockEntityTag") != null;
+					DyeColor baseColor = ItemArmBanner.getColor(banner);
+					BannerPatterns patterns = banner.get(DataComponents.BANNER_PATTERNS);
+					boolean flag = patterns != null && !patterns.layers().isEmpty();
 					matrixStack.pushPose();
 					matrixStack.scale(1.0F, -1.0F, -1.0F);
 					Material material = flag ? ModelBakery.SHIELD_BASE : ModelBakery.NO_PATTERN_SHIELD;
@@ -84,7 +88,7 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 							this.modelPauldron.renderType(material.atlasLocation()), true, banner.hasFoil()));
 					if (flag) {
 						List<Pair<Holder<BannerPattern>, DyeColor>> list = BannerBlockEntity.createPatterns(
-								ItemArmBanner.getColor(banner), BannerBlockEntity.getItemPatterns(banner));
+								baseColor, patterns);
 						matrixStack.mulPose(new Quaternion(Vector3.YN, 90, true).toMoj());
 						matrixStack.mulPose(new Quaternion(Vector3.ZP, 180, true).toMoj());
 						matrixStack.translate(0, 0.3, -0.55);
