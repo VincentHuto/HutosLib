@@ -49,8 +49,8 @@ public class ChapterTemplate extends BookDataTemplate {
 	}
 
 	public ItemStack getIconItem() {
-		if (color != null && icon.contains(",")) {
-			String[] split = icon.split(",", 2);
+		if (icon != null && icon.contains(":")) {
+			String[] split = icon.split(":", 2);
 			if (split.length < 2) {
 				return ItemStack.EMPTY;
 			}
