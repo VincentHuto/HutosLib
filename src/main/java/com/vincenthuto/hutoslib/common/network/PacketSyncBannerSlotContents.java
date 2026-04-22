@@ -10,7 +10,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -51,8 +50,8 @@ public static void handle(PacketSyncBannerSlotContents msg, IPayloadContext ctx)
 ctx.enqueueWork(() -> {
 Minecraft minecraft = Minecraft.getInstance();
 Entity entity = minecraft.level.getEntity(msg.entityId);
-if (entity instanceof LivingEntity living && living instanceof Player) {
-BannerExtensionSlot.get(living).setAll(msg.stacks);
+if (entity instanceof Player player) {
+BannerExtensionSlot.get(player).setAll(msg.stacks);
 }
 });
 }
