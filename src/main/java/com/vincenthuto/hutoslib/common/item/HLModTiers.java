@@ -2,11 +2,14 @@ package com.vincenthuto.hutoslib.common.item;
 
 import java.util.function.Supplier;
 
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 
 @SuppressWarnings("deprecation")
 public enum HLModTiers implements Tier {
@@ -70,5 +73,17 @@ public enum HLModTiers implements Tier {
 	@Override
 	public int getUses() {
 		return this.maxUses;
+	}
+
+	@Override
+	public TagKey<Block> getIncorrectBlocksForDrops() {
+		return switch (this) {
+		case WOOD -> BlockTags.INCORRECT_FOR_WOODEN_TOOL;
+		case STONE -> BlockTags.INCORRECT_FOR_STONE_TOOL;
+		case IRON -> BlockTags.INCORRECT_FOR_IRON_TOOL;
+		case DIAMOND -> BlockTags.INCORRECT_FOR_DIAMOND_TOOL;
+		case GOLD -> BlockTags.INCORRECT_FOR_GOLD_TOOL;
+		case NETHERITE -> BlockTags.INCORRECT_FOR_NETHERITE_TOOL;
+		};
 	}
 }

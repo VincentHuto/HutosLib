@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.RegistryObject;
 
 public class HLBlockStateProvider extends BlockStateProvider {
 
@@ -19,7 +18,7 @@ public class HLBlockStateProvider extends BlockStateProvider {
 	@Override
 	protected void registerStatesAndModels() {
 		simpleBlock(HLBlockInit.display_glass.get());
-		for (RegistryObject<Block> b : HLBlockInit.MODELEDBLOCKS.getEntries()) {
+		for (var b : HLBlockInit.MODELEDBLOCKS.getEntries()) {
 			ModelFile mf = new ModelFile(
 					HutosLib.rloc("block/" + b.get().asItem().getDescriptionId().replace("block.hutoslib.", ""))) {
 

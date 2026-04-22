@@ -13,9 +13,8 @@ import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
-import net.neoforged.neoforge.registries.RegistryObject;
 
 public class HLItemInit {
 
@@ -32,58 +31,58 @@ public class HLItemInit {
 	// Test Tome
 	public static ResourceLocation hl_guide_book_text = HutosLib.rloc(
 			"textures/gui/guide/hl_guide_model.png");
-	public static final RegistryObject<Item> hl_guide_book = SPECIALITEMS.register("hl_guide_book",
+	public static final DeferredHolder<Item, ? extends Item> hl_guide_book = SPECIALITEMS.register("hl_guide_book",
 			() -> new ItemHLGuideBook(new Item.Properties().stacksTo(1),
 					hl_guide_book_text));
 
 	// Materials
-	public static final RegistryObject<Item> raw_clay_flask = ITEMS.register("raw_clay_flask",
+	public static final DeferredHolder<Item, Item> raw_clay_flask = ITEMS.register("raw_clay_flask",
 			() -> new Item(new Item.Properties()));
-	public static final RegistryObject<Item> cured_clay_flask = ITEMS.register("cured_clay_flask",
+	public static final DeferredHolder<Item, Item> cured_clay_flask = ITEMS.register("cured_clay_flask",
 			() -> new Item(new Item.Properties()));
 
 	// Karma
-//	public static final RegistryObject<Item> node_of_actualization = ITEMS.register("node_of_actualization",
+//	public static final DeferredHolder<Item, Item> node_of_actualization = ITEMS.register("node_of_actualization",
 //			() -> new ItemNodeOfActualization(new Item.Properties()));
 
 	// Knappers
-	public static final RegistryObject<Item> iron_knapper = HANDHELDITEMS.register("iron_knapper",
+	public static final DeferredHolder<Item, ? extends Item> iron_knapper = HANDHELDITEMS.register("iron_knapper",
 			() -> new ItemKnapper(35f, 1, 0, HLModTiers.IRON, new Item.Properties()));
-	public static final RegistryObject<Item> diamond_knapper = HANDHELDITEMS.register("diamond_knapper",
+	public static final DeferredHolder<Item, ? extends Item> diamond_knapper = HANDHELDITEMS.register("diamond_knapper",
 			() -> new ItemKnapper(50f, 1, 0, HLModTiers.DIAMOND,
 					new Item.Properties()));
-	public static final RegistryObject<Item> obsidian_flakes = ITEMS.register("obsidian_flakes",
+	public static final DeferredHolder<Item, Item> obsidian_flakes = ITEMS.register("obsidian_flakes",
 			() -> new Item(new Item.Properties()));
 
 	// Banners and Patterns
 
-	public static final RegistryObject<BannerPattern> logo = BANNERPATTERNS.register("hutoslib_logo",
+	public static final DeferredHolder<BannerPattern, BannerPattern> logo = BANNERPATTERNS.register("hutoslib_logo",
 			() -> new BannerPattern("hutoslib_logo"));
 
-	public static final RegistryObject<Item> hutoslib_logo = ITEMS.register("hutoslib_logo",
+	public static final DeferredHolder<Item, Item> hutoslib_logo = ITEMS.register("hutoslib_logo",
 			() -> new BannerPatternItem(
 					TagKey.create(Registries.BANNER_PATTERN,
 							HutosLib.rloc( "pattern_item/hutoslib_logo")),
 					new Item.Properties()));
 
-	public static final RegistryObject<Item> leather_arm_banner = SPECIALITEMS.register("leather_arm_banner",
+	public static final DeferredHolder<Item, ? extends Item> leather_arm_banner = SPECIALITEMS.register("leather_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.LEATHER,
 					HutosLib.rloc( "textures/entity/arm_banner/leather_arm_banner.png")));
-	public static final RegistryObject<Item> iron_arm_banner = SPECIALITEMS.register("iron_arm_banner",
+	public static final DeferredHolder<Item, ? extends Item> iron_arm_banner = SPECIALITEMS.register("iron_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.IRON,
 					HutosLib.rloc( "textures/entity/arm_banner/iron_arm_banner.png")));
-	public static final RegistryObject<Item> gold_arm_banner = SPECIALITEMS.register("gold_arm_banner",
+	public static final DeferredHolder<Item, ? extends Item> gold_arm_banner = SPECIALITEMS.register("gold_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.GOLD,
 					HutosLib.rloc( "textures/entity/arm_banner/gold_arm_banner.png")));
-	public static final RegistryObject<Item> diamond_arm_banner = SPECIALITEMS.register("diamond_arm_banner",
+	public static final DeferredHolder<Item, ? extends Item> diamond_arm_banner = SPECIALITEMS.register("diamond_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.DIAMOND,
 					HutosLib.rloc( "textures/entity/arm_banner/diamond_arm_banner.png")));
 
-	public static final RegistryObject<Item> obsidian_arm_banner = SPECIALITEMS.register("obsidian_arm_banner",
+	public static final DeferredHolder<Item, ? extends Item> obsidian_arm_banner = SPECIALITEMS.register("obsidian_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.DIAMOND,
 					HutosLib.rloc( "textures/entity/arm_banner/obsidian_arm_banner.png")));
 
-	public static final RegistryObject<Item> netherite_arm_banner = SPECIALITEMS.register("netherite_arm_banner",
+	public static final DeferredHolder<Item, ? extends Item> netherite_arm_banner = SPECIALITEMS.register("netherite_arm_banner",
 			() -> new ItemArmBanner(new Item.Properties(), ArmorMaterials.NETHERITE,
 					HutosLib.rloc( "textures/entity/arm_banner/netherite_arm_banner.png")));
 
