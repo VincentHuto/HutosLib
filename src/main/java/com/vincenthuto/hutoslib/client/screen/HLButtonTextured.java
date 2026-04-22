@@ -15,7 +15,7 @@ public class HLButtonTextured extends Button {
 
 	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, Component.literal(""), actionIn, DEFAULT_NARRATION);
+		super(posXIn, posYIn, buttonWidthIn, buttonHeightIn, Component.literal(""), actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -34,7 +34,7 @@ public class HLButtonTextured extends Button {
 
 	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Component text, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, DEFAULT_NARRATION);
+		super(posXIn, posYIn, buttonWidthIn, buttonHeightIn, text, actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -61,7 +61,6 @@ public class HLButtonTextured extends Button {
 	 * @param buttonHeightIn Button Size Height
 	 * @param uIn            Texture X Loc
 	 * @param vIn            Texture Y Loc
-	 * @param tooltip        Hover Tooltip
 	 * @param actionIn       On Pressed Action
 	 */
 
@@ -73,7 +72,7 @@ public class HLButtonTextured extends Button {
 
 	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, Component text, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonHeightIn, buttonWidthIn, text, actionIn, DEFAULT_NARRATION);
+		super(posXIn, posYIn, buttonWidthIn, buttonHeightIn, text, actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
 		this.id = idIn;
 		this.posX = posXIn;
@@ -103,23 +102,23 @@ public class HLButtonTextured extends Button {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float particks) {
+	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float particks) {
+		this.posX = this.getX();
+		this.posY = this.getY();
 		if (visible) {
-			if (mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width
-					&& mouseY < this.getY() + this.height) {
+			if (this.isMouseOver(mouseX, mouseY)) {
 				this.isHovered = true;
 				v = newV;
-				graphics.blit(texture, posX, posY, u, adjV, width, height);
+				graphics.blit(texture, this.getX(), this.getY(), u, adjV, width, height);
 			} else if (state) {
 				v = newV;
-				graphics.blit(texture, posX, posY, u, adjV, width, height);
+				graphics.blit(texture, this.getX(), this.getY(), u, adjV, width, height);
 			} else {
 				this.isHovered = false;
 				newV = v;
-				graphics.blit(texture, posX, posY, u, v, width, height);
+				graphics.blit(texture, this.getX(), this.getY(), u, v, width, height);
 			}
 		}
-
 
 	}
 

@@ -52,7 +52,7 @@ public static final StreamCodec<FriendlyByteBuf, Content> CODEC = StreamCodec.of
 (buf, msg) -> {
 buf.writeUtf(msg.path, 50);
 buf.writeResourceLocation(msg.key);
-PlaceboJsonReloadListener.writeItem(msg.path, (TypeKeyed<?>) msg.item, buf);
+writeItemUnchecked(msg.path, msg.item, buf);
 },
 buf -> {
 String path = buf.readUtf(50);
@@ -64,6 +64,16 @@ return new Content<>(path, key, (TypeKeyed) item);
 final ResourceLocation key;
 final V item;
 
+@SuppressWarnings("unchecked")
+private static <T extends TypeKeyed<T>> void writeItemUnchecked(String path, TypeKeyed<?> item, FriendlyByteBuf buf) {
+PlaceboJsonReloadListener.writeItem(path, (T) item, buf);
+}
+
+	@SuppressWarnings("unchecked")
+	private static <T extends TypeKeyed<T>> void acceptItemUnchecked(String path, TypeKeyed<?> item) {
+	PlaceboJsonReloadListener.acceptItem(path, (T) item);
+	}
+
 public Content(String path, ResourceLocation key, V item) {
 super(path);
 this.key = key;
@@ -71,7 +81,7 @@ this.item = item;
 }
 
 public static void handle(Content<?> msg, IPayloadContext ctx) {
-ctx.enqueueWork(() -> PlaceboJsonReloadListener.acceptItem(msg.path, msg.item));
+	ctx.enqueueWork(() -> acceptItemUnchecked(msg.path, msg.item));
 }
 
 @Override

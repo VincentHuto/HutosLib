@@ -11,7 +11,7 @@ public class RecipeHelper implements IPlatformRecipeHelper {
 @Override
 public <T extends CraftingRecipe> int getWidth(T recipe) {
 if (recipe instanceof ShapedRecipe shapedRecipe) {
-return shapedRecipe.getRecipeWidth();
+return shapedRecipe.getWidth();
 }
 return 0;
 }
@@ -19,7 +19,7 @@ return 0;
 @Override
 public <T extends CraftingRecipe> int getHeight(T recipe) {
 if (recipe instanceof ShapedRecipe shapedRecipe) {
-return shapedRecipe.getRecipeHeight();
+return shapedRecipe.getHeight();
 }
 return 0;
 }

@@ -23,7 +23,7 @@ import net.minecraft.network.FriendlyByteBuf;
 /**
  * A PSerializer is a combination of json and network de/serializer.<br>
  * Each component is optional (as necessary) except for the Json Deserializer.<br>
- * The consumer is responsible for verifying that all serializers conform to application-dependent requirements through {@link #validate(boolean)}
+ * The consumer is responsible for verifying that all serializers conform to application-dependent requirements through {@link #(boolean)}
  *
  * @param <V> The type of object this serializer interfaces with.
  */
@@ -118,10 +118,10 @@ public class PSerializer<V> implements JsonDeserializer<V>, JsonSerializer<V>, N
 	public static <V> PSerializer<V> fromCodec(String name, Codec<V> codec) {
 		Builder<V> builder = new Builder<>(name);
 		Consumer<String> onErr = msg -> logCodecError(name, msg);
-		builder.toJson(obj -> codec.encodeStart(JsonOps.INSTANCE, obj).getOrThrow(false, onErr).getAsJsonObject());
-		builder.fromJson(json -> codec.decode(JsonOps.INSTANCE, json).getOrThrow(false, onErr).getFirst());
-		builder.toNetwork((obj, buf) -> buf.writeNbt((CompoundTag) codec.encodeStart(NbtOps.INSTANCE, obj).getOrThrow(false, onErr)));
-		builder.fromNetwork(buf -> codec.decode(NbtOps.INSTANCE, buf.readNbt()).getOrThrow(false, onErr).getFirst());
+		builder.toJson(obj -> codec.encodeStart(JsonOps.INSTANCE, obj).resultOrPartial(onErr).orElseThrow().getAsJsonObject());
+		builder.fromJson(json -> codec.decode(JsonOps.INSTANCE, json).resultOrPartial(onErr).orElseThrow().getFirst());
+		builder.toNetwork((obj, buf) -> buf.writeNbt((CompoundTag) codec.encodeStart(NbtOps.INSTANCE, obj).resultOrPartial(onErr).orElseThrow()));
+		builder.fromNetwork(buf -> codec.decode(NbtOps.INSTANCE, buf.readNbt()).resultOrPartial(onErr).orElseThrow().getFirst());
 		return builder.build();
 	}
 

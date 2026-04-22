@@ -76,7 +76,7 @@ public class ParticleLightning extends TextureSheetParticle {
 		this.zd = 0.0;
 		this.data.setMaxOffset(0.2f);
 		this.data.fractalize();
-		this.data.finalize();
+		this.data.finish();
 		this.colorR = r;
 		this.colorG = g;
 		this.colorB = b;
@@ -104,7 +104,7 @@ public class ParticleLightning extends TextureSheetParticle {
 		this.zd = 0.0;
 		this.data.setMaxOffset(0.2f);
 		this.data.fractalize();
-		this.data.finalize();
+		this.data.finish();
 		this.colorR = r;
 		this.colorG = g;
 		this.colorB = b;
@@ -132,7 +132,7 @@ public class ParticleLightning extends TextureSheetParticle {
 		this.zd = 0.0;
 
 		this.data.fractalize();
-		this.data.finalize();
+		this.data.finish();
 		this.colorR = r;
 		this.colorG = g;
 		this.colorB = b;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
@@ -75,14 +74,12 @@ public class HLGuiGuidePage extends Screen {
 				}));
 
 		this.addRenderableWidget(buttonTitle = new HLButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0, (press) -> {
-					mc.setScreen(new HLGuiGuideTitlePage(book));
-				}));
+				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0,
+				(press) -> mc.setScreen(new HLGuiGuideTitlePage(book))));
 
 		this.addRenderableWidget(buttonCloseTab = new HLButtonTextured(HLLocHelper.guiPrefix("book_tabs.png"),
-				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32, (press) -> {
-					this.onClose();
-				}));
+				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32,
+				(press) -> this.onClose()));
 		super.init();
 	}
 
@@ -98,9 +95,7 @@ public class HLGuiGuidePage extends Screen {
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		
-		PoseStack matrixStack = graphics.pose();
-		this.renderBackground(graphics);
+		this.renderMenuBackground(graphics);
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -110,10 +105,8 @@ public class HLGuiGuidePage extends Screen {
 		HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (pageNum + 1)), left + guiWidth - 26,
 				top + guiHeight - 15, 50, 0xffffff, true);
 
-		matrixStack.pushPose();
 		graphics.renderFakeItem(((PageTemplate) pageTemplate).getIconItem(), left + guiWidth - 32,
 				top + guiHeight - 220);
-		matrixStack.popPose();
 		if (!((PageTemplate) pageTemplate).getTitle().isEmpty()) {
 			HLGuiUtils.drawMaxWidthString(font,
 					Component.literal(I18n.get(((PageTemplate) pageTemplate).getTitle())), left - guiWidth + 180,
@@ -167,22 +160,21 @@ public class HLGuiGuidePage extends Screen {
 				}
 			}
 		}
-		List<Component> titlePage = new ArrayList<Component>();
-		titlePage.add(Component.literal(I18n.get("Title")));
-		titlePage.add(Component.literal(I18n.get("Return to Catagories")));
+		List<Component> titlePage = new ArrayList<>();
+		titlePage.add(Component.literal("Title"));
+		titlePage.add(Component.literal("Return to Categories"));
 		if (buttonTitle.isHovered()) {
 			graphics.renderComponentTooltip(font, titlePage, mouseX, mouseY);
 		}
 		List<Component> ClosePage = new ArrayList<>();
-		ClosePage.add(Component.literal(I18n.get("Close Book")));
+		ClosePage.add(Component.literal("Close Book"));
 		if (buttonCloseTab.isHoveredOrFocused()) {
 			graphics.renderComponentTooltip(font, ClosePage, mouseX, mouseY);
 		}
 	}
 
 	@Override
-	public void renderBackground(GuiGraphics graphics) {
-		super.renderBackground(graphics);
+	protected void renderMenuBackground(GuiGraphics graphics) {
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
 		int centerX = (width / 2) - guiWidth / 2;

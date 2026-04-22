@@ -19,12 +19,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public class ItemNodeOfActualization extends Item {
 
 public ItemNodeOfActualization(Properties properties) {
-super(properties.stacksTo(1));
-}
-
-@Override
-public Rarity getRarity(ItemStack stack) {
-return Rarity.RARE;
+super(properties.stacksTo(1).rarity(Rarity.RARE));
 }
 
 @Override

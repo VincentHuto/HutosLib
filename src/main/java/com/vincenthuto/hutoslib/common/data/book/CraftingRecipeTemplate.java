@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -49,20 +50,20 @@ public class CraftingRecipeTemplate extends PageTemplate {
 		ClientLevel world = Objects.requireNonNull(Minecraft.getInstance().level);
 
 		var recipeStream = world.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING).stream()
-				.filter(r -> r.getResultItem(world.registryAccess()).getItem() == getIconItem().getItem());
+				.filter(holder -> holder.value().getResultItem(world.registryAccess()).getItem() == getIconItem().getItem());
 		var recipes = recipeStream.toList();
 
 		GhostRecipe ghost = new GhostRecipe();
 		if (!recipes.isEmpty()) {
 			float time = Minecraft.getInstance().level.getGameTime();
 			var test = Mth.floor(time / 30.0F) % recipes.size();
-			var currentRecipe = recipes.get(test);
-			ghost.setRecipe(currentRecipe);
+			var currentHolder = recipes.get(test);
+			CraftingRecipe currentRecipe = currentHolder.value();
+			ghost.setRecipe(currentHolder);
 			ItemStack itemstack = currentRecipe.getResultItem(world.registryAccess());
 			ghost.addIngredient(Ingredient.of(itemstack), 1 * 18 + 98, 1 * 18 + 31);
 
-			List<List<ItemStack>> inputs = currentRecipe.getIngredients().stream()
-					.map(ingredient -> List.of(ingredient.getItems())).toList();
+			List<Ingredient> inputs = currentRecipe.getIngredients();
 
 			int w = recipeHelper.get().getWidth(currentRecipe);
 			int h = recipeHelper.get().getHeight(currentRecipe);
@@ -76,7 +77,7 @@ public class CraftingRecipeTemplate extends PageTemplate {
 			for (int i = 0; i < inputs.size(); i++) {
 				int index = getCraftingIndex(i, w, h);
 				var coord = coords.get(index);
-				var ingredient = currentRecipe.getIngredients().get(i);
+				var ingredient = inputs.get(i);
 				ghost.addIngredient(ingredient, coord.getLeft(), coord.getRight());
 			}
 

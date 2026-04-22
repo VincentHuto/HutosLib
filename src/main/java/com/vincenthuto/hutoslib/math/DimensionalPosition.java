@@ -1,5 +1,8 @@
 package com.vincenthuto.hutoslib.math;
 
+import java.util.stream.Stream;
+
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -9,8 +12,12 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 
 	public static DimensionalPosition fromNBT(CompoundTag nbt) {
+		return fromNBT(nbt, HolderLookup.Provider.create(Stream.empty()));
+	}
+
+	public static DimensionalPosition fromNBT(CompoundTag nbt, HolderLookup.Provider provider) {
 		DimensionalPosition dp = new DimensionalPosition();
-		dp.deserializeNBT(nbt);
+		dp.deserializeNBT(provider, nbt);
 		return dp;
 	}
 	private ResourceLocation dimension;
@@ -28,17 +35,15 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 	}
 
 	@Override
-	public void deserializeNBT(CompoundTag nbt) {
+	public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
 		if (nbt.contains("dim")) {
-			ResourceLocation dim = new ResourceLocation(nbt.getString("dim"));
-			this.dimension = dim;
+			ResourceLocation parsed = ResourceLocation.tryParse(nbt.getString("dim"));
+			if (parsed != null) {
+				this.dimension = parsed;
+			}
 		}
 
-		if (nbt.contains("pos")) {
-			CompoundTag bPosNbt = nbt.getCompound("pos");
-			BlockPos bPos = NbtUtils.readBlockPos(bPosNbt);
-			this.position = bPos;
-		}
+		NbtUtils.readBlockPos(nbt, "pos").ifPresent(pos -> this.position = pos);
 	}
 
 	public ResourceLocation getDimension() {
@@ -50,11 +55,14 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 	}
 
 	@Override
-	public CompoundTag serializeNBT() {
+	public CompoundTag serializeNBT(HolderLookup.Provider provider) {
 		CompoundTag nbt = new CompoundTag();
-		nbt.putString("dim", dimension.toString());
-		CompoundTag posNbt = NbtUtils.writeBlockPos(position);
-		nbt.put("pos", posNbt);
+		if (dimension != null) {
+			nbt.putString("dim", dimension.toString());
+		}
+		if (position != null) {
+			nbt.put("pos", NbtUtils.writeBlockPos(position));
+		}
 		return nbt;
 	}
 }

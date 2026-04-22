@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.common.network;
 
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
-import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
+import com.vincenthuto.hutoslib.common.karma.KarmaProvider;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,38 +16,39 @@ public static final CustomPacketPayload.Type<PacketKarmaServer> TYPE =
 new CustomPacketPayload.Type<>(HutosLib.rloc("packet_karma_server"));
 
 public static final StreamCodec<FriendlyByteBuf, PacketKarmaServer> CODEC = StreamCodec.of(
-PacketKarmaServer::encode, PacketKarmaServer::decode);
-
-public static PacketKarmaServer decode(final FriendlyByteBuf buf) {
-return new PacketKarmaServer(buf.readBoolean(), buf.readFloat());
-}
-
-public static void encode(final PacketKarmaServer msg, final FriendlyByteBuf buf) {
-buf.writeBoolean(msg.active);
-buf.writeFloat(msg.volume);
-}
+(buf, msg) -> msg.encode(buf), PacketKarmaServer::new);
 
 public static void handle(final PacketKarmaServer msg, IPayloadContext ctx) {
 ctx.enqueueWork(() -> {
 if (Minecraft.getInstance().player != null) {
-IKarma capa = Minecraft.getInstance().player.getData(HLAttachmentTypes.KARMA.get());
-capa.setActive(msg.active);
-capa.setKarma(msg.volume);
+IKarma karmaState = KarmaProvider.getKarma(Minecraft.getInstance().player);
+karmaState.setActive(msg.active);
+karmaState.setKarma(msg.karma);
 }
 });
 }
 
 private final boolean active;
-private final float volume;
+private final float karma;
 
-public PacketKarmaServer(boolean active, float volumeIn) {
-this.active = active;
-this.volume = volumeIn;
+public PacketKarmaServer(FriendlyByteBuf buf) {
+this.active = buf.readBoolean();
+this.karma = buf.readFloat();
 }
 
-public PacketKarmaServer(IKarma volume) {
-this.active = volume.isActive();
-this.volume = volume.getKarma();
+public PacketKarmaServer(boolean active, float karma) {
+this.active = active;
+this.karma = karma;
+}
+
+public PacketKarmaServer(IKarma karmaState) {
+this.active = karmaState.isActive();
+this.karma = karmaState.getKarma();
+}
+
+public void encode(FriendlyByteBuf buf) {
+buf.writeBoolean(active);
+buf.writeFloat(karma);
 }
 
 @Override

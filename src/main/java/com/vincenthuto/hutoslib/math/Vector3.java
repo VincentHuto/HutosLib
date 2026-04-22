@@ -69,7 +69,7 @@ public class Vector3 {
 	}
 
 	public static Vector3 fromEntityCenter(Entity e) {
-		return new Vector3(e.getX(), e.getY() - e.getMyRidingOffset() + e.getBbHeight() / 2, e.getZ());
+		return new Vector3(e.getX(), e.getY() + e.getBbHeight() * 0.5D, e.getZ());
 	}
 
 	public static Vector3 getPerpendicular(Vector3 vec) {
@@ -276,7 +276,7 @@ public class Vector3 {
 
 	@OnlyIn(Dist.CLIENT)
 	public void vertex(Matrix4f mat, VertexConsumer buffer) {
-		buffer.vertex(mat, (float) x, (float) y, (float) z);
+		buffer.addVertex(mat, x, y, z);
 	}
 
 	public Vector3 xCrossProduct() {

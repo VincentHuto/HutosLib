@@ -7,8 +7,6 @@ import com.vincenthuto.hutoslib.common.network.VanillaPacketDispatcher;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -37,6 +35,16 @@ public class SimpleInventoryBlockEntity extends BaseContainerBlockEntity {
 	@Override
 	protected AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory) {
 		return null;
+	}
+
+	@Override
+	public NonNullList<ItemStack> getItems() {
+		return this.inventory;
+	}
+
+	@Override
+	public void setItems(NonNullList<ItemStack> pItems) {
+		this.inventory = pItems;
 	}
 
 	@Override
@@ -124,44 +132,11 @@ public class SimpleInventoryBlockEntity extends BaseContainerBlockEntity {
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
-	@Override
-	public void handleUpdateTag(CompoundTag tag) {
-		super.handleUpdateTag(tag);
-	}
-
-	@Override
-	public void load(CompoundTag pTag) {
-		super.load(pTag);
-		this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-		ContainerHelper.loadAllItems(pTag, this.inventory);
-	}
-
-	@Override
-	protected void saveAdditional(CompoundTag pTag) {
-		super.saveAdditional(pTag);
-		ContainerHelper.saveAllItems(pTag, this.inventory);
-	}
-
-	@Override
-	public CompoundTag getUpdateTag() {
-		CompoundTag tag = new CompoundTag();
-		ContainerHelper.saveAllItems(tag, this.inventory);
-		return tag;
-	}
-
-	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-		super.onDataPacket(net, pkt);
-	}
-
 	public void sendUpdates() {
-		level.setBlocksDirty(worldPosition, getBlockState(), getBlockState());
-		level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-		setChanged();
-	}
-
-	@Override
-	public void setChanged() {
-		super.setChanged();
+		if (level != null) {
+			level.setBlocksDirty(worldPosition, getBlockState(), getBlockState());
+			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+			setChanged();
+		}
 	}
 }

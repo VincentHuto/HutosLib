@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 
 import net.minecraft.Util;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderType.CompositeState;
@@ -25,10 +26,10 @@ public class HLRenderStateShards extends RenderStateShard {
 	private static final Function<ResourceLocation, RenderType> GUI_TRANSLUCENT;
 
 	static {
-		GUI_CUTOUT = Util.memoize(texture -> createDefault("gui_" + texture, DefaultVertexFormat.POSITION_COLOR_TEX,
+		GUI_CUTOUT = Util.memoize(texture -> createDefault("gui_" + texture, DefaultVertexFormat.POSITION_TEX_COLOR ,
 				Mode.QUADS, makeGuiState(texture).createCompositeState(false)));
 		GUI_TRANSLUCENT = Util.memoize(texture -> createDefault("gui_translucent_" + texture,
-				DefaultVertexFormat.POSITION_COLOR_TEX, Mode.QUADS,
+				DefaultVertexFormat.POSITION_TEX_COLOR , Mode.QUADS,
 				makeGuiState(texture).setTransparencyState(TRANSLUCENT_TRANSPARENCY).createCompositeState(false)));
 	}
 
@@ -46,7 +47,7 @@ public class HLRenderStateShards extends RenderStateShard {
 
 	private static CompositeState.CompositeStateBuilder makeGuiState(ResourceLocation texture) {
 		return RenderType.CompositeState.builder().setTextureState(new TextureStateShard(texture, false, false))
-				.setShaderState(POSITION_COLOR_TEX_SHADER);
+				.setShaderState(new ShaderStateShard(GameRenderer::getPositionTexColorShader));
 	}
 
 	private static RenderType createDefault(String name, VertexFormat format, VertexFormat.Mode mode,

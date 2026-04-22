@@ -13,34 +13,34 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class PacketOpenBanner implements CustomPacketPayload {
 
-public static final CustomPacketPayload.Type<PacketOpenBanner> TYPE =
-new CustomPacketPayload.Type<>(HutosLib.rloc("packet_open_banner"));
+    public static final CustomPacketPayload.Type<PacketOpenBanner> TYPE =
+            new CustomPacketPayload.Type<>(HutosLib.rloc("packet_open_banner"));
 
-public static final StreamCodec<FriendlyByteBuf, PacketOpenBanner> CODEC = StreamCodec.of(
-(buf, msg) -> msg.encode(buf), PacketOpenBanner::new);
+    public static final StreamCodec<FriendlyByteBuf, PacketOpenBanner> CODEC = StreamCodec.of(
+            (buf, msg) -> msg.encode(buf), PacketOpenBanner::new);
 
-public PacketOpenBanner() {
-}
+    public PacketOpenBanner() {
+    }
 
-public PacketOpenBanner(FriendlyByteBuf buf) {
-}
+    public PacketOpenBanner(FriendlyByteBuf buf) {
+    }
 
-public void encode(FriendlyByteBuf buf) {
-}
+    public static void handle(PacketOpenBanner msg, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
+            if (ctx.player() instanceof ServerPlayer sender)
+                if (sender != null) {
+                    sender.openMenu(new SimpleMenuProvider(
+                            (i, playerInventory, playerEntity) -> new BannerSlotContainer(i, playerInventory),
+                            Component.translatable("container.crafting")));
+                }
+        });
+    }
 
-public static void handle(PacketOpenBanner msg, IPayloadContext ctx) {
-ctx.enqueueWork(() -> {
-ServerPlayer sender = ctx.sender();
-if (sender != null) {
-sender.openMenu(new SimpleMenuProvider(
-(i, playerInventory, playerEntity) -> new BannerSlotContainer(i, playerInventory),
-Component.translatable("container.crafting")));
-}
-});
-}
+    public void encode(FriendlyByteBuf buf) {
+    }
 
-@Override
-public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
-return TYPE;
-}
+    @Override
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 }

@@ -8,10 +8,10 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.ClientTickEvent;
-import net.neoforged.neoforge.event.tick.RenderTickEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 
-@EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.NEOFORGE)
+@EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public final class HlClientTickHandler {
 
 public static int ticksWithLexicaOpen = 0;
@@ -42,12 +42,12 @@ calcDelta();
 }
 
 @SubscribeEvent
-public static void renderTickPre(RenderTickEvent.Pre event) {
-partialTicks = event.getPartialTick();
+public static void renderFramePre(RenderFrameEvent.Pre event) {
+partialTicks = event.getPartialTick().getGameTimeDeltaPartialTick(true);
 }
 
 @SubscribeEvent
-public static void renderTickPost(RenderTickEvent.Post event) {
+public static void renderFramePost(RenderFrameEvent.Post event) {
 calcDelta();
 }
 

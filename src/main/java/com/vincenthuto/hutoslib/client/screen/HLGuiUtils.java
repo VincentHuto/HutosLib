@@ -10,6 +10,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -41,20 +42,19 @@ public class HLGuiUtils {
 		GlStateManager._depthMask(false);
 		GlStateManager._disableCull();
 		RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
-		Tesselator var4 = RenderSystem.renderThreadTesselator();
-		BufferBuilder var5 = var4.getBuilder();
+		BufferBuilder var5 = Tesselator.getInstance().begin(VertexFormat.Mode.LINES,
+				DefaultVertexFormat.POSITION_COLOR_NORMAL);
 		RenderSystem.lineWidth(1.0F);
-		var5.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
 		Vector3d vector3f = new Vector3d(x2 - x1, y2 - y1, 0);
 		Vector3d vector3f2 = new Vector3d(x1 - x2, y1 - y2, 0);
 		int red = (int) color.getRed();
 		int green = (int) color.getGreen();
 		int blue = (int) color.getBlue();
-		var5.vertex(x1, y1, 0.0D).color(red, green, blue, 255).normal((float) vector3f.x, (float) vector3f.y, 0.0F)
-				.endVertex();
-		var5.vertex(x2, y2, 0.0D).color(red, green, blue, 255).normal((float) vector3f2.x, (float) vector3f2.y, 0.0F)
-				.endVertex();
-		var4.end();
+		var5.addVertex((float) x1, (float) y1, 0.0F).setColor(red, green, blue, 255)
+				.setNormal((float) vector3f.x, (float) vector3f.y, 0.0F);
+		var5.addVertex((float) x2, (float) y2, 0.0F).setColor(red, green, blue, 255)
+				.setNormal((float) vector3f2.x, (float) vector3f2.y, 0.0F);
+		BufferUploader.drawWithShader(var5.buildOrThrow());
 		GlStateManager._enableCull();
 		GlStateManager._depthMask(true);
 	}
@@ -77,26 +77,20 @@ public class HLGuiUtils {
 	 */
 	public static void drawScaledTexturedModalRect(float x, float y, float textureX, float textureY, float width,
 			float height, float scaleIn) {
-		/*
-		 * float f = 0.01090625F; float f1 = 0.01090625F;
-		 */
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		bufferbuilder.vertex(x + 0, y + height, 1).uv((textureX + 0) * scaleIn, (textureY + height) * scaleIn)
-				.endVertex();
-		bufferbuilder.vertex(x + width, y + height, 1).uv((textureX + width) * scaleIn, (textureY + height) * scaleIn)
-				.endVertex();
-		bufferbuilder.vertex(x + width, y + 0, 1).uv((textureX + width) * scaleIn, (textureY + 0) * scaleIn)
-				.endVertex();
-		bufferbuilder.vertex(x + 0, y + 0, 1).uv((textureX + 0) * scaleIn, (textureY + 0) * scaleIn).endVertex();
-		tessellator.end();
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		BufferBuilder bufferbuilder = Tesselator.getInstance().begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		bufferbuilder.addVertex(x, y + height, 1.0F).setUv((textureX) * scaleIn, (textureY + height) * scaleIn);
+		bufferbuilder.addVertex(x + width, y + height, 1.0F)
+				.setUv((textureX + width) * scaleIn, (textureY + height) * scaleIn);
+		bufferbuilder.addVertex(x + width, y, 1.0F).setUv((textureX + width) * scaleIn, (textureY) * scaleIn);
+		bufferbuilder.addVertex(x, y, 1.0F).setUv((textureX) * scaleIn, (textureY) * scaleIn);
+		BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 	}
 
 	public static int drawText(Font fontIn, FormattedCharSequence reorderingProcessor, float x, float y, int color,
 			Matrix4f matrix, boolean drawShadow) {
-		MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource
-				.immediate(Tesselator.getInstance().getBuilder());
+		MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers()
+				.bufferSource();
 		int i = fontIn.drawInBatch(reorderingProcessor, x, y, color, drawShadow, matrix, multibuffersource$buffersource,
 				Font.DisplayMode.NORMAL, 0, 15728880);
 		multibuffersource$buffersource.endBatch();
@@ -108,21 +102,16 @@ public class HLGuiUtils {
 	 */
 	public static void drawTexturedModalRect(float x, float y, float textureX, float textureY, float width,
 			float height) {
-		/*
-		 * float f = 0.00390625F; float f1 = 0.00390625F;
-		 */
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		bufferbuilder.vertex(x + 0, y + height, 1).uv((textureX + 0) * 0.00390625F, (textureY + height) * 0.00390625F)
-				.endVertex();
-		bufferbuilder.vertex(x + width, y + height, 1)
-				.uv((textureX + width) * 0.00390625F, (textureY + height) * 0.00390625F).endVertex();
-		bufferbuilder.vertex(x + width, y + 0, 1).uv((textureX + width) * 0.00390625F, (textureY + 0) * 0.00390625F)
-				.endVertex();
-		bufferbuilder.vertex(x + 0, y + 0, 1).uv((textureX + 0) * 0.00390625F, (textureY + 0) * 0.00390625F)
-				.endVertex();
-		tessellator.end();
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		BufferBuilder bufferbuilder = Tesselator.getInstance().begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		bufferbuilder.addVertex(x, y + height, 1.0F)
+				.setUv((textureX) * 0.00390625F, (textureY + height) * 0.00390625F);
+		bufferbuilder.addVertex(x + width, y + height, 1.0F)
+				.setUv((textureX + width) * 0.00390625F, (textureY + height) * 0.00390625F);
+		bufferbuilder.addVertex(x + width, y, 1.0F)
+				.setUv((textureX + width) * 0.00390625F, (textureY) * 0.00390625F);
+		bufferbuilder.addVertex(x, y, 1.0F).setUv((textureX) * 0.00390625F, (textureY) * 0.00390625F);
+		BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 	}
 
 	public static void fracLine(PoseStack matrix, double src_x, double src_y, double dst_x, double dst_y, int zLevel,
@@ -143,38 +132,30 @@ public class HLGuiUtils {
 
 	// MATRIX FIXING
 	public static void renderItemStackInGui(GuiGraphics graphics, ItemStack stack, int x, int y) {
-		PoseStack ms = graphics.pose();
-		transferMsToGl(ms, () -> graphics.renderFakeItem(stack, x, y));
+		graphics.renderFakeItem(stack, x, y);
 	}
 
 	// MULTIBLOCK STUFF
 	public static void renderMultiBlock(PoseStack matrices, MultiblockPattern pattern, float partialTicks,
 			BlockAndTintGetter getter, double relX, double relY) {
 		matrices.pushPose();
-		MultiBufferSource src = Minecraft.getInstance().renderBuffers().bufferSource();
+		matrices.translate(relX, relY, 100.0D);
+		matrices.scale(8.0F, -8.0F, 8.0F);
+		MultiBufferSource.BufferSource src = Minecraft.getInstance().renderBuffers().bufferSource();
 		BlockEntityRenderDispatcher d = Minecraft.getInstance().getBlockEntityRenderDispatcher();
-		pattern.getBlockPosBlockList().forEach((box) -> {
-			box.render(pattern, matrices, partialTicks, getter, src, d);
-		});
+		pattern.getBlockPosBlockList().forEach((box) -> box.render(pattern, matrices, partialTicks, getter, src, d));
+		src.endBatch();
 		matrices.popPose();
-		PoseStack stack = RenderSystem.getModelViewStack();
-		stack.pushPose();
-		stack.translate(relX, relY, 100);
-		stack.scale(8, 8, 8);
-		stack.scale(1, -1, 1);
-		RenderSystem.applyModelViewMatrix();
-		Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
-		stack.popPose();
-		RenderSystem.applyModelViewMatrix();
 
 	}
 
 	public static void renderPatternInGUI(GuiGraphics graphics, Minecraft mc, MultiblockPattern pattern, double xOff,
 			double yOff) {
-		PoseStack viewModelPose = RenderSystem.getModelViewStack();
+		PoseStack viewModelPose = graphics.pose();
 		viewModelPose.pushPose();
 		Lighting.setupFor3DItems();
 		List<BlockPosBlockPair> patternList = pattern.getBlockPosBlockList();
+		viewModelPose.translate(xOff, yOff, 0.0D);
 		viewModelPose.scale(0.5f, 0.5f, -1f);
 		viewModelPose.mulPose(new Quaternion(Vector3.YP, -5, true).toMoj());
 		for (BlockPosBlockPair pair : patternList) {
@@ -185,13 +166,7 @@ public class HLGuiUtils {
 	}
 
 	public static void transferMsToGl(PoseStack ms, Runnable toRun) {
-		PoseStack mvs = RenderSystem.getModelViewStack();
-		mvs.pushPose();
-		mvs.mulPoseMatrix(ms.last().pose());
-		RenderSystem.applyModelViewMatrix();
 		toRun.run();
-		mvs.popPose();
-		RenderSystem.applyModelViewMatrix();
 	}
 
 }

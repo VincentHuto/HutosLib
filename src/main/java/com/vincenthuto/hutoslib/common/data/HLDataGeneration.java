@@ -8,8 +8,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -25,14 +23,7 @@ public class HLDataGeneration {
 		HLBlockTagProvider blockTags = new HLBlockTagProvider(packOutput, lookupProvider, event.getExistingFileHelper());
 		generator.addProvider(event.includeServer(), blockTags);
 		generator.addProvider(event.includeServer(),new HLItemTagProvider(packOutput, lookupProvider, blockTags, event.getExistingFileHelper()));
-		generator.addProvider(event.includeServer(), new RecipeProvider.Runner(packOutput, lookupProvider) {
-			@Override
-			protected RecipeProvider createRecipeProvider(HolderLookup.Provider lookupProvider, RecipeOutput output) {
-				return new HLRecipeProvider(lookupProvider, output);
-			}
-			@Override
-			public String getName() { return "HutosLib Recipes"; }
-		});
+		generator.addProvider(event.includeServer(), new HLRecipeProvider(packOutput, lookupProvider));
 		generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
 				List.of(new LootTableProvider.SubProviderEntry(HLBlockLootTableProvider::new, LootContextParamSets.BLOCK)),
 				lookupProvider));

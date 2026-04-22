@@ -26,8 +26,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.crafting.conditions.ICondition;
-import net.neoforged.neoforge.common.crafting.conditions.ICondition.IContext;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -66,7 +64,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	private final Map<ResourceLocation, V> staged = new HashMap<>();
 	private final Set<ListenerCallback<V>> callbacks = new HashSet<>();
 
-	private WeakReference<ICondition.IContext> context;
+	private WeakReference<Object> context = new WeakReference<>(null);
 
 	/**
 	 * Constructs a new JSON reload listener. All parameters will be saved finally
@@ -101,7 +99,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 		objects.forEach((key, ele) -> {
 			try {
 				if (checkAndLogEmpty(ele, key, this.path, this.logger)
-						&& checkConditions(ele, key, this.path, this.logger, this.getContext())) {
+						&& checkConditions(ele, key, this.path, this.logger, this.getConditionContext())) {
 					JsonObject obj = ele.getAsJsonObject();
 					V deserialized;
 					if (this.subtypes) {
@@ -129,7 +127,6 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 
 	/**
 	 * Add all default serializers to this reload listener. This should be a series
-	 * of calls to {@link registerSerializer}
 	 */
 	protected abstract void registerBuiltinSerializers();
 
@@ -266,17 +263,16 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	 * @return True if the item's conditions are met, false otherwise.
 	 */
 	public static boolean checkConditions(JsonElement e, ResourceLocation id, String type, Logger logger,
-			IContext context) {
+			Object context) {
 		// TODO: Update condition checking for NeoForge 1.21.1 when ConditionalOps API is stable
 		return true;
 	}
 
 	/**
-	 * @return The context object held in this listener, or {@link IContext.EMPTY}
-	 *         if it is unavailable.
+	 * @return The context object held in this listener, or null if it is unavailable.
 	 */
-	protected final ICondition.IContext getContext() {
-		return this.context.get() != null ? this.context.get() : IContext.EMPTY;
+	protected final Object getConditionContext() {
+		return this.context.get();
 	}
 
 	/**

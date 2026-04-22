@@ -9,7 +9,7 @@ public class HLLocHelper {
 	public static ResourceLocation getBySplit(String loc) {
 		if (loc != null && loc.contains(":")) {
 			String[] split = loc.split(":");
-			ResourceLocation rl = new ResourceLocation(split[0], split[1]);
+			ResourceLocation rl = ResourceLocation.tryBuild(split[0], split[1]);
 			if (rl != null) {
 				return rl;
 			}

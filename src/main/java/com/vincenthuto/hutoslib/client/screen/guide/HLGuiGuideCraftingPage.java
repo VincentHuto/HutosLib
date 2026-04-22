@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
@@ -15,10 +14,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
 public class HLGuiGuideCraftingPage extends HLGuiGuidePage {
 
@@ -30,8 +27,7 @@ public class HLGuiGuideCraftingPage extends HLGuiGuidePage {
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		PoseStack matrixStack = graphics.pose();
-		this.renderBackground(graphics);
+		this.renderMenuBackground(graphics);
 		left = width / 2 - guiWidth / 2;
 		top = height / 2 - guiHeight / 2;
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -41,10 +37,8 @@ public class HLGuiGuideCraftingPage extends HLGuiGuidePage {
 		HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (pageNum + 1)), left + guiWidth - 26,
 				top + guiHeight - 15, 50, 0xffffff, true);
 
-		matrixStack.pushPose();
 		graphics.renderFakeItem(((PageTemplate) pageTemplate).getIconItem(), left + guiWidth - 32,
 				top + guiHeight - 220);
-		matrixStack.popPose();
 		if (!((PageTemplate) pageTemplate).getTitle().isEmpty()) {
 			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(((PageTemplate) pageTemplate).getTitle())),
 					left - guiWidth + 180, top + guiHeight - 220, 165, 0xffffff, true);
@@ -80,14 +74,14 @@ public class HLGuiGuideCraftingPage extends HLGuiGuidePage {
 				}
 			}
 		}
-		List<Component> titlePage = new ArrayList<Component>();
-		titlePage.add(Component.literal(I18n.get("Title")));
-		titlePage.add(Component.literal(I18n.get("Return to Catagories")));
+		List<Component> titlePage = new ArrayList<>();
+		titlePage.add(Component.literal("Title"));
+		titlePage.add(Component.literal("Return to Categories"));
 		if (buttonTitle.isHovered()) {
 			graphics.renderComponentTooltip(font, titlePage, mouseX, mouseY);
 		}
 		List<Component> ClosePage = new ArrayList<>();
-		ClosePage.add(Component.literal(I18n.get("Close Book")));
+		ClosePage.add(Component.literal("Close Book"));
 		if (buttonCloseTab.isHoveredOrFocused()) {
 			graphics.renderComponentTooltip(font, ClosePage, mouseX, mouseY);
 		}
@@ -97,29 +91,7 @@ public class HLGuiGuideCraftingPage extends HLGuiGuidePage {
 
 	private void renderGhost(GhostRecipe itemRecipe, GuiGraphics pGuiGraphics, Minecraft pMinecraft, int pLeftPos,
 			int pTopPos, boolean p_282174_, float pPartialTick) {
-
-		itemRecipe.time = minecraft.level.getGameTime();
-		
-		for (int i = 0; i < itemRecipe.ingredients.size(); ++i) {
-			GhostRecipe.GhostIngredient ghostrecipe$ghostingredient = itemRecipe.ingredients.get(i);
-			int j = ghostrecipe$ghostingredient.getX() + pLeftPos;
-			int k = ghostrecipe$ghostingredient.getY() + pTopPos;
-			if (i == 0 && p_282174_) {
-				pGuiGraphics.fill(j - 4, k - 4, j + 20, k + 20, 822018048);
-			} else {
-				pGuiGraphics.fill(j, k, j + 16, k + 16, 822018048);
-			}
-
-			ItemStack itemstack = ghostrecipe$ghostingredient.getItem();
-	         ItemStack[] aitemstack = ghostrecipe$ghostingredient.ingredient.getItems();
-//			System.out.println(Arrays.toString(aitemstack));
-			pGuiGraphics.renderFakeItem(itemstack, j, k);
-			pGuiGraphics.fill(RenderType.guiGhostRecipeOverlay(), j, k, j + 16, k + 16, 822083583);
-			if (i == 0) {
-				pGuiGraphics.renderItemDecorations(pMinecraft.font, itemstack, j, k);
-			}
-		}
-
+		itemRecipe.render(pGuiGraphics, pMinecraft, pLeftPos, pTopPos, p_282174_, pPartialTick);
 	}
 
 	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {

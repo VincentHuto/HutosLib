@@ -1,7 +1,7 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -19,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,7 +27,6 @@ public class HLGuiGuideTitlePage extends Screen {
 	private static HLGuiGuideTitlePage screen;
 	final ResourceLocation texture;
 	final ResourceLocation overlay;
-	Minecraft mc = Minecraft.getInstance();
 	int guiWidth = 186;
 	int guiHeight = 240;
 	double xDragPos = 0;
@@ -37,8 +35,6 @@ public class HLGuiGuideTitlePage extends Screen {
 	public double dragUpDown = 0;
 	int left, top;
 	final int BUTTONCLOSE = 30;
-	Component titleComponent;
-	Component subtitleComponent;
 
 	public ItemStack icon;
 	HLButtonTextured buttonclose;
@@ -59,10 +55,9 @@ public class HLGuiGuideTitlePage extends Screen {
 	}
 
 	public HLGuiGuideTitlePage(BookCodeModel book) {
-		super(Component.translatable(""));
+		super(Component.literal(book.getTemplate().getTitle()));
 		this.book = book;
 		this.icon = book.getTemplate().getIconItem();
-		this.titleComponent = Component.literal(book.getTemplate().getTitle());
 		this.chapters = book.getChapters();
 		this.texture = book.getTemplate().getCoverImage();
 		this.overlay = book.getTemplate().getOverlayImage();
@@ -86,11 +81,9 @@ public class HLGuiGuideTitlePage extends Screen {
 		this.clearWidgets();
 		this.addRenderableWidget(
 				buttonclose = new HLButtonTextured(overlay, BUTTONCLOSE, (int) (centerX + (guiWidth * 0.05f)),
-						(int) (centerY + (guiHeight * 0.78f)), 32, 32, 209, 32, (press) -> {
-							onClose();
-						}));
+						(int) (centerY + (guiHeight * 0.78f)), 32, 32, 209, 32, (press) -> onClose()));
 
-		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
+		chapters.sort(Comparator.comparingInt(ChapterTemplate::getOrdinality));
 
 		for (int i = 0; i < chapters.size(); i++) {
 			HLTomeCategoryTab tab = new HLTomeCategoryTab(chapters.get(i).getChapterRGB(),
@@ -122,16 +115,13 @@ public class HLGuiGuideTitlePage extends Screen {
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		PoseStack matrixStack = graphics.pose();
-		this.renderBackground(graphics);
+		this.renderMenuBackground(graphics);
 		int centerX = (width / 2) - guiWidth / 2;
 		int centerY = (height / 2) - guiHeight / 2;
-		Collections.sort(chapters, (obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
+		chapters.sort(Comparator.comparingInt(ChapterTemplate::getOrdinality));
 
-		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
-		graphics.blit(overlay, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
-		title.getContents();
-		if (title.getContents() != ComponentContents.EMPTY) {
-			HLGuiUtils.drawMaxWidthString(font, title, centerX + 10, centerY + 10, 165, 0xffffff, true);
+		if (!this.title.getString().isEmpty()) {
+			HLGuiUtils.drawMaxWidthString(font, this.title, centerX + 10, centerY + 10, 165, 0xffffff, true);
 		}
 
 		matrixStack.pushPose();
@@ -160,9 +150,17 @@ public class HLGuiGuideTitlePage extends Screen {
 
 		this.buttonclose.render(graphics, mouseX, mouseY, partialTicks);
 		if (this.buttonclose.isHoveredOrFocused()) {
-			graphics.renderTooltip(font, Component.translatable("Close"), this.buttonclose.getX(),
+			graphics.renderTooltip(font, Component.literal("Close"), this.buttonclose.getX(),
 					this.buttonclose.getY());
 		}
+	}
+
+	@Override
+	protected void renderMenuBackground(GuiGraphics graphics) {
+		int centerX = (width / 2) - guiWidth / 2;
+		int centerY = (height / 2) - guiHeight / 2;
+		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
+		graphics.blit(overlay, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
 	}
 
 	@Override

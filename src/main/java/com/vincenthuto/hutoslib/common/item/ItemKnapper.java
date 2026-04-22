@@ -19,11 +19,11 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ToolAction;
+import net.neoforged.neoforge.common.ItemAbility;
 
 public class ItemKnapper extends DiggerItem {
-public static final ToolAction KNAPPER_DIG = ToolAction.get("knapper_dig");
-public static final Set<ToolAction> DEFAULT_KNAPPER_ACTIONS = Stream.of(KNAPPER_DIG)
+public static final ItemAbility KNAPPER_DIG = ItemAbility.get("knapper_dig");
+public static final Set<ItemAbility> DEFAULT_KNAPPER_ACTIONS = Stream.of(KNAPPER_DIG)
 .collect(Collectors.toCollection(Sets::newIdentityHashSet));
 public static TagKey<Block> EFFECTIVE_ON = TagKey.create(Registries.BLOCK,
 ResourceLocation.fromNamespaceAndPath("minecraft", "mineable/knapper"));
@@ -31,13 +31,13 @@ ResourceLocation.fromNamespaceAndPath("minecraft", "mineable/knapper"));
 private float speed;
 
 public ItemKnapper(float speedIn, float attackDamageIn, float attackSpeedIn, Tier tier, Properties builderIn) {
-super(attackDamageIn, -2.8f, tier, EFFECTIVE_ON, builderIn);
+super(tier, EFFECTIVE_ON, builderIn.attributes(DiggerItem.createAttributes(tier, attackDamageIn, attackSpeedIn)));
 this.speed = speedIn;
 }
 
 @Override
-public boolean canPerformAction(ItemStack stack, net.neoforged.neoforge.common.ToolAction toolAction) {
-return DEFAULT_KNAPPER_ACTIONS.contains(toolAction);
+public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+return DEFAULT_KNAPPER_ACTIONS.contains(itemAbility);
 }
 
 @Override

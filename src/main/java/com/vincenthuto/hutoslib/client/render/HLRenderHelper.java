@@ -10,6 +10,7 @@ package com.vincenthuto.hutoslib.client.render;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -32,7 +33,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class HLRenderHelper {
-	public static final ResourceLocation MC_BLOCK_SHEET = new ResourceLocation("textures/atlas/blocks.png");
+	public static final ResourceLocation MC_BLOCK_SHEET = InventoryMenu.BLOCK_ATLAS;
 
 	public static int color(FluidStack stack) {
 
@@ -74,14 +75,12 @@ public class HLRenderHelper {
 		float u = minU + (maxU - minU) * width / 16F;
 		float v = minV + (maxV - minV) * height / 16F;
 
-		BufferBuilder buffer = tesselator().getBuilder();
-		buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		buffer.vertex(x, y + height, 0).uv(minU, v).endVertex();
-		buffer.vertex(x + width, y + height, 0).uv(u, v).endVertex();
-		buffer.vertex(x + width, y, 0).uv(u, minV).endVertex();
-		buffer.vertex(x, y, 0).uv(minU, minV).endVertex();
-
-		tesselator().end();
+		BufferBuilder buffer = tesselator().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		buffer.addVertex(x, y + height, 0).setUv(minU, v);
+		buffer.addVertex(x + width, y + height, 0).setUv(u, v);
+		buffer.addVertex(x + width, y, 0).setUv(u, minV);
+		buffer.addVertex(x, y, 0).setUv(minU, minV);
+		BufferUploader.drawWithShader(buffer.buildOrThrow());
 	}
 
 	public static void drawTiledTexture(int x, int y, TextureAtlasSprite icon, int width, int height) {
@@ -114,7 +113,7 @@ public class HLRenderHelper {
 
 	public static TextureAtlasSprite getTexture(String location) {
 
-		return textureMap().getSprite(new ResourceLocation(location));
+		return textureMap().getSprite(ResourceLocation.parse(location));
 	}
 
 	public static void resetShaderColor() {
@@ -209,10 +208,14 @@ public class HLRenderHelper {
 		innerBuilder.setLight(LightTexture.pack(15, 15));
 		innerBuilder.setOverlay(OverlayTexture.NO_OVERLAY);
 		innerBuilder.setNormal(1, 1, 1);
-		innerBuilder.vertex(x, y + h, 0).uv(u0, v1).endVertex();
-		innerBuilder.vertex(x + w, y + h, 0).uv(u1, v1).endVertex();
-		innerBuilder.vertex(x + w, y, 0).uv(u1, v0).endVertex();
-		innerBuilder.vertex(x, y, 0).uv(u0, v0).endVertex();
+		innerBuilder.addVertex(x, y + h, 0).setUv(u0, v1);
+		innerBuilder.endVertex();
+		innerBuilder.addVertex(x + w, y + h, 0).setUv(u1, v1);
+		innerBuilder.endVertex();
+		innerBuilder.addVertex(x + w, y, 0).setUv(u1, v0);
+		innerBuilder.endVertex();
+		innerBuilder.addVertex(x, y, 0).setUv(u0, v0);
+		innerBuilder.endVertex();
 		innerBuilder.unsetDefaultColor();
 	}
 

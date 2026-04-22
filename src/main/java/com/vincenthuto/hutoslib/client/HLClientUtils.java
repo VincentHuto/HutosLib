@@ -15,7 +15,7 @@ public class HLClientUtils {
 	}
 
 	public static float getPartialTicks() {
-		return getClient().getFrameTime();
+		return HlClientTickHandler.partialTicks;
 	}
 
 	public static ClientLevel getWorld() {

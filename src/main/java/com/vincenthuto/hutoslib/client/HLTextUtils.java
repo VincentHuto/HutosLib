@@ -4,14 +4,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.loading.StringUtils;
 
 public class HLTextUtils {
 
-public static Rarity AURIC = Rarity.create("Auric", ChatFormatting.GOLD);
-public static Rarity SANGUINE = Rarity.create("Sanguine", ChatFormatting.DARK_RED);
+public static final ChatFormatting AURIC = ChatFormatting.GOLD;
+public static final ChatFormatting SANGUINE = ChatFormatting.DARK_RED;
 
 public static String getItemRegistryName(Item item) {
 return BuiltInRegistries.ITEM.getKey(item).getPath();

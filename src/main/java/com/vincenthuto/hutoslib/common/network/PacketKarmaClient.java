@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.common.network;
 
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
-import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
+import com.vincenthuto.hutoslib.common.karma.KarmaProvider;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,26 +17,24 @@ public static final CustomPacketPayload.Type<PacketKarmaClient> TYPE =
 new CustomPacketPayload.Type<>(HutosLib.rloc("packet_karma_client"));
 
 public static final StreamCodec<FriendlyByteBuf, PacketKarmaClient> CODEC = StreamCodec.of(
-PacketKarmaClient::encode, PacketKarmaClient::decode);
-
-public static PacketKarmaClient decode(final FriendlyByteBuf buf) {
-return new PacketKarmaClient();
-}
-
-public static void encode(final PacketKarmaClient msg, final FriendlyByteBuf buf) {
-}
+(buf, msg) -> msg.encode(buf), PacketKarmaClient::new);
 
 public static void handle(final PacketKarmaClient msg, IPayloadContext ctx) {
 ctx.enqueueWork(() -> {
-ServerPlayer sender = ctx.sender();
-if (sender != null) {
-IKarma volume = sender.getData(HLAttachmentTypes.KARMA.get());
-PacketDistributor.sendToPlayer(sender, new PacketKarmaServer(volume));
+if (ctx.player() instanceof ServerPlayer sender) {
+IKarma karmaState = KarmaProvider.getKarma(sender);
+PacketDistributor.sendToPlayer(sender, new PacketKarmaServer(karmaState));
 }
 });
 }
 
 public PacketKarmaClient() {
+}
+
+public PacketKarmaClient(FriendlyByteBuf buf) {
+}
+
+public void encode(FriendlyByteBuf buf) {
 }
 
 @Override

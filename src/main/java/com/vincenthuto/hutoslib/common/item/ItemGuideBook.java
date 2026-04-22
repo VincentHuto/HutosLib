@@ -1,12 +1,7 @@
 package com.vincenthuto.hutoslib.common.item;
 
 import java.util.Random;
-import java.util.function.Consumer;
 
-import com.vincenthuto.hutoslib.client.render.item.RenderItemGuideBook;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -14,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 public class ItemGuideBook extends Item {
 	private static final Random random = new Random();
@@ -40,12 +34,6 @@ public class ItemGuideBook extends Item {
 
 	public ResourceLocation getTexture() {
 		return texture;
-	}
-
-	@Override
-		public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-		super.initializeClient(consumer);
-		consumer.accept(RenderPropTome.INSTANCE);
 	}
 
 	@Override
@@ -108,17 +96,5 @@ public class ItemGuideBook extends Item {
 
 	public void setTexture(ResourceLocation texture) {
 		this.texture = texture;
-	}
-}
-
-class RenderPropTome implements IClientItemExtensions {
-
-	public static RenderPropTome INSTANCE = new RenderPropTome();
-
-
-	@Override
-	public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-		return new RenderItemGuideBook(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-				Minecraft.getInstance().getEntityModels());
 	}
 }

@@ -7,13 +7,6 @@
  */
 package com.vincenthuto.hutoslib.client.render;
 
-import static com.mojang.blaze3d.vertex.DefaultVertexFormat.ELEMENT_COLOR;
-import static com.mojang.blaze3d.vertex.DefaultVertexFormat.ELEMENT_NORMAL;
-import static com.mojang.blaze3d.vertex.DefaultVertexFormat.ELEMENT_POSITION;
-import static com.mojang.blaze3d.vertex.DefaultVertexFormat.ELEMENT_UV0;
-import static com.mojang.blaze3d.vertex.DefaultVertexFormat.ELEMENT_UV1;
-import static com.mojang.blaze3d.vertex.DefaultVertexFormat.ELEMENT_UV2;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -67,76 +60,100 @@ public class TransformingVertexBuilder implements VertexConsumer {
 
 	@Nonnull
 	@Override
-	public VertexConsumer vertex(double x, double y, double z) {
+	public VertexConsumer addVertex(float x, float y, float z) {
 		pos.putData(new Vec3(x, y, z));
 		return this;
 	}
 
 	@Nonnull
 	@Override
-	public VertexConsumer color(int red, int green, int blue, int alpha) {
+	public VertexConsumer setColor(int red, int green, int blue, int alpha) {
 		color.putData(new Vector4f(red / 255f, green / 255f, blue / 255f, alpha / 255f));
 		return this;
 	}
 
 	@Nonnull
 	@Override
-	public VertexConsumer uv(float u, float v) {
+	public VertexConsumer setUv(float u, float v) {
 		uv.putData(new Vec2(u, v));
 		return this;
 	}
 
 	@Nonnull
 	@Override
-	public VertexConsumer overlayCoords(int u, int v) {
+	public VertexConsumer setUv1(int u, int v) {
 		overlay.putData(new Vec2i(u, v));
 		return this;
 	}
 
 	@Nonnull
 	@Override
-	public VertexConsumer uv2(int u, int v) {
+	public VertexConsumer setUv2(int u, int v) {
 		lightmap.putData(new Vec2i(u, v));
 		return this;
 	}
 
 	@Nonnull
 	@Override
-	public VertexConsumer normal(float x, float y, float z) {
-		normal.putData(new Vector3f(x, y, z));
+	public VertexConsumer setNormal(float x, float y, float z) {
+		Vector3f vec = new Vector3f(x, y, z);
+		vec.normalize();
+		normal.setGlobal(vec);
 		return this;
 	}
 
-	@Override
 	public void endVertex() {
 		for (VertexFormatElement element : format.getElements()) {
-			if (element == ELEMENT_POSITION)
-				pos.ifPresent(pos -> base.vertex(transform.last().pose(), (float) pos.x, (float) pos.y, (float) pos.z));
-			else if (element == ELEMENT_COLOR)
-				color.ifPresent(c -> base.color(c.x(), c.y(), c.z(), c.w()));
-			else if (element == ELEMENT_UV0)
-				uv.ifPresent(uv -> base.uv(uv.x, uv.y));
-			else if (element == ELEMENT_UV1)
-				overlay.ifPresent(overlay -> base.overlayCoords(overlay.x, overlay.y));
-			else if (element == ELEMENT_UV2)
-				lightmap.ifPresent(lightmap -> base.uv2(lightmap.x, lightmap.y));
-			else if (element == ELEMENT_NORMAL)
-				normal.ifPresent(normal -> base.normal(transform.last().normal(), normal.x(), normal.y(), normal.z()));
+			if (element == VertexFormatElement.POSITION)
+				pos.ifPresent(pos -> base.addVertex(transform.last(), (float) pos.x, (float) pos.y, (float) pos.z));
+			else if (element == VertexFormatElement.COLOR)
+				color.ifPresent(c -> base.setColor(c.x(), c.y(), c.z(), c.w()));
+			else if (element == VertexFormatElement.UV0)
+				uv.ifPresent(uv -> base.setUv(uv.x, uv.y));
+			else if (element == VertexFormatElement.UV1)
+				overlay.ifPresent(overlay -> base.setUv1(overlay.x, overlay.y));
+			else if (element == VertexFormatElement.UV2)
+				lightmap.ifPresent(lightmap -> base.setUv2(lightmap.x, lightmap.y));
+			else if (element == VertexFormatElement.NORMAL)
+				normal.ifPresent(normal -> base.setNormal(transform.last(), normal.x(), normal.y(), normal.z()));
 		}
-		base.endVertex();
 		allObjects.forEach(ObjectWithGlobal::clear);
+	}
+
+	// Legacy-style aliases used by existing rendering helpers.
+	public VertexConsumer vertex(double x, double y, double z) {
+		return addVertex((float) x, (float) y, (float) z);
+	}
+
+	public VertexConsumer color(int red, int green, int blue, int alpha) {
+		return setColor(red, green, blue, alpha);
+	}
+
+	public VertexConsumer uv(float u, float v) {
+		return setUv(u, v);
+	}
+
+	public VertexConsumer overlayCoords(int u, int v) {
+		return setUv1(u, v);
+	}
+
+	public VertexConsumer uv2(int u, int v) {
+		return setUv2(u, v);
+	}
+
+	public VertexConsumer normal(float x, float y, float z) {
+		normal.putData(new Vector3f(x, y, z));
+		return this;
 	}
 
 	public void defaultColor(float r, float g, float b, float a) {
 		color.setGlobal(new Vector4f(r, g, b, a));
 	}
 
-	@Override
 	public void defaultColor(int r, int g, int b, int a) {
 		defaultColor(r / 255f, g / 255f, b / 255f, a / 255f);
 	}
 
-	@Override
 	public void unsetDefaultColor() {
 		color.setGlobal(null);
 	}
@@ -145,18 +162,25 @@ public class TransformingVertexBuilder implements VertexConsumer {
 		this.uv.setGlobal(uv);
 	}
 
-	public void setLight(int light) {
-		lightmap.setGlobal(new Vec2i(light & 255, light >> 16));
+	@Nonnull
+	@Override
+	public VertexConsumer setLight(int light) {
+		lightmap.setGlobal(new Vec2i(light & 0xffff, light >> 16));
+		return this;
 	}
 
-	public void setNormal(float x, float y, float z) {
+	public VertexConsumer setGlobalNormal(float x, float y, float z) {
 		Vector3f vec = new Vector3f(x, y, z);
 		vec.normalize();
 		normal.setGlobal(vec);
+		return this;
 	}
 
-	public void setOverlay(int packedOverlayIn) {
+	@Nonnull
+	@Override
+	public VertexConsumer setOverlay(int packedOverlayIn) {
 		overlay.setGlobal(new Vec2i(packedOverlayIn & 0xffff, packedOverlayIn >> 16));
+		return this;
 	}
 
 	private record Vec2i(int x, int y) {

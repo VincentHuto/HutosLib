@@ -26,7 +26,7 @@ public class HLItemInit {
 			.create(Registries.BANNER_PATTERN, HutosLib.MOD_ID);
 
 	public static final TagKey<Item> TAG_KNAPPERS = TagKey.create(Registries.ITEM,
-			new ResourceLocation("hutoslib:knappers"));
+			HutosLib.rloc("knappers"));
 
 	// Test Tome
 	public static ResourceLocation hl_guide_book_text = HutosLib.rloc(
@@ -57,7 +57,7 @@ public class HLItemInit {
 	// Banners and Patterns
 
 	public static final DeferredHolder<BannerPattern, BannerPattern> logo = BANNERPATTERNS.register("hutoslib_logo",
-			() -> new BannerPattern("hutoslib_logo"));
+			() -> new BannerPattern(HutosLib.rloc("hutoslib_logo"), "hutoslib_logo"));
 
 	public static final DeferredHolder<Item, Item> hutoslib_logo = ITEMS.register("hutoslib_logo",
 			() -> new BannerPatternItem(

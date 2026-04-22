@@ -10,8 +10,6 @@ package com.vincenthuto.hutoslib.client.render;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.vertex.Tesselator;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -56,12 +54,9 @@ public class FluidInfoArea extends InfoArea {
 	{
 
 		if(!fluid.isEmpty())
-			tooltip.accept(applyFormat(
-					fluid.getDisplayName(),
-					fluid.getFluid().getFluidType().getRarity(fluid).color
-			));
+			tooltip.accept(fluid.getHoverName());
 		else
-			tooltip.accept(Component.translatable("Empty"));
+			tooltip.accept(Component.literal("Empty"));
 
 		if(Minecraft.getInstance().options.advancedItemTooltips&&!fluid.isEmpty())
 		{
@@ -69,7 +64,6 @@ public class FluidInfoArea extends InfoArea {
 				tooltip.accept(applyFormat(Component.literal("Density: "+fluid.getFluid().getFluidType().getDensity(fluid)), ChatFormatting.DARK_GRAY));
 				tooltip.accept(applyFormat(Component.literal("Temperature: "+fluid.getFluid().getFluidType().getTemperature(fluid)), ChatFormatting.DARK_GRAY));
 				tooltip.accept(applyFormat(Component.literal("Viscosity: "+fluid.getFluid().getFluidType().getViscosity(fluid)), ChatFormatting.DARK_GRAY));
-				tooltip.accept(applyFormat(Component.literal("NBT Data: "+fluid.getTag()), ChatFormatting.DARK_GRAY));
 		}
 
 		if(tankCapacity > 0)
@@ -89,15 +83,23 @@ public class FluidInfoArea extends InfoArea {
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float parTick) {
 		FluidStack fluid = tank.getFluid();
-		float capacity = tank.getCapacity();
+		int capacity = tank.getCapacity();
 		graphics.pose().pushPose();
-		MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 		if (!fluid.isEmpty()) {
-			int fluidHeight = (int) (area.getHeight() * (fluid.getAmount() / capacity));
-			HLRenderHelper.drawRepeatedFluidSpriteGui(buffer, graphics.pose(), fluid, area.getX(),
-					area.getY() + area.getHeight() - fluidHeight, area.getWidth(), fluidHeight);
+			int fluidHeight = 0;
+			if (capacity > 0) {
+				float ratio = (float) fluid.getAmount() / (float) capacity;
+				fluidHeight = Math.round(area.getHeight() * ratio);
+				fluidHeight = Math.max(1, Math.min(area.getHeight(), fluidHeight));
+			}
+			if (fluidHeight > 0) {
+				MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+				HLRenderHelper.drawRepeatedFluidSpriteGui(buffer, graphics.pose(), fluid, area.getX(),
+						area.getY() + area.getHeight() - fluidHeight, area.getWidth(), fluidHeight);
+				buffer.endBatch();
+			}
 		}
-		buffer.endBatch();
+		graphics.blit(overlayTexture, area.getX(), area.getY(), overlayUMin, overlayVMin, overlayWidth, overlayHeight);
 		graphics.pose().popPose();
 	}
 

@@ -18,43 +18,11 @@ public static final CustomPacketPayload.Type<PacketSpawnLightningParticle> TYPE 
 new CustomPacketPayload.Type<>(HutosLib.rloc("packet_spawn_lightning"));
 
 public static final StreamCodec<FriendlyByteBuf, PacketSpawnLightningParticle> CODEC = StreamCodec.of(
-PacketSpawnLightningParticle::encode, PacketSpawnLightningParticle::decode);
-
-public static PacketSpawnLightningParticle decode(FriendlyByteBuf buf) {
-PacketSpawnLightningParticle msg = new PacketSpawnLightningParticle();
-try {
-msg.startVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-msg.endVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-msg.color = new ParticleColor(buf.readFloat(), buf.readFloat(), buf.readFloat());
-msg.speed = buf.readFloat();
-msg.maxAge = buf.readInt();
-msg.fract = buf.readInt();
-msg.maxOffset = buf.readFloat();
-} catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-return msg;
-}
-return msg;
-}
-
-public static void encode(PacketSpawnLightningParticle msg, FriendlyByteBuf buf) {
-buf.writeDouble(msg.getPosition().x);
-buf.writeDouble(msg.getPosition().y);
-buf.writeDouble(msg.getPosition().z);
-buf.writeDouble(msg.getSpeedVec().x);
-buf.writeDouble(msg.getSpeedVec().y);
-buf.writeDouble(msg.getSpeedVec().z);
-buf.writeFloat(msg.getColor().getRed());
-buf.writeFloat(msg.getColor().getGreen());
-buf.writeFloat(msg.getColor().getBlue());
-buf.writeFloat(msg.getSpeed());
-buf.writeInt(msg.getMaxAge());
-buf.writeInt(msg.getFract());
-buf.writeFloat(msg.getMaxOffset());
-}
+(buf, msg) -> msg.encode(buf), PacketSpawnLightningParticle::new);
 
 public static void handle(PacketSpawnLightningParticle msg, IPayloadContext ctx) {
 ctx.enqueueWork(() -> {
-ClientLevel level = (ClientLevel) Minecraft.getInstance().level;
+ClientLevel level = Minecraft.getInstance().level;
 if (level == null) return;
 level.addParticle(
 LightningParticleFactory.createData(msg.color, msg.getSpeed(), msg.maxAge, msg.fract, msg.getMaxOffset()),
@@ -71,6 +39,26 @@ public int maxAge, fract;
 public float maxOffset;
 
 public PacketSpawnLightningParticle() {
+}
+
+public PacketSpawnLightningParticle(FriendlyByteBuf buf) {
+try {
+this.startVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+this.endVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+this.color = new ParticleColor(buf.readFloat(), buf.readFloat(), buf.readFloat());
+this.speed = buf.readFloat();
+this.maxAge = buf.readInt();
+this.fract = buf.readInt();
+this.maxOffset = buf.readFloat();
+} catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+this.startVec = Vec3.ZERO;
+this.endVec = Vec3.ZERO;
+this.color = new ParticleColor(1.0F, 1.0F, 1.0F);
+this.speed = 0.0F;
+this.maxAge = 0;
+this.fract = 0;
+this.maxOffset = 0.0F;
+}
 }
 
 public PacketSpawnLightningParticle(Vec3 entVec, Vec3 endVec2, ParticleColor color, float s, int a, int f, float o) {
@@ -90,6 +78,22 @@ public float getMaxOffset() { return maxOffset; }
 public Vec3 getPosition() { return this.startVec; }
 public float getSpeed() { return speed; }
 public Vec3 getSpeedVec() { return this.endVec; }
+
+public void encode(FriendlyByteBuf buf) {
+buf.writeDouble(getPosition().x);
+buf.writeDouble(getPosition().y);
+buf.writeDouble(getPosition().z);
+buf.writeDouble(getSpeedVec().x);
+buf.writeDouble(getSpeedVec().y);
+buf.writeDouble(getSpeedVec().z);
+buf.writeFloat(getColor().getRed());
+buf.writeFloat(getColor().getGreen());
+buf.writeFloat(getColor().getBlue());
+buf.writeFloat(getSpeed());
+buf.writeInt(getMaxAge());
+buf.writeInt(getFract());
+buf.writeFloat(getMaxOffset());
+}
 
 @Override
 public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {

@@ -1,12 +1,14 @@
 package com.vincenthuto.hutoslib.common.data;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -18,15 +20,15 @@ import net.neoforged.neoforge.common.Tags;
 
 public class HLRecipeProvider extends RecipeProvider {
 
-    public HLRecipeProvider(HolderLookup.Provider lookupProvider, RecipeOutput output) {
-        super(lookupProvider, output);
+    public HLRecipeProvider(PackOutput output, CompletableFuture<net.minecraft.core.HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider);
     }
 
     @Override
-    protected void buildRecipes() {
+    protected void buildRecipes(RecipeOutput output) {
         // Items
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, HLItemInit.obsidian_flakes.get(), 4)
-            .requires(Tags.Items.OBSIDIAN)
+            .requires(Tags.Items.OBSIDIANS)
             .unlockedBy("has_obsidian", InventoryChangeTrigger.TriggerInstance.hasItems(
                     ItemPredicate.Builder.item().of(Items.OBSIDIAN).build()))
             .save(output, HutosLib.rloc("flakes_from_obsidian"));
@@ -87,11 +89,11 @@ public class HLRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLItemInit.leather_arm_banner.get())
             .pattern("XXB")
             .pattern(" XS")
-            .define('X', Tags.Items.LEATHER)
+            .define('X', Tags.Items.LEATHERS)
             .define('B', Tags.Items.SLIME_BALLS)
             .define('S', Tags.Items.RODS_WOODEN)
             .unlockedBy("has_leather", InventoryChangeTrigger.TriggerInstance.hasItems(
-                    ItemPredicate.Builder.item().of(Tags.Items.LEATHER).build()))
+                    ItemPredicate.Builder.item().of(Tags.Items.LEATHERS).build()))
             .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLItemInit.gold_arm_banner.get())
@@ -127,11 +129,11 @@ public class HLRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLItemInit.obsidian_arm_banner.get())
             .pattern("XXB")
             .pattern(" XS")
-            .define('X', Tags.Items.OBSIDIAN)
+            .define('X', Tags.Items.OBSIDIANS)
             .define('B', Tags.Items.SLIME_BALLS)
             .define('S', Tags.Items.RODS_WOODEN)
             .unlockedBy("has_obsidian", InventoryChangeTrigger.TriggerInstance.hasItems(
-                    ItemPredicate.Builder.item().of(Tags.Items.OBSIDIAN).build()))
+                    ItemPredicate.Builder.item().of(Tags.Items.OBSIDIANS).build()))
             .save(output);
 
         // Blocks
@@ -157,7 +159,7 @@ public class HLRecipeProvider extends RecipeProvider {
             .pattern(" X ")
             .pattern("XLX")
             .pattern(" X ")
-            .define('X', Tags.Items.OBSIDIAN)
+            .define('X', Tags.Items.OBSIDIANS)
             .define('L', Tags.Items.GEMS_LAPIS)
             .unlockedBy("has_gem_lapis", InventoryChangeTrigger.TriggerInstance.hasItems(
                     ItemPredicate.Builder.item().of(Tags.Items.GEMS_LAPIS).build()))

@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 
 import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -22,26 +23,18 @@ public class HLRenderTypeInit extends RenderType {
 	public static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR,
 			VertexFormat.Mode.QUADS, 256, false, true, lightningState);
 	public static final ParticleRenderType GLOW_RENDER = new ParticleRenderType() {
+		@SuppressWarnings("deprecation")
 		@Override
-		public void begin(BufferBuilder buffer, TextureManager textureManager) {
+		public BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
 			RenderSystem.enableBlend();
+			RenderSystem.setShader(GameRenderer::getParticleShader);
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.enableCull();
 			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
 			RenderSystem.depthMask(false);
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-			buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-		}
-
-		@Override
-		public void end(Tesselator tessellator) {
-			tessellator.end();
-			RenderSystem.enableDepthTest();
-			RenderSystem.depthMask(true);
-			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-			RenderSystem.disableCull();
-
+			return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 		}
 
 		@Override
@@ -51,9 +44,11 @@ public class HLRenderTypeInit extends RenderType {
 	};
 
 	public static final ParticleRenderType DARK_GLOW_RENDER = new ParticleRenderType() {
+		@SuppressWarnings("deprecation")
 		@Override
-		public void begin(BufferBuilder buffer, TextureManager textureManager) {
+		public BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
 			RenderSystem.depthMask(true);
+			RenderSystem.setShader(GameRenderer::getParticleShader);
 			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
 			RenderSystem.depthMask(false);
 			RenderSystem.enableBlend();
@@ -62,16 +57,7 @@ public class HLRenderTypeInit extends RenderType {
 			RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-		}
-
-		@Override
-		public void end(Tesselator tessellator) {
-			RenderSystem.disableCull();
-			RenderSystem.depthMask(true);
-
-			tessellator.end();
-
+			return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 		}
 
 		@Override
