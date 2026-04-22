@@ -77,9 +77,8 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 						matrixStack.mulPose(new Quaternion(Vector3.ZP, 180, true).toMoj());
 						matrixStack.translate(0, 0.3, -0.55);
 						matrixStack.scale(0.5f, 0.5f, 0.5f);
-						DyeColor baseColor = banner.get(DataComponents.BASE_COLOR) != null
-								? banner.get(DataComponents.BASE_COLOR)
-								: DyeColor.WHITE;
+						DyeColor bannerColor = banner.get(DataComponents.BASE_COLOR);
+						DyeColor baseColor = bannerColor != null ? bannerColor : DyeColor.WHITE;
 						BannerRenderer.renderPatterns(matrixStack, buffer, lightness, OverlayTexture.NO_OVERLAY,
 								this.modelPauldron.plate(), material, false, baseColor, patterns, banner.hasFoil());
 					}
