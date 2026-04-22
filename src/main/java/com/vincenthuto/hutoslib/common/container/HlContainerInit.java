@@ -8,8 +8,8 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.RegistryObject;
 
 public class HlContainerInit {
 
@@ -19,9 +19,9 @@ HutosLib.MOD_ID);
 public static final DeferredRegister<RecipeSerializer<?>> RECIPESERIALIZERS = DeferredRegister
 .create(Registries.RECIPE_SERIALIZER, HutosLib.MOD_ID);
 
-public static final RegistryObject<MenuType<BannerSlotContainer>> banner_slot_container = CONTAINERS.register(
+public static final DeferredHolder<MenuType<?>, MenuType<BannerSlotContainer>> banner_slot_container = CONTAINERS.register(
 "banner_slot_container", () -> new MenuType<>(BannerSlotContainer::new, FeatureFlags.DEFAULT_FLAGS));
 
-public static final RegistryObject<RecipeSerializer<?>> arm_banner_craft = RECIPESERIALIZERS
+public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> arm_banner_craft = RECIPESERIALIZERS
 .register("arm_banner_craft", () -> new SimpleCraftingRecipeSerializer<>(ArmBannerCraftRecipe::new));
 }

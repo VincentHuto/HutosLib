@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.RegistryObject;
 
 public class HLItemModelProvider extends ItemModelProvider {
 public HLItemModelProvider(PackOutput generator, ExistingFileHelper existingFileHelper) {
@@ -20,17 +19,17 @@ super(generator, HutosLib.MOD_ID, existingFileHelper);
 
 @Override
 protected void registerModels() {
-for (RegistryObject<Block> b : HLBlockInit.BLOCKS.getEntries()) {
+for (var b : HLBlockInit.BLOCKS.getEntries()) {
 registerBlockModel(b.get());
 }
-for (RegistryObject<Block> b : HLBlockInit.MODELEDBLOCKS.getEntries()) {
+for (var b : HLBlockInit.MODELEDBLOCKS.getEntries()) {
 registerBlockModel(b.get());
 }
 
-for (RegistryObject<Item> item : HLItemInit.ITEMS.getEntries()) {
+for (var item : HLItemInit.ITEMS.getEntries()) {
 registerBasicItem(item.get());
 }
-for (RegistryObject<Item> item : HLItemInit.HANDHELDITEMS.getEntries()) {
+for (var item : HLItemInit.HANDHELDITEMS.getEntries()) {
 registerHandheldItem(item.get());
 }
 }

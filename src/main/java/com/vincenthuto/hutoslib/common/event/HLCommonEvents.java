@@ -2,12 +2,12 @@ package com.vincenthuto.hutoslib.common.event;
 
 import com.vincenthuto.hutoslib.HutosLib;
 
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.NEOFORGE)
+@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.NEOFORGE)
 public class HLCommonEvents {
 
-	@Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+	@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 	public static class ModBusEvents {
 
 	}

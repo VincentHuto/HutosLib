@@ -20,27 +20,27 @@ import net.minecraft.core.registries.Registries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import net.neoforged.neoforge.registries.RegistryObject;
-
-@Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class HLParticleInit {
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister
 			.create(Registries.PARTICLE_TYPE, HutosLib.MOD_ID);
 
-	public static final RegistryObject<ParticleType<ColorParticleData>> glow = PARTICLE_TYPES.register("glow",
+	public static final DeferredHolder<ParticleType<?>, GlowParticleType> glow = PARTICLE_TYPES.register("glow",
 			() -> new GlowParticleType());
 
-	public static final RegistryObject<ParticleType<DarkColorParticleData>> dark_glow = PARTICLE_TYPES
+	public static final DeferredHolder<ParticleType<?>, DarkGlowParticleType> dark_glow = PARTICLE_TYPES
 			.register("dark_glow", () -> new DarkGlowParticleType());
 
-	public static RegistryObject<ParticleType<ColorLightningData>> lightning_bolt = PARTICLE_TYPES
+	public static DeferredHolder<ParticleType<?>, LightningParticleType> lightning_bolt = PARTICLE_TYPES
 			.register("lightning_bolt", () -> new LightningParticleType());
 
-	public static final RegistryObject<ParticleType<EmberParticleData>> ember = PARTICLE_TYPES.register("ember",
+	public static final DeferredHolder<ParticleType<?>, EmberParticleType> ember = PARTICLE_TYPES.register("ember",
 			() -> new EmberParticleType());
 
 	@SubscribeEvent

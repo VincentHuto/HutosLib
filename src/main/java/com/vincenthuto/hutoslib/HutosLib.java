@@ -30,18 +30,18 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.common.Mod.EventBusSubscriber.Bus;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.event.RegisterEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.RegistryObject;
 
 @Mod("hutoslib")
-@Mod.EventBusSubscriber(modid = HutosLib.MOD_ID, bus = Bus.MOD)
+@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class HutosLib {
 public static final Logger LOGGER = LogManager.getLogger();
 
@@ -71,7 +71,7 @@ event.register(Registries.ITEM, helper -> helper.register(item.getFirst(), item.
 
 public static final DeferredRegister<CreativeModeTab> CREATIVETABS = DeferredRegister
 .create(Registries.CREATIVE_MODE_TAB, HutosLib.MOD_ID);
-public static final RegistryObject<CreativeModeTab> hutoslibtab = CREATIVETABS.register("hutoslibtab",
+public static final DeferredHolder<CreativeModeTab, CreativeModeTab> hutoslibtab = CREATIVETABS.register("hutoslibtab",
 () -> CreativeModeTab.builder().title(Component.translatable("item_group." + MOD_ID + ".hutoslibtab"))
 .icon(() -> new ItemStack(HLItemInit.obsidian_flakes.get())).build());
 

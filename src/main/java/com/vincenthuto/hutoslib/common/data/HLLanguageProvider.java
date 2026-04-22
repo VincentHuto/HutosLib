@@ -9,7 +9,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.LanguageProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
 
 public class HLLanguageProvider extends LanguageProvider {
 
@@ -36,24 +35,24 @@ public class HLLanguageProvider extends LanguageProvider {
 		addKeyBindTranslations();
 
 		
-		for (RegistryObject<Item> i : HLItemInit.ITEMS.getEntries()) {
-			addItem(i,
+		for (var i : HLItemInit.ITEMS.getEntries()) {
+			add(i.get(),
 					HLTextUtils.convertInitToLang(i.get().asItem().getDescriptionId().replace("item.hutoslib.", "")));
 		}
-		for (RegistryObject<Item> i : HLItemInit.SPECIALITEMS.getEntries()) {
-			addItem(i,
+		for (var i : HLItemInit.SPECIALITEMS.getEntries()) {
+			add(i.get(),
 					HLTextUtils.convertInitToLang(i.get().asItem().getDescriptionId().replace("item.hutoslib.", "")));
 		}
-		for (RegistryObject<Item> i : HLItemInit.HANDHELDITEMS.getEntries()) {
-			addItem(i,
+		for (var i : HLItemInit.HANDHELDITEMS.getEntries()) {
+			add(i.get(),
 					HLTextUtils.convertInitToLang(i.get().asItem().getDescriptionId().replace("item.hutoslib.", "")));
 		}
-		for (RegistryObject<Block> b : HLBlockInit.BLOCKS.getEntries()) {
-			addBlock(b,
+		for (var b : HLBlockInit.BLOCKS.getEntries()) {
+			add(b.get(),
 					HLTextUtils.convertInitToLang(b.get().asItem().getDescriptionId().replace("block.hutoslib.", "")));
 		}
-		for (RegistryObject<Block> b : HLBlockInit.MODELEDBLOCKS.getEntries()) {
-			addBlock(b,
+		for (var b : HLBlockInit.MODELEDBLOCKS.getEntries()) {
+			add(b.get(),
 					HLTextUtils.convertInitToLang(b.get().asItem().getDescriptionId().replace("block.hutoslib.", "")));
 		}
 	}
