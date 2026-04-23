@@ -270,7 +270,13 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 		if (context instanceof ICondition.IContext ctx && e.isJsonObject()) {
 			JsonObject json = e.getAsJsonObject();
 			if (json.has("conditions")) {
-				return CraftingHelper.processConditions(GsonHelper.getAsJsonArray(json, "conditions"), ctx);
+				try {
+					return CraftingHelper.processConditions(GsonHelper.getAsJsonArray(json, "conditions"), ctx);
+				} catch (Exception ex) {
+					logger.error("Failed to evaluate conditions for {} item {}.", type, id);
+					logger.error("Underlying Exception: ", ex);
+					return false;
+				}
 			}
 		}
 		return true;
