@@ -16,6 +16,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.mojang.serialization.JsonOps;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.network.ReloadListenerPacket;
 
@@ -24,11 +26,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -269,9 +269,13 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 			Object context) {
 		if (context instanceof ICondition.IContext ctx && e.isJsonObject()) {
 			JsonObject json = e.getAsJsonObject();
-			if (json.has("conditions")) {
+			String conditionsKey = json.has("neoforge:conditions") ? "neoforge:conditions"
+					: json.has("conditions") ? "conditions" : null;
+			if (conditionsKey != null) {
 				try {
-					return CraftingHelper.processConditions(GsonHelper.getAsJsonArray(json, "conditions"), ctx);
+					var conditions = ICondition.LIST_CODEC.parse(JsonOps.INSTANCE, json.get(conditionsKey))
+							.getOrThrow(JsonParseException::new);
+					return conditions.stream().allMatch(cond -> cond.test(ctx));
 				} catch (Exception ex) {
 					logger.error("Failed to evaluate conditions for {} item {}.", type, id);
 					logger.error("Underlying Exception: ", ex);

@@ -7,7 +7,7 @@
     "item": "hutoslib:diamond_arm_banner"
   },
   "result": {
-    "item": "hutoslib:netherite_arm_banner"
+    "id": "hutoslib:netherite_arm_banner"
   },
   "template": {
     "item": "minecraft:netherite_upgrade_smithing_template"

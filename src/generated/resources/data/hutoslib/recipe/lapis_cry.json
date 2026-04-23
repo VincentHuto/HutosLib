@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "tag": "c:gems/lapis"
+    },
+    "X": {
+      "tag": "c:obsidians"
+    }
+  },
+  "pattern": [
+    " X ",
+    "XLX",
+    " X "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:crying_obsidian"
+  }
+}

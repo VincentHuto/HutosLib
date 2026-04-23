@@ -3,7 +3,9 @@
   "ingredient" : {
     "item" : "hutoslib:raw_clay_flask"
   },
-  "result" : "hutoslib:cured_clay_flask",
+  "result" : {
+    "id" : "hutoslib:cured_clay_flask"
+  },
   "experience" : 1.0,
   "cookingtime" : 200
 }

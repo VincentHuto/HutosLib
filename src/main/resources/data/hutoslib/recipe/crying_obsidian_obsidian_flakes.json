@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    "XLX",
+    " X "
+  ],
+  "key": {
+    "X": {
+      "item": "hutoslib:obsidian_flakes"
+    },"L": {
+      "item": "minecraft:lapis_lazuli"
+    }
+  },
+  "result": {
+    "item": "minecraft:crying_obsidian"
+  }
+}

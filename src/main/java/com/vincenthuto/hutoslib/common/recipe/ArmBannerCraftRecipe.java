@@ -22,31 +22,32 @@ super(CraftingBookCategory.MISC);
 
 @Override
 public ItemStack assemble(CraftingInput inv, HolderLookup.Provider registryAccess) {
-ItemStack itemstack = ItemStack.EMPTY;
-ItemStack itemstack1 = ItemStack.EMPTY;
+	ItemStack sourceBanner = ItemStack.EMPTY;
+	ItemStack outputArmBanner = ItemStack.EMPTY;
 
 for (int i = 0; i < inv.size(); ++i) {
 ItemStack itemstack2 = inv.getItem(i);
 if (!itemstack2.isEmpty()) {
-if (itemstack2.getItem() instanceof BannerItem) {
-itemstack = itemstack2;
+			if (itemstack2.getItem() instanceof BannerItem) {
+				sourceBanner = itemstack2;
 } else if (itemstack2.getItem() instanceof ItemArmBanner) {
-itemstack1 = itemstack2.copy();
+				outputArmBanner = itemstack2.copy();
 }
 }
 }
 
-if (itemstack1.isEmpty()) {
-return itemstack1;
-} else {
-DyeColor baseColor = ((BannerItem) itemstack.getItem()).getColor();
-itemstack1.set(DataComponents.BASE_COLOR, baseColor);
-BannerPatternLayers patterns = itemstack.get(DataComponents.BANNER_PATTERNS);
-if (patterns != null) {
-itemstack1.set(DataComponents.BANNER_PATTERNS, patterns);
-}
-return itemstack1;
-}
+	if (outputArmBanner.isEmpty() || sourceBanner.isEmpty()) {
+		return ItemStack.EMPTY;
+	}
+
+	DyeColor baseColor = sourceBanner.getOrDefault(DataComponents.BASE_COLOR,
+			((BannerItem) sourceBanner.getItem()).getColor());
+	outputArmBanner.set(DataComponents.BASE_COLOR, baseColor);
+
+	BannerPatternLayers patterns = sourceBanner.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY);
+	outputArmBanner.set(DataComponents.BANNER_PATTERNS, patterns);
+
+	return outputArmBanner;
 }
 
 @Override

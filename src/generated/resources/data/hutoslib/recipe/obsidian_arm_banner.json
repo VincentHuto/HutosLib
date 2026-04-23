@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:slime_balls"
+    },
+    "S": {
+      "tag": "c:rods/wooden"
+    },
+    "X": {
+      "tag": "c:obsidians"
+    }
+  },
+  "pattern": [
+    "XXB",
+    " XS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hutoslib:obsidian_arm_banner"
+  }
+}

@@ -8,7 +8,13 @@
     "item" : "minecraft:glow_ink_sac"
   } ],
   "result" : {
-    "item" : "minecraft:enchanted_book",
-    "nbt" : "{StoredEnchantments:[{lvl: 1,id:\"hutoslib:glimmer\"}]}"
+    "id" : "minecraft:enchanted_book",
+    "components" : {
+      "minecraft:stored_enchantments" : {
+        "levels" : {
+          "hutoslib:glimmer" : 1
+        }
+      }
+    }
   }
 }

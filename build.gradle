@@ -21,6 +21,11 @@ sourceSets.main.resources {
     exclude("src/generated/**/.cache")
 }
 
+tasks.named('processResources', ProcessResources).configure {
+    // Keep the first matching resource (src/main/resources) when generated output overlaps.
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 base {
     archivesName = mod_id
 }

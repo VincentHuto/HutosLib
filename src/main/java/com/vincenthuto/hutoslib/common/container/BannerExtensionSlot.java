@@ -97,8 +97,8 @@ banner.setContents(ItemStack.EMPTY);
 public static void track(PlayerEvent.StartTracking event) {
 Entity target = event.getTarget();
 if (target.level().isClientSide) return;
-if (target instanceof LivingEntity living) {
-get(living).syncToSelf();
+if (target instanceof Player playerTarget) {
+get(playerTarget).syncTo(event.getEntity());
 }
 }
 
@@ -173,14 +173,16 @@ slotList.get(i).setContents(stacks.get(i));
 }
 
 protected void syncToTracking() {
-if (owner == null) return;
-PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
+if (!(owner instanceof Player playerOwner)) return;
+PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents(playerOwner, this);
 PacketDistributor.sendToPlayersTrackingEntityAndSelf(owner, message);
 }
 
 protected void syncTo(Player target) {
-PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents((Player) owner, this);
-PacketDistributor.sendToPlayer((ServerPlayer) target, message);
+if (!(owner instanceof Player playerOwner)) return;
+if (!(target instanceof ServerPlayer serverTarget)) return;
+PacketSyncBannerSlotContents message = new PacketSyncBannerSlotContents(playerOwner, this);
+PacketDistributor.sendToPlayer(serverTarget, message);
 }
 
 protected void syncToSelf() {

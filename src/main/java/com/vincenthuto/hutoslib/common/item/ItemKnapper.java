@@ -37,7 +37,7 @@ this.speed = speedIn;
 
 @Override
 public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
-return DEFAULT_KNAPPER_ACTIONS.contains(itemAbility);
+return super.canPerformAction(stack, itemAbility) || DEFAULT_KNAPPER_ACTIONS.contains(itemAbility);
 }
 
 @Override
