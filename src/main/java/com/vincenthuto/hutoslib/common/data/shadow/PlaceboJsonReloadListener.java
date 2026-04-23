@@ -24,8 +24,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -264,7 +267,18 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	 */
 	public static boolean checkConditions(JsonElement e, ResourceLocation id, String type, Logger logger,
 			Object context) {
-		// TODO: Update condition checking for NeoForge 1.21.1 when ConditionalOps API is stable
+		if (context instanceof ICondition.IContext ctx && e.isJsonObject()) {
+			JsonObject json = e.getAsJsonObject();
+			if (json.has("conditions")) {
+				try {
+					return CraftingHelper.processConditions(GsonHelper.getAsJsonArray(json, "conditions"), ctx);
+				} catch (Exception ex) {
+					logger.error("Failed to evaluate conditions for {} item {}.", type, id);
+					logger.error("Underlying Exception: ", ex);
+					return false;
+				}
+			}
+		}
 		return true;
 	}
 
