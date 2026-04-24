@@ -3,14 +3,14 @@ package com.vincenthuto.hutoslib.common.data.book;
 import java.util.List;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class BookCodeModel {
-	ResourceLocation resourceLocation;
+	Identifier resourceLocation;
 	BookTemplate template;
 	List<ChapterTemplate> chapters;
 
-	public BookCodeModel(ResourceLocation resourceLocation, BookTemplate template) {
+	public BookCodeModel(Identifier resourceLocation, BookTemplate template) {
 		this.resourceLocation = resourceLocation;
 		this.template = template;
 	}
@@ -32,11 +32,11 @@ public class BookCodeModel {
 	}
 
 
-	public ResourceLocation getResourceLocation() {
+	public Identifier getResourceLocation() {
 		return resourceLocation;
 	}
 
-	public void setResourceLocation(ResourceLocation resourceLocation) {
+	public void setResourceLocation(Identifier resourceLocation) {
 		this.resourceLocation = resourceLocation;
 	}
 

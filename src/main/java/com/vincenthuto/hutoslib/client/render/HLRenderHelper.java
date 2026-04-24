@@ -26,14 +26,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class HLRenderHelper {
-	public static final ResourceLocation MC_BLOCK_SHEET = InventoryMenu.BLOCK_ATLAS;
+	public static final Identifier MC_BLOCK_SHEET = InventoryMenu.BLOCK_ATLAS;
 
 	public static int color(FluidStack stack) {
 
@@ -106,14 +106,14 @@ public class HLRenderHelper {
 		return getTexture(IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(fluid));
 	}
 
-	public static TextureAtlasSprite getTexture(ResourceLocation location) {
+	public static TextureAtlasSprite getTexture(Identifier location) {
 
 		return textureMap().getSprite(location);
 	}
 
 	public static TextureAtlasSprite getTexture(String location) {
 
-		return textureMap().getSprite(ResourceLocation.parse(location));
+		return textureMap().getSprite(Identifier.parse(location));
 	}
 
 	public static void resetShaderColor() {
@@ -139,7 +139,7 @@ public class HLRenderHelper {
 		RenderSystem.setShaderColor(red, green, blue, 1.0F);
 	}
 
-	private static void setShaderTexture0(ResourceLocation mcBlockSheet) {
+	private static void setShaderTexture0(Identifier mcBlockSheet) {
 		RenderSystem.setShaderTexture(0, mcBlockSheet);
 	}
 
@@ -219,7 +219,7 @@ public class HLRenderHelper {
 		innerBuilder.unsetDefaultColor();
 	}
 
-	public static TextureAtlasSprite getSprite(ResourceLocation rl) {
+	public static TextureAtlasSprite getSprite(Identifier rl) {
 		return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(rl);
 	}
 

@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -d .worktrees)",
+      "Bash(ls -d worktrees)",
+      "Bash(grep -i \"worktree.*director\" CLAUDE.md)",
+      "WebSearch",
+      "WebFetch(domain:projects.neoforged.net)",
+      "WebFetch(domain:www.curseforge.com)",
+      "WebFetch(domain:maven.neoforged.net)",
+      "Bash(./gradlew --no-daemon dependencies --configuration compileClasspath)",
+      "Bash(xargs sed *)",
+      "Bash(grep -v \"//.*ResourceLocation\")",
+      "Bash(./gradlew compileJava)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(xargs grep *)",
+      "Bash(./gradlew dependencies *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(jar -tf /c/Users/Vince/.gradle/caches/neoformruntime/artifacts/minecraft_1.21.11_client.jar)",
+      "Bash(jar -tf \"/c/Users/Vince/.gradle/caches/modules-2/files-2.1/net.neoforged/neoforge/21.11.42/a340d747a123d42cac6bce38e3bec2e4589cea08/neoforge-21.11.42-sources.jar\")",
+      "Bash(xargs -I{} sh -c 'jar -tf \"{}\" 2>/dev/null | grep -q \"net/minecraft/client/renderer/RenderType.class\" && echo \"{}\"')"
+    ]
+  }
+}

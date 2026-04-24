@@ -20,7 +20,7 @@
 //import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 //import net.minecraft.client.sounds.SoundManager;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.sounds.SoundEvents;
 //
 //public abstract class HLAbstractSkillTreeScreen extends AbstractMalumScreen {
@@ -78,7 +78,7 @@
 //
 //	public abstract Collection<BookEntry> getEntries();
 //
-//	public void renderBackground(ResourceLocation texture, GuiGraphics graphics, float xModifier, float yModifier) {
+//	public void renderBackground(Identifier texture, GuiGraphics graphics, float xModifier, float yModifier) {
 //		int guiLeft = (width - bookWidth) / 2;
 //		int guiTop = (height - bookHeight) / 2;
 //		int insideLeft = guiLeft + 17;

@@ -7,7 +7,7 @@ import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -53,11 +53,11 @@ public class BookTemplate extends BookDataTemplate {
 		return coverLoc;
 	}
 
-	public ResourceLocation getOverlayImage() {
+	public Identifier getOverlayImage() {
 		return HLLocHelper.getBySplit(overlayLoc);
 	}
 
-	public ResourceLocation getCoverImage() {
+	public Identifier getCoverImage() {
 		return HLLocHelper.getBySplit(coverLoc);
 
 	}
@@ -68,7 +68,7 @@ public class BookTemplate extends BookDataTemplate {
 			if (split.length < 2) {
 				return ItemStack.EMPTY;
 			}
-			Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(split[0], split[1]));
+			Item item = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
 			}

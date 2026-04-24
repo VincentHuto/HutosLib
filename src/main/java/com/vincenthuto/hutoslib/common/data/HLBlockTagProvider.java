@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.common.data;
 
 import java.util.concurrent.CompletableFuture;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;

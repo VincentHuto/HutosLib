@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.common.container;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import com.google.common.collect.ImmutableList;
 import com.vincenthuto.hutoslib.HutosLib;
@@ -14,7 +14,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -123,7 +123,7 @@ banner.onContentsChanged();
 };
 
 private final BannerSlotItemHandler banner = new BannerSlotItemHandler(this,
-ResourceLocation.fromNamespaceAndPath("hutoslib", "banner"), inventory, 0);
+Identifier.fromNamespaceAndPath("hutoslib", "banner"), inventory, 0);
 
 private final ImmutableList<BannerSlotItemHandler> slots = ImmutableList.of(banner);
 
@@ -136,18 +136,18 @@ this.owner = owner;
 		inventory.deserializeNBT(provider, nbt);
 	}
 
-@Nonnull
+@NonNull
 public BannerSlotItemHandler getBanner() {
 return banner;
 }
 
-@Nonnull
+@NonNull
 @Override
 public LivingEntity getOwner() {
 return owner;
 }
 
-@Nonnull
+@NonNull
 @Override
 public ImmutableList<BannerSlotItemHandler> getSlots() {
 return slots;

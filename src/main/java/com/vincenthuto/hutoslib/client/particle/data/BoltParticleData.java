@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector4f;

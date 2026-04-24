@@ -6,8 +6,8 @@ import com.vincenthuto.hutoslib.common.recipe.ArmBannerCraftRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -23,5 +23,5 @@ public static final DeferredHolder<MenuType<?>, MenuType<BannerSlotContainer>> b
 "banner_slot_container", () -> new MenuType<>(BannerSlotContainer::new, FeatureFlags.DEFAULT_FLAGS));
 
 public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> arm_banner_craft = RECIPESERIALIZERS
-.register("arm_banner_craft", () -> new SimpleCraftingRecipeSerializer<>(ArmBannerCraftRecipe::new));
+.register("arm_banner_craft", () -> new CustomRecipe.Serializer<>(ArmBannerCraftRecipe::new));
 }

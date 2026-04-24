@@ -9,7 +9,7 @@ import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -26,7 +26,7 @@ public static final ItemAbility KNAPPER_DIG = ItemAbility.get("knapper_dig");
 public static final Set<ItemAbility> DEFAULT_KNAPPER_ACTIONS = Stream.of(KNAPPER_DIG)
 .collect(Collectors.toCollection(Sets::newIdentityHashSet));
 public static TagKey<Block> EFFECTIVE_ON = TagKey.create(Registries.BLOCK,
-ResourceLocation.fromNamespaceAndPath("minecraft", "mineable/knapper"));
+Identifier.fromNamespaceAndPath("minecraft", "mineable/knapper"));
 
 private float speed;
 

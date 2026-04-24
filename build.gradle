@@ -37,9 +37,11 @@ neoForge {
     // Specify the version of NeoForge to use.
     version = project.neo_version
 
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
+    if (project.hasProperty('parchment_mappings_version') && project.hasProperty('parchment_minecraft_version')) {
+        parchment {
+            mappingsVersion = project.parchment_mappings_version
+            minecraftVersion = project.parchment_minecraft_version
+        }
     }
 
     // Access transformers are automatically detected from META-INF/accesstransformer.cfg
@@ -62,8 +64,8 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
-        data {
-            data()
+        clientData {
+            clientData()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 

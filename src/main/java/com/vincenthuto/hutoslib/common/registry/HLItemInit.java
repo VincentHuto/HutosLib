@@ -7,7 +7,7 @@ import com.vincenthuto.hutoslib.common.item.ItemHLGuideBook;
 import com.vincenthuto.hutoslib.common.item.ItemKnapper;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.BannerPatternItem;
@@ -29,7 +29,7 @@ public class HLItemInit {
 			HutosLib.rloc("knappers"));
 
 	// Test Tome
-	public static ResourceLocation hl_guide_book_text = HutosLib.rloc(
+	public static Identifier hl_guide_book_text = HutosLib.rloc(
 			"textures/gui/guide/hl_guide_model.png");
 	public static final DeferredHolder<Item, ? extends Item> hl_guide_book = SPECIALITEMS.register("hl_guide_book",
 			() -> new ItemHLGuideBook(new Item.Properties().stacksTo(1),

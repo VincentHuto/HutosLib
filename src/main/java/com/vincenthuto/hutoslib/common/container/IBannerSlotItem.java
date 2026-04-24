@@ -1,21 +1,21 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import com.google.common.collect.ImmutableSet;
 import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
 
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 public interface IBannerSlotItem {
-	default boolean canEquip(@Nonnull ItemStack stack, @Nonnull IBannerSlot slot) {
+	default boolean canEquip(@NonNull ItemStack stack, @NonNull IBannerSlot slot) {
 		return true;
 	}
 
-	default boolean canUnequip(@Nonnull ItemStack stack, @Nonnull IBannerSlot slot) {
+	default boolean canUnequip(@NonNull ItemStack stack, @NonNull IBannerSlot slot) {
 		var enchantments = stack.get(DataComponents.ENCHANTMENTS);
 		if (enchantments != null) {
 			return enchantments.keySet().stream()
@@ -24,17 +24,17 @@ public interface IBannerSlotItem {
 		return true;
 	}
 
-	@Nonnull
-	default ImmutableSet<ResourceLocation> getAcceptableSlots(@Nonnull ItemStack stack) {
+	@NonNull
+	default ImmutableSet<Identifier> getAcceptableSlots(@NonNull ItemStack stack) {
 		return BannerSlotCapability.ANY_SLOT_LIST;
 	}
 
-	default void onEquipped(@Nonnull ItemStack stack, @Nonnull IBannerSlot slot) {
+	default void onEquipped(@NonNull ItemStack stack, @NonNull IBannerSlot slot) {
 	}
 
-	default void onUnequipped(@Nonnull ItemStack stack, @Nonnull IBannerSlot slot) {
+	default void onUnequipped(@NonNull ItemStack stack, @NonNull IBannerSlot slot) {
 	}
 
-	default void onWornTick(@Nonnull ItemStack stack, @Nonnull IBannerSlot slot) {
+	default void onWornTick(@NonNull ItemStack stack, @NonNull IBannerSlot slot) {
 	}
 }

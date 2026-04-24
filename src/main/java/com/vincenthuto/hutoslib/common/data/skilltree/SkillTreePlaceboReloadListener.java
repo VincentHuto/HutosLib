@@ -12,12 +12,12 @@ import com.google.gson.Gson;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.data.shadow.PlaceboJsonReloadListener;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SkillTreePlaceboReloadListener extends PlaceboJsonReloadListener<TreeDataTemplate> {
 
 	public static final SkillTreePlaceboReloadListener INSTANCE = new SkillTreePlaceboReloadListener();
-	private Map<ResourceLocation, TreeDataTemplate> byType = ImmutableMap.of();
+	private Map<Identifier, TreeDataTemplate> byType = ImmutableMap.of();
 	public List<TreeCodeModel> trees = ImmutableList.of();
 	private static final Gson GSON = new Gson();
 
@@ -25,7 +25,7 @@ public class SkillTreePlaceboReloadListener extends PlaceboJsonReloadListener<Tr
 		super(HutosLib.LOGGER, "skilltrees", true, true);
 	}
 	
-	public TreeCodeModel getTreeByTitle(ResourceLocation rl) {
+	public TreeCodeModel getTreeByTitle(Identifier rl) {
 		Optional<TreeCodeModel> optional = this.trees.parallelStream().filter(p -> p.getResourceLocation().equals(rl))
 				.findFirst();
 		return optional.isPresent() ? optional.get() : null;
@@ -34,7 +34,7 @@ public class SkillTreePlaceboReloadListener extends PlaceboJsonReloadListener<Tr
 	@Override
 	protected void onReload() {
 		super.onReload();
-		ImmutableMap.Builder<ResourceLocation, TreeDataTemplate> builder = ImmutableMap.builder();
+		ImmutableMap.Builder<Identifier, TreeDataTemplate> builder = ImmutableMap.builder();
 		this.registry.values().forEach(a -> {
 			builder.put(a.id, a);
 		});
@@ -49,7 +49,7 @@ public class SkillTreePlaceboReloadListener extends PlaceboJsonReloadListener<Tr
 		this.registerSerializer(HutosLib.rloc("skill"), SkillTemplate.SERIALIZER);
 	}
 
-	public Map<ResourceLocation, TreeDataTemplate> getTypeMap() {
+	public Map<Identifier, TreeDataTemplate> getTypeMap() {
 		return this.byType;
 	}
 
@@ -61,7 +61,7 @@ public class SkillTreePlaceboReloadListener extends PlaceboJsonReloadListener<Tr
 		return "trees";
 	}
 
-	public void bindTrees(Map<ResourceLocation, TreeDataTemplate> resourceManager) {
+	public void bindTrees(Map<Identifier, TreeDataTemplate> resourceManager) {
 		HutosLib.LOGGER.info("Binding Trees:");
 		ImmutableList.Builder<TreeCodeModel> builder = ImmutableList.builder();
 
@@ -90,7 +90,7 @@ public class SkillTreePlaceboReloadListener extends PlaceboJsonReloadListener<Tr
 			if (treeNames.get(i).template() instanceof TreeTemplate b) {
 				String treeTitle = treeNames.get(i).getTree();
 				TreeCodeModel tree = new TreeCodeModel(
-						ResourceLocation.fromNamespaceAndPath(treeNames.get(i).resourceLocation().getNamespace(),
+						Identifier.fromNamespaceAndPath(treeNames.get(i).resourceLocation().getNamespace(),
 								treeNames.get(i).getTree()),
 						b);
 				List<BranchTemplate> branchs = new ArrayList<BranchTemplate>();

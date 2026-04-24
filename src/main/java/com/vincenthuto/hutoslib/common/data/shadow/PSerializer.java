@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;

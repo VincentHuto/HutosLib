@@ -2,10 +2,10 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import com.vincenthuto.hutoslib.common.data.shadow.TypeKeyed.TypeKeyedBase;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public abstract class BookDataTemplate extends TypeKeyedBase<BookDataTemplate> {
-	ResourceLocation location;
+	Identifier location;
 	int ordinality;
 
 	// So GSON.toJson doesnt like nonprimatives so imma split this like Im doing the

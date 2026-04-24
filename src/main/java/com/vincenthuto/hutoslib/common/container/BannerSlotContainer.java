@@ -10,7 +10,7 @@ import com.vincenthuto.hutoslib.common.network.PacketContainerSlot;
 
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,7 +39,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 	private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{
 		EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
 	};
-	private static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[]{
+	private static final Identifier[] TEXTURE_EMPTY_SLOTS = new Identifier[]{
 		InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS,
 		InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS,
 		InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE,
@@ -77,7 +77,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 				}
 
 				@Override
-				public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+				public Pair<Identifier, Identifier> getNoItemIcon() {
 					return Pair.of(InventoryMenu.BLOCK_ATLAS,
 							TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()]);
 				}

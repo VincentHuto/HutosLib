@@ -19,14 +19,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public class HLGuiGuideTitlePage extends Screen {
 
 	private static HLGuiGuideTitlePage screen;
-	final ResourceLocation texture;
-	final ResourceLocation overlay;
+	final Identifier texture;
+	final Identifier overlay;
 	int guiWidth = 186;
 	int guiHeight = 240;
 	double xDragPos = 0;

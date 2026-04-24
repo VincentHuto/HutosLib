@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.vincenthuto.hutoslib.common.block.entity.SimpleInventoryBlockEntity;
 
@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 
+@SuppressWarnings("deprecation")
 public class HLInvHelper {
 
 public static ItemStack findItemInPlayerInv(Player player, Class<? extends Item> item) {

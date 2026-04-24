@@ -9,7 +9,7 @@ import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -53,7 +53,7 @@ public class BranchTemplate extends TreeDataTemplate {
 			if (split.length < 2) {
 				return ItemStack.EMPTY;
 			}
-			Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(split[0], split[1]));
+			Item item = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
 			}
@@ -84,14 +84,14 @@ public class BranchTemplate extends TreeDataTemplate {
 		this.texture = texture;
 	}
 
-	public ResourceLocation getTextureLocation() {
+	public Identifier getTextureLocation() {
 
 		if (texture != null && texture.contains(":")) {
 			String[] split = texture.split(":", 2);
 			if (split.length < 2) {
 				return HutosLib.rloc(texture);
 			}
-			ResourceLocation rl = ResourceLocation.fromNamespaceAndPath(split[0], split[1]);
+			Identifier rl = Identifier.fromNamespaceAndPath(split[0], split[1]);
 			if (rl != null) {
 				return rl;
 			}

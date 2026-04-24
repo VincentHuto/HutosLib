@@ -5,7 +5,7 @@ import com.vincenthuto.hutoslib.client.HLLocHelper;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 
 public class HLButtonArrow extends HLButtonTextured {
@@ -13,9 +13,9 @@ public class HLButtonArrow extends HLButtonTextured {
 	public static enum ArrowDirection {
 		FORWARD(HLLocHelper.guiPrefix("arrow_forward.png")), BACKWARD(HLLocHelper.guiPrefix("arrow_back.png"));
 
-		ResourceLocation texture;
+		Identifier texture;
 
-		ArrowDirection(ResourceLocation texture) {
+		ArrowDirection(Identifier texture) {
 			this.texture = texture;
 		}
 	}

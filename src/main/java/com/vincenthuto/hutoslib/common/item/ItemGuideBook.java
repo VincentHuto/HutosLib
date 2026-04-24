@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.common.item;
 
 import java.util.Random;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -25,14 +25,14 @@ public class ItemGuideBook extends Item {
 	public float pageAngle;
 	public float tRot;
 	public float close;
-	private ResourceLocation texture;
+	private Identifier texture;
 
-	public ItemGuideBook(Properties prop, ResourceLocation loc) {
+	public ItemGuideBook(Properties prop, Identifier loc) {
 		super(prop);
 		this.texture = loc;
 	}
 
-	public ResourceLocation getTexture() {
+	public Identifier getTexture() {
 		return texture;
 	}
 
@@ -94,7 +94,7 @@ public class ItemGuideBook extends Item {
 
 	}
 
-	public void setTexture(ResourceLocation texture) {
+	public void setTexture(Identifier texture) {
 		this.texture = texture;
 	}
 }

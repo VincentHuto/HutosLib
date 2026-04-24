@@ -8,7 +8,7 @@ import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -63,7 +63,7 @@ public class SkillTemplate extends TreeDataTemplate {
 			if (split.length < 2) {
 				return ItemStack.EMPTY;
 			}
-			Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(split[0], split[1]));
+			Item item = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
 			}
@@ -71,7 +71,7 @@ public class SkillTemplate extends TreeDataTemplate {
 		return ItemStack.EMPTY;
 	}
 
-	public ResourceLocation getTextureLocation() {
+	public Identifier getTextureLocation() {
 
 		return HLLocHelper.getBySplit(texture);
 

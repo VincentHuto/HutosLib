@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.client.screen;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

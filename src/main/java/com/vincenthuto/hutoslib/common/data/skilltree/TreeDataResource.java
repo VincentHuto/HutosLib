@@ -1,8 +1,8 @@
 package com.vincenthuto.hutoslib.common.data.skilltree;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-public record TreeDataResource(ResourceLocation resourceLocation,  TreeDataTemplate template) {
+public record TreeDataResource(Identifier resourceLocation,  TreeDataTemplate template) {
 
 	
 	public String[] getSplitPath() {

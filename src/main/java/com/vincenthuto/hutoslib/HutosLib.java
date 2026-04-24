@@ -1,5 +1,6 @@
 package com.vincenthuto.hutoslib;
 
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +21,6 @@ import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -49,7 +49,7 @@ public static final String MOD_ID = "hutoslib";
 public static IProxy proxy = new IProxy() {
 };
 
-public static Pair<ResourceLocation, BlockItem> createItemBlock(Pair<Block, ResourceLocation> block) {
+public static Pair<Identifier, BlockItem> createItemBlock(Pair<Block, Identifier> block) {
 return Pair.of(block.getSecond(), new BlockItem(block.getFirst(), new Item.Properties()));
 }
 
@@ -58,13 +58,13 @@ public static void onRegisterItems(final RegisterEvent event) {
 if (event.getRegistryKey() != Registries.ITEM) {
 return;
 }
-HLBlockInit.BLOCKS.getEntries().stream().map(m -> new Pair<Block, ResourceLocation>(m.get(), m.getId())).map(t -> createItemBlock(t))
+HLBlockInit.BLOCKS.getEntries().stream().map(m -> new Pair<Block, Identifier>(m.get(), m.getId())).map(t -> createItemBlock(t))
 .forEach(item -> registerBlockItem(event, item));
-HLBlockInit.MODELEDBLOCKS.getEntries().stream().map(m -> new Pair<Block, ResourceLocation>(m.get(), m.getId()))
+HLBlockInit.MODELEDBLOCKS.getEntries().stream().map(m -> new Pair<Block, Identifier>(m.get(), m.getId()))
 .map(t -> createItemBlock(t)).forEach(item -> registerBlockItem(event, item));
 }
 
-private static void registerBlockItem(RegisterEvent event, Pair<ResourceLocation, BlockItem> item) {
+private static void registerBlockItem(RegisterEvent event, Pair<Identifier, BlockItem> item) {
 event.register(Registries.ITEM, helper -> helper.register(item.getFirst(), item.getSecond()));
 }
 
@@ -75,7 +75,7 @@ public static final DeferredHolder<CreativeModeTab, CreativeModeTab> hutoslibtab
 .icon(() -> new ItemStack(HLItemInit.obsidian_flakes.get())).build());
 
 public HutosLib(IEventBus modEventBus) {
-if (FMLEnvironment.dist.isClient()) {
+if (FMLEnvironment.getDist().isClient()) {
 proxy = new ClientProxy();
 }
 modEventBus.addListener(this::commonSetup);
@@ -121,7 +121,7 @@ HLBlockInit.MODELEDBLOCKS.getEntries().forEach(i -> output.accept(i.get()));
 }
 }
 
-public static ResourceLocation rloc(String path) {
-return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+public static Identifier rloc(String path) {
+return Identifier.fromNamespaceAndPath(MOD_ID, path);
 }
 }

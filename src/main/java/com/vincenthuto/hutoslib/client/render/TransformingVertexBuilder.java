@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -58,42 +58,42 @@ public class TransformingVertexBuilder implements VertexConsumer {
 		this(buffer, type, new PoseStack());
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public VertexConsumer addVertex(float x, float y, float z) {
 		pos.putData(new Vec3(x, y, z));
 		return this;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public VertexConsumer setColor(int red, int green, int blue, int alpha) {
 		color.putData(new Vector4f(red / 255f, green / 255f, blue / 255f, alpha / 255f));
 		return this;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public VertexConsumer setUv(float u, float v) {
 		uv.putData(new Vec2(u, v));
 		return this;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public VertexConsumer setUv1(int u, int v) {
 		overlay.putData(new Vec2i(u, v));
 		return this;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public VertexConsumer setUv2(int u, int v) {
 		lightmap.putData(new Vec2i(u, v));
 		return this;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public VertexConsumer setNormal(float x, float y, float z) {
 		Vector3f vec = new Vector3f(x, y, z);
@@ -162,7 +162,7 @@ public class TransformingVertexBuilder implements VertexConsumer {
 		this.uv.setGlobal(uv);
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public VertexConsumer setLight(int light) {
 		lightmap.setGlobal(new Vec2i(light & 0xffff, light >> 16));
@@ -176,7 +176,7 @@ public class TransformingVertexBuilder implements VertexConsumer {
 		return this;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public VertexConsumer setOverlay(int packedOverlayIn) {
 		overlay.setGlobal(new Vec2i(packedOverlayIn & 0xffff, packedOverlayIn >> 16));

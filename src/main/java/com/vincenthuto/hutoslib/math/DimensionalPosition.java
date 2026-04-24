@@ -6,7 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 public class DimensionalPosition implements INBTSerializable<CompoundTag> {
@@ -20,7 +20,7 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 		dp.deserializeNBT(provider, nbt);
 		return dp;
 	}
-	private ResourceLocation dimension;
+	private Identifier dimension;
 
 	private BlockPos position;
 	public DimensionalPosition() {
@@ -29,7 +29,7 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 	/*
 	 * to get RL Player().level.dimension().location();
 	 */
-	public DimensionalPosition(ResourceLocation dim, BlockPos pos) {
+	public DimensionalPosition(Identifier dim, BlockPos pos) {
 		this.dimension = dim;
 		this.position = pos;
 	}
@@ -37,7 +37,7 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 	@Override
 	public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
 		if (nbt.contains("dim")) {
-			ResourceLocation parsed = ResourceLocation.tryParse(nbt.getString("dim"));
+			Identifier parsed = Identifier.tryParse(nbt.getString("dim"));
 			if (parsed != null) {
 				this.dimension = parsed;
 			}
@@ -46,7 +46,7 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 		NbtUtils.readBlockPos(nbt, "pos").ifPresent(pos -> this.position = pos);
 	}
 
-	public ResourceLocation getDimension() {
+	public Identifier getDimension() {
 		return this.dimension;
 	}
 

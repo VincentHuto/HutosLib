@@ -34,6 +34,9 @@ import net.neoforged.neoforge.network.PacketDistributor;
 @EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class HLClientEvents {
 
+public static final KeyMapping.Category ARMBANNER_CATEGORY =
+    new KeyMapping.Category(Identifier.fromNamespaceAndPath("hutoslib", "armbanner"));
+
 @SubscribeEvent
 public static void skybox(RenderLevelStageEvent event) {
 BoltRenderer.onWorldRenderLast(event.getPartialTick().getGameTimeDeltaPartialTick(true), event.getPoseStack());
@@ -56,8 +59,9 @@ public static class ModBusEvents {
 
 @SubscribeEvent
 public static void initKeybinds(RegisterKeyMappingsEvent ev) {
+ev.registerCategory(ARMBANNER_CATEGORY);
 ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V,
-"key.armbanner.category"));
+ARMBANNER_CATEGORY));
 }
 
 @SubscribeEvent

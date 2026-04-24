@@ -3,14 +3,14 @@ package com.vincenthuto.hutoslib.common.data.skilltree;
 import java.util.List;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class TreeCodeModel {
-	ResourceLocation resourceLocation;
+	Identifier resourceLocation;
 	TreeTemplate template;
 	List<BranchTemplate> branchs;
 
-	public TreeCodeModel(ResourceLocation resourceLocation, TreeTemplate template) {
+	public TreeCodeModel(Identifier resourceLocation, TreeTemplate template) {
 		this.resourceLocation = resourceLocation;
 		this.template = template;
 	}
@@ -32,11 +32,11 @@ public class TreeCodeModel {
 	}
 
 
-	public ResourceLocation getResourceLocation() {
+	public Identifier getResourceLocation() {
 		return resourceLocation;
 	}
 
-	public void setResourceLocation(ResourceLocation resourceLocation) {
+	public void setResourceLocation(Identifier resourceLocation) {
 		this.resourceLocation = resourceLocation;
 	}
 

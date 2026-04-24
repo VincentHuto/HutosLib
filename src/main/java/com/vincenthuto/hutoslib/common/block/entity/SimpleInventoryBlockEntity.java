@@ -1,7 +1,7 @@
 
 package com.vincenthuto.hutoslib.common.block.entity;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.vincenthuto.hutoslib.common.network.VanillaPacketDispatcher;
 

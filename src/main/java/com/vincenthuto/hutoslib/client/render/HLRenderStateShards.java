@@ -13,17 +13,17 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderType.CompositeState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 //This extends RenderStateShard to get access to various protected members
 public class HLRenderStateShards extends RenderStateShard {
-	private static final Function<ResourceLocation, RenderType> GUI_CUTOUT;
-	private static final Function<ResourceLocation, RenderType> GUI_TRANSLUCENT;
+	private static final Function<Identifier, RenderType> GUI_CUTOUT;
+	private static final Function<Identifier, RenderType> GUI_TRANSLUCENT;
 
 	static {
 		GUI_CUTOUT = Util.memoize(texture -> createDefault("gui_" + texture, DefaultVertexFormat.POSITION_TEX_COLOR ,
@@ -37,15 +37,15 @@ public class HLRenderStateShards extends RenderStateShard {
 		super(p_110161_, p_110162_, p_110163_);
 	}
 
-	public static RenderType getGui(ResourceLocation texture) {
+	public static RenderType getGui(Identifier texture) {
 		return GUI_CUTOUT.apply(texture);
 	}
 
-	public static RenderType getGuiTranslucent(ResourceLocation texture) {
+	public static RenderType getGuiTranslucent(Identifier texture) {
 		return GUI_TRANSLUCENT.apply(texture);
 	}
 
-	private static CompositeState.CompositeStateBuilder makeGuiState(ResourceLocation texture) {
+	private static CompositeState.CompositeStateBuilder makeGuiState(Identifier texture) {
 		return RenderType.CompositeState.builder().setTextureState(new TextureStateShard(texture, false, false))
 				.setShaderState(new ShaderStateShard(GameRenderer::getPositionTexColorShader));
 	}

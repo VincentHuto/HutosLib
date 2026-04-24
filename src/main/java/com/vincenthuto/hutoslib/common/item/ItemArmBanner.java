@@ -7,7 +7,7 @@ import com.vincenthuto.hutoslib.common.container.IBannerSlotItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -28,9 +28,9 @@ return color != null ? color : DyeColor.WHITE;
 }
 
 public Holder<ArmorMaterial> material;
-ResourceLocation modellocation;
+Identifier modellocation;
 
-public ItemArmBanner(Properties prop, Holder<ArmorMaterial> materialIn, ResourceLocation modellocation) {
+public ItemArmBanner(Properties prop, Holder<ArmorMaterial> materialIn, Identifier modellocation) {
 super(prop.stacksTo(1));
 this.material = materialIn;
 this.modellocation = modellocation;
@@ -47,7 +47,7 @@ DyeColor color = stack.get(DataComponents.BASE_COLOR);
 return color != null ? this.getDescriptionId() + '.' + color.getName() : super.getDescriptionId(stack);
 }
 
-public ResourceLocation getTexture() {
+public Identifier getTexture() {
 return modellocation;
 }
 

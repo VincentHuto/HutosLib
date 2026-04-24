@@ -3,17 +3,17 @@ package com.vincenthuto.hutoslib.client.screen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class HLButtonTextured extends Button {
 
-	public final ResourceLocation texture;
+	public final Identifier texture;
 	public int id, posX, posY, buttonWidth, buttonHeight, u, v, adjV, newV;
 	boolean state;
 	public Button.OnPress action;
 	public Component text;
 
-	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
+	public HLButtonTextured(Identifier texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Button.OnPress actionIn) {
 		super(posXIn, posYIn, buttonWidthIn, buttonHeightIn, Component.literal(""), actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
@@ -32,7 +32,7 @@ public class HLButtonTextured extends Button {
 
 	}
 
-	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
+	public HLButtonTextured(Identifier texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Component text, Button.OnPress actionIn) {
 		super(posXIn, posYIn, buttonWidthIn, buttonHeightIn, text, actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;
@@ -64,13 +64,13 @@ public class HLButtonTextured extends Button {
 	 * @param actionIn       On Pressed Action
 	 */
 
-	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
+	public HLButtonTextured(Identifier texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, Button.OnPress actionIn) {
 		this(texIn, idIn, posXIn, posYIn, buttonWidthIn, buttonHeightIn, uIn, vIn, false, actionIn);
 
 	}
 
-	public HLButtonTextured(ResourceLocation texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
+	public HLButtonTextured(Identifier texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, Component text, Button.OnPress actionIn) {
 		super(posXIn, posYIn, buttonWidthIn, buttonHeightIn, text, actionIn, DEFAULT_NARRATION);
 		this.texture = texIn;

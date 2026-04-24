@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;

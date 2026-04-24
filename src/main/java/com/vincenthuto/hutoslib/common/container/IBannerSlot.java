@@ -1,30 +1,30 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import com.google.common.collect.ImmutableSet;
 import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
 
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 public interface IBannerSlot {
-	static boolean isAcceptableSlot(@Nonnull IBannerSlot slot, @Nonnull ItemStack stack,
-			@Nonnull IBannerSlotItem extItem) {
-		ImmutableSet<ResourceLocation> slots = extItem.getAcceptableSlots(stack);
+	static boolean isAcceptableSlot(@NonNull IBannerSlot slot, @NonNull ItemStack stack,
+			@NonNull IBannerSlotItem extItem) {
+		ImmutableSet<Identifier> slots = extItem.getAcceptableSlots(stack);
 		return slots.contains(BannerSlotCapability.ANY_SLOT) || slots.contains(slot.getType());
 	}
 
-	default boolean canEquip(@Nonnull ItemStack stack) {
+	default boolean canEquip(@NonNull ItemStack stack) {
 		if (stack.getItem() instanceof IBannerSlotItem extItem) {
 			return IBannerSlot.isAcceptableSlot(this, stack, extItem) && extItem.canEquip(stack, this);
 		}
 		return false;
 	}
 
-	default boolean canUnequip(@Nonnull ItemStack stack) {
+	default boolean canUnequip(@NonNull ItemStack stack) {
 		if (stack.getItem() instanceof IBannerSlotItem extItem) {
 			return extItem.canUnequip(stack, this) && !hasCurseOfBinding(stack);
 		}
@@ -37,16 +37,16 @@ public interface IBannerSlot {
 		return enchantments.keySet().stream().anyMatch(h -> h.is(Enchantments.BINDING_CURSE));
 	}
 
-	@Nonnull
+	@NonNull
 	IBannerContainer getContainer();
 
-	@Nonnull
+	@NonNull
 	ItemStack getContents();
 
-	@Nonnull
-	ResourceLocation getType();
+	@NonNull
+	Identifier getType();
 
 	void onContentsChanged();
 
-	void setContents(@Nonnull ItemStack stack);
+	void setContents(@NonNull ItemStack stack);
 }

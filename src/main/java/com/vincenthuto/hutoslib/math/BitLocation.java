@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.math;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,7 +53,7 @@ public class BitLocation {
 		return bitX3;
 	}
 
-	@Nonnull
+	@NonNull
 	public BlockPos blockPos;
 
 	public int bitX, bitY, bitZ;

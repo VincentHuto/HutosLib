@@ -1,8 +1,8 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-public record BookDataResource(ResourceLocation resourceLocation,  BookDataTemplate template) {
+public record BookDataResource(Identifier resourceLocation,  BookDataTemplate template) {
 
 	
 	public String[] getSplitPath() {

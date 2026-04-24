@@ -14,13 +14,13 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
-	public static ResourceLocation defaultText = HutosLib.rloc(
+	public static Identifier defaultText = HutosLib.rloc(
 			"textures/gui/hl_guide_book_text_default.png");
 	public BookModel model;
 

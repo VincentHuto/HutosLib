@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.common.block;
 
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.serialization.MapCodec;
 import com.vincenthuto.hutoslib.common.block.entity.DisplayPedestalBlockEntity;

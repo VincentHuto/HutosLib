@@ -5,7 +5,7 @@ import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 public class ItemHLGuideBook extends ItemGuideBook {
 
-	public ItemHLGuideBook(Properties prop, ResourceLocation texture) {
+	public ItemHLGuideBook(Properties prop, Identifier texture) {
 		super(prop, texture);
 	}
 

@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.common.data.shadow;
 
 import java.util.Optional;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
@@ -26,7 +26,7 @@ return 0;
 
 @SuppressWarnings("DataFlowIssue")
 @Override
-public Optional<ResourceLocation> getRegistryNameForRecipe(Recipe<?> recipe) {
+public Optional<Identifier> getRegistryNameForRecipe(Recipe<?> recipe) {
 	// Recipe.getId() was removed in 1.21.1 — ID is tracked in RecipeHolder externally
 	return Optional.empty();
 }

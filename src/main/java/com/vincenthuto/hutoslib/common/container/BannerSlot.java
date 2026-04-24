@@ -1,10 +1,10 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import com.vincenthuto.hutoslib.HutosLib;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class BannerSlot extends Slot {
-	public static final ResourceLocation SLOT_BACKGROUND = HutosLib.rloc(
+	public static final Identifier SLOT_BACKGROUND = HutosLib.rloc(
 			"gui/empty_banner_slot_background");
 
 	private static Container emptyInventory = new SimpleContainer(0);
@@ -30,7 +30,7 @@ public class BannerSlot extends Slot {
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public ItemStack getItem() {
 		return slot.getContents();
 	}
@@ -41,7 +41,7 @@ public class BannerSlot extends Slot {
 	}
 
 	@Override
-	public int getMaxStackSize(@Nonnull ItemStack stack) {
+	public int getMaxStackSize(@NonNull ItemStack stack) {
 		return 1;
 	}
 
@@ -56,19 +56,19 @@ public class BannerSlot extends Slot {
 	}
 
 	@Override
-	public boolean mayPlace(@Nonnull ItemStack stack) {
+	public boolean mayPlace(@NonNull ItemStack stack) {
 		if (stack.isEmpty())
 			return false;
 		return slot.canEquip(stack);
 	}
 
 	@Override
-	public void onQuickCraft(@Nonnull ItemStack oldStackIn, @Nonnull ItemStack newStackIn) {
+	public void onQuickCraft(@NonNull ItemStack oldStackIn, @NonNull ItemStack newStackIn) {
 
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public ItemStack remove(int amount) {
 		ItemStack itemstack = slot.getContents();
 
@@ -88,7 +88,7 @@ public class BannerSlot extends Slot {
 	}
 
 	@Override
-	public void set(@Nonnull ItemStack stack) {
+	public void set(@NonNull ItemStack stack) {
 		slot.setContents(stack);
 		this.setChanged();
 	}
