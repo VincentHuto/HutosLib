@@ -9,6 +9,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.util.RandomSource;
 
 public class EmberParticleFactory implements ParticleProvider<EmberParticleData> {
 	public static final String NAME = "ember";
@@ -28,7 +29,7 @@ public class EmberParticleFactory implements ParticleProvider<EmberParticleData>
 	 */
 	@Override
 	public Particle createParticle(EmberParticleData data, ClientLevel worldIn, double x, double y, double z,
-			double xSpeed, double ySpeed, double zSpeed) {
+			double xSpeed, double ySpeed, double zSpeed, RandomSource randomSource) {
 		return new ParticleGlow(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(),
 				data.color.getBlue(), data.alpha, data.scale, data.life, this.spriteSet);
 

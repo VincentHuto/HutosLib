@@ -9,6 +9,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.util.RandomSource;
 
 public class LightningParticleFactory implements ParticleProvider<ColorLightningData> {
 	public static ColorLightningData createData(ParticleColor color, float s, int a, int f, float o) {
@@ -23,7 +24,7 @@ public class LightningParticleFactory implements ParticleProvider<ColorLightning
 
 	@Override
 	public Particle createParticle(ColorLightningData typeIn, ClientLevel worldIn, double x, double y, double z,
-			double xSpeed, double ySpeed, double zSpeed) {
+			double xSpeed, double ySpeed, double zSpeed, RandomSource randomSource) {
 		ParticleLightning particle = new ParticleLightning(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet,
 				typeIn.color.getRed(), typeIn.color.getGreen(), typeIn.color.getBlue(), typeIn.speed, typeIn.maxAge,
 				typeIn.fract, typeIn.maxOffset);

@@ -128,7 +128,7 @@ public class BoltRenderer {
 		ps.pushPose();
 		// here we translate based on the inverse position of the client viewing camera
 		// to get back to 0, 0, 0
-		Vec3 camVec = BoltRenderer.INSTANCE.minecraft.gameRenderer.getMainCamera().getPosition();
+		Vec3 camVec = BoltRenderer.INSTANCE.minecraft.gameRenderer.getMainCamera().position();
 		ps.translate(-camVec.x, -camVec.y, -camVec.z);
 		MultiBufferSource.BufferSource buffers = BoltRenderer.INSTANCE.minecraft.renderBuffers().bufferSource();
 		BoltRenderer.INSTANCE.render(partialTicks, ps, buffers);

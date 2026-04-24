@@ -42,7 +42,7 @@ public class HLParticleUtils {
 
 		while ((d4 + .65) < d3) {
 			d4 += 1.8D - d5 + r.nextDouble() * (1.5D - d5);
-			if (world.isClientSide)
+			if (world.isClientSide())
 				world.addParticle(type, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
 			if (world instanceof ServerLevel) {
 				((ServerLevel) world).sendParticles(type2, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, r.nextInt(4), 0,
