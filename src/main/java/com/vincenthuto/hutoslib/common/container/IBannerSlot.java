@@ -1,14 +1,12 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import org.jspecify.annotations.NonNull;
-
 import com.google.common.collect.ImmutableSet;
 import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
-
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
+import org.jspecify.annotations.NonNull;
 
 public interface IBannerSlot {
 	static boolean isAcceptableSlot(@NonNull IBannerSlot slot, @NonNull ItemStack stack,

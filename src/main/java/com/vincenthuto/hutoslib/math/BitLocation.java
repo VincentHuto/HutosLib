@@ -1,12 +1,11 @@
 package com.vincenthuto.hutoslib.math;
 
-import org.jspecify.annotations.NonNull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.NonNull;
 
 //From Chisel and Bits
 public class BitLocation {

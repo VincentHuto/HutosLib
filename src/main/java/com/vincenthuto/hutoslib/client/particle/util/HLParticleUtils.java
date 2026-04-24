@@ -1,13 +1,13 @@
 package com.vincenthuto.hutoslib.client.particle.util;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HLParticleUtils {
 	public static Random r = new Random();

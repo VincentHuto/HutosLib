@@ -10,10 +10,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class HLBlockEntityInit {
 
-public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister
-.create(Registries.BLOCK_ENTITY_TYPE, HutosLib.MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister
+            .create(Registries.BLOCK_ENTITY_TYPE, HutosLib.MOD_ID);
 
-public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DisplayPedestalBlockEntity>> display_pedestal = BLOCK_ENTITIES
-.register("display_pedestal", () -> BlockEntityType.Builder
-.of(DisplayPedestalBlockEntity::new, HLBlockInit.display_pedestal.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DisplayPedestalBlockEntity>> display_pedestal = BLOCK_ENTITIES
+            .register("display_pedestal",
+                    () -> new BlockEntityType<>(DisplayPedestalBlockEntity::new, HLBlockInit.display_pedestal.get()));
 }

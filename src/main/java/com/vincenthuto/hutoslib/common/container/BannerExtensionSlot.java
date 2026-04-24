@@ -1,18 +1,11 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.jspecify.annotations.NonNull;
-
 import com.google.common.collect.ImmutableList;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.network.PacketSyncBannerSlotContents;
 import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
-
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,18 +16,24 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jspecify.annotations.NonNull;
 
-@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
-public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<CompoundTag> {
+import java.util.Collection;
+import java.util.List;
+
+@EventBusSubscriber(modid = HutosLib.MOD_ID)
+public class BannerExtensionSlot implements IBannerContainer, ValueIOSerializable {
 
 @SubscribeEvent
 public static void entityTick(PlayerTickEvent.Post event) {
@@ -132,8 +131,8 @@ this.owner = owner;
 }
 
 	@Override
-	public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-		inventory.deserializeNBT(provider, nbt);
+	public void deserialize(ValueInput input) {
+		inventory.deserialize(input);
 	}
 
 @NonNull
@@ -155,14 +154,14 @@ return slots;
 
 @Override
 public void onContentsChanged(BannerSlotItemHandler slot) {
-if (owner != null && !owner.level().isClientSide) {
+if (owner != null && !owner.level().isClientSide()) {
 syncToTracking();
 }
 }
 
 	@Override
-	public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-		return inventory.serializeNBT(provider);
+	public void serialize(ValueOutput output) {
+		inventory.serialize(output);
 	}
 
 public void setAll(NonNullList<ItemStack> stacks) {

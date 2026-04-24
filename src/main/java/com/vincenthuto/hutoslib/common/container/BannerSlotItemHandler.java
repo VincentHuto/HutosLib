@@ -1,10 +1,9 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import org.jspecify.annotations.NonNull;
-
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import org.jspecify.annotations.NonNull;
 
 @SuppressWarnings("deprecation")
 public class BannerSlotItemHandler implements IBannerSlot {

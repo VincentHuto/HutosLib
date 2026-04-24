@@ -1,17 +1,15 @@
 package com.vincenthuto.hutoslib.common.data;
 
-import java.util.concurrent.CompletableFuture;
-
-import org.jspecify.annotations.Nullable;
-
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 public class HLBlockTagProvider extends BlockTagsProvider {
 

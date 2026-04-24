@@ -1,15 +1,14 @@
 package com.vincenthuto.hutoslib.common.registry;
 
-import java.util.function.Supplier;
-
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.karma.Karma;
-
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.function.Supplier;
 
 public class HLAttachmentTypes {
 

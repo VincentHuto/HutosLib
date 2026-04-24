@@ -1,10 +1,6 @@
 package com.vincenthuto.hutoslib.common.registry;
 
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.particle.data.ColorLightningData;
-import com.vincenthuto.hutoslib.client.particle.data.ColorParticleData;
-import com.vincenthuto.hutoslib.client.particle.data.DarkColorParticleData;
-import com.vincenthuto.hutoslib.client.particle.data.EmberParticleData;
 import com.vincenthuto.hutoslib.client.particle.factory.DarkGlowParticleFactory;
 import com.vincenthuto.hutoslib.client.particle.factory.EmberParticleFactory;
 import com.vincenthuto.hutoslib.client.particle.factory.GlowParticleFactory;
@@ -13,15 +9,12 @@ import com.vincenthuto.hutoslib.client.particle.type.DarkGlowParticleType;
 import com.vincenthuto.hutoslib.client.particle.type.EmberParticleType;
 import com.vincenthuto.hutoslib.client.particle.type.GlowParticleType;
 import com.vincenthuto.hutoslib.client.particle.type.LightningParticleType;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -45,10 +38,10 @@ public class HLParticleInit {
 
 	@SubscribeEvent
 	public static void registerParticleFactories(RegisterParticleProvidersEvent  event) {
-		Minecraft.getInstance().particleEngine.register(glow.get(), GlowParticleFactory::new);
-		Minecraft.getInstance().particleEngine.register(dark_glow.get(), DarkGlowParticleFactory::new);
-		Minecraft.getInstance().particleEngine.register(lightning_bolt.get(), LightningParticleFactory::new);
-		Minecraft.getInstance().particleEngine.register(ember.get(), EmberParticleFactory::new);
+		event.registerSpriteSet(glow.get(), GlowParticleFactory::new);
+		event.registerSpriteSet(dark_glow.get(), DarkGlowParticleFactory::new);
+		event.registerSpriteSet(lightning_bolt.get(), LightningParticleFactory::new);
+		event.registerSpriteSet(ember.get(), EmberParticleFactory::new);
 
 	}
 

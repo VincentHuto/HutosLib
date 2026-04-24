@@ -1,31 +1,25 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Supplier;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideCraftingPage;
 import com.vincenthuto.hutoslib.common.data.shadow.LazySupplier;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 import com.vincenthuto.hutoslib.common.data.shadow.RecipeHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 
 public class CraftingRecipeTemplate extends PageTemplate {

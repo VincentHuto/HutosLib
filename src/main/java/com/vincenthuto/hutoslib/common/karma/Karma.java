@@ -1,27 +1,23 @@
 package com.vincenthuto.hutoslib.common.karma;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 
-public class Karma implements IKarma, INBTSerializable<CompoundTag> {
+public class Karma implements IKarma, ValueIOSerializable {
 private boolean active = false;
 private float karma = 0.0F;
 
 @Override
-public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-CompoundTag tag = new CompoundTag();
-tag.putBoolean("Active", active);
-tag.putFloat("Amount", karma);
-return tag;
+public void serialize(ValueOutput output) {
+output.putBoolean("Active", active);
+output.putFloat("Amount", karma);
 }
 
 @Override
-public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-if (nbt.contains("Active") && nbt.contains("Amount")) {
-this.active = nbt.getBoolean("Active");
-this.karma = nbt.getFloat("Amount");
-}
+public void deserialize(ValueInput input) {
+this.active = input.getBooleanOr("Active", false);
+this.karma = input.getFloatOr("Amount", 0.0F);
 }
 
 @Override

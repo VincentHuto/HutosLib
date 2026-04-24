@@ -1,17 +1,16 @@
 package com.vincenthuto.hutoslib.common.data.skilltree;
 
-import java.util.List;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 
 public class BranchTemplate extends TreeDataTemplate {
@@ -53,7 +52,7 @@ public class BranchTemplate extends TreeDataTemplate {
 			if (split.length < 2) {
 				return ItemStack.EMPTY;
 			}
-			Item item = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(split[0], split[1]));
+			Item item = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(split[0], split[1])).get().value();
 			if (item != null) {
 				return new ItemStack(item);
 			}

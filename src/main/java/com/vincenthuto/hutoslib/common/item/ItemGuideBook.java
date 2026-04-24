@@ -1,7 +1,5 @@
 package com.vincenthuto.hutoslib.common.item;
 
-import java.util.Random;
-
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -9,6 +7,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
+import java.util.Random;
 
 public class ItemGuideBook extends Item {
 	private static final Random random = new Random();

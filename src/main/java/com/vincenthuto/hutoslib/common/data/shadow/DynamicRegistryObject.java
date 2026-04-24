@@ -1,10 +1,10 @@
 package com.vincenthuto.hutoslib.common.data.shadow;
 
+import net.minecraft.resources.Identifier;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import net.minecraft.resources.Identifier;
 
 @SuppressWarnings("rawtypes")
 public class DynamicRegistryObject<T extends TypeKeyed<? super T>> implements Supplier<T>, ListenerCallback {

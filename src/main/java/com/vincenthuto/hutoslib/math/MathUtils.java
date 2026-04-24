@@ -1,16 +1,15 @@
 package com.vincenthuto.hutoslib.math;
 
-import java.awt.Point;
-import java.util.Optional;
-import java.util.Random;
-import java.util.function.Predicate;
-
-import org.jspecify.annotations.Nullable;
-
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
+
+import java.awt.*;
+import java.util.Optional;
+import java.util.Random;
+import java.util.function.Predicate;
 
 /**
  * Maf utility class to make my life like way easier.

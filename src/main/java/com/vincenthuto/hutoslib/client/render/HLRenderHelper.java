@@ -7,22 +7,11 @@
  */
 package com.vincenthuto.hutoslib.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
-
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -36,129 +25,79 @@ public class HLRenderHelper {
 	public static final Identifier MC_BLOCK_SHEET = InventoryMenu.BLOCK_ATLAS;
 
 	public static int color(FluidStack stack) {
-
 		return !stack.isEmpty() && stack.getFluid() != null
 				? IClientFluidTypeExtensions.of(stack.getFluid()).getTintColor(stack)
 				: 0;
 	}
 
 	public static int density(FluidStack stack) {
-
 		return !stack.isEmpty() && stack.getFluid() != null ? stack.getFluid().getFluidType().getDensity(stack) : 0;
 	}
 
-	public static void drawFluid(int x, int y, FluidStack fluid, int width, int height) {
-		if (fluid.isEmpty()) {
-			return;
-		}
-		RenderSystem.enableBlend();
-		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		int color = color(fluid);
-		setPosTexShader();
-		setBlockTextureSheet();
-		setSahderColorFromInt(color);
-		drawTiledTexture(x, y, getTexture(IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(fluid)),
-				width, height);
-	}
-
-	public static void drawScaledTexturedModalRectFromSprite(int x, int y, TextureAtlasSprite icon, int width,
-			int height) {
-
-		if (icon == null) {
-			return;
-		}
-		float minU = icon.getU0();
-		float maxU = icon.getU1();
-		float minV = icon.getV0();
-		float maxV = icon.getV1();
-
-		float u = minU + (maxU - minU) * width / 16F;
-		float v = minV + (maxV - minV) * height / 16F;
-
-		BufferBuilder buffer = tesselator().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		buffer.addVertex(x, y + height, 0).setUv(minU, v);
-		buffer.addVertex(x + width, y + height, 0).setUv(u, v);
-		buffer.addVertex(x + width, y, 0).setUv(u, minV);
-		buffer.addVertex(x, y, 0).setUv(minU, minV);
-		BufferUploader.drawWithShader(buffer.buildOrThrow());
-	}
-
-	public static void drawTiledTexture(int x, int y, TextureAtlasSprite icon, int width, int height) {
-		int drawHeight;
-		int drawWidth;
-		for (int i = 0; i < width; i += 16) {
-			for (int j = 0; j < height; j += 16) {
-				drawWidth = Math.min(width - i, 16);
-				drawHeight = Math.min(height - j, 16);
-				drawScaledTexturedModalRectFromSprite(x + i, y + j, icon, drawWidth, drawHeight);
-			}
-		}
-		resetShaderColor();
-	}
-
 	public static TextureAtlasSprite getFluidTexture(Fluid fluid) {
-
 		return getTexture(IClientFluidTypeExtensions.of(fluid).getStillTexture());
 	}
 
 	public static TextureAtlasSprite getFluidTexture(FluidStack fluid) {
-
 		return getTexture(IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(fluid));
 	}
 
 	public static TextureAtlasSprite getTexture(Identifier location) {
-
 		return textureMap().getSprite(location);
 	}
 
 	public static TextureAtlasSprite getTexture(String location) {
-
 		return textureMap().getSprite(Identifier.parse(location));
 	}
 
-	public static void resetShaderColor() {
-
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-	}
-
-	public static void setBlockTextureSheet() {
-
-		setShaderTexture0(MC_BLOCK_SHEET);
-	}
-
-	public static void setPosTexShader() {
-
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-	}
-
-	public static void setSahderColorFromInt(int color) {
-
-		float red = (color >> 16 & 255) / 255.0F;
-		float green = (color >> 8 & 255) / 255.0F;
-		float blue = (color & 255) / 255.0F;
-		RenderSystem.setShaderColor(red, green, blue, 1.0F);
-	}
-
-	private static void setShaderTexture0(Identifier mcBlockSheet) {
-		RenderSystem.setShaderTexture(0, mcBlockSheet);
-	}
-
 	public static Tesselator tesselator() {
-
 		return Tesselator.getInstance();
 	}
 
 	public static TextureAtlas textureMap() {
-
 		return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS);
 	}
 
-	public static void drawRepeatedFluidSpriteGui(MultiBufferSource buffer, PoseStack transform, FluidStack fluid,
-			float x, float y, float w, float h) {
-		RenderType renderType = HLRenderStateShards.getGuiTranslucent(InventoryMenu.BLOCK_ATLAS);
-		VertexConsumer builder = buffer.getBuffer(renderType);
-		drawRepeatedFluidSprite(builder, transform, fluid, x, y, w, h);
+	public static TextureAtlasSprite getSprite(Identifier rl) {
+		return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(rl);
 	}
+
+	// -----------------------------------------------------------------------
+	// GUI fluid rendering — uses GuiGraphics + blitSprite in 1.21.11
+	// -----------------------------------------------------------------------
+
+	public static void drawRepeatedFluidSpriteGui(GuiGraphics graphics, FluidStack fluid, float x, float y, float w,
+			float h) {
+		IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
+		TextureAtlasSprite sprite = getSprite(props.getStillTexture(fluid));
+		int col = props.getTintColor(fluid);
+		int iW = sprite.contents().width();
+		int iH = sprite.contents().height();
+		if (iW > 0 && iH > 0)
+			drawRepeatedSpriteGui(graphics, (int) x, (int) y, (int) w, (int) h, iW, iH, sprite, col);
+	}
+
+	public static void drawRepeatedSpriteGui(GuiGraphics graphics, int x, int y, int w, int h, int iconWidth,
+			int iconHeight, TextureAtlasSprite sprite, int color) {
+		int iterMaxW = w / iconWidth;
+		int iterMaxH = h / iconHeight;
+		int leftoverW = w % iconWidth;
+		int leftoverH = h % iconHeight;
+		for (int ww = 0; ww <= iterMaxW; ww++) {
+			int drawW = (ww < iterMaxW) ? iconWidth : leftoverW;
+			if (drawW <= 0) continue;
+			for (int hh = 0; hh <= iterMaxH; hh++) {
+				int drawH = (hh < iterMaxH) ? iconHeight : leftoverH;
+				if (drawH <= 0) continue;
+				graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x + ww * iconWidth, y + hh * iconHeight,
+						drawW, drawH, color);
+			}
+		}
+	}
+
+	// -----------------------------------------------------------------------
+	// 3D / world-render fluid/sprite helpers (use VertexConsumer + PoseStack)
+	// -----------------------------------------------------------------------
 
 	public static void drawRepeatedFluidSprite(VertexConsumer builder, PoseStack transform, FluidStack fluid, float x,
 			float y, float w, float h) {
@@ -217,10 +156,6 @@ public class HLRenderHelper {
 		innerBuilder.addVertex(x, y, 0).setUv(u0, v0);
 		innerBuilder.endVertex();
 		innerBuilder.unsetDefaultColor();
-	}
-
-	public static TextureAtlasSprite getSprite(Identifier rl) {
-		return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(rl);
 	}
 
 }

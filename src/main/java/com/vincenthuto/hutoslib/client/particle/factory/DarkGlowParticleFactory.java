@@ -9,11 +9,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.particles.ParticleOptions;
 
 public class DarkGlowParticleFactory implements ParticleProvider<DarkColorParticleData> {
 	public static final String NAME = "dark_glow";
-	public static ParticleOptions createData(ParticleColor color) {
+	public static DarkColorParticleData createData(ParticleColor color) {
 		return new DarkColorParticleData(HLParticleInit.dark_glow.get(), color);
 	}
 

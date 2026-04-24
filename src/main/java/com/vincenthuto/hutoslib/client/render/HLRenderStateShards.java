@@ -7,34 +7,36 @@
  */
 package com.vincenthuto.hutoslib.client.render;
 
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.rendertype.RenderSetup;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
+
 import java.util.function.Function;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat.Mode;
-
-import net.minecraft.util.Util;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderType.CompositeState;
-import net.minecraft.resources.Identifier;
-
-//This extends RenderStateShard to get access to various protected members
-public class HLRenderStateShards extends RenderStateShard {
+/**
+ * GUI render type helpers using the 1.21.11 pipeline/RenderSetup API.
+ * The old RenderStateShard/CompositeState approach is no longer available.
+ */
+public class HLRenderStateShards {
 	private static final Function<Identifier, RenderType> GUI_CUTOUT;
 	private static final Function<Identifier, RenderType> GUI_TRANSLUCENT;
 
 	static {
-		GUI_CUTOUT = Util.memoize(texture -> createDefault("gui_" + texture, DefaultVertexFormat.POSITION_TEX_COLOR ,
-				Mode.QUADS, makeGuiState(texture).createCompositeState(false)));
-		GUI_TRANSLUCENT = Util.memoize(texture -> createDefault("gui_translucent_" + texture,
-				DefaultVertexFormat.POSITION_TEX_COLOR , Mode.QUADS,
-				makeGuiState(texture).setTransparencyState(TRANSLUCENT_TRANSPARENCY).createCompositeState(false)));
-	}
+		// Opaque textured: no blend, no depth test (GUI_OPAQUE_TEXTURED_BACKGROUND pipeline)
+		GUI_CUTOUT = Util.memoize(texture -> RenderType.create(
+				"hl_gui_" + texture,
+				RenderSetup.builder(RenderPipelines.GUI_OPAQUE_TEXTURED_BACKGROUND)
+						.withTexture("Sampler0", texture)
+						.createRenderSetup()));
 
-	private HLRenderStateShards(String p_110161_, Runnable p_110162_, Runnable p_110163_) {
-		super(p_110161_, p_110162_, p_110163_);
+		// Translucent textured: SRC_ALPHA / ONE_MINUS_SRC_ALPHA blend, no depth test (GUI_TEXTURED pipeline)
+		GUI_TRANSLUCENT = Util.memoize(texture -> RenderType.create(
+				"hl_gui_translucent_" + texture,
+				RenderSetup.builder(RenderPipelines.GUI_TEXTURED)
+						.withTexture("Sampler0", texture)
+						.createRenderSetup()));
 	}
 
 	public static RenderType getGui(Identifier texture) {
@@ -44,15 +46,4 @@ public class HLRenderStateShards extends RenderStateShard {
 	public static RenderType getGuiTranslucent(Identifier texture) {
 		return GUI_TRANSLUCENT.apply(texture);
 	}
-
-	private static CompositeState.CompositeStateBuilder makeGuiState(Identifier texture) {
-		return RenderType.CompositeState.builder().setTextureState(new TextureStateShard(texture, false, false))
-				.setShaderState(new ShaderStateShard(GameRenderer::getPositionTexColorShader));
-	}
-
-	private static RenderType createDefault(String name, VertexFormat format, VertexFormat.Mode mode,
-			RenderType.CompositeState state) {
-		return RenderType.create(name, format, mode, 256, false, false, state);
-	}
-
 }

@@ -9,11 +9,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.particles.ParticleOptions;
 
 public class EmberParticleFactory implements ParticleProvider<EmberParticleData> {
 	public static final String NAME = "ember";
-	public static ParticleOptions createData(ParticleColor color, float s, float a, int l) {
+	public static EmberParticleData createData(ParticleColor color, float s, float a, int l) {
 		return new EmberParticleData(HLParticleInit.ember.get(), color, a, s, l);
 	}
 

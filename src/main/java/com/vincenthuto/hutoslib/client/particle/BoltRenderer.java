@@ -5,24 +5,18 @@ package com.vincenthuto.hutoslib.client.particle;
  * Imported October 2021 and heavily modified.
  */
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.vincenthuto.hutoslib.client.HLRenderTypeInit;
 import com.vincenthuto.hutoslib.client.particle.data.BoltParticleData;
-
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Matrix4f;
+
+import java.util.*;
 
 // todo(williewillus) integrate this properly into the particle system
 public class BoltRenderer {

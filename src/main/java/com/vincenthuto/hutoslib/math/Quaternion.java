@@ -1,9 +1,8 @@
 package com.vincenthuto.hutoslib.math;
 
+import net.minecraft.util.Mth;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-
-import net.minecraft.util.Mth;
 
 public final class Quaternion {
 	public static final Quaternion ONE = new Quaternion(0.0F, 0.0F, 0.0F, 1.0F);

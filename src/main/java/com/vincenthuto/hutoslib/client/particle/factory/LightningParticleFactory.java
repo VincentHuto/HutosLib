@@ -9,10 +9,9 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.particles.ParticleOptions;
 
 public class LightningParticleFactory implements ParticleProvider<ColorLightningData> {
-	public static ParticleOptions createData(ParticleColor color, float s, int a, int f, float o) {
+	public static ColorLightningData createData(ParticleColor color, float s, int a, int f, float o) {
 		return new ColorLightningData(HLParticleInit.lightning_bolt.get(), color, s, a, f, o);
 	}
 

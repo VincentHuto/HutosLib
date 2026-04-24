@@ -1,15 +1,14 @@
 package com.vincenthuto.hutoslib.common.data;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HLBlockLootTableProvider extends BlockLootSubProvider {
 

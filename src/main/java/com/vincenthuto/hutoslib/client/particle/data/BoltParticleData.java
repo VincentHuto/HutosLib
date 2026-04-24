@@ -1,20 +1,12 @@
 package com.vincenthuto.hutoslib.client.particle.data;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
-
-import org.jspecify.annotations.Nullable;
-
+import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector4f;
+import org.jspecify.annotations.Nullable;
 
-import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
-
-import net.minecraft.world.phys.Vec3;
+import java.util.*;
 
 public class BoltParticleData {
 

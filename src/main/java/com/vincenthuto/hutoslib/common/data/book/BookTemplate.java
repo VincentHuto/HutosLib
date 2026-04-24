@@ -68,7 +68,7 @@ public class BookTemplate extends BookDataTemplate {
 			if (split.length < 2) {
 				return ItemStack.EMPTY;
 			}
-			Item item = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(split[0], split[1]));
+			Item item = BuiltInRegistries.ITEM.get(Identifier.fromNamespaceAndPath(split[0], split[1])).get().value();
 			if (item != null) {
 				return new ItemStack(item);
 			}

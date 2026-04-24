@@ -1,9 +1,9 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
-import java.util.List;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
+
+import java.util.List;
 
 public class BookCodeModel {
 	Identifier resourceLocation;

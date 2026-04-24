@@ -11,24 +11,16 @@ import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BannerRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
-public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
+public class LayerArmBanner<S extends HumanoidRenderState, M extends HumanoidModel<S>> extends RenderLayer<S, M> {
 
 	public static final Identifier fallback = HutosLib.rloc(
 			"textures/entity/arm_banner/arm_banner.png");
@@ -37,7 +29,7 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 	private final ModelArmBanner modelPauldron;
 
 	@SuppressWarnings("rawtypes")
-	public LayerArmBanner(LivingEntityRenderer<T, M> owner) {
+	public LayerArmBanner(RenderLayerParent<S, M> owner) {
 		super(owner);
 		modelPauldron = new ModelArmBanner(
 				Minecraft.getInstance().getEntityModels().bakeLayer(HutosLibModelLayersInit.arm_banner));
@@ -45,52 +37,44 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 
 	@SuppressWarnings({ "unchecked", "unused" })
 	@Override
-	public void render(PoseStack matrixStack, MultiBufferSource buffer, int lightness, T ent, float limbSwing,
-			float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void submit(PoseStack matrixStack, SubmitNodeCollector collector, int lightness, S state,
+			float limbSwing, float limbSwingAmount) {
 
-		if (ent instanceof Player player) {
-			Inventory inv = player.getInventory();
-			ItemStack chest = inv.getArmor(EquipmentSlot.CHEST.getIndex());
-			boolean scaleFlag = chest == ItemStack.EMPTY ? false : true;
+		// Use chestEquipment from render state to determine if wearing chest armor
+		boolean scaleFlag = !state.chestEquipment.isEmpty();
 
-			BannerFinder.findBanner(player, true).ifPresent((getter) -> {
-				ItemStack banner = getter.getBanner();
-				if (banner.getItem() instanceof ItemArmBanner type) {
-					matrixStack.pushPose();
-					this.translateToBody(matrixStack);
-					matrixStack.translate(-0.35, -0.05, 0);
-					Identifier texture = type.getTexture() != null ? type.getTexture() : fallback;
-					if (scaleFlag) {
-						matrixStack.scale(1.2f, 1.2f, 1.25f);
-						matrixStack.translate(0.01, 0.0, 0);
-						renderColoredCutoutModel(modelPauldron, texture, matrixStack, buffer, lightness, player, -1);
-					} else {
-						renderColoredCutoutModel(modelPauldron, texture, matrixStack, buffer, lightness, player, -1);
-					}
-					BannerPatternLayers patterns = banner.get(DataComponents.BANNER_PATTERNS);
-					boolean flag = patterns != null && !patterns.layers().isEmpty();
-					matrixStack.pushPose();
-					matrixStack.scale(1.0F, -1.0F, -1.0F);
-					Material material = flag ? ModelBakery.SHIELD_BASE : ModelBakery.NO_PATTERN_SHIELD;
-					if (flag) {
-						matrixStack.mulPose(new Quaternion(Vector3.YN, 90, true).toMoj());
-						matrixStack.mulPose(new Quaternion(Vector3.ZP, 180, true).toMoj());
-						matrixStack.translate(0, 0.3, -0.55);
-						matrixStack.scale(0.5f, 0.5f, 0.5f);
-						DyeColor bannerColor = banner.get(DataComponents.BASE_COLOR);
-						DyeColor baseColor = bannerColor != null ? bannerColor : DyeColor.WHITE;
-						BannerRenderer.renderPatterns(matrixStack, buffer, lightness, OverlayTexture.NO_OVERLAY,
-								this.modelPauldron.plate(), material, false, baseColor, patterns, banner.hasFoil());
-					}
-					matrixStack.popPose();
-					matrixStack.popPose();
+		// NOTE: BannerFinder.findBanner() requires a Player entity which is not
+		// available in the render state. This only works for the local player.
+		// For full multi-player support, move banner data into a custom render state.
+		Player player = Minecraft.getInstance().player;
+		if (player == null) return;
+
+		BannerFinder.findBanner(player, true).ifPresent((getter) -> {
+			ItemStack banner = getter.getBanner();
+			if (banner.getItem() instanceof ItemArmBanner type) {
+				matrixStack.pushPose();
+				this.translateToBody(matrixStack);
+				matrixStack.translate(-0.35, -0.05, 0);
+				Identifier texture = type.getTexture() != null ? type.getTexture() : fallback;
+				if (scaleFlag) {
+					matrixStack.scale(1.2f, 1.2f, 1.25f);
+					matrixStack.translate(0.01, 0.0, 0);
+					renderColoredCutoutModel(modelPauldron, texture, matrixStack, collector, lightness, state,
+							-1, 0);
+				} else {
+					renderColoredCutoutModel(modelPauldron, texture, matrixStack, collector, lightness, state,
+							-1, 0);
 				}
-			});
-		}
+				// TODO: Banner pattern rendering requires MaterialSet from a BakingContext/BER
+				// context. To re-enable patterns, inject MaterialSet via the renderer setup
+				// and call BannerRenderer.submitPatterns(...) with the correct Model<S>
+				// wrapping modelPauldron.plate().
+				matrixStack.popPose();
+			}
+		});
 	}
 
 	private void translateToBody(PoseStack matrixStack) {
 		this.getParentModel().leftArm.translateAndRotate(matrixStack);
 	}
-
 }

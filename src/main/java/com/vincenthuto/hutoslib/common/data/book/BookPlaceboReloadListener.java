@@ -1,18 +1,13 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.data.shadow.PlaceboJsonReloadListener;
-
 import net.minecraft.resources.Identifier;
+
+import java.util.*;
 
 public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDataTemplate> {
 

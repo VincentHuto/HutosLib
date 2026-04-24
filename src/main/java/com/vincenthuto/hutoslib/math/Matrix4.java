@@ -1,8 +1,8 @@
 package com.vincenthuto.hutoslib.math;
 
-import java.nio.FloatBuffer;
-
 import org.joml.Vector3f;
+
+import java.nio.FloatBuffer;
 
 public final class Matrix4 {
 	private static final int ORDER = 4;

@@ -1,7 +1,5 @@
 package com.vincenthuto.hutoslib.client.screen;
 
-import org.jspecify.annotations.Nullable;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
+import org.jspecify.annotations.Nullable;
 
 public class ScreenBlockTintGetter implements BlockAndTintGetter {
 

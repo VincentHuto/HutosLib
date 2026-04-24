@@ -1,8 +1,7 @@
 package com.vincenthuto.hutoslib.math;
 
-import org.joml.Matrix4f;
-
 import net.minecraft.util.Mth;
+import org.joml.Matrix4f;
 
 /**
  * A mutable, four dimensional vector with single floating point precision.
