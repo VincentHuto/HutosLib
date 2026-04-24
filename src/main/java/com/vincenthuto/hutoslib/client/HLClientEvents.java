@@ -12,6 +12,7 @@ import com.vincenthuto.hutoslib.common.network.PacketOpenBanner;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 
 import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
