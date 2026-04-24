@@ -63,7 +63,7 @@ public class BookCodeModel {
 	}
 	public void encodeToBuf(FriendlyByteBuf buf) {
 		// Write Book location
-		buf.writeResourceLocation(resourceLocation);
+		buf.writeIdentifier(resourceLocation);
 
 		// Write book json
 		buf.writeUtf(template.coverLoc);

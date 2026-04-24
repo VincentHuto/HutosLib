@@ -51,12 +51,12 @@ new CustomPacketPayload.Type<>(HutosLib.rloc("reload_listener_content"));
 public static final StreamCodec<FriendlyByteBuf, Content> CODEC = StreamCodec.of(
 (buf, msg) -> {
 buf.writeUtf(msg.path, 50);
-buf.writeResourceLocation(msg.key);
+buf.writeIdentifier(msg.key);
 writeItemUnchecked(msg.path, msg.item, buf);
 },
 buf -> {
 String path = buf.readUtf(50);
-Identifier key = buf.readResourceLocation();
+Identifier key = buf.readIdentifier();
 Object item = PlaceboJsonReloadListener.readItem(path, key, buf);
 return new Content<>(path, key, (TypeKeyed) item);
 });

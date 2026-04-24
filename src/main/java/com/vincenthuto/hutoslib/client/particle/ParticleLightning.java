@@ -1,57 +1,20 @@
 package com.vincenthuto.hutoslib.client.particle;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.vincenthuto.hutoslib.client.HLRenderTypeInit;
 import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 public class ParticleLightning extends TextureSheetParticle {
-	private static final ParticleRenderType LIGHTNING_BOLT_RENDER = new ParticleRenderType() {
-
-		@Override
-		public BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
-			return ParticleLightning.beginRenderCommon(tesselator, textureManager);
-		}
-
-		@Override
-		public String toString() {
-			return "hutoslib:lightning_bolt";
-		}
-
-	};
-	@SuppressWarnings("deprecation")
-	private static BufferBuilder beginRenderCommon(Tesselator tesselator, TextureManager textureManager) {
-		RenderSystem.depthMask(false);
-		RenderSystem.disableCull();
-		RenderSystem.enableBlend();
-		RenderSystem.blendFunc(770, 1);
-		RenderSystem.setShader(GameRenderer::getParticleShader);
-		RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-		return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-	}
-	@SuppressWarnings("deprecation")
-	private static void endRenderCommon() {
-		Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES).restoreLastBlurMipmap();
-		// RenderSystem.alphaFunc((int) 516, (float) 0.1f);
-		RenderSystem.disableBlend();
-		RenderSystem.enableCull();
-		RenderSystem.depthMask(true);
-	}
+	private static final ParticleRenderType LIGHTNING_BOLT_RENDER =
+			new ParticleRenderType("hutoslib:lightning_bolt", HLRenderTypeInit.PARTICLE_LIGHTNING_BOLT);
 	private ParticleLightningStorage data;
 	public float colorR = 0;
 

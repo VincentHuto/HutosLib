@@ -63,7 +63,7 @@ public class TreeCodeModel {
 	}
 	public void encodeToBuf(FriendlyByteBuf buf) {
 		// Write Tree  location
-		buf.writeResourceLocation(resourceLocation);
+		buf.writeIdentifier(resourceLocation);
 
 		// Write book json
 		buf.writeUtf(template.coverLoc);
