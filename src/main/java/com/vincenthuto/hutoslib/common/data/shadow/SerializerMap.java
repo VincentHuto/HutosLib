@@ -134,7 +134,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	 * @return The deserialized object.
 	 */
 	public V read(FriendlyByteBuf buf) {
-		Identifier type = buf.readResourceLocation();
+		Identifier type = buf.readIdentifier();
 		var serializer = this.serializers.get(type);
 		return serializer.read(buf);
 	}
@@ -146,7 +146,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	 */
 	public void write(V obj, FriendlyByteBuf buf) {
 		Identifier type = this.get(obj.getSerializer());
-		buf.writeResourceLocation(type);
+		buf.writeIdentifier(type);
 		obj.getSerializer().writeUnchecked(obj, buf);
 	}
 
