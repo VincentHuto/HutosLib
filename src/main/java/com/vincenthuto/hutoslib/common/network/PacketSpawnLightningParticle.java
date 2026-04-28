@@ -4,11 +4,10 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.particle.factory.LightningParticleFactory;
 import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -22,7 +21,9 @@ public static final StreamCodec<FriendlyByteBuf, PacketSpawnLightningParticle> C
 
 public static void handle(PacketSpawnLightningParticle msg, IPayloadContext ctx) {
 ctx.enqueueWork(() -> {
-ClientLevel level = Minecraft.getInstance().level;
+Player player = ctx.player();
+if (player == null) return;
+var level = player.level();
 if (level == null) return;
 level.addParticle(
 LightningParticleFactory.createData(msg.color, msg.getSpeed(), msg.maxAge, msg.fract, msg.getMaxOffset()),

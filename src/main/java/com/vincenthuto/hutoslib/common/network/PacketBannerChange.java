@@ -5,7 +5,6 @@ import com.google.gson.JsonParser;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -51,8 +50,9 @@ ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, stack);
 
 public static void handle(PacketBannerChange msg, IPayloadContext ctx) {
 ctx.enqueueWork(() -> {
-Minecraft minecraft = Minecraft.getInstance();
-Entity entity = minecraft.level.getEntity(msg.player);
+Player receiver = ctx.player();
+if (receiver == null) return;
+Entity entity = receiver.level().getEntity(msg.player);
 if (!(entity instanceof Player)) return;
 BannerFinder.setBannerFromPacket((Player) entity, msg.where, msg.slot, msg.stack);
 });

@@ -4,7 +4,6 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.container.BannerSlotItemHandler;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -48,8 +47,9 @@ ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, stack);
 
 public static void handle(PacketSyncBannerSlotContents msg, IPayloadContext ctx) {
 ctx.enqueueWork(() -> {
-Minecraft minecraft = Minecraft.getInstance();
-var level = minecraft.level;
+Player receiver = ctx.player();
+if (receiver == null) return;
+var level = receiver.level();
 if (level == null) return;
 Entity entity = level.getEntity(msg.entityId);
 if (entity instanceof Player player) {

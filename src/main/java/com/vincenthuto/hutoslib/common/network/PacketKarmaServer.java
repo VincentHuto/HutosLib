@@ -4,10 +4,10 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.karma.IKarma;
 import com.vincenthuto.hutoslib.common.karma.KarmaProvider;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class PacketKarmaServer implements CustomPacketPayload {
@@ -20,8 +20,9 @@ public static final StreamCodec<FriendlyByteBuf, PacketKarmaServer> CODEC = Stre
 
 public static void handle(final PacketKarmaServer msg, IPayloadContext ctx) {
 ctx.enqueueWork(() -> {
-if (Minecraft.getInstance().player != null) {
-IKarma karmaState = KarmaProvider.getKarma(Minecraft.getInstance().player);
+Player player = ctx.player();
+if (player != null) {
+IKarma karmaState = KarmaProvider.getKarma(player);
 karmaState.setActive(msg.active);
 karmaState.setKarma(msg.karma);
 }
