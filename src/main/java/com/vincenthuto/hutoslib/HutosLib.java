@@ -10,14 +10,17 @@ import com.vincenthuto.hutoslib.common.banner.BannerFinderBannerSlot;
 import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.data.HLDataGeneration;
+import com.vincenthuto.hutoslib.common.book.knowledge.BookEntryRegistry;
 import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
 import com.vincenthuto.hutoslib.common.data.skilltree.SkillTreePlaceboReloadListener;
+import com.vincenthuto.hutoslib.common.event.GuideBookUnlockEvents;
 import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +28,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -109,6 +113,10 @@ private void commonSetup(final FMLCommonSetupEvent event) {
 BookPlaceboReloadListener.INSTANCE.registerToBus();
 SkillTreePlaceboReloadListener.INSTANCE.registerToBus();
 BannerFinderBannerSlot.initFinder();
+// Register test unlock: picking up a diamond unlocks the guide's locked_test chapter
+BookEntryRegistry.registerItemUnlock(
+        BuiltInRegistries.ITEM.getKey(Items.DIAMOND),
+        GuideBookUnlockEvents.LOCKED_TEST_ENTRY);
 }
 
 public void buildContents(BuildCreativeModeTabContentsEvent output) {

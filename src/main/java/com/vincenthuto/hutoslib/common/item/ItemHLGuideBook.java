@@ -2,6 +2,7 @@ package com.vincenthuto.hutoslib.common.item;
 
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
+import com.vincenthuto.hutoslib.common.book.filter.EntryGatedBookFilter;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
 
@@ -24,10 +25,9 @@ public class ItemHLGuideBook extends ItemGuideBook {
 		BookCodeModel book = test.getBookByTitle(HutosLib.rloc("guide"));
 		if (test != null) {
 			if (lvl.isClientSide) {
-				if(book != null) {
-					HLGuiGuideTitlePage.openScreenViaItem(book);
-					//HLSkillTree.openScreenViaItem();
-
+				if (book != null) {
+					BookCodeModel filtered = EntryGatedBookFilter.INSTANCE.filter(book, p_41433_);
+					HLGuiGuideTitlePage.openScreenViaItem(filtered);
 				}
 			}
 		}

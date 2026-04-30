@@ -11,6 +11,12 @@ public enum CommonDiscoverySource implements IDiscoverySource {
     ADVANCEMENT,
     /** Entry was unlocked by picking up a specific item. */
     ITEM_PICKUP,
+    /** Entry was unlocked by killing a specific entity type. */
+    ENTITY_KILL,
+    /** Entry was unlocked by entering a specific biome. */
+    BIOME_ENTER,
+    /** Entry was unlocked by entering or discovering a specific structure. */
+    STRUCTURE_DISCOVER,
     /** Catch-all for sources not covered by other constants. */
     OTHER
 }
