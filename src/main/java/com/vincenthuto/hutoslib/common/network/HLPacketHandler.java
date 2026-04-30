@@ -45,6 +45,9 @@ registrar.playToClient(PacketKarmaServer.TYPE, PacketKarmaServer.CODEC,
 PacketKarmaServer::handle);
 registrar.playToServer(PacketKarmaClient.TYPE, PacketKarmaClient.CODEC,
 PacketKarmaClient::handle);
+
+registrar.playToClient(PacketSyncBookKnowledge.TYPE, PacketSyncBookKnowledge.CODEC,
+PacketSyncBookKnowledge::handle);
 }
 
 public static void sendLightningSpawn(Vec3 entVec, Vec3 endVec, float radius, ResourceKey<Level> dimension,
