@@ -2,13 +2,28 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import com.vincenthuto.hutoslib.common.book.filter.IBookPageFilter;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class BookCodeModel {
+
+	/**
+	 * A no-op {@link IBookPageFilter} that returns the source book unchanged.
+	 * Use this as the default when no content gating is required.
+	 */
+	public static final IBookPageFilter UNFILTERED = (source, player) -> source;
+
 	ResourceLocation resourceLocation;
 	BookTemplate template;
 	List<ChapterTemplate> chapters;
+
+	/** Optional filter applied when this book is opened. {@code null} = no filtering. */
+	@Nullable
+	private IBookPageFilter pageFilter;
 
 	public BookCodeModel(ResourceLocation resourceLocation, BookTemplate template) {
 		this.resourceLocation = resourceLocation;
@@ -38,6 +53,21 @@ public class BookCodeModel {
 
 	public void setResourceLocation(ResourceLocation resourceLocation) {
 		this.resourceLocation = resourceLocation;
+	}
+
+	/**
+	 * Returns the active page filter, or {@link #UNFILTERED} if none has been set.
+	 */
+	public IBookPageFilter getPageFilter() {
+		return pageFilter != null ? pageFilter : UNFILTERED;
+	}
+
+	/**
+	 * Assigns a page filter to this book. Pass {@code null} to clear back to
+	 * {@link #UNFILTERED}.
+	 */
+	public void setPageFilter(@Nullable IBookPageFilter pageFilter) {
+		this.pageFilter = pageFilter;
 	}
 
 	public int getTotalPages() {
