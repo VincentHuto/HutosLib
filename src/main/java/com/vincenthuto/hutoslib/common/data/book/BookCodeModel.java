@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.vincenthuto.hutoslib.common.book.BookTheme;
 import com.vincenthuto.hutoslib.common.book.filter.IBookPageFilter;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -24,6 +25,10 @@ public class BookCodeModel {
 	/** Optional filter applied when this book is opened. {@code null} = no filtering. */
 	@Nullable
 	private IBookPageFilter pageFilter;
+
+	/** Optional visual theme for this book's screens. {@code null} = use default textures/colors. */
+	@Nullable
+	private BookTheme theme;
 
 	public BookCodeModel(ResourceLocation resourceLocation, BookTemplate template) {
 		this.resourceLocation = resourceLocation;
@@ -68,6 +73,22 @@ public class BookCodeModel {
 	 */
 	public void setPageFilter(@Nullable IBookPageFilter pageFilter) {
 		this.pageFilter = pageFilter;
+	}
+
+	/**
+	 * Returns the visual theme for this book, or {@code null} if using defaults.
+	 */
+	@Nullable
+	public BookTheme getTheme() {
+		return theme;
+	}
+
+	/**
+	 * Assigns a visual theme to this book. Pass {@code null} to revert to the
+	 * default look.
+	 */
+	public void setTheme(@Nullable BookTheme theme) {
+		this.theme = theme;
 	}
 
 	public int getTotalPages() {
