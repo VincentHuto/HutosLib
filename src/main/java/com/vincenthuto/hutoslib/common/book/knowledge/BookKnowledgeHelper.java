@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
  * Server-side helper that unlocks book entries registered in
  * {@link BookEntryRegistry} and syncs the result to the client.
  *
- * <p>Both public entry points delegate to the shared
+ * <p>All typed entry points delegate to the shared
  * {@link #unlockEntries(ServerPlayer, Set, IDiscoverySource)} core, which
  * performs the unlock loop and fires a client sync only when at least one
  * entry was newly added.
@@ -47,6 +47,48 @@ public final class BookKnowledgeHelper {
         Set<ResourceLocation> entries = BookEntryRegistry.entriesForAdvancement(advancementId);
         if (!entries.isEmpty()) {
             unlockEntries(player, entries, CommonDiscoverySource.ADVANCEMENT);
+        }
+    }
+
+    /**
+     * Unlocks all book entries registered for {@code entityTypeId} in
+     * {@link BookEntryRegistry} and syncs to the client if anything changed.
+     *
+     * @param player       the server-side player who made the kill
+     * @param entityTypeId the registry key of the killed entity type
+     */
+    public static void unlockForEntityKill(ServerPlayer player, ResourceLocation entityTypeId) {
+        Set<ResourceLocation> entries = BookEntryRegistry.entriesForEntityKill(entityTypeId);
+        if (!entries.isEmpty()) {
+            unlockEntries(player, entries, CommonDiscoverySource.ENTITY_KILL);
+        }
+    }
+
+    /**
+     * Unlocks all book entries registered for {@code biomeId} in
+     * {@link BookEntryRegistry} and syncs to the client if anything changed.
+     *
+     * @param player  the server-side player
+     * @param biomeId the registry key of the biome the player just entered
+     */
+    public static void unlockForBiome(ServerPlayer player, ResourceLocation biomeId) {
+        Set<ResourceLocation> entries = BookEntryRegistry.entriesForBiome(biomeId);
+        if (!entries.isEmpty()) {
+            unlockEntries(player, entries, CommonDiscoverySource.BIOME_ENTER);
+        }
+    }
+
+    /**
+     * Unlocks all book entries registered for {@code structureId} in
+     * {@link BookEntryRegistry} and syncs to the client if anything changed.
+     *
+     * @param player      the server-side player
+     * @param structureId the registry key of the structure the player just entered
+     */
+    public static void unlockForStructure(ServerPlayer player, ResourceLocation structureId) {
+        Set<ResourceLocation> entries = BookEntryRegistry.entriesForStructure(structureId);
+        if (!entries.isEmpty()) {
+            unlockEntries(player, entries, CommonDiscoverySource.STRUCTURE_DISCOVER);
         }
     }
 
