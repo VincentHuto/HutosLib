@@ -63,7 +63,8 @@ public class ItemGuideBook extends Item {
 	 *
 	 * <p>Set via {@link #withKnowledgeProvider(Function)}.
 	 */
-	private Function<Player, Optional<IBookKnowledge>> knowledgeProvider;
+	private Function<Player, Optional<IBookKnowledge>> knowledgeProvider =
+			player -> Optional.of(BookKnowledgeProvider.get(player));
 
 	public ItemGuideBook(Properties prop, ResourceLocation loc) {
 		super(prop);
@@ -111,10 +112,7 @@ public class ItemGuideBook extends Item {
 	 * HutosLib's own {@code BOOK_KNOWLEDGE} attachment.
 	 */
 	public Function<Player, Optional<IBookKnowledge>> getKnowledgeProvider() {
-		if (knowledgeProvider != null) {
-			return knowledgeProvider;
-		}
-		return player -> Optional.of(BookKnowledgeProvider.get(player));
+		return knowledgeProvider;
 	}
 
 	/**

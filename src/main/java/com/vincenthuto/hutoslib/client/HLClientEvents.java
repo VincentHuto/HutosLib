@@ -75,10 +75,11 @@ for (Item item : BuiltInRegistries.ITEM) {
 if (!(item instanceof ItemGuideBook book)) continue;
 String prefix = book.getBookPrefix();
 if (prefix == null) continue;
+var provider = book.getKnowledgeProvider();
 IItemDecorator decorator = (graphics, font, stack, itemX, itemY) -> {
 Minecraft mc = Minecraft.getInstance();
 if (mc.player == null) return false;
-return book.getKnowledgeProvider().apply(mc.player).map(knowledge -> {
+return provider.apply(mc.player).map(knowledge -> {
 if (!BookReadTracker.hasUnread(mc.player.getUUID(), knowledge, prefix)) {
 return false;
 }
