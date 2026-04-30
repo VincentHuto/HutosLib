@@ -1,0 +1,10 @@
+{
+  "type": "hutoslib:page",
+  "ordinality": 3,
+  "texture": "hutoslib:textures/gui/guide/page.png",
+  "title": "Diamond Secrets: Entry III",
+  "subtitle": "One key, many doors",
+  "text": "The third locked page. All three entries are revealed the moment the hutoslib:guide/locked_test entry is unlocked by picking up a diamond.",
+  "icon": "minecraft:diamond",
+  "requiresEntry": "hutoslib:guide/locked_test"
+}

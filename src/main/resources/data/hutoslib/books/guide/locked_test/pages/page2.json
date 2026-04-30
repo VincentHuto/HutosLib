@@ -1,0 +1,10 @@
+{
+  "type": "hutoslib:page",
+  "ordinality": 2,
+  "texture": "hutoslib:textures/gui/guide/page.png",
+  "title": "Diamond Secrets: Entry II",
+  "subtitle": "Still locked behind a diamond",
+  "text": "This second locked page also requires the same diamond entry. Multiple pages can share a single unlock condition.",
+  "icon": "minecraft:diamond",
+  "requiresEntry": "hutoslib:guide/locked_test"
+}

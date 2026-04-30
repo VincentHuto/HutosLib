@@ -21,24 +21,32 @@ public class PageTemplate extends BookDataTemplate {
 							Codec.STRING.fieldOf("title").forGetter(PageTemplate::getTitle),
 							Codec.STRING.fieldOf("subtitle").forGetter(PageTemplate::getSubtitle),
 							Codec.STRING.fieldOf("text").forGetter(PageTemplate::getText),
-							Codec.STRING.fieldOf("icon").forGetter(PageTemplate::getIcon))
+							Codec.STRING.fieldOf("icon").forGetter(PageTemplate::getIcon),
+							Codec.STRING.optionalFieldOf("requiresEntry", "").forGetter(PageTemplate::getRequiresEntry))
 					.apply(inst, PageTemplate::new));
 	public static final PSerializer<PageTemplate> SERIALIZER = PSerializer.fromCodec("page", CODEC);
 
 	String title, chapter, subtitle, text, icon, texture;
+	/** Entry ID that must be unlocked before this page is visible. Empty string = always visible. */
+	String requiresEntry = "";
 
 	public PageTemplate() {
 		super(0);
 	}
 
 	public PageTemplate(int ordinality, String texture, String title, String subtitle, String text, String icon) {
+		this(ordinality, texture, title, subtitle, text, icon, "");
+	}
+
+	public PageTemplate(int ordinality, String texture, String title, String subtitle, String text, String icon,
+			String requiresEntry) {
 		super(ordinality);
 		this.texture = texture;
 		this.title = title;
 		this.subtitle = subtitle;
 		this.text = text;
 		this.icon = icon;
-
+		this.requiresEntry = requiresEntry != null ? requiresEntry : "";
 	}
 
 	public ItemStack getIconItem() {
@@ -107,6 +115,14 @@ public class PageTemplate extends BookDataTemplate {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public String getRequiresEntry() {
+		return requiresEntry != null ? requiresEntry : "";
+	}
+
+	public void setRequiresEntry(String requiresEntry) {
+		this.requiresEntry = requiresEntry != null ? requiresEntry : "";
 	}
 
 	@Override
