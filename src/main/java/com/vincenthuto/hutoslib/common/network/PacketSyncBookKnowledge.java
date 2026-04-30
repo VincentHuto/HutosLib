@@ -6,6 +6,8 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledge;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
@@ -49,7 +51,7 @@ public class PacketSyncBookKnowledge implements CustomPacketPayload {
     public PacketSyncBookKnowledge(FriendlyByteBuf buf) {
         this.playerUuid = buf.readUUID();
         try {
-            this.data = NbtIo.read(buf, NbtAccounter.unlimitedHeap());
+            this.data = NbtIo.read(new ByteBufInputStream(buf), NbtAccounter.unlimitedHeap());
         } catch (java.io.IOException e) {
             throw new RuntimeException("Failed to read BookKnowledge NBT from network buffer", e);
         }
@@ -72,7 +74,7 @@ public class PacketSyncBookKnowledge implements CustomPacketPayload {
     private void encode(FriendlyByteBuf buf) {
         buf.writeUUID(playerUuid);
         try {
-            NbtIo.write(data, buf);
+            NbtIo.write(data, new ByteBufOutputStream(buf));
         } catch (java.io.IOException e) {
             throw new RuntimeException("Failed to write BookKnowledge NBT to network buffer", e);
         }

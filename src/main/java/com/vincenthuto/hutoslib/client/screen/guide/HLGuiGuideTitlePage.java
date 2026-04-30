@@ -220,8 +220,8 @@ public class HLGuiGuideTitlePage extends Screen {
 					String chapterPrefix = buildChapterPrefix(chapters.get(tab.id));
 					if (chapterPrefix != null
 							&& BookReadTracker.countUnread(resolvedUuid, resolvedKnowledge, chapterPrefix) > 0) {
-						graphics.fill(tab.posX + tab.width - 7, tab.posY + 2,
-								tab.posX + tab.width - 3, tab.posY + 6, 0xFF000000 | resolveAccentColor());
+						graphics.fill(tab.posX + tab.getWidth() - 7, tab.posY + 2,
+								tab.posX + tab.getWidth() - 3, tab.posY + 6, 0xFF000000 | resolveAccentColor());
 					}
 				}
 			} else {
