@@ -34,7 +34,9 @@ public class HLGuiGuidePage extends Screen {
 	protected static final int SUBTITLE_Y_DELTA = 10;
 	/** Additional pixels dropped for the body row beneath the subtitle (or title). */
 	protected static final int BODY_Y_DELTA     = 10;
-	/** Maximum width (pixels) available for page text. */
+	/** Maximum width (pixels) available for title and subtitle text (slightly wider than body). */
+	protected static final int HEADING_MAX_WIDTH = 165;
+	/** Maximum width (pixels) available for body text. */
 	protected static final int TEXT_MAX_WIDTH   = 160;
 	/** Padding from the left edge of the gui. */
 	protected static final int TEXT_LEFT_OFFSET = 180;
@@ -194,13 +196,13 @@ public class HLGuiGuidePage extends Screen {
 
 		if (!page.getTitle().isEmpty()) {
 			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(page.getTitle())),
-					textX, currentY, TEXT_MAX_WIDTH + 5, color, true);
+					textX, currentY, HEADING_MAX_WIDTH, color, true);
 			currentY += SUBTITLE_Y_DELTA;
 		}
 
 		if (!page.getSubtitle().isEmpty()) {
 			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(page.getSubtitle())),
-					textX, currentY, TEXT_MAX_WIDTH + 5, color, true);
+					textX, currentY, HEADING_MAX_WIDTH, color, true);
 			currentY += BODY_Y_DELTA;
 		}
 

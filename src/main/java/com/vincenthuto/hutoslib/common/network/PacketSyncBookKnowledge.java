@@ -26,9 +26,10 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  *
  * <p>This packet is registered in {@link HLPacketHandler}. On the client side the
  * handler applies the received snapshot to the local player's
- * {@link HLAttachmentTypes#BOOK_KNOWLEDGE} attachment. Mods with their own
- * {@code AttachmentType<? extends BookKnowledge>} can send this packet from
- * the server and apply it themselves via {@link #applyTo}.
+ * {@link com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes#BOOK_KNOWLEDGE} attachment.
+ * Mods with their own {@code AttachmentType<? extends BookKnowledge>} can send this packet from
+ * the server and apply it themselves via
+ * {@link #applyTo(BookKnowledge, net.minecraft.core.HolderLookup.Provider)}.
  *
  * <p>To send from a server handler:
  * {@code PacketDistributor.sendToPlayer(serverPlayer, new PacketSyncBookKnowledge(uuid, knowledge, registries))}.
