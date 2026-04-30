@@ -202,7 +202,8 @@ public class HLGuiGuidePageTOC extends Screen {
 
 	/**
 	 * Derives a {@link BookReadTracker} prefix string for page {@code index}.
-	 * Uses the page's {@link net.minecraft.resources.ResourceLocation} ID if available.
+	 * Uses the page's {@link net.minecraft.resources.ResourceLocation} ID if available,
+	 * falling back to the book's entry prefix.
 	 */
 	@Nullable
 	private String buildPagePrefix(int index) {

@@ -185,8 +185,7 @@ public class HLGuiGuideTitlePage extends Screen {
 
 		// Unread count badge
 		if (tracker != null && viewerUuid != null && knowledge != null) {
-			String bookPrefix = book.getResourceLocation().getPath() + "/";
-			int unread = BookReadTracker.countUnread(viewerUuid, knowledge, bookPrefix);
+			int unread = BookReadTracker.countUnread(viewerUuid, knowledge, book.getEntryPrefix());
 			if (unread > 0) {
 				Component badge = Component.literal(unread + " new");
 				HLGuiUtils.drawMaxWidthString(font, badge, centerX + 10, centerY + 20, 100, titleColor, true);

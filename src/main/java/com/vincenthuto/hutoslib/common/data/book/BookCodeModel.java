@@ -91,6 +91,16 @@ public class BookCodeModel {
 		this.theme = theme;
 	}
 
+	/**
+	 * Returns the canonical entry-prefix string for this book, i.e.
+	 * {@code resourceLocation.getPath() + "/"}. Used by
+	 * {@link com.vincenthuto.hutoslib.client.book.BookReadTracker} and similar
+	 * utilities to scope queries to this book's entries.
+	 */
+	public String getEntryPrefix() {
+		return resourceLocation.getPath() + "/";
+	}
+
 	public int getTotalPages() {
 		int count = 0;
 		if (chapters != null) {
