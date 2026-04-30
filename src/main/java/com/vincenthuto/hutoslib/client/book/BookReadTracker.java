@@ -56,6 +56,26 @@ public final class BookReadTracker {
         ACKNOWLEDGED.computeIfAbsent(playerId, id -> new HashSet<>()).addAll(entryIds);
     }
 
+    /** Returns whether {@code entryId} has been acknowledged for this player. */
+    public static boolean isAcknowledged(UUID playerId, ResourceLocation entryId) {
+        return entryId != null
+                && ACKNOWLEDGED.getOrDefault(playerId, Collections.emptySet()).contains(entryId);
+    }
+
+    /**
+     * Counts how many explicit entry/page IDs are still unacknowledged.
+     */
+    public static int countUnread(UUID playerId, Collection<ResourceLocation> entryIds) {
+        Set<ResourceLocation> seen = ACKNOWLEDGED.getOrDefault(playerId, Collections.emptySet());
+        int count = 0;
+        for (ResourceLocation entryId : entryIds) {
+            if (entryId != null && !seen.contains(entryId)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     /**
      * Returns {@code true} if the player has at least one unlocked entry whose
      * path starts with {@code bookPrefix} that has not yet been acknowledged.

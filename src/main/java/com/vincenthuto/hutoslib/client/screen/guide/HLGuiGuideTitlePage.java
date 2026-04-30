@@ -2,8 +2,10 @@ package com.vincenthuto.hutoslib.client.screen.guide;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -193,8 +195,8 @@ public class HLGuiGuideTitlePage extends Screen {
 				: (localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null);
 
 		// Unread count badge
-		if (resolvedUuid != null && resolvedKnowledge != null) {
-			int unread = BookReadTracker.countUnread(resolvedUuid, resolvedKnowledge, book.getEntryPrefix());
+		if (resolvedUuid != null) {
+			int unread = countUnreadForBook(resolvedUuid, resolvedKnowledge);
 			if (unread > 0) {
 				Component badge = Component.literal(unread + " new");
 				HLGuiUtils.drawMaxWidthString(font, badge, centerX + 10, centerY + 20, 100, titleColor, true);
@@ -215,11 +217,8 @@ public class HLGuiGuideTitlePage extends Screen {
 				RenderSystem.setShaderColor(1, 1, 1, 1.0F);
 
 				// Unread dot indicator on chapter tassel
-				if (resolvedUuid != null && resolvedKnowledge != null
-						&& tab.id >= 0 && tab.id < chapters.size()) {
-					String chapterPrefix = buildChapterPrefix(chapters.get(tab.id));
-					if (chapterPrefix != null
-							&& BookReadTracker.countUnread(resolvedUuid, resolvedKnowledge, chapterPrefix) > 0) {
+				if (resolvedUuid != null && tab.id >= 0 && tab.id < chapters.size()) {
+					if (countUnreadForChapter(resolvedUuid, chapters.get(tab.id), resolvedKnowledge) > 0) {
 						graphics.fill(tab.posX + tab.getWidth() - 7, tab.posY + 2,
 								tab.posX + tab.getWidth() - 3, tab.posY + 6, 0xFF000000 | resolveAccentColor());
 					}
@@ -324,5 +323,37 @@ public class HLGuiGuideTitlePage extends Screen {
 				? pBook.getPageFilter().filter(pBook, player)
 				: pBook;
 		mc.setScreen(new HLGuiGuideTitlePage(filtered));
+	}
+
+	private int countUnreadForBook(UUID playerId, @Nullable IBookKnowledge knowledge) {
+		Set<ResourceLocation> pageIds = collectPageIds(chapters);
+		if (!pageIds.isEmpty()) {
+			return BookReadTracker.countUnread(playerId, pageIds);
+		}
+		return knowledge != null ? BookReadTracker.countUnread(playerId, knowledge, book.getEntryPrefix()) : 0;
+	}
+
+	private int countUnreadForChapter(UUID playerId, ChapterTemplate chapter, @Nullable IBookKnowledge knowledge) {
+		Set<ResourceLocation> pageIds = collectPageIds(List.of(chapter));
+		if (!pageIds.isEmpty()) {
+			return BookReadTracker.countUnread(playerId, pageIds);
+		}
+		String chapterPrefix = buildChapterPrefix(chapter);
+		if (chapterPrefix == null || knowledge == null) {
+			return 0;
+		}
+		return BookReadTracker.countUnread(playerId, knowledge, chapterPrefix);
+	}
+
+	private static Set<ResourceLocation> collectPageIds(List<ChapterTemplate> sourceChapters) {
+		Set<ResourceLocation> ids = new HashSet<>();
+		for (ChapterTemplate chapter : sourceChapters) {
+			for (var page : chapter.getPages()) {
+				if (page.getId() != null) {
+					ids.add(page.getId());
+				}
+			}
+		}
+		return ids;
 	}
 }

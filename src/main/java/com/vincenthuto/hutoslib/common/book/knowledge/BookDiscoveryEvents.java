@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.vincenthuto.hutoslib.HutosLib;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -22,8 +22,8 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.advancements.AdvancementEarnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -33,7 +33,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
  * registered in {@link BookEntryRegistry} when a player:
  * <ul>
  *   <li>picks up an item ({@link ItemEntityPickupEvent.Post})</li>
- *   <li>earns an advancement ({@link AdvancementEarnEvent})</li>
+ *   <li>earns an advancement ({@link AdvancementEvent.AdvancementEarnEvent})</li>
  *   <li>kills an entity ({@link LivingDeathEvent})</li>
  *   <li>enters a new biome ({@link PlayerTickEvent.Post}, polled every 20 ticks)</li>
  *   <li>enters a registered structure ({@link PlayerTickEvent.Post}, polled every 20 ticks)</li>
@@ -95,7 +95,7 @@ public final class BookDiscoveryEvents {
      * {@link BookKnowledgeHelper}.
      */
     @SubscribeEvent
-    public static void onAdvancementEarned(AdvancementEarnEvent event) {
+    public static void onAdvancementEarned(AdvancementEvent.AdvancementEarnEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
@@ -193,7 +193,7 @@ public final class BookDiscoveryEvents {
             return;
         }
         ServerLevel level = player.serverLevel();
-        Registry<Structure> structRegistry =
+        HolderLookup.RegistryLookup<Structure> structRegistry =
                 level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
 
         Set<ResourceLocation> nowInside = new HashSet<>();

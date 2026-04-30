@@ -1,19 +1,18 @@
 package com.vincenthuto.hutoslib.client;
 
-import net.neoforged.neoforge.client.IItemDecorator;
-import net.neoforged.neoforge.client.event.*;
-import org.lwjgl.glfw.GLFW;
-
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.particle.BoltRenderer;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemGuideBook;
 import com.vincenthuto.hutoslib.client.render.layer.LayerArmBanner;
+import com.vincenthuto.hutoslib.common.book.filter.EntryGatedBookFilter;
+import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
+import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
 import com.vincenthuto.hutoslib.common.item.ItemGuideBook;
 import com.vincenthuto.hutoslib.common.network.PacketOpenBanner;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -22,6 +21,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -29,126 +29,179 @@ import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.IItemDecorator;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class HLClientEvents {
 
-@SubscribeEvent
-public static void onPlayerLogout(ClientPlayerNetworkEvent.LoggingOut event) {
-if (event.getPlayer() != null) {
-ItemGuideBook.clearState(event.getPlayer().getUUID());
-}
-}
+    public static KeyMapping OPEN_BANNER_SLOT_KEYBIND;
 
-@SubscribeEvent
-public static void skybox(RenderLevelStageEvent event) {
-BoltRenderer.onWorldRenderLast(event.getPartialTick().getGameTimeDeltaPartialTick(true), event.getPoseStack());
-}
+    @SubscribeEvent
+    public static void onPlayerLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+        if (event.getPlayer() != null) {
+            ItemGuideBook.clearState(event.getPlayer().getUUID());
+            BookReadTracker.clear(event.getPlayer().getUUID());
+        }
+    }
 
-public static KeyMapping OPEN_BANNER_SLOT_KEYBIND;
+    @SubscribeEvent
+    public static void skybox(RenderLevelStageEvent event) {
+        BoltRenderer.onWorldRenderLast(event.getPartialTick().getGameTimeDeltaPartialTick(true), event.getPoseStack());
+    }
 
-@SubscribeEvent
-public static void handleKeys(ClientTickEvent.Pre ev) {
-Minecraft mc = Minecraft.getInstance();
-while (HLClientEvents.OPEN_BANNER_SLOT_KEYBIND.consumeClick()) {
-if (mc.screen == null) {
-PacketDistributor.sendToServer(new PacketOpenBanner());
-}
-}
-}
+    @SubscribeEvent
+    public static void handleKeys(ClientTickEvent.Pre ev) {
+        Minecraft mc = Minecraft.getInstance();
+        while (HLClientEvents.OPEN_BANNER_SLOT_KEYBIND.consumeClick()) {
+            if (mc.screen == null) {
+                PacketDistributor.sendToServer(new PacketOpenBanner());
+            }
+        }
+    }
 
-@EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-public static class ModBusEvents {
+    @EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+    public static class ModBusEvents {
 
-@SubscribeEvent
-public static void initKeybinds(RegisterKeyMappingsEvent ev) {
-ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V,
-"key.armbanner.category"));
-}
-
-@SubscribeEvent
-public static void registerItemDecorations(RegisterItemDecorationsEvent event) {
-for (Item item : BuiltInRegistries.ITEM) {
-if (!(item instanceof ItemGuideBook book)) continue;
-String prefix = book.getBookPrefix();
-if (prefix == null) continue;
-var provider = book.getKnowledgeProvider();
-IItemDecorator decorator = (graphics, font, stack, itemX, itemY) -> {
-Minecraft mc = Minecraft.getInstance();
-if (mc.player == null) return false;
-return provider.apply(mc.player).map(knowledge -> {
-if (!BookReadTracker.hasUnread(mc.player.getUUID(), knowledge, prefix)) {
-return false;
-}
-// Draw a 3x4 gold badge at the top-right corner of the item icon,
-// with corner pixels removed so it looks like a small circle.
-int dotX = itemX + 12;
-int dotY = itemY;
-int color = 0xFFFFD700;
-graphics.fill(dotX + 1, dotY, dotX + 3, dotY + 1, color);
-graphics.fill(dotX, dotY + 1, dotX + 4, dotY + 3, color);
-graphics.fill(dotX + 1, dotY + 3, dotX + 3, dotY + 4, color);
-return false;
-}).orElse(false);
-};
-event.register(book, decorator);
-}
-}
-
-@SubscribeEvent
-public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-IClientItemExtensions armBannerRenderer = new IClientItemExtensions() {
-@Override
-public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-return new RenderItemArmBanner(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-Minecraft.getInstance().getEntityModels());
-}
-};
-
-event.registerItem(armBannerRenderer, HLItemInit.leather_arm_banner.get(), HLItemInit.iron_arm_banner.get(),
-HLItemInit.gold_arm_banner.get(), HLItemInit.diamond_arm_banner.get(),
-HLItemInit.obsidian_arm_banner.get(), HLItemInit.netherite_arm_banner.get());
-
-event.registerItem(new IClientItemExtensions() {
-@Override
-public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-return new RenderItemGuideBook(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-Minecraft.getInstance().getEntityModels());
-}
-}, HLItemInit.hl_guide_book.get());
-}
-
-@SuppressWarnings({ "rawtypes", "unchecked" })
-private static <T extends LivingEntity, M extends HumanoidModel<T>, R extends LivingEntityRenderer<T, M>> void addLayerToEntity(
-EntityRenderersEvent.AddLayers event, EntityType<? extends T> entityType) {
-R renderer = event.getRenderer(entityType);
-if (renderer != null) {
-renderer.addLayer(new LayerArmBanner(renderer));
-}
-}
-
-@SuppressWarnings({ "rawtypes", "unchecked" })
-private static void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, PlayerSkin.Model skinModel) {
-EntityRenderer<? extends Player> render = event.getSkin(skinModel);
-if (render instanceof LivingEntityRenderer livingRenderer) {
-livingRenderer.addLayer(new LayerArmBanner<>(livingRenderer));
-}
-}
+        @SubscribeEvent
+        public static void initKeybinds(RegisterKeyMappingsEvent ev) {
+            ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V, "key.armbanner.category"));
+        }
 
 
-@SubscribeEvent
-public static void constructLayers(EntityRenderersEvent.AddLayers event) {
-addLayerToEntity(event, EntityType.ARMOR_STAND);
-addLayerToEntity(event, EntityType.ZOMBIE);
-addLayerToEntity(event, EntityType.SKELETON);
-addLayerToEntity(event, EntityType.HUSK);
-addLayerToEntity(event, EntityType.DROWNED);
-addLayerToEntity(event, EntityType.STRAY);
-addLayerToPlayerSkin(event, PlayerSkin.Model.WIDE);
-addLayerToPlayerSkin(event, PlayerSkin.Model.SLIM);
-}
-}
+        @SubscribeEvent
+        public static void registerItemDecorations(RegisterItemDecorationsEvent event) {
+            for (Item item : BuiltInRegistries.ITEM) {
+                if (item instanceof ItemGuideBook book) {
+                    String prefix = book.getBookPrefix();
+                    if (prefix == null || prefix.isEmpty()) {
+                        continue;
+                    }
+                    var provider = book.getKnowledgeProvider();
+                    IItemDecorator decorator = (graphics, font, stack, itemX, itemY) -> {
+                        Minecraft mc = Minecraft.getInstance();
+                        if (mc.player == null) {
+                            return false;
+                        }
+
+                        IBookKnowledge knowledge = provider.apply(mc.player).orElse(null);
+                        if (!hasUnreadForDecorator(mc.player, book, knowledge)) {
+                            return false;
+                        }
+
+                        // Draw a 3x4 gold badge at the top-right corner of the item icon,
+                        // with corner pixels removed so it looks like a small circle.
+                        int dotX = itemX + 12;
+                        int dotY = itemY;
+                        int color = 0xFFFFD700;
+                        graphics.fill(dotX + 1, dotY, dotX + 3, dotY + 1, color);
+                        graphics.fill(dotX, dotY + 1, dotX + 4, dotY + 3, color);
+                        graphics.fill(dotX + 1, dotY + 3, dotX + 3, dotY + 4, color);
+                        return true;
+                    };
+
+                    event.register(book, decorator);
+                }
+
+            }
+        }
+
+        private static boolean hasUnreadForDecorator(Player player, ItemGuideBook book, IBookKnowledge knowledge) {
+            String prefix = book.getBookPrefix();
+            if (prefix == null || prefix.isEmpty()) {
+                return false;
+            }
+
+            // Prefer page-id based unread state so inventory dots match title/TOC badges.
+            Set<ResourceLocation> visiblePageIds = collectVisiblePageIds(player, prefix);
+            if (!visiblePageIds.isEmpty()) {
+                return BookReadTracker.countUnread(player.getUUID(), visiblePageIds) > 0;
+            }
+
+            // Back-compat fallback for books that only track knowledge entries by prefix.
+            return knowledge != null && BookReadTracker.hasUnread(player.getUUID(), knowledge, prefix);
+        }
+
+        private static Set<ResourceLocation> collectVisiblePageIds(Player player, String prefix) {
+            Set<ResourceLocation> ids = new HashSet<>();
+            for (BookCodeModel loadedBook : BookPlaceboReloadListener.INSTANCE.getBooks()) {
+                if (!loadedBook.getEntryPrefix().equals(prefix)) {
+                    continue;
+                }
+
+                // Match the same visibility rules used when opening the guide from the item.
+                BookCodeModel filtered = loadedBook.getPageFilter().filter(loadedBook, player);
+                filtered = EntryGatedBookFilter.INSTANCE.filter(filtered, player);
+                if (filtered.getChapters() == null) {
+                    continue;
+                }
+                for (var chapter : filtered.getChapters()) {
+                    if (chapter.getPages() == null) {
+                        continue;
+                    }
+                    for (var page : chapter.getPages()) {
+                        if (page.getId() != null) {
+                            ids.add(page.getId());
+                        }
+                    }
+                }
+            }
+            return ids;
+        }
+
+        @SubscribeEvent
+        public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+            IClientItemExtensions armBannerRenderer = new IClientItemExtensions() {
+                @Override
+                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                    return new RenderItemArmBanner(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
+                }
+            };
+
+            event.registerItem(armBannerRenderer, HLItemInit.leather_arm_banner.get(), HLItemInit.iron_arm_banner.get(), HLItemInit.gold_arm_banner.get(), HLItemInit.diamond_arm_banner.get(), HLItemInit.obsidian_arm_banner.get(), HLItemInit.netherite_arm_banner.get());
+
+            event.registerItem(new IClientItemExtensions() {
+                @Override
+                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                    return new RenderItemGuideBook(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
+                }
+            }, HLItemInit.hl_guide_book.get());
+        }
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        private static <T extends LivingEntity, M extends HumanoidModel<T>, R extends LivingEntityRenderer<T, M>> void addLayerToEntity(EntityRenderersEvent.AddLayers event, EntityType<? extends T> entityType) {
+            R renderer = event.getRenderer(entityType);
+            if (renderer != null) {
+                renderer.addLayer(new LayerArmBanner(renderer));
+            }
+        }
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        private static void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, PlayerSkin.Model skinModel) {
+            EntityRenderer<? extends Player> render = event.getSkin(skinModel);
+            if (render instanceof LivingEntityRenderer livingRenderer) {
+                livingRenderer.addLayer(new LayerArmBanner<>(livingRenderer));
+            }
+        }
+
+
+        @SubscribeEvent
+        public static void constructLayers(EntityRenderersEvent.AddLayers event) {
+            addLayerToEntity(event, EntityType.ARMOR_STAND);
+            addLayerToEntity(event, EntityType.ZOMBIE);
+            addLayerToEntity(event, EntityType.SKELETON);
+            addLayerToEntity(event, EntityType.HUSK);
+            addLayerToEntity(event, EntityType.DROWNED);
+            addLayerToEntity(event, EntityType.STRAY);
+            addLayerToPlayerSkin(event, PlayerSkin.Model.WIDE);
+            addLayerToPlayerSkin(event, PlayerSkin.Model.SLIM);
+        }
+    }
 }

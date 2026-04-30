@@ -33,7 +33,8 @@ public class HLItemInit {
 			"textures/gui/guide/hl_guide_model.png");
 	public static final DeferredHolder<Item, ? extends Item> hl_guide_book = SPECIALITEMS.register("hl_guide_book",
 			() -> new ItemHLGuideBook(new Item.Properties().stacksTo(1),
-					hl_guide_book_text));
+					hl_guide_book_text)
+					.withBookPrefix("guide/"));
 
 	// Materials
 	public static final DeferredHolder<Item, Item> raw_clay_flask = ITEMS.register("raw_clay_flask",

@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
@@ -24,7 +23,6 @@ import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -135,11 +133,7 @@ public class HLGuiGuidePageTOC extends Screen {
 		this.renderMenuBackground(graphics);
 		left = width / 2 - guiWidth / 2;
 		top  = height / 2 - guiHeight / 2;
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, chapterTemplate.getTextureLocation());
 		pageButtons.sort(Comparator.comparingInt(HLButtonTextured::getId));
-		super.render(graphics, mouseX, mouseY, partialTicks);
 
 		int accentColor = resolveAccentColor();
 
@@ -153,6 +147,7 @@ public class HLGuiGuidePageTOC extends Screen {
 
 		for (int i = 0; i < pageButtons.size(); i++) {
 			HLButtonTextured btn = pageButtons.get(i);
+			btn.render(graphics, mouseX, mouseY, partialTicks);
 			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (i + 1)),
 					btn.posX + 5, btn.posY + 2, 150, 0xffffff, true);
 			HLGuiUtils.drawMaxWidthString(font,
@@ -160,14 +155,23 @@ public class HLGuiGuidePageTOC extends Screen {
 					btn.posX + 30, btn.posY + 2, 150, 0xffffff, true);
 
 			// Unread dot indicator
-			if (resolvedUuid != null && resolvedKnowledge != null) {
-				String pagePrefix = buildPagePrefix(i);
-				if (pagePrefix != null && BookReadTracker.countUnread(resolvedUuid, resolvedKnowledge, pagePrefix) > 0) {
+			if (resolvedUuid != null) {
+				ResourceLocation pageId = chapterTemplate.getPages().get(i).getId();
+				boolean unread = pageId != null
+						? !BookReadTracker.isAcknowledged(resolvedUuid, pageId)
+						: resolvedKnowledge != null && buildPagePrefix(i) != null
+								&& BookReadTracker.countUnread(resolvedUuid, resolvedKnowledge, buildPagePrefix(i)) > 0;
+				if (unread) {
 					graphics.fill(btn.posX + btn.getWidth() - 8, btn.posY + 3,
 							btn.posX + btn.getWidth() - 3, btn.posY + 8, 0xFF000000 | accentColor);
 				}
 			}
 		}
+
+		arrowF.render(graphics, mouseX, mouseY, partialTicks);
+		arrowB.render(graphics, mouseX, mouseY, partialTicks);
+		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
+		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
 
 		List<Component> titlePage = new ArrayList<>();
 		titlePage.add(Component.literal("Title"));
@@ -180,6 +184,16 @@ public class HLGuiGuidePageTOC extends Screen {
 		if (buttonCloseTab.isHoveredOrFocused()) {
 			graphics.renderComponentTooltip(font, closePage, mouseX, mouseY);
 		}
+	}
+
+	@Override
+	public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		// TOC renders its own panel background; suppress Screen's default in-world blur path.
+	}
+
+	@Override
+	protected void renderBlurredBackground(float partialTicks) {
+		// Explicitly disable blur for this screen.
 	}
 
 	@Override
