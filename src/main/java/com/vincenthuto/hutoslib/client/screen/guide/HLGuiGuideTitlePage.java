@@ -204,6 +204,17 @@ public class HLGuiGuideTitlePage extends Screen {
 						tab.color.getBlue() / 255, 1.0F);
 				element.render(graphics, mouseX, mouseY, partialTicks);
 				RenderSystem.setShaderColor(1, 1, 1, 1.0F);
+
+				// Unread dot indicator on chapter tassel
+				if (tracker != null && viewerUuid != null && knowledge != null
+						&& tab.id >= 0 && tab.id < chapters.size()) {
+					String chapterPrefix = buildChapterPrefix(chapters.get(tab.id));
+					if (chapterPrefix != null
+							&& BookReadTracker.countUnread(viewerUuid, knowledge, chapterPrefix) > 0) {
+						graphics.fill(tab.posX + tab.width - 7, tab.posY + 2,
+								tab.posX + tab.width - 3, tab.posY + 6, 0xFF000000 | resolveAccentColor());
+					}
+				}
 			} else {
 				element.render(graphics, mouseX, mouseY, partialTicks);
 			}
@@ -246,6 +257,18 @@ public class HLGuiGuideTitlePage extends Screen {
 			return theme.accentColor() != 0 ? theme.accentColor() : BookTheme.DEFAULT_ACCENT;
 		}
 		return BookTheme.DEFAULT_ACCENT;
+	}
+
+	/**
+	 * Derives a {@link BookReadTracker} prefix string for the given chapter.
+	 * Returns {@code null} if the chapter has no assigned ID yet.
+	 */
+	@Nullable
+	private String buildChapterPrefix(ChapterTemplate chapter) {
+		if (chapter.getId() != null) {
+			return chapter.getId().getPath() + "/";
+		}
+		return null;
 	}
 
 	// -------------------------------------------------------------------------
