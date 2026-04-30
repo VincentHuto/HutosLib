@@ -151,10 +151,7 @@ public final class BookDiscoveryEvents {
         }
 
         checkBiome(player);
-
-        if (!BookEntryRegistry.getStructureUnlocks().isEmpty()) {
-            checkStructures(player);
-        }
+        checkStructures(player);
     }
 
     // -------------------------------------------------------------------------
@@ -192,6 +189,9 @@ public final class BookDiscoveryEvents {
     }
 
     private static void checkStructures(ServerPlayer player) {
+        if (BookEntryRegistry.getStructureUnlocks().isEmpty()) {
+            return;
+        }
         ServerLevel level = player.serverLevel();
         Registry<Structure> structRegistry =
                 level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
@@ -216,11 +216,12 @@ public final class BookDiscoveryEvents {
 
         for (ResourceLocation structureId : nowInside) {
             if (known.add(structureId)) {
-                // Newly entered this structure during this session
+                // Player just entered this structure for the first time this session;
+                // BookKnowledge.unlockEntry is idempotent so no duplicate unlock occurs.
                 BookKnowledgeHelper.unlockForStructure(player, structureId);
             }
         }
-        // Remove structures the player has left so they can re-trigger if they re-enter
+        // Remove structures the player has left so they can re-enter-and-fire next time.
         known.retainAll(nowInside);
     }
 }
