@@ -15,6 +15,7 @@ import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
 import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.book.BookTheme;
+import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
@@ -142,6 +143,14 @@ public class HLGuiGuidePageTOC extends Screen {
 
 		int accentColor = resolveAccentColor();
 
+		// Determine UUID and knowledge to use – prefer explicitly-provided values,
+		// otherwise fall back to the local player so the standard opening path works too.
+		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
+		UUID resolvedUuid = viewerUuid != null ? viewerUuid
+				: (localPlayer != null ? localPlayer.getUUID() : null);
+		IBookKnowledge resolvedKnowledge = knowledge != null ? knowledge
+				: (localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null);
+
 		for (int i = 0; i < pageButtons.size(); i++) {
 			HLButtonTextured btn = pageButtons.get(i);
 			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (i + 1)),
@@ -151,9 +160,9 @@ public class HLGuiGuidePageTOC extends Screen {
 					btn.posX + 30, btn.posY + 2, 150, 0xffffff, true);
 
 			// Unread dot indicator
-			if (tracker != null && viewerUuid != null && knowledge != null) {
+			if (resolvedUuid != null && resolvedKnowledge != null) {
 				String pagePrefix = buildPagePrefix(i);
-				if (pagePrefix != null && BookReadTracker.countUnread(viewerUuid, knowledge, pagePrefix) > 0) {
+				if (pagePrefix != null && BookReadTracker.countUnread(resolvedUuid, resolvedKnowledge, pagePrefix) > 0) {
 					graphics.fill(btn.posX + btn.getWidth() - 8, btn.posY + 3,
 							btn.posX + btn.getWidth() - 3, btn.posY + 8, 0xFF000000 | accentColor);
 				}

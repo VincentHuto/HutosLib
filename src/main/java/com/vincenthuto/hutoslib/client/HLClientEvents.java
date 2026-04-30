@@ -1,6 +1,7 @@
 package com.vincenthuto.hutoslib.client;
 
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.network.event.ClientPlayerNetworkEvent;
 import org.lwjgl.glfw.GLFW;
 
 import com.vincenthuto.hutoslib.HutosLib;
@@ -8,6 +9,7 @@ import com.vincenthuto.hutoslib.client.particle.BoltRenderer;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemGuideBook;
 import com.vincenthuto.hutoslib.client.render.layer.LayerArmBanner;
+import com.vincenthuto.hutoslib.common.item.ItemGuideBook;
 import com.vincenthuto.hutoslib.common.network.PacketOpenBanner;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 
@@ -33,6 +35,13 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class HLClientEvents {
+
+@SubscribeEvent
+public static void onPlayerLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+if (event.getPlayer() != null) {
+ItemGuideBook.clearState(event.getPlayer().getUUID());
+}
+}
 
 @SubscribeEvent
 public static void skybox(RenderLevelStageEvent event) {

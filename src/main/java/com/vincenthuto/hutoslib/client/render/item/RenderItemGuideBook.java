@@ -3,10 +3,12 @@ package com.vincenthuto.hutoslib.client.render.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.common.item.BookAnimState;
 import com.vincenthuto.hutoslib.common.item.ItemGuideBook;
 import com.vincenthuto.hutoslib.math.Quaternion;
 import com.vincenthuto.hutoslib.math.Vector3;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -16,6 +18,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
@@ -32,7 +35,7 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 	public BookModel getModel() {
 		return model;
 	}
- 
+
 	@Override
 	public void renderByItem(ItemStack stack, ItemDisplayContext transform, PoseStack ms,
 			MultiBufferSource buffers, int light, int overlay) {
@@ -42,34 +45,39 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 			ms.mulPose(Vector3.YN.rotationDegrees(30).toMoj());
 			ms.mulPose(Vector3.ZN.rotationDegrees(-20).toMoj());
 			ms.translate(-1.5D, -0.45D, -0.075D);
-
-
 		}
-		if (stack.getItem() instanceof ItemGuideBook) {
-			ItemGuideBook item = (ItemGuideBook) stack.getItem();
+
+		if (stack.getItem() instanceof ItemGuideBook item) {
+			// Look up the per-entity animation state. BlockEntityWithoutLevelRenderer
+			// does not receive an entity reference, so we use the local camera entity
+			// (i.e. the player the client is currently controlling / spectating).
+			// For the primary use-case (local player holding the book) this is exact.
+			Player localPlayer = Minecraft.getInstance().player;
+			BookAnimState s = ItemGuideBook.getOrCreateState(
+					localPlayer != null ? localPlayer.getUUID() : null);
+
 			ms.pushPose();
 			ms.translate(0.5D, 0.50D, 0.5D);
 			ms.mulPose(Vector3.XP.rotationDegrees(45).toMoj());
 			ms.mulPose(Vector3.ZP.rotationDegrees(15).toMoj());
 			ms.mulPose(Vector3.YP.rotationDegrees(-60).toMoj());
 
-			float f = (float) item.ticks + 1;
+			float f = (float) s.ticks + 1;
 			ms.translate(0.0D, 0.1F + Mth.sin(f * 0.1F) * 0.01F, 0.0D);
 
 			float f1;
-			for (f1 = item.nextPageAngle - item.pageAngle; f1 >= (float) Math.PI; f1 -= ((float) Math.PI * 2F)) {
+			for (f1 = s.nextPageAngle - s.pageAngle; f1 >= (float) Math.PI; f1 -= ((float) Math.PI * 2F)) {
 			}
-
 			while (f1 < -(float) Math.PI) {
 				f1 += ((float) Math.PI * 2F);
 			}
-			float f2 = item.pageAngle + f1;
+			float f2 = s.pageAngle + f1;
 			ms.mulPose(Vector3.YP.rotation(-f2).toMoj());
 			ms.mulPose(Vector3.ZP.rotationDegrees(80.0F).toMoj());
-			float f3 = Mth.lerp(1, item.oFlip, item.flip);
+			float f3 = Mth.lerp(1, s.oFlip, s.flip);
 			float f4 = Mth.frac(f3 + 0.25F) * 1.6F - 0.3F;
 			float f5 = Mth.frac(f3 + 0.75F) * 1.6F - 0.3F;
-			this.model.setupAnim(f, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), item.close);
+			this.model.setupAnim(f, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), s.close);
 
 			if (item.getTexture() != null) {
 				VertexConsumer ivertexbuilder = buffers.getBuffer(model.renderType(item.getTexture()));
@@ -79,11 +87,8 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 					ms.scale(0.8f, 0.8f, 0.8f);
 					ms.mulPose(new Quaternion(Vector3.XP, 35, true).toMoj());
 					ms.mulPose(new Quaternion(Vector3.ZP, 45, true).toMoj());
-
 				}
-
 				model.renderToBuffer(ms, ivertexbuilder, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-
 				ms.popPose();
 			} else {
 				VertexConsumer ivertexbuilder = buffers.getBuffer(model.renderType(defaultText));
@@ -94,14 +99,10 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 					ms.mulPose(new Quaternion(Vector3.YP, -125, true).toMoj());
 					ms.mulPose(new Quaternion(Vector3.XP, 35, true).toMoj());
 					ms.mulPose(new Quaternion(Vector3.ZP, 45, true).toMoj());
-
 				}
-
 				model.renderToBuffer(ms, ivertexbuilder, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-
 				ms.popPose();
 			}
-
 		}
 	}
 }
