@@ -277,7 +277,8 @@ public class HLGuiGuideTitlePage extends Screen {
 	 * the full path ({@code book/chapter/file/}) would never match any knowledge
 	 * entry because entries don't nest under the chapter JSON file name.
 	 *
-	 * <p>Returns {@code null} if the chapter has no assigned ID yet.
+	 * <p>Returns {@code null} if the chapter has no assigned ID or if the ID
+	 * contains fewer than three path segments (malformed).
 	 */
 	@Nullable
 	private String buildChapterPrefix(ChapterTemplate chapter) {
@@ -285,11 +286,17 @@ public class HLGuiGuideTitlePage extends Screen {
 			return null;
 		}
 		String path = chapter.getId().getPath();
-		String[] parts = path.split("/");
-		if (parts.length >= 2) {
-			return parts[0] + "/" + parts[1] + "/";
+		int first = path.indexOf('/');
+		if (first < 0) {
+			return null; // malformed – single-segment ID has no chapter component
 		}
-		return path + "/";
+		int second = path.indexOf('/', first + 1);
+		if (second < 0) {
+			return null; // malformed – only two segments, no file component
+		}
+		// Return book/chapter/ (the first two path segments), which scopes to all
+		// knowledge entries that belong to this chapter.
+		return path.substring(0, second + 1);
 	}
 
 	// -------------------------------------------------------------------------
