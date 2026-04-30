@@ -45,8 +45,8 @@ public final class EntryGatedBookFilter implements IBookPageFilter {
             for (BookDataTemplate page : chapter.getPages()) {
                 if (page instanceof PageTemplate pt && !pt.getRequiresEntry().isEmpty()) {
                     ResourceLocation entryId = ResourceLocation.tryParse(pt.getRequiresEntry());
-                    if (entryId != null && !knowledge.hasEntry(entryId)) {
-                        continue; // locked — skip this page
+                    if (entryId == null || !knowledge.hasEntry(entryId)) {
+                        continue; // locked or malformed entry ID — skip this page
                     }
                 }
                 visiblePages.add(page);
