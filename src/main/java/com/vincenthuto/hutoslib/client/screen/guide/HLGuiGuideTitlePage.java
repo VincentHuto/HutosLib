@@ -4,14 +4,20 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLTextUtils;
+import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
+import com.vincenthuto.hutoslib.common.book.BookTheme;
+import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 
@@ -32,7 +38,7 @@ public class HLGuiGuideTitlePage extends Screen {
 	double xDragPos = 0;
 	double yDragPos = 0;
 	public double dragLeftRight = 0;
-	public double dragUpDown = 0;
+	public double dragUpDown    = 0;
 	int left, top;
 	final int BUTTONCLOSE = 30;
 
@@ -41,6 +47,20 @@ public class HLGuiGuideTitlePage extends Screen {
 	public List<ChapterTemplate> chapters = new ArrayList<>();
 	public List<HLButtonTextured> buttonList = new ArrayList<>();
 	private BookCodeModel book;
+
+	/** Optional tracker for displaying total unread count. */
+	@Nullable
+	private final BookReadTracker tracker;
+	/** UUID of the viewing player (needed by {@link BookReadTracker}). */
+	@Nullable
+	private final UUID viewerUuid;
+	/** Optional knowledge source for computing the unread badge count. */
+	@Nullable
+	private final IBookKnowledge knowledge;
+
+	// -------------------------------------------------------------------------
+	// Static openers
+	// -------------------------------------------------------------------------
 
 	public static void openScreenViaItem(BookCodeModel book) {
 		openScreen(book, true);
@@ -54,14 +74,39 @@ public class HLGuiGuideTitlePage extends Screen {
 		Minecraft.getInstance().setScreen(screen);
 	}
 
-	public HLGuiGuideTitlePage(BookCodeModel book) {
-		super(Component.literal(book.getTemplate().getTitle()));
-		this.book = book;
-		this.icon = book.getTemplate().getIconItem();
-		this.chapters = book.getChapters();
-		this.texture = book.getTemplate().getCoverImage();
-		this.overlay = book.getTemplate().getOverlayImage();
+	/**
+	 * Opens the title page with unread-count display support.
+	 *
+	 * @param book       the book model
+	 * @param tracker    client-side read tracker
+	 * @param viewerUuid UUID of the viewing player
+	 * @param knowledge  the player's book knowledge
+	 */
+	public static void openScreen(BookCodeModel book, BookReadTracker tracker,
+			UUID viewerUuid, IBookKnowledge knowledge) {
+		Minecraft.getInstance().setScreen(
+				new HLGuiGuideTitlePage(book, tracker, viewerUuid, knowledge));
+	}
 
+	// -------------------------------------------------------------------------
+	// Constructors
+	// -------------------------------------------------------------------------
+
+	public HLGuiGuideTitlePage(BookCodeModel book) {
+		this(book, null, null, null);
+	}
+
+	public HLGuiGuideTitlePage(BookCodeModel book, @Nullable BookReadTracker tracker,
+			@Nullable UUID viewerUuid, @Nullable IBookKnowledge knowledge) {
+		super(Component.literal(book.getTemplate().getTitle()));
+		this.book       = book;
+		this.icon       = book.getTemplate().getIconItem();
+		this.chapters   = book.getChapters();
+		this.texture    = book.getTemplate().getCoverImage();
+		this.overlay    = book.getTemplate().getOverlayImage();
+		this.tracker    = tracker;
+		this.viewerUuid = viewerUuid;
+		this.knowledge  = knowledge;
 	}
 
 	public void setBook(BookCodeModel book) {
@@ -72,6 +117,10 @@ public class HLGuiGuideTitlePage extends Screen {
 		return book;
 	}
 
+	// -------------------------------------------------------------------------
+	// Screen lifecycle
+	// -------------------------------------------------------------------------
+
 	@Override
 	public void init() {
 		Random rand = new Random();
@@ -79,9 +128,13 @@ public class HLGuiGuideTitlePage extends Screen {
 		int centerY = (height / 2) - guiHeight / 2;
 		this.buttonList.clear();
 		this.clearWidgets();
+
+		ResourceLocation overlayTex = resolveOverlayTexture();
 		this.addRenderableWidget(
-				buttonclose = new HLButtonTextured(overlay, BUTTONCLOSE, (int) (centerX + (guiWidth * 0.05f)),
-						(int) (centerY + (guiHeight * 0.78f)), 32, 32, 209, 32, (press) -> onClose()));
+				buttonclose = new HLButtonTextured(overlayTex, BUTTONCLOSE,
+						(int) (centerX + (guiWidth * 0.05f)),
+						(int) (centerY + (guiHeight * 0.78f)), 32, 32, 209, 32,
+						(press) -> onClose()));
 
 		chapters.sort(Comparator.comparingInt(ChapterTemplate::getOrdinality));
 
@@ -112,6 +165,10 @@ public class HLGuiGuideTitlePage extends Screen {
 		return true;
 	}
 
+	// -------------------------------------------------------------------------
+	// Rendering
+	// -------------------------------------------------------------------------
+
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		PoseStack matrixStack = graphics.pose();
@@ -120,13 +177,25 @@ public class HLGuiGuideTitlePage extends Screen {
 		int centerY = (height / 2) - guiHeight / 2;
 		chapters.sort(Comparator.comparingInt(ChapterTemplate::getOrdinality));
 
+		int titleColor = resolveAccentColor();
+
 		if (!this.title.getString().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, this.title, centerX + 10, centerY + 10, 165, 0xffffff, true);
+			HLGuiUtils.drawMaxWidthString(font, this.title, centerX + 10, centerY + 10, 165, titleColor, true);
+		}
+
+		// Unread count badge
+		if (tracker != null && viewerUuid != null && knowledge != null) {
+			String bookPrefix = book.getResourceLocation().getPath() + "/";
+			int unread = BookReadTracker.countUnread(viewerUuid, knowledge, bookPrefix);
+			if (unread > 0) {
+				Component badge = Component.literal(unread + " new");
+				HLGuiUtils.drawMaxWidthString(font, badge, centerX + 10, centerY + 20, 100, titleColor, true);
+			}
 		}
 
 		matrixStack.pushPose();
 		left = width / 2 - guiWidth / 2;
-		top = height / 2 - guiHeight / 2;
+		top  = height / 2 - guiHeight / 2;
 		graphics.renderFakeItem(icon, left + guiWidth - 48, top + guiHeight - 230);
 		matrixStack.popPose();
 
@@ -136,22 +205,19 @@ public class HLGuiGuideTitlePage extends Screen {
 						tab.color.getBlue() / 255, 1.0F);
 				element.render(graphics, mouseX, mouseY, partialTicks);
 				RenderSystem.setShaderColor(1, 1, 1, 1.0F);
-
 			} else {
 				element.render(graphics, mouseX, mouseY, partialTicks);
-
 			}
 
 			if (element.isHoveredOrFocused()) {
 				graphics.renderTooltip(font, element.text, element.getX(), element.getY());
 			}
-
 		}
 
 		this.buttonclose.render(graphics, mouseX, mouseY, partialTicks);
 		if (this.buttonclose.isHoveredOrFocused()) {
-			graphics.renderTooltip(font, Component.literal("Close"), this.buttonclose.getX(),
-					this.buttonclose.getY());
+			graphics.renderTooltip(font, Component.literal("Close"),
+					this.buttonclose.getX(), this.buttonclose.getY());
 		}
 	}
 
@@ -159,21 +225,54 @@ public class HLGuiGuideTitlePage extends Screen {
 	protected void renderMenuBackground(GuiGraphics graphics) {
 		int centerX = (width / 2) - guiWidth / 2;
 		int centerY = (height / 2) - guiHeight / 2;
-		graphics.blit(texture, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
-		graphics.blit(overlay, centerX, centerY, 0, 0, this.guiWidth, this.guiHeight);
+		graphics.blit(texture,             centerX, centerY, 0, 0, guiWidth, guiHeight);
+		graphics.blit(resolveOverlayTexture(), centerX, centerY, 0, 0, guiWidth, guiHeight);
 	}
+
+	// -------------------------------------------------------------------------
+	// Theme helpers
+	// -------------------------------------------------------------------------
+
+	private ResourceLocation resolveOverlayTexture() {
+		BookTheme theme = book.getTheme();
+		if (theme != null && theme.backgroundTexture() != null) {
+			return theme.backgroundTexture();
+		}
+		return overlay;
+	}
+
+	private int resolveAccentColor() {
+		BookTheme theme = book.getTheme();
+		if (theme != null) {
+			return theme.accentColor() != 0 ? theme.accentColor() : BookTheme.DEFAULT_ACCENT;
+		}
+		return BookTheme.DEFAULT_ACCENT;
+	}
+
+	// -------------------------------------------------------------------------
+	// Drag / misc
+	// -------------------------------------------------------------------------
 
 	@Override
 	public boolean mouseDragged(double xPos, double yPos, int button, double dragLeftRight, double dragUpDown) {
 		xDragPos = xPos;
 		yDragPos = yPos;
 		this.dragLeftRight += dragLeftRight / 2;
-		this.dragUpDown -= dragUpDown / 2;
+		this.dragUpDown    -= dragUpDown / 2;
 		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
 	}
-	
+
+	// -------------------------------------------------------------------------
+	// Legacy/static openers
+	// -------------------------------------------------------------------------
+
 	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {
 		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuideTitlePage(pBook));
+		// Apply page filter before showing the book
+		net.minecraft.world.entity.player.Player player = mc.player;
+		BookCodeModel filtered = player != null
+				? pBook.getPageFilter().filter(pBook, player)
+				: pBook;
+		mc.setScreen(new HLGuiGuideTitlePage(filtered));
 	}
 }
