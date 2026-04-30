@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledge;
+import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * Sends a full {@link BookKnowledge} snapshot from the server to the owning
@@ -22,8 +24,13 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * <p>The payload is: player UUID (16 bytes) + raw NBT blob of
  * {@link BookKnowledge#serializeNBT}.
  *
- * <p>This packet is registered in {@link HLPacketHandler}; mods that need it
- * can send it via
+ * <p>This packet is registered in {@link HLPacketHandler}. On the client side the
+ * handler applies the received snapshot to the local player's
+ * {@link HLAttachmentTypes#BOOK_KNOWLEDGE} attachment. Mods with their own
+ * {@code AttachmentType<? extends BookKnowledge>} can send this packet from
+ * the server and apply it themselves via {@link #applyTo}.
+ *
+ * <p>To send from a server handler:
  * {@code PacketDistributor.sendToPlayer(serverPlayer, new PacketSyncBookKnowledge(uuid, knowledge, registries))}.
  */
 public class PacketSyncBookKnowledge implements CustomPacketPayload {
@@ -73,6 +80,21 @@ public class PacketSyncBookKnowledge implements CustomPacketPayload {
     /** The UUID of the player whose knowledge this packet describes. */
     public UUID getPlayerUuid() {
         return playerUuid;
+    }
+
+    /**
+     * Client-side handler registered in {@link HLPacketHandler}.
+     * Applies the snapshot to the local player's {@link HLAttachmentTypes#BOOK_KNOWLEDGE}
+     * attachment when the packet's UUID matches the local player.
+     */
+    public static void handle(PacketSyncBookKnowledge msg, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
+            var player = ctx.player();
+            if (player != null && player.getUUID().equals(msg.playerUuid)) {
+                BookKnowledge knowledge = BookKnowledgeProvider.get(player);
+                msg.applyTo(knowledge, player.level().registryAccess());
+            }
+        });
     }
 
     /**

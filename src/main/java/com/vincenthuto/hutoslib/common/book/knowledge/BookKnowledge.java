@@ -18,13 +18,19 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 /**
  * Default NBT-serializable implementation of {@link IBookKnowledge}.
  *
+ * <p>An {@code AttachmentType<BookKnowledge>} is registered by HutosLib as
+ * {@link com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes#BOOK_KNOWLEDGE}.
+ * Use {@link BookKnowledgeProvider#get(net.minecraft.world.entity.player.Player)} for
+ * convenient access.
+ *
  * <p>Discovery sources are persisted by their {@link IDiscoverySource#name()}
  * string. Subclasses should override {@link #lookupSource(String)} to re-hydrate
  * their specific source enum on deserialization; the base implementation silently
  * drops unknown source names rather than throwing.
  *
- * <p>The attachment key itself is intentionally <em>not</em> declared here –
- * each mod registers its own {@code AttachmentType} in its own registry class.
+ * <p>Mods that need additional data (e.g. a mod-specific discovery enum) should
+ * extend this class, override {@link #lookupSource} and {@link #newSourceSet},
+ * and register their own {@code AttachmentType} in their own registry class.
  */
 public class BookKnowledge implements IBookKnowledge, INBTSerializable<CompoundTag> {
 
