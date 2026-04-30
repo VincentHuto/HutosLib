@@ -53,9 +53,8 @@ public class RenderItemGuideBook extends BlockEntityWithoutLevelRenderer {
 			// (i.e. the player the client is currently controlling / spectating).
 			// For the primary use-case (local player holding the book) this is exact.
 			Player localPlayer = Minecraft.getInstance().player;
-			BookAnimState s = localPlayer != null
-					? ItemGuideBook.getOrCreateState(localPlayer.getUUID())
-					: new BookAnimState();
+			BookAnimState s = ItemGuideBook.getOrCreateState(
+					localPlayer != null ? localPlayer.getUUID() : null);
 
 			ms.pushPose();
 			ms.translate(0.5D, 0.50D, 0.5D);

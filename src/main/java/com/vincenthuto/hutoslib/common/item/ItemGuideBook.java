@@ -1,9 +1,9 @@
 package com.vincenthuto.hutoslib.common.item;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -26,8 +26,17 @@ public class ItemGuideBook extends Item {
 	 *
 	 * <p>Only populated on the logical client (guarded by
 	 * {@link Level#isClientSide} in {@link #inventoryTick}).
+	 *
+	 * <p>Entries are removed via {@link #clearState(UUID)} when a player
+	 * disconnects to prevent unbounded growth.
 	 */
-	private static final Map<UUID, BookAnimState> ANIM_STATES = new HashMap<>();
+	private static final Map<UUID, BookAnimState> ANIM_STATES = new ConcurrentHashMap<>();
+
+	/**
+	 * Fallback state used when no local player is available (e.g. GUI preview).
+	 * Never mutated — represents a default closed-book pose.
+	 */
+	private static final BookAnimState DEFAULT_STATE = new BookAnimState();
 
 	private ResourceLocation texture;
 
@@ -38,10 +47,22 @@ public class ItemGuideBook extends Item {
 
 	/**
 	 * Returns the animation state for the given entity UUID, creating a default
-	 * state if one does not yet exist.
+	 * state if one does not yet exist. Returns {@link #DEFAULT_STATE} when
+	 * {@code entityUuid} is {@code null}.
 	 */
 	public static BookAnimState getOrCreateState(UUID entityUuid) {
+		if (entityUuid == null) {
+			return DEFAULT_STATE;
+		}
 		return ANIM_STATES.computeIfAbsent(entityUuid, id -> new BookAnimState());
+	}
+
+	/**
+	 * Removes the cached animation state for the given entity UUID.
+	 * Call this when a player disconnects to prevent unbounded map growth.
+	 */
+	public static void clearState(UUID entityUuid) {
+		ANIM_STATES.remove(entityUuid);
 	}
 
 	public ResourceLocation getTexture() {
