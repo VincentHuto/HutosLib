@@ -52,8 +52,11 @@ public final class BookEntryRegistry {
      *
      * @param itemId  registry key of the item (e.g. {@code minecraft:diamond})
      * @param entryId the book entry to unlock
+     * @throws NullPointerException if {@code itemId} or {@code entryId} is null
      */
     public static void registerItemUnlock(ResourceLocation itemId, ResourceLocation entryId) {
+        java.util.Objects.requireNonNull(itemId,  "itemId must not be null");
+        java.util.Objects.requireNonNull(entryId, "entryId must not be null");
         ITEM_UNLOCKS.computeIfAbsent(itemId, k -> ConcurrentHashMap.newKeySet()).add(entryId);
     }
 
@@ -63,9 +66,12 @@ public final class BookEntryRegistry {
      *
      * @param advancementId the advancement's resource location
      * @param entryId       the book entry to unlock
+     * @throws NullPointerException if {@code advancementId} or {@code entryId} is null
      */
     public static void registerAdvancementUnlock(ResourceLocation advancementId,
             ResourceLocation entryId) {
+        java.util.Objects.requireNonNull(advancementId, "advancementId must not be null");
+        java.util.Objects.requireNonNull(entryId,       "entryId must not be null");
         ADVANCEMENT_UNLOCKS.computeIfAbsent(advancementId, k -> ConcurrentHashMap.newKeySet())
                 .add(entryId);
     }
