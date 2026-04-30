@@ -1,29 +1,19 @@
 package com.vincenthuto.hutoslib.common.event;
 
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledge;
-import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeEvents;
-import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
-import com.vincenthuto.hutoslib.common.book.knowledge.CommonDiscoverySource;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Items;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 
 /**
- * Server-side event listener that unlocks the HutosLib guide's test locked
- * entries when the player picks up a diamond.
+ * Holds the entry-ID constant used by the HutosLib guide's test locked pages.
  *
- * <p>This class exists solely to facilitate testing the entry-unlock /
- * {@link com.vincenthuto.hutoslib.common.book.filter.EntryGatedBookFilter}
- * system without requiring an external mod (e.g. Hemomancy) to be present.
- * Three guide pages (locked_test/pages/page1–3) are gated behind the entry
- * {@code hutoslib:guide/locked_test}; picking up any diamond unlocks them all.
+ * <p>Three guide pages ({@code locked_test/pages/page1–3}) are gated behind
+ * the entry {@code hutoslib:guide/locked_test}. The mapping that unlocks them
+ * when the player picks up a diamond is registered in
+ * {@link com.vincenthuto.hutoslib.common.book.knowledge.BookEntryRegistry}
+ * during {@code FMLCommonSetupEvent}; the unlock itself is handled generically
+ * by {@link com.vincenthuto.hutoslib.common.book.knowledge.BookDiscoveryEvents}.
  */
-@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public final class GuideBookUnlockEvents {
 
     /**
@@ -34,22 +24,5 @@ public final class GuideBookUnlockEvents {
             HutosLib.rloc("guide/locked_test");
 
     private GuideBookUnlockEvents() {
-    }
-
-    @SubscribeEvent
-    public static void onItemPickup(ItemEntityPickupEvent.Post event) {
-        if (!(event.getPlayer() instanceof ServerPlayer serverPlayer)) {
-            return;
-        }
-
-        if (!event.getOriginalStack().is(Items.DIAMOND)) {
-            return;
-        }
-
-        BookKnowledge knowledge = BookKnowledgeProvider.get(serverPlayer);
-        if (!knowledge.hasEntry(LOCKED_TEST_ENTRY)) {
-            knowledge.unlockEntry(LOCKED_TEST_ENTRY, CommonDiscoverySource.ITEM_PICKUP);
-            BookKnowledgeEvents.sync(serverPlayer);
-        }
     }
 }
