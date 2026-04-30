@@ -1,9 +1,14 @@
 package com.vincenthuto.hutoslib.common.item;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+
+import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
+import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -40,9 +45,76 @@ public class ItemGuideBook extends Item {
 
 	private ResourceLocation texture;
 
+	/**
+	 * Entry-path prefix shared by all entries belonging to this book, e.g.
+	 * {@code "sanctumsanguinium/"}. When non-null, HutosLib automatically
+	 * registers an item-stack decoration that shows a gold dot whenever the
+	 * player has at least one unread entry for this book.
+	 *
+	 * <p>Set via {@link #withBookPrefix(String)}.
+	 */
+	private String bookPrefix;
+
+	/**
+	 * Function that retrieves the player's {@link IBookKnowledge} for this book.
+	 * Defaults to HutosLib's own {@code BOOK_KNOWLEDGE} attachment via
+	 * {@link BookKnowledgeProvider}. Mods that store knowledge in a mod-specific
+	 * attachment should override this via {@link #withKnowledgeProvider}.
+	 *
+	 * <p>Set via {@link #withKnowledgeProvider(Function)}.
+	 */
+	private Function<Player, Optional<IBookKnowledge>> knowledgeProvider;
+
 	public ItemGuideBook(Properties prop, ResourceLocation loc) {
 		super(prop);
 		this.texture = loc;
+	}
+
+	/**
+	 * Sets the entry-path prefix used to scope unread-entry detection to this
+	 * book (e.g. {@code "sanctumsanguinium/"}). When non-null, HutosLib will
+	 * automatically register an item-stack decoration (gold dot) whenever the
+	 * player has at least one unread entry for this book.
+	 *
+	 * @param prefix path prefix shared by all entries belonging to this book
+	 * @return {@code this} for chaining
+	 */
+	public ItemGuideBook withBookPrefix(String prefix) {
+		this.bookPrefix = prefix;
+		return this;
+	}
+
+	/**
+	 * Sets the function used to retrieve a player's {@link IBookKnowledge} for
+	 * this book. Defaults to HutosLib's own {@code BOOK_KNOWLEDGE} attachment via
+	 * {@link BookKnowledgeProvider}. Mods that store knowledge in a mod-specific
+	 * attachment should supply their own accessor here.
+	 *
+	 * @param provider function that returns knowledge for a given player
+	 * @return {@code this} for chaining
+	 */
+	public ItemGuideBook withKnowledgeProvider(Function<Player, Optional<IBookKnowledge>> provider) {
+		this.knowledgeProvider = provider;
+		return this;
+	}
+
+	/**
+	 * Returns the entry-path prefix for this book, or {@code null} if not set.
+	 */
+	public String getBookPrefix() {
+		return bookPrefix;
+	}
+
+	/**
+	 * Returns the knowledge provider function for this book. If none was
+	 * explicitly set via {@link #withKnowledgeProvider}, falls back to
+	 * HutosLib's own {@code BOOK_KNOWLEDGE} attachment.
+	 */
+	public Function<Player, Optional<IBookKnowledge>> getKnowledgeProvider() {
+		if (knowledgeProvider != null) {
+			return knowledgeProvider;
+		}
+		return player -> Optional.of(BookKnowledgeProvider.get(player));
 	}
 
 	/**
