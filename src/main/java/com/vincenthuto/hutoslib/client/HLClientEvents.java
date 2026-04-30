@@ -1,9 +1,11 @@
 package com.vincenthuto.hutoslib.client;
 
+import net.neoforged.neoforge.client.IItemDecorator;
 import net.neoforged.neoforge.client.event.*;
 import org.lwjgl.glfw.GLFW;
 
 import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.particle.BoltRenderer;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemGuideBook;
@@ -19,9 +21,11 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -63,6 +67,35 @@ public static class ModBusEvents {
 public static void initKeybinds(RegisterKeyMappingsEvent ev) {
 ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V,
 "key.armbanner.category"));
+}
+
+@SubscribeEvent
+public static void registerItemDecorations(RegisterItemDecorationsEvent event) {
+for (Item item : BuiltInRegistries.ITEM) {
+if (!(item instanceof ItemGuideBook book)) continue;
+String prefix = book.getBookPrefix();
+if (prefix == null) continue;
+var provider = book.getKnowledgeProvider();
+IItemDecorator decorator = (graphics, font, stack, itemX, itemY) -> {
+Minecraft mc = Minecraft.getInstance();
+if (mc.player == null) return false;
+return provider.apply(mc.player).map(knowledge -> {
+if (!BookReadTracker.hasUnread(mc.player.getUUID(), knowledge, prefix)) {
+return false;
+}
+// Draw a 3x4 gold badge at the top-right corner of the item icon,
+// with corner pixels removed so it looks like a small circle.
+int dotX = itemX + 12;
+int dotY = itemY;
+int color = 0xFFFFD700;
+graphics.fill(dotX + 1, dotY, dotX + 3, dotY + 1, color);
+graphics.fill(dotX, dotY + 1, dotX + 4, dotY + 3, color);
+graphics.fill(dotX + 1, dotY + 3, dotX + 3, dotY + 4, color);
+return false;
+}).orElse(false);
+};
+event.register(book, decorator);
+}
 }
 
 @SubscribeEvent
