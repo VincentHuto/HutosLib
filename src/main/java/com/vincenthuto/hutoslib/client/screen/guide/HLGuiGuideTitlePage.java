@@ -17,6 +17,7 @@ import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.book.BookTheme;
+import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
@@ -183,9 +184,17 @@ public class HLGuiGuideTitlePage extends Screen {
 			HLGuiUtils.drawMaxWidthString(font, this.title, centerX + 10, centerY + 10, 165, titleColor, true);
 		}
 
+		// Determine UUID and knowledge to use – prefer explicitly-provided values,
+		// otherwise fall back to the local player so the standard opening path works too.
+		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
+		UUID resolvedUuid = viewerUuid != null ? viewerUuid
+				: (localPlayer != null ? localPlayer.getUUID() : null);
+		IBookKnowledge resolvedKnowledge = knowledge != null ? knowledge
+				: (localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null);
+
 		// Unread count badge
-		if (tracker != null && viewerUuid != null && knowledge != null) {
-			int unread = BookReadTracker.countUnread(viewerUuid, knowledge, book.getEntryPrefix());
+		if (resolvedUuid != null && resolvedKnowledge != null) {
+			int unread = BookReadTracker.countUnread(resolvedUuid, resolvedKnowledge, book.getEntryPrefix());
 			if (unread > 0) {
 				Component badge = Component.literal(unread + " new");
 				HLGuiUtils.drawMaxWidthString(font, badge, centerX + 10, centerY + 20, 100, titleColor, true);
@@ -206,11 +215,11 @@ public class HLGuiGuideTitlePage extends Screen {
 				RenderSystem.setShaderColor(1, 1, 1, 1.0F);
 
 				// Unread dot indicator on chapter tassel
-				if (tracker != null && viewerUuid != null && knowledge != null
+				if (resolvedUuid != null && resolvedKnowledge != null
 						&& tab.id >= 0 && tab.id < chapters.size()) {
 					String chapterPrefix = buildChapterPrefix(chapters.get(tab.id));
 					if (chapterPrefix != null
-							&& BookReadTracker.countUnread(viewerUuid, knowledge, chapterPrefix) > 0) {
+							&& BookReadTracker.countUnread(resolvedUuid, resolvedKnowledge, chapterPrefix) > 0) {
 						graphics.fill(tab.posX + tab.width - 7, tab.posY + 2,
 								tab.posX + tab.width - 3, tab.posY + 6, 0xFF000000 | resolveAccentColor());
 					}
@@ -261,14 +270,26 @@ public class HLGuiGuideTitlePage extends Screen {
 
 	/**
 	 * Derives a {@link BookReadTracker} prefix string for the given chapter.
-	 * Returns {@code null} if the chapter has no assigned ID yet.
+	 *
+	 * <p>Chapter resource IDs have the form {@code namespace:book/chapter/file}
+	 * (three path segments). The logical chapter prefix used by knowledge entries
+	 * is the first two segments — {@code book/chapter/} — NOT the full path. Using
+	 * the full path ({@code book/chapter/file/}) would never match any knowledge
+	 * entry because entries don't nest under the chapter JSON file name.
+	 *
+	 * <p>Returns {@code null} if the chapter has no assigned ID yet.
 	 */
 	@Nullable
 	private String buildChapterPrefix(ChapterTemplate chapter) {
-		if (chapter.getId() != null) {
-			return chapter.getId().getPath() + "/";
+		if (chapter.getId() == null) {
+			return null;
 		}
-		return null;
+		String path = chapter.getId().getPath();
+		String[] parts = path.split("/");
+		if (parts.length >= 2) {
+			return parts[0] + "/" + parts[1] + "/";
+		}
+		return path + "/";
 	}
 
 	// -------------------------------------------------------------------------

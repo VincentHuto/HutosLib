@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
+import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
 import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
@@ -107,6 +108,12 @@ public class HLGuiGuidePage extends Screen {
 				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32,
 				(press) -> this.onClose()));
 		super.init();
+
+		// Acknowledge this page as read when the player actually views it.
+		net.minecraft.world.entity.player.Player localPlayer = mc.player;
+		if (localPlayer != null && pageTemplate.getId() != null) {
+			BookReadTracker.acknowledge(localPlayer.getUUID(), pageTemplate.getId());
+		}
 	}
 
 	@Override

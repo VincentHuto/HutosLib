@@ -33,6 +33,19 @@ public final class BookReadTracker {
     }
 
     /**
+     * Marks a single entry ID as acknowledged (read) for this player.
+     * Call this when the player actually views a specific page.
+     *
+     * @param playerId the player's UUID
+     * @param entryId  the entry ID to mark as read; ignored if {@code null}
+     */
+    public static void acknowledge(UUID playerId, ResourceLocation entryId) {
+        if (entryId != null) {
+            ACKNOWLEDGED.computeIfAbsent(playerId, id -> new HashSet<>()).add(entryId);
+        }
+    }
+
+    /**
      * Marks a collection of entry IDs as acknowledged (read) for this player.
      * Call this when the player opens a book screen.
      *
