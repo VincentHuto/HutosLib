@@ -48,7 +48,7 @@ public class HLClientEvents {
     public static void onPlayerLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         if (event.getPlayer() != null) {
             ItemGuideBook.clearState(event.getPlayer().getUUID());
-            BookReadTracker.clear(event.getPlayer().getUUID());
+            BookReadTracker.flush();
         }
     }
 
