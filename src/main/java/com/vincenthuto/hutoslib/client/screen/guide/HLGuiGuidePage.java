@@ -2,6 +2,9 @@ package com.vincenthuto.hutoslib.client.screen.guide;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
@@ -11,6 +14,8 @@ import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
 import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
 import com.vincenthuto.hutoslib.common.book.BookTheme;
+import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
+import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookDataTemplate;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
@@ -62,13 +67,28 @@ public class HLGuiGuidePage extends Screen {
 	BookDataTemplate pageTemplate;
 	public BookCodeModel book;
 	public ChapterTemplate chapter;
+	@Nullable
+	private final BookReadTracker tracker;
+	@Nullable
+	private final UUID viewerUuid;
+	@Nullable
+	private final IBookKnowledge knowledge;
 
 	public HLGuiGuidePage(int pageNum, BookCodeModel book, ChapterTemplate chapter) {
+		this(pageNum, book, chapter, null, null, null);
+	}
+
+	public HLGuiGuidePage(int pageNum, BookCodeModel book, ChapterTemplate chapter,
+			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid,
+			@Nullable IBookKnowledge knowledge) {
 		super(Component.literal(""));
 		this.pageNum      = pageNum;
 		this.book         = book;
 		this.chapter      = chapter;
 		this.pageTemplate = chapter.getPages().get(pageNum);
+		this.tracker      = tracker;
+		this.viewerUuid   = viewerUuid;
+		this.knowledge    = knowledge;
 	}
 
 	// -------------------------------------------------------------------------
@@ -84,25 +104,30 @@ public class HLGuiGuidePage extends Screen {
 			this.addRenderableWidget(arrowF = new HLButtonArrow(ArrowDirection.FORWARD, ARROWF,
 					left + guiWidth - 18, top + guiHeight - 7, (press) -> {
 						if (pageNum != (chapter.getPages().size() - 1)) {
-							chapter.getPages().get(pageNum + 1).getPageScreen(pageNum + 1, book, chapter);
+							chapter.getPages().get(pageNum + 1).getPageScreen(pageNum + 1, book, chapter,
+									tracker, resolveViewerUuid(), resolveKnowledge());
 						} else {
-							chapter.getPages().get(pageNum + 1).getPageScreen(pageNum, book, chapter);
+							chapter.getPages().get(pageNum).getPageScreen(pageNum, book, chapter,
+									tracker, resolveViewerUuid(), resolveKnowledge());
 						}
 					}));
 		}
 		this.addRenderableWidget(
 				arrowB = new HLButtonArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
 					if (pageNum > 0) {
-						chapter.getPages().get(pageNum - 1).getPageScreen(pageNum - 1, book, chapter);
+						chapter.getPages().get(pageNum - 1).getPageScreen(pageNum - 1, book, chapter,
+								tracker, resolveViewerUuid(), resolveKnowledge());
 					} else {
-						mc.setScreen(new HLGuiGuidePageTOC(book, chapter));
+						mc.setScreen(new HLGuiGuidePageTOC(book, chapter, tracker,
+								resolveViewerUuid(), resolveKnowledge()));
 					}
 				}));
 
 		ResourceLocation tabTex = resolveTabTexture();
 		this.addRenderableWidget(buttonTitle = new HLButtonTextured(tabTex,
 				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0,
-				(press) -> mc.setScreen(new HLGuiGuideTitlePage(book))));
+				(press) -> mc.setScreen(new HLGuiGuideTitlePage(book, tracker,
+						resolveViewerUuid(), resolveKnowledge()))));
 
 		this.addRenderableWidget(buttonCloseTab = new HLButtonTextured(tabTex,
 				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32,
@@ -257,6 +282,21 @@ public class HLGuiGuidePage extends Screen {
 		return BookTheme.DEFAULT_ACCENT;
 	}
 
+	@Nullable
+	private UUID resolveViewerUuid() {
+		net.minecraft.world.entity.player.Player localPlayer = mc.player;
+		return viewerUuid != null ? viewerUuid : (localPlayer != null ? localPlayer.getUUID() : null);
+	}
+
+	@Nullable
+	private IBookKnowledge resolveKnowledge() {
+		if (knowledge != null) {
+			return knowledge;
+		}
+		net.minecraft.world.entity.player.Player localPlayer = mc.player;
+		return localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null;
+	}
+
 	// -------------------------------------------------------------------------
 	// Drag
 	// -------------------------------------------------------------------------
@@ -285,5 +325,12 @@ public class HLGuiGuidePage extends Screen {
 	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {
 		Minecraft mc = Minecraft.getInstance();
 		mc.setScreen(new HLGuiGuidePage(pNum, pBook, pChapterTemplate));
+	}
+
+	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate,
+			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid,
+			@Nullable IBookKnowledge knowledge) {
+		Minecraft mc = Minecraft.getInstance();
+		mc.setScreen(new HLGuiGuidePage(pNum, pBook, pChapterTemplate, tracker, viewerUuid, knowledge));
 	}
 }

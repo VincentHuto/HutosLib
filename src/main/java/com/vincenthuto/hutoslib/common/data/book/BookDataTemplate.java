@@ -1,8 +1,12 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
+import java.util.UUID;
+
 import javax.annotation.Nullable;
 
+import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.screen.guide.IBookPageRenderer;
+import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.shadow.TypeKeyed.TypeKeyedBase;
 
 import net.minecraft.resources.ResourceLocation;
@@ -49,5 +53,11 @@ public abstract class BookDataTemplate extends TypeKeyedBase<BookDataTemplate> {
 	public abstract void setChapter(String chapterName);
 
 	public abstract void getPageScreen(int pageNum, BookCodeModel book, ChapterTemplate chapter);
+
+	public void getPageScreen(int pageNum, BookCodeModel book, ChapterTemplate chapter,
+			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid,
+			@Nullable IBookKnowledge knowledge) {
+		getPageScreen(pageNum, book, chapter);
+	}
 
 }

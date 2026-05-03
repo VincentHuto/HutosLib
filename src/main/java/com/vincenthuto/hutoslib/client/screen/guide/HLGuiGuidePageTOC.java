@@ -97,7 +97,7 @@ public class HLGuiGuidePageTOC extends Screen {
 					(verticalLoc - 210) + (i * 15), 163, 14, 5, 228, (press) -> {
 						if (press instanceof HLButtonTextured button) {
 							chapterTemplate.getPages().get(button.getId()).getPageScreen(button.getId(), book,
-									chapterTemplate);
+									chapterTemplate, tracker, resolveViewerUuid(), resolveKnowledge());
 						}
 					}));
 		}
@@ -108,16 +108,19 @@ public class HLGuiGuidePageTOC extends Screen {
 
 		this.addRenderableWidget(arrowF = new HLButtonArrow(ArrowDirection.FORWARD, ARROWF,
 				left + guiWidth - 18, top + guiHeight - 7,
-				(press) -> chapterTemplate.getPages().get(0).getPageScreen(0, book, chapterTemplate)));
+				(press) -> chapterTemplate.getPages().get(0).getPageScreen(0, book,
+						chapterTemplate, tracker, resolveViewerUuid(), resolveKnowledge())));
 
 		this.addRenderableWidget(arrowB = new HLButtonArrow(ArrowDirection.BACKWARD, ARROWB,
 				left, top + guiHeight - 7,
-				(press) -> book.getTemplate().getPageScreen(0, book, null)));
+				(press) -> Minecraft.getInstance().setScreen(new HLGuiGuideTitlePage(book, tracker,
+						resolveViewerUuid(), resolveKnowledge()))));
 
 		ResourceLocation tabTex = resolveTabTexture();
 		this.addRenderableWidget(buttonTitle = new HLButtonTextured(tabTex, TITLEBUTTON,
 				left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0,
-				(press) -> book.getTemplate().getPageScreen(0, book, null)));
+				(press) -> Minecraft.getInstance().setScreen(new HLGuiGuideTitlePage(book, tracker,
+						resolveViewerUuid(), resolveKnowledge()))));
 
 		this.addRenderableWidget(buttonCloseTab = new HLButtonTextured(tabTex, CLOSEBUTTON,
 				left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32,
@@ -139,11 +142,8 @@ public class HLGuiGuidePageTOC extends Screen {
 
 		// Determine UUID and knowledge to use – prefer explicitly-provided values,
 		// otherwise fall back to the local player so the standard opening path works too.
-		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
-		UUID resolvedUuid = viewerUuid != null ? viewerUuid
-				: (localPlayer != null ? localPlayer.getUUID() : null);
-		IBookKnowledge resolvedKnowledge = knowledge != null ? knowledge
-				: (localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null);
+		UUID resolvedUuid = resolveViewerUuid();
+		IBookKnowledge resolvedKnowledge = resolveKnowledge();
 
 		for (int i = 0; i < pageButtons.size(); i++) {
 			HLButtonTextured btn = pageButtons.get(i);
@@ -221,6 +221,21 @@ public class HLGuiGuidePageTOC extends Screen {
 			return theme.accentColor() != 0 ? theme.accentColor() : BookTheme.DEFAULT_ACCENT;
 		}
 		return BookTheme.DEFAULT_ACCENT;
+	}
+
+	@Nullable
+	private UUID resolveViewerUuid() {
+		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
+		return viewerUuid != null ? viewerUuid : (localPlayer != null ? localPlayer.getUUID() : null);
+	}
+
+	@Nullable
+	private IBookKnowledge resolveKnowledge() {
+		if (knowledge != null) {
+			return knowledge;
+		}
+		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
+		return localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null;
 	}
 
 	/**

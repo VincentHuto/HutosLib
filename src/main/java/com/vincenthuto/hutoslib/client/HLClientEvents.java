@@ -6,10 +6,7 @@ import com.vincenthuto.hutoslib.client.particle.BoltRenderer;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemGuideBook;
 import com.vincenthuto.hutoslib.client.render.layer.LayerArmBanner;
-import com.vincenthuto.hutoslib.common.book.filter.EntryGatedBookFilter;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
-import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
-import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
 import com.vincenthuto.hutoslib.common.item.ItemGuideBook;
 import com.vincenthuto.hutoslib.common.network.PacketOpenBanner;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
@@ -36,7 +33,6 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
@@ -119,42 +115,19 @@ public class HLClientEvents {
                 return false;
             }
 
-            // Prefer page-id based unread state so inventory dots match title/TOC badges.
-            Set<ResourceLocation> visiblePageIds = collectVisiblePageIds(player, prefix);
-            if (!visiblePageIds.isEmpty()) {
-                return BookReadTracker.countUnread(player.getUUID(), visiblePageIds) > 0;
-            }
+            // Prefer page-id based unread state, but keep a knowledge-prefix fallback
+            // for books whose unlock IDs don't map 1:1 with page IDs.
+            Set<ResourceLocation> visiblePageIds = book.collectVisiblePageIds(player);
+            int unreadByPages = visiblePageIds.isEmpty()
+                    ? 0
+                    : BookReadTracker.countUnread(player.getUUID(), visiblePageIds);
+            int unreadByKnowledge = knowledge != null
+                    ? BookReadTracker.countUnread(player.getUUID(), knowledge, prefix)
+                    : 0;
 
-            // Back-compat fallback for books that only track knowledge entries by prefix.
-            return knowledge != null && BookReadTracker.hasUnread(player.getUUID(), knowledge, prefix);
+            return Math.max(unreadByPages, unreadByKnowledge) > 0;
         }
 
-        private static Set<ResourceLocation> collectVisiblePageIds(Player player, String prefix) {
-            Set<ResourceLocation> ids = new HashSet<>();
-            for (BookCodeModel loadedBook : BookPlaceboReloadListener.INSTANCE.getBooks()) {
-                if (!loadedBook.getEntryPrefix().equals(prefix)) {
-                    continue;
-                }
-
-                // Match the same visibility rules used when opening the guide from the item.
-                BookCodeModel filtered = loadedBook.getPageFilter().filter(loadedBook, player);
-                filtered = EntryGatedBookFilter.INSTANCE.filter(filtered, player);
-                if (filtered.getChapters() == null) {
-                    continue;
-                }
-                for (var chapter : filtered.getChapters()) {
-                    if (chapter.getPages() == null) {
-                        continue;
-                    }
-                    for (var page : chapter.getPages()) {
-                        if (page.getId() != null) {
-                            ids.add(page.getId());
-                        }
-                    }
-                }
-            }
-            return ids;
-        }
 
         @SubscribeEvent
         public static void registerClientExtensions(RegisterClientExtensionsEvent event) {

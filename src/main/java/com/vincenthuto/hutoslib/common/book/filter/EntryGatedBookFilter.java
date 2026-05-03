@@ -3,6 +3,8 @@ package com.vincenthuto.hutoslib.common.book.filter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
@@ -35,7 +37,17 @@ public final class EntryGatedBookFilter implements IBookPageFilter {
 
     @Override
     public BookCodeModel filter(BookCodeModel source, Player player) {
-        IBookKnowledge knowledge = BookKnowledgeProvider.get(player);
+        return filter(source, BookKnowledgeProvider.get(player));
+    }
+
+    /**
+     * Variant used by mods whose book UI reads knowledge from a custom
+     * attachment instead of HutosLib's default {@link BookKnowledgeProvider}.
+     */
+    public BookCodeModel filter(BookCodeModel source, @Nullable IBookKnowledge knowledge) {
+        if (source == null) {
+            return null;
+        }
 
         List<ChapterTemplate> filteredChapters = new ArrayList<>();
 
@@ -45,7 +57,7 @@ public final class EntryGatedBookFilter implements IBookPageFilter {
             for (BookDataTemplate page : chapter.getPages()) {
                 if (page instanceof PageTemplate pt && !pt.getRequiresEntry().isEmpty()) {
                     ResourceLocation entryId = ResourceLocation.tryParse(pt.getRequiresEntry());
-                    if (entryId == null || !knowledge.hasEntry(entryId)) {
+                    if (entryId == null || knowledge == null || !knowledge.hasEntry(entryId)) {
                         continue; // locked or malformed entry ID — skip this page
                     }
                 }

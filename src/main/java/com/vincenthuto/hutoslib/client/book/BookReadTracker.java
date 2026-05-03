@@ -80,6 +80,31 @@ public final class BookReadTracker {
         }
     }
 
+    /**
+     * Marks a collection of entry IDs as unread for this player. This is used
+     * when a server sync reports entries that were just discovered, so stale
+     * client-side read state from earlier accidental visibility cannot suppress
+     * the "new entry" indicators.
+     *
+     * @param playerId the player's UUID
+     * @param entryIds the entry IDs to remove from the acknowledged/read set
+     */
+    public static void unacknowledge(UUID playerId, Collection<ResourceLocation> entryIds) {
+        ensureLoaded();
+        if (entryIds == null || entryIds.isEmpty()) {
+            return;
+        }
+        Set<ResourceLocation> acknowledged = ACKNOWLEDGED.get(playerId);
+        if (acknowledged == null || acknowledged.isEmpty()) {
+            return;
+        }
+        boolean changed = acknowledged.removeAll(entryIds);
+        if (changed) {
+            dirty = true;
+            saveIfDirty();
+        }
+    }
+
     /** Returns whether {@code entryId} has been acknowledged for this player. */
     public static boolean isAcknowledged(UUID playerId, ResourceLocation entryId) {
         ensureLoaded();

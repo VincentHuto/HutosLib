@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.common.item;
 
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.common.book.filter.EntryGatedBookFilter;
-import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledge;
+import com.vincenthuto.hutoslib.common.book.filter.IBookPageFilter;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
@@ -73,6 +73,12 @@ public class ItemGuideBook extends Item {
     private Function<Player, Optional<IBookKnowledge>> knowledgeProvider =
             player -> Optional.of(BookKnowledgeProvider.get(player));
 
+    /**
+     * Optional item-level page filter override used when computing unread state
+     * and opening the book from the item.
+     */
+    private IBookPageFilter pageFilterOverride;
+
     public ItemGuideBook(Properties prop, ResourceLocation loc) {
         super(prop);
         this.texture = loc;
@@ -114,7 +120,7 @@ public class ItemGuideBook extends Item {
         if (prefix == null || prefix.isEmpty()) return;
 
         IBookKnowledge knowledge = this.getKnowledgeProvider().apply(mc.player).orElse(null);
-        int unread = countUnreadForDisplay(mc.player, prefix, knowledge);
+        int unread = countUnreadForDisplay(mc.player, knowledge);
         if (unread > 0) {
             tooltip.add(Component.literal(ChatFormatting.GOLD + "⬤ " + unread
                     + " unread entr" + (unread == 1 ? "y" : "ies")));
@@ -122,24 +128,32 @@ public class ItemGuideBook extends Item {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static int countUnreadForDisplay(Player player, String prefix, IBookKnowledge knowledge) {
-        Set<ResourceLocation> visiblePageIds = collectVisiblePageIds(player, prefix);
-        if (!visiblePageIds.isEmpty()) {
-            return BookReadTracker.countUnread(player.getUUID(), visiblePageIds);
-        }
-        return knowledge != null ? BookReadTracker.countUnread(player.getUUID(), knowledge, prefix) : 0;
+    private int countUnreadForDisplay(Player player, IBookKnowledge knowledge) {
+        Set<ResourceLocation> visiblePageIds = collectVisiblePageIds(player);
+        String prefix = this.getBookPrefix();
+        int unreadByPages = visiblePageIds.isEmpty()
+                ? 0
+                : BookReadTracker.countUnread(player.getUUID(), visiblePageIds);
+        int unreadByKnowledge = knowledge != null
+                ? BookReadTracker.countUnread(player.getUUID(), knowledge, prefix)
+                : 0;
+        return Math.max(unreadByPages, unreadByKnowledge);
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static Set<ResourceLocation> collectVisiblePageIds(Player player, String prefix) {
+    public Set<ResourceLocation> collectVisiblePageIds(Player player) {
         Set<ResourceLocation> ids = new HashSet<>();
+        String prefix = this.getBookPrefix();
+        if (prefix == null || prefix.isEmpty()) {
+            return ids;
+        }
+
         for (BookCodeModel loadedBook : BookPlaceboReloadListener.INSTANCE.getBooks()) {
             if (!loadedBook.getEntryPrefix().equals(prefix)) {
                 continue;
             }
             // Match the same visibility rules used when opening the guide from the item.
-            BookCodeModel filtered = loadedBook.getPageFilter().filter(loadedBook, player);
-            filtered = EntryGatedBookFilter.INSTANCE.filter(filtered, player);
+            BookCodeModel filtered = applyVisibilityFilters(loadedBook, player);
             if (filtered.getChapters() == null) {
                 continue;
             }
@@ -155,6 +169,19 @@ public class ItemGuideBook extends Item {
             }
         }
         return ids;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public BookCodeModel applyVisibilityFilters(BookCodeModel loadedBook, Player player) {
+        IBookPageFilter filter = pageFilterOverride != null ? pageFilterOverride : loadedBook.getPageFilter();
+        BookCodeModel filtered = filter.filter(loadedBook, player);
+        IBookKnowledge knowledge = getKnowledgeProvider().apply(player).orElse(null);
+        filtered = knowledge != null
+                ? EntryGatedBookFilter.INSTANCE.filter(filtered, knowledge)
+                : EntryGatedBookFilter.INSTANCE.filter(filtered, player);
+        filtered.setPageFilter(filter);
+        filtered.setTheme(loadedBook.getTheme());
+        return filtered;
     }
 
     /**
@@ -182,6 +209,16 @@ public class ItemGuideBook extends Item {
      */
     public ItemGuideBook withKnowledgeProvider(Function<Player, Optional<IBookKnowledge>> provider) {
         this.knowledgeProvider = provider;
+        return this;
+    }
+
+    /**
+     * Overrides the page filter used for this specific item instance. Useful for
+     * mods that gate book pages with a mod-specific knowledge source rather than
+     * the book model's default HutosLib filter.
+     */
+    public ItemGuideBook withPageFilter(IBookPageFilter filter) {
+        this.pageFilterOverride = filter;
         return this;
     }
 

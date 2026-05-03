@@ -81,11 +81,12 @@ public class BookKnowledge implements IBookKnowledge, INBTSerializable<CompoundT
         if (entryId == null) {
             return false;
         }
-        boolean changed = unlockedEntries.add(entryId);
+        boolean entryChanged = unlockedEntries.add(entryId);
+        boolean sourceChanged = false;
         if (source != null) {
-            entrySources.computeIfAbsent(entryId, id -> newSourceSet()).add(source);
+            sourceChanged = entrySources.computeIfAbsent(entryId, id -> newSourceSet()).add(source);
         }
-        return changed;
+        return entryChanged || sourceChanged;
     }
 
     @Override

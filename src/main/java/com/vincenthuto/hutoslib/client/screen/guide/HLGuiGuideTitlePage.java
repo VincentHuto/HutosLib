@@ -1,6 +1,7 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -60,6 +61,15 @@ public class HLGuiGuideTitlePage extends Screen {
 	/** Optional knowledge source for computing the unread badge count. */
 	@Nullable
 	private final IBookKnowledge knowledge;
+	/**
+	 * Optional supplier that, when invoked, returns a freshly-filtered
+	 * {@link BookCodeModel} reflecting the player's current knowledge. Set by
+	 * the opener (e.g. {@code BloodyBookItem.use}) so that
+	 * {@link #refresh()} can rebuild the visible chapter list when the
+	 * server pushes a knowledge sync while the book is open.
+	 */
+	@Nullable
+	private java.util.function.Supplier<BookCodeModel> refresher;
 
 	// -------------------------------------------------------------------------
 	// Static openers
@@ -89,6 +99,66 @@ public class HLGuiGuideTitlePage extends Screen {
 			UUID viewerUuid, IBookKnowledge knowledge) {
 		Minecraft.getInstance().setScreen(
 				new HLGuiGuideTitlePage(book, tracker, viewerUuid, knowledge));
+	}
+
+	/**
+	 * Same as {@link #openScreen(BookCodeModel, BookReadTracker, UUID, IBookKnowledge)},
+	 * but also installs a refresher supplier that
+	 * {@link #refreshIfOpen()} can use to rebuild the visible chapters when
+	 * the player's knowledge changes (e.g. on a server sync packet) while the
+	 * book is open. The supplier should re-run the page-visibility filters
+	 * against the freshest knowledge.
+	 */
+	public static void openScreen(BookCodeModel book, BookReadTracker tracker,
+			UUID viewerUuid, IBookKnowledge knowledge,
+			@Nullable java.util.function.Supplier<BookCodeModel> refresher) {
+		HLGuiGuideTitlePage page = new HLGuiGuideTitlePage(book, tracker, viewerUuid, knowledge);
+		page.refresher = refresher;
+		Minecraft.getInstance().setScreen(page);
+	}
+
+	/**
+	 * If the currently-open Minecraft screen is an {@link HLGuiGuideTitlePage}
+	 * with an installed refresher, re-applies its filter and rebuilds the
+	 * chapter buttons in place. Safe to call from any thread that has already
+	 * been hopped to the client thread (e.g. inside
+	 * {@code IPayloadContext#enqueueWork}).
+	 */
+	public static void refreshIfOpen() {
+		Screen current = Minecraft.getInstance().screen;
+		if (current instanceof HLGuiGuideTitlePage page) {
+			page.refresh();
+		}
+	}
+
+	/**
+	 * Marks the supplied entries unread for {@code playerId}, then refreshes the
+	 * open guide title page if one is present. This is useful for mods that sync
+	 * newly-discovered book entries from the server and need existing stale
+	 * client read-state to stop suppressing unread/new-entry badges.
+	 */
+	public static void markEntriesUnreadAndRefreshIfOpen(UUID playerId, Collection<ResourceLocation> entryIds) {
+		BookReadTracker.unacknowledge(playerId, entryIds);
+		refreshIfOpen();
+	}
+
+	/**
+	 * Re-runs the installed refresher (if any), swaps in the new
+	 * {@link BookCodeModel}, and rebuilds widgets via {@link #init()}. No-op
+	 * when no refresher was provided.
+	 */
+	public void refresh() {
+		if (refresher == null) {
+			return;
+		}
+		BookCodeModel refreshed = refresher.get();
+		if (refreshed == null) {
+			return;
+		}
+		this.book = refreshed;
+		this.chapters = refreshed.getChapters();
+		// Rebuild buttons against the new chapter list.
+		this.init(Minecraft.getInstance(), this.width, this.height);
 	}
 
 	// -------------------------------------------------------------------------
@@ -147,7 +217,8 @@ public class HLGuiGuideTitlePage extends Screen {
 					(int) (centerX + (guiWidth * 0.05f) + 167 + (rand.nextInt(6) - rand.nextInt(4))),
 					centerY - (i * -25) + 18, 0, 192, (press) -> {
 						if (press instanceof HLButtonTextured button) {
-							chapters.get(button.id).getPageScreen(0, book, chapters.get(button.id));
+							Minecraft.getInstance().setScreen(new HLGuiGuidePageTOC(book, chapters.get(button.id), tracker,
+									resolveViewerUuid(), resolveKnowledge()));
 						}
 					});
 			buttonList.add(tab);
@@ -188,11 +259,8 @@ public class HLGuiGuideTitlePage extends Screen {
 
 		// Determine UUID and knowledge to use – prefer explicitly-provided values,
 		// otherwise fall back to the local player so the standard opening path works too.
-		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
-		UUID resolvedUuid = viewerUuid != null ? viewerUuid
-				: (localPlayer != null ? localPlayer.getUUID() : null);
-		IBookKnowledge resolvedKnowledge = knowledge != null ? knowledge
-				: (localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null);
+		UUID resolvedUuid = resolveViewerUuid();
+		IBookKnowledge resolvedKnowledge = resolveKnowledge();
 
 		// Unread count badge
 		if (resolvedUuid != null) {
@@ -267,6 +335,21 @@ public class HLGuiGuideTitlePage extends Screen {
 		return BookTheme.DEFAULT_ACCENT;
 	}
 
+	@Nullable
+	private UUID resolveViewerUuid() {
+		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
+		return viewerUuid != null ? viewerUuid : (localPlayer != null ? localPlayer.getUUID() : null);
+	}
+
+	@Nullable
+	private IBookKnowledge resolveKnowledge() {
+		if (knowledge != null) {
+			return knowledge;
+		}
+		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
+		return localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null;
+	}
+
 	/**
 	 * Derives a {@link BookReadTracker} prefix string for the given chapter.
 	 *
@@ -327,22 +410,21 @@ public class HLGuiGuideTitlePage extends Screen {
 
 	private int countUnreadForBook(UUID playerId, @Nullable IBookKnowledge knowledge) {
 		Set<ResourceLocation> pageIds = collectPageIds(chapters);
-		if (!pageIds.isEmpty()) {
-			return BookReadTracker.countUnread(playerId, pageIds);
-		}
-		return knowledge != null ? BookReadTracker.countUnread(playerId, knowledge, book.getEntryPrefix()) : 0;
+		int unreadByPages = pageIds.isEmpty() ? 0 : BookReadTracker.countUnread(playerId, pageIds);
+		int unreadByKnowledge = knowledge != null
+				? BookReadTracker.countUnread(playerId, knowledge, book.getEntryPrefix())
+				: 0;
+		return Math.max(unreadByPages, unreadByKnowledge);
 	}
 
 	private int countUnreadForChapter(UUID playerId, ChapterTemplate chapter, @Nullable IBookKnowledge knowledge) {
 		Set<ResourceLocation> pageIds = collectPageIds(List.of(chapter));
-		if (!pageIds.isEmpty()) {
-			return BookReadTracker.countUnread(playerId, pageIds);
-		}
+		int unreadByPages = pageIds.isEmpty() ? 0 : BookReadTracker.countUnread(playerId, pageIds);
 		String chapterPrefix = buildChapterPrefix(chapter);
-		if (chapterPrefix == null || knowledge == null) {
-			return 0;
-		}
-		return BookReadTracker.countUnread(playerId, knowledge, chapterPrefix);
+		int unreadByKnowledge = (chapterPrefix == null || knowledge == null)
+				? 0
+				: BookReadTracker.countUnread(playerId, knowledge, chapterPrefix);
+		return Math.max(unreadByPages, unreadByKnowledge);
 	}
 
 	private static Set<ResourceLocation> collectPageIds(List<ChapterTemplate> sourceChapters) {
