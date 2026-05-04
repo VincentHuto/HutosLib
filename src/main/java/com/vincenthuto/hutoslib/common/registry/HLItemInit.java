@@ -52,6 +52,9 @@ public class HLItemInit {
 	public static final DeferredHolder<Item, ? extends Item> diamond_knapper = HANDHELDITEMS.register("diamond_knapper",
 			() -> new ItemKnapper(50f, 1, 0, HLModTiers.DIAMOND,
 					new Item.Properties()));
+	public static final DeferredHolder<Item, ? extends Item> netherite_knapper = HANDHELDITEMS.register("netherite_knapper",
+			() -> new ItemKnapper(65f, 1, 0, HLModTiers.NETHERITE,
+					new Item.Properties()));
 	public static final DeferredHolder<Item, Item> obsidian_flakes = ITEMS.register("obsidian_flakes",
 			() -> new Item(new Item.Properties()));
 

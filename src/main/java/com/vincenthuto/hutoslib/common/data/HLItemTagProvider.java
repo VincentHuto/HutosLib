@@ -3,6 +3,7 @@ package com.vincenthuto.hutoslib.common.data;
 import java.util.concurrent.CompletableFuture;
 
 import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -18,5 +19,9 @@ public class HLItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        tag(HLItemInit.TAG_KNAPPERS)
+            .add(HLItemInit.iron_knapper.get())
+            .add(HLItemInit.diamond_knapper.get())
+            .add(HLItemInit.netherite_knapper.get());
     }
 }

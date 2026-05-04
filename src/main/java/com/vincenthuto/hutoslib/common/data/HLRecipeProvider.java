@@ -14,7 +14,9 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
@@ -84,6 +86,16 @@ public class HLRecipeProvider extends RecipeProvider {
             .unlockedBy("has_gem_diamonds", InventoryChangeTrigger.TriggerInstance.hasItems(
                     ItemPredicate.Builder.item().of(Tags.Items.GEMS_DIAMOND).build()))
             .save(output);
+
+        SmithingTransformRecipeBuilder.smithing(
+                Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
+                Ingredient.of(HLItemInit.diamond_knapper.get()),
+                Ingredient.of(Items.NETHERITE_INGOT),
+                RecipeCategory.TOOLS,
+                HLItemInit.netherite_knapper.get())
+            .unlocks("has_netherite_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item().of(Items.NETHERITE_INGOT).build()))
+            .save(output, HutosLib.rloc("netherite_knapper"));
 
         // Banners
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLItemInit.leather_arm_banner.get())
