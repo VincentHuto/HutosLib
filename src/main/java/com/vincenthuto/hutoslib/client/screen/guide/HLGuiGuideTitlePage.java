@@ -203,11 +203,11 @@ public class HLGuiGuideTitlePage extends Screen {
 		this.clearWidgets();
 
 		ResourceLocation overlayTex = resolveOverlayTexture();
-		this.addRenderableWidget(
-				buttonclose = new HLButtonTextured(overlayTex, BUTTONCLOSE,
-						(int) (centerX + (guiWidth * 0.05f)),
-						(int) (centerY + (guiHeight * 0.78f)), 32, 32, 209, 32,
-						(press) -> onClose()));
+//		this.addRenderableWidget(
+//				buttonclose = new HLButtonTextured(overlayTex, BUTTONCLOSE,
+//						(int) (centerX + (guiWidth * 0.05f)),
+//						(int) (centerY + (guiHeight * 0.78f)), 32, 32, 209, 32,
+//						(press) -> onClose()));
 
 		chapters.sort(Comparator.comparingInt(ChapterTemplate::getOrdinality));
 
@@ -300,11 +300,11 @@ public class HLGuiGuideTitlePage extends Screen {
 			}
 		}
 
-		this.buttonclose.render(graphics, mouseX, mouseY, partialTicks);
-		if (this.buttonclose.isHoveredOrFocused()) {
-			graphics.renderTooltip(font, Component.literal("Close"),
-					this.buttonclose.getX(), this.buttonclose.getY());
-		}
+//		this.buttonclose.render(graphics, mouseX, mouseY, partialTicks);
+//		if (this.buttonclose.isHoveredOrFocused()) {
+//			graphics.renderTooltip(font, Component.literal("Close"),
+//					this.buttonclose.getX(), this.buttonclose.getY());
+//		}
 	}
 
 	@Override
