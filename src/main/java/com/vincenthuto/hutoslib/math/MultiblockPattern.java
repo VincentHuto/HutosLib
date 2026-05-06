@@ -17,6 +17,7 @@ public class MultiblockPattern {
 
 	BlockPattern pattern;
 	Map<String, Block> symbolList;
+	Map<String, MultiblockPatternKey> keyList;
 	String[][] patternArray;
 
 	/***
@@ -32,6 +33,18 @@ public class MultiblockPattern {
 	public MultiblockPattern(BlockPattern pattern, Map<String, Block> symbolList, String[][] patternArray) {
 		this.pattern = pattern;
 		this.symbolList = symbolList;
+		this.keyList = symbolList.entrySet().stream().collect(Collectors.toMap(Entry::getKey,
+				entry -> MultiblockPatternKey.block(entry.getKey(), entry.getValue()), (a, b) -> b,
+				LinkedHashMap::new));
+		this.patternArray = patternArray;
+	}
+
+	public MultiblockPattern(BlockPattern pattern, Map<String, MultiblockPatternKey> keyList, String[][] patternArray,
+			boolean useDisplayKeys) {
+		this.pattern = pattern;
+		this.keyList = keyList;
+		this.symbolList = keyList.entrySet().stream().collect(Collectors.toMap(Entry::getKey,
+				entry -> entry.getValue().fallbackBlock(), (a, b) -> b, LinkedHashMap::new));
 		this.patternArray = patternArray;
 	}
 
@@ -41,12 +54,13 @@ public class MultiblockPattern {
 			for (int j = 0; j < element.length; j++) {
 				for (int k = 0; k < element[j].length(); k++) {
 					String curr = String.valueOf(element[j].charAt(k));
-					if (curr != "A") {
-						if (!distinct.containsKey(symbolList.get(String.valueOf(curr)))) {
-							distinct.put(symbolList.get(String.valueOf(curr)), 1);
+					Block block = symbolList.get(curr);
+					if (block != null && !block.defaultBlockState().isAir()) {
+						if (!distinct.containsKey(block)) {
+							distinct.put(block, 1);
 						} else {
-							Integer incr = distinct.get(symbolList.get(String.valueOf(curr))) + 1;
-							distinct.put(symbolList.get(String.valueOf(curr)), incr);
+							Integer incr = distinct.get(block) + 1;
+							distinct.put(block, incr);
 						}
 					}
 				}
@@ -63,11 +77,47 @@ public class MultiblockPattern {
 		return list.stream().collect(Collectors.toMap(Entry::getKey, Entry::getValue, (a, b) -> b, LinkedHashMap::new));
 	}
 
+	public List<MaterialCount> getMaterialCounts(boolean sortAscending) {
+		Map<MultiblockPatternKey, Integer> distinct = new LinkedHashMap<>();
+		for (String[] element : patternArray) {
+			for (String row : element) {
+				for (int k = 0; k < row.length(); k++) {
+					MultiblockPatternKey key = keyList.get(String.valueOf(row.charAt(k)));
+					if (key == null || key.isAir()) {
+						continue;
+					}
+					distinct.merge(key, 1, Integer::sum);
+				}
+			}
+		}
+		List<MaterialCount> list = distinct.entrySet().stream()
+				.map(entry -> new MaterialCount(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toCollection(ArrayList::new));
+		list.sort((o1, o2) -> {
+			int count = sortAscending
+					? Integer.compare(o1.count(), o2.count())
+					: Integer.compare(o2.count(), o1.count());
+			if (count != 0) {
+				return count;
+			}
+			return o1.key().displayLabel().compareTo(o2.key().displayLabel());
+		});
+		return list;
+	}
+
 	public BlockPattern getBlockPattern() {
 		return pattern;
 	}
 
 	public List<BlockPosBlockPair> getBlockPosBlockList() {
+		return getBlockPosBlockList(false, 0);
+	}
+
+	public List<BlockPosBlockPair> getDisplayBlockPosBlockList(long cycleIndex) {
+		return getBlockPosBlockList(true, cycleIndex);
+	}
+
+	private List<BlockPosBlockPair> getBlockPosBlockList(boolean display, long cycleIndex) {
 		List<BlockPosBlockPair> list = new ArrayList<>();
 		// Block
 		for (int T = 0; T < patternArray.length; T++) {
@@ -75,7 +125,10 @@ public class MultiblockPattern {
 			int height = currentAisle.length;
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < currentAisle[i].toCharArray().length; j++) {
-					list.add(new BlockPosBlockPair(symbolList.get(String.valueOf(currentAisle[i].toCharArray()[j])),
+					String symbol = String.valueOf(currentAisle[i].toCharArray()[j]);
+					MultiblockPatternKey key = keyList.get(symbol);
+					Block block = display && key != null ? key.displayBlock(cycleIndex) : symbolList.get(symbol);
+					list.add(new BlockPosBlockPair(block,
 							new BlockPos(j, (height - i - 1), T)));
 				}
 			}
@@ -118,6 +171,10 @@ public class MultiblockPattern {
 		return symbolList;
 	}
 
+	public Map<String, MultiblockPatternKey> getKeyList() {
+		return keyList;
+	}
+
 	public void printMultiblockLayout() {
 		for (int T = 0; T < patternArray.length; T++) {
 			String[] currentAisle = patternArray[T];
@@ -136,6 +193,9 @@ public class MultiblockPattern {
 
 	public void setPattern(BlockPattern pattern) {
 		this.pattern = pattern;
+	}
+
+	public record MaterialCount(MultiblockPatternKey key, int count) {
 	}
 
 }

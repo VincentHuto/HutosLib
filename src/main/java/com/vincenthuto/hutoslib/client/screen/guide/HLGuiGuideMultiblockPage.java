@@ -7,6 +7,7 @@ import com.vincenthuto.hutoslib.client.screen.ScreenBlockTintGetter;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import com.vincenthuto.hutoslib.math.MultiblockPattern;
+import com.vincenthuto.hutoslib.math.MultiblockPatternKey;
 import com.vincenthuto.hutoslib.math.Vector3;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -47,11 +48,16 @@ public class HLGuiGuideMultiblockPage extends HLGuiGuidePage {
 		super.render(graphics, mouseX, mouseY, partialTicks);
 		float left = width / 2 - guiWidth / 2;
 		float top = height / 2 - guiHeight / 2;
+		long cycleIndex = System.currentTimeMillis() / 2000L;
 		int line = 0;
-		for (Block block : pattern.getBlockCount(false).keySet()) {
+		for (MultiblockPattern.MaterialCount material : pattern.getMaterialCounts(false)) {
+			MultiblockPatternKey key = material.key();
+			Block block = key.displayBlock(cycleIndex);
+			String name = key.isTag()
+					? key.displayLabel() + " (" + I18n.get(block.getDescriptionId()) + ")"
+					: I18n.get(block.getDescriptionId());
 			HLGuiUtils.drawMaxWidthString(font,
-					Component.literal(
-							I18n.get(block.getDescriptionId()) + ": " + pattern.getBlockCount(false).get(block)),
+					Component.literal(name + ": " + material.count()),
 					(int) (left - guiWidth + 180), (int) (top + guiHeight - 140) - line * -10, 160, 0xffffff, true);
 			line++;
 		}

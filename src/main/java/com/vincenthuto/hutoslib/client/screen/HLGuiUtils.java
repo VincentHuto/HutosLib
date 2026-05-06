@@ -136,6 +136,10 @@ public class HLGuiUtils {
 	}
 
 	// MULTIBLOCK STUFF
+	private static long multiblockCycleIndex() {
+		return System.currentTimeMillis() / 2000L;
+	}
+
 	public static void renderMultiBlock(PoseStack matrices, MultiblockPattern pattern, float partialTicks,
 			BlockAndTintGetter getter, double relX, double relY) {
 		matrices.pushPose();
@@ -143,7 +147,8 @@ public class HLGuiUtils {
 		matrices.scale(8.0F, -8.0F, 8.0F);
 		MultiBufferSource.BufferSource src = Minecraft.getInstance().renderBuffers().bufferSource();
 		BlockEntityRenderDispatcher d = Minecraft.getInstance().getBlockEntityRenderDispatcher();
-		pattern.getBlockPosBlockList().forEach((box) -> box.render(pattern, matrices, partialTicks, getter, src, d));
+		pattern.getDisplayBlockPosBlockList(multiblockCycleIndex())
+				.forEach((box) -> box.render(pattern, matrices, partialTicks, getter, src, d));
 		src.endBatch();
 		matrices.popPose();
 
@@ -154,7 +159,7 @@ public class HLGuiUtils {
 		PoseStack viewModelPose = graphics.pose();
 		viewModelPose.pushPose();
 		Lighting.setupFor3DItems();
-		List<BlockPosBlockPair> patternList = pattern.getBlockPosBlockList();
+		List<BlockPosBlockPair> patternList = pattern.getDisplayBlockPosBlockList(multiblockCycleIndex());
 		viewModelPose.translate(xOff, yOff, 0.0D);
 		viewModelPose.scale(0.5f, 0.5f, -1f);
 		viewModelPose.mulPose(new Quaternion(Vector3.YP, -5, true).toMoj());

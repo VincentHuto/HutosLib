@@ -18,7 +18,7 @@ public class RenderMultiBlockInGui {
 	public static void renderPatternInGUI(PoseStack ms, Minecraft mc, MultiblockPattern pattern) {
 		ms.pushPose();
 		Lighting.setupFor3DItems();
-		List<BlockPosBlockPair> patternList = pattern.getBlockPosBlockList();
+		List<BlockPosBlockPair> patternList = pattern.getDisplayBlockPosBlockList(System.currentTimeMillis() / 2000L);
 		ms.mulPose(new Quaternion(Vector3.ZERO, 45, true).toMoj());
 		ms.scale(0.5f, 0.5f, 0.5f);
 		ms.translate(0, 2, 0);
