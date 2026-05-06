@@ -1,38 +1,27 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
-import net.neoforged.neoforge.network.PacketDistributor;
 import com.vincenthuto.hutoslib.common.network.PacketContainerSlot;
-
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.CraftingMenu;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.inventory.RecipeBookMenu;
-import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.world.inventory.ResultContainer;
-import net.minecraft.world.inventory.ResultSlot;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.List;
 
 public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
 

@@ -1,10 +1,9 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.world.entity.LivingEntity;
+
+import javax.annotation.Nonnull;
 
 public interface IBannerContainer {
 	@Nonnull

@@ -1,24 +1,18 @@
 package com.vincenthuto.hutoslib.common.data;
 
-import java.util.concurrent.CompletableFuture;
-
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
-
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+
+import java.util.concurrent.CompletableFuture;
 
 public class HLRecipeProvider extends RecipeProvider {
 

@@ -1,13 +1,13 @@
 package com.vincenthuto.hutoslib.math;
 
-import java.util.stream.Stream;
-
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+
+import java.util.stream.Stream;
 
 public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 

@@ -1,16 +1,15 @@
 package com.vincenthuto.hutoslib.common.data.skilltree;
 
-import java.util.List;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 
 public class SkillTemplate extends TreeDataTemplate {

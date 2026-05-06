@@ -1,15 +1,10 @@
 package com.vincenthuto.hutoslib.common.block;
 
-import java.util.stream.Stream;
-
-import javax.annotation.Nullable;
-
 import com.mojang.serialization.MapCodec;
 import com.vincenthuto.hutoslib.common.block.entity.DisplayPedestalBlockEntity;
 import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.container.HLInvHelper;
 import com.vincenthuto.hutoslib.common.network.VanillaPacketDispatcher;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -22,12 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -39,6 +29,9 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 public class BlockDisplayPedestal extends BaseEntityBlock {
 	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;

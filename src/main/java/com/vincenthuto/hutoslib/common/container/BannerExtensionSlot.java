@@ -1,18 +1,12 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableList;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.network.PacketSyncBannerSlotContents;
 import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
-
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,6 +26,10 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.List;
 
 @EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class BannerExtensionSlot implements IBannerContainer, INBTSerializable<CompoundTag> {

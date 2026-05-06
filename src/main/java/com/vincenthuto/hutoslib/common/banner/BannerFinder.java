@@ -1,16 +1,15 @@
 package com.vincenthuto.hutoslib.common.banner;
 
-import java.util.Optional;
-import java.util.function.IntFunction;
-
 import com.google.gson.JsonElement;
 import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
+
+import java.util.Optional;
+import java.util.function.IntFunction;
 
 public abstract class BannerFinder {
 	public interface BannerGetter {

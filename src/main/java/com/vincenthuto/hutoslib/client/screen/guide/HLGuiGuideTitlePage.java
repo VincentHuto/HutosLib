@@ -1,18 +1,5 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.client.HLTextUtils;
@@ -24,13 +11,16 @@ import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
+
+import javax.annotation.Nullable;
+import java.util.*;
 
 public class HLGuiGuideTitlePage extends Screen {
 

@@ -1,12 +1,5 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
@@ -19,12 +12,17 @@ import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 public class HLGuiGuidePageTOC extends Screen {
 	double xDragPos = 0;

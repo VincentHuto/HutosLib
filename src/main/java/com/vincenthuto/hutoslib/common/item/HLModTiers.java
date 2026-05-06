@@ -1,7 +1,5 @@
 package com.vincenthuto.hutoslib.common.item;
 
-import java.util.function.Supplier;
-
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -9,6 +7,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+
+import java.util.function.Supplier;
 
 public enum HLModTiers implements Tier {
 

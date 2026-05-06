@@ -1,9 +1,9 @@
 package com.vincenthuto.hutoslib.common.data.skilltree;
 
-import java.util.List;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.List;
 
 public class TreeCodeModel {
 	ResourceLocation resourceLocation;

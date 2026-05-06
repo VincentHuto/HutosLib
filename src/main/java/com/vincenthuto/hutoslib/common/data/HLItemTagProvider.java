@@ -1,15 +1,14 @@
 package com.vincenthuto.hutoslib.common.data;
 
-import java.util.concurrent.CompletableFuture;
-
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
+import java.util.concurrent.CompletableFuture;
 
 public class HLItemTagProvider extends ItemTagsProvider {
 

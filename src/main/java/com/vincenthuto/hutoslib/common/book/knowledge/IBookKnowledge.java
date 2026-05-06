@@ -1,9 +1,9 @@
 package com.vincenthuto.hutoslib.common.book.knowledge;
 
+import net.minecraft.resources.ResourceLocation;
+
 import java.util.Map;
 import java.util.Set;
-
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * Capability-style interface representing everything a player "knows" about a

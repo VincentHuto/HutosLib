@@ -1,10 +1,7 @@
 
 package com.vincenthuto.hutoslib.common.block.entity;
 
-import javax.annotation.Nullable;
-
 import com.vincenthuto.hutoslib.common.network.VanillaPacketDispatcher;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -20,6 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 public class SimpleInventoryBlockEntity extends BaseContainerBlockEntity {
 

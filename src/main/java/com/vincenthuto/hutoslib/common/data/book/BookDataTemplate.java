@@ -1,15 +1,13 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.screen.guide.IBookPageRenderer;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.shadow.TypeKeyed.TypeKeyedBase;
-
 import net.minecraft.resources.ResourceLocation;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 public abstract class BookDataTemplate extends TypeKeyedBase<BookDataTemplate> {
 	ResourceLocation location;

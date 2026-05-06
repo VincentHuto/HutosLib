@@ -1,14 +1,12 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.vincenthuto.hutoslib.common.book.BookTheme;
 import com.vincenthuto.hutoslib.common.book.filter.IBookPageFilter;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class BookCodeModel {
 

@@ -1,11 +1,9 @@
 package com.vincenthuto.hutoslib.common.network;
 
-import java.util.UUID;
-
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledge;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
-
+import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import net.minecraft.core.HolderLookup;
@@ -16,6 +14,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import java.util.UUID;
 
 /**
  * Sends a full {@link BookKnowledge} snapshot from the server to the owning

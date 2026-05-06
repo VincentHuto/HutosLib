@@ -1,8 +1,5 @@
 package com.vincenthuto.hutoslib.math;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -10,6 +7,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MultiblockPatternKey {
 	private final String symbol;

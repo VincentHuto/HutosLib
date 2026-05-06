@@ -1,11 +1,7 @@
 package com.vincenthuto.hutoslib.client.book;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 
@@ -15,15 +11,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
+import java.util.*;
 
 /**
  * Client-side tracker that records which book pages/entries a player has read.

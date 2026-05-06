@@ -1,11 +1,11 @@
 package com.vincenthuto.hutoslib.common.data.shadow;
 
-import java.util.Optional;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+
+import java.util.Optional;
 
 public class RecipeHelper implements IPlatformRecipeHelper {
 @Override

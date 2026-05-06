@@ -1,12 +1,12 @@
 package com.vincenthuto.hutoslib.common.book.knowledge;
 
+import net.minecraft.resources.ResourceLocation;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * Central registry that maps item, advancement, entity-type, biome, and

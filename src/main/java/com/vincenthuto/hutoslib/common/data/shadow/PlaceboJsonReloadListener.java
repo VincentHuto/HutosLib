@@ -1,16 +1,5 @@
 package com.vincenthuto.hutoslib.common.data.shadow;
 
-import java.lang.ref.WeakReference;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.Logger;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
@@ -20,7 +9,6 @@ import com.google.gson.JsonParseException;
 import com.mojang.serialization.JsonOps;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.network.ReloadListenerPacket;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,6 +20,11 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
+import java.util.*;
 
 /**
  * A Placebo JSON Reload Listener is a big pile of boilerplate for registering

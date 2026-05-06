@@ -1,19 +1,17 @@
 package com.vincenthuto.hutoslib.common.book.filter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookDataTemplate;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A generic {@link IBookPageFilter} that hides pages whose

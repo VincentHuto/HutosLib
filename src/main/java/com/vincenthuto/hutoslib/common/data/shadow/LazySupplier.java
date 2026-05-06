@@ -1,9 +1,9 @@
 package com.vincenthuto.hutoslib.common.data.shadow;
 
 
-import java.util.function.Supplier;
-
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public class LazySupplier<T> implements Supplier<T> {
     private final Supplier<T> supplier;

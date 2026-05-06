@@ -8,11 +8,11 @@
 
 package com.vincenthuto.hutoslib.client.render;
 
-import java.util.List;
-
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
+
+import java.util.List;
 
 public abstract class InfoArea implements Renderable {
 	protected final Rect2i area;

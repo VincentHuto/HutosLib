@@ -1,9 +1,9 @@
 package com.vincenthuto.hutoslib.common.book.knowledge;
 
-import java.util.Set;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.util.Set;
 
 /**
  * Server-side helper that unlocks book entries registered in

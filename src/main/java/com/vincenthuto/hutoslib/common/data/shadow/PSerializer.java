@@ -1,11 +1,5 @@
 package com.vincenthuto.hutoslib.common.data.shadow;
 
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
@@ -15,10 +9,14 @@ import com.vincenthuto.hutoslib.common.data.shadow.JsonUtil.JsonDeserializer;
 import com.vincenthuto.hutoslib.common.data.shadow.JsonUtil.JsonSerializer;
 import com.vincenthuto.hutoslib.common.data.shadow.JsonUtil.NetDeserializer;
 import com.vincenthuto.hutoslib.common.data.shadow.JsonUtil.NetSerializer;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
+
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * A PSerializer is a combination of json and network de/serializer.<br>

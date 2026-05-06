@@ -1,19 +1,13 @@
 package com.vincenthuto.hutoslib.common.book.knowledge;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+
+import java.util.*;
 
 /**
  * Default NBT-serializable implementation of {@link IBookKnowledge}.

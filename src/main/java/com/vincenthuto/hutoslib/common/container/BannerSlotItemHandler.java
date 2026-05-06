@@ -1,10 +1,10 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
+
+import javax.annotation.Nonnull;
 
 public class BannerSlotItemHandler implements IBannerSlot {
 	protected final IBannerContainer owner;

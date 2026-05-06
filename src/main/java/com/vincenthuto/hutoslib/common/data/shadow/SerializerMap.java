@@ -1,14 +1,13 @@
 package com.vincenthuto.hutoslib.common.data.shadow;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer.PSerializable;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+
+import javax.annotation.Nullable;
 
 /**
  * A Serializer Map is a registry of PSerializers, which supports type-keyed de/serialization.

@@ -1,9 +1,6 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import javax.annotation.Nullable;
-
 import com.vincenthuto.hutoslib.common.block.entity.SimpleInventoryBlockEntity;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,6 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+
+import javax.annotation.Nullable;
 
 public class HLInvHelper {
 

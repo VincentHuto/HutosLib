@@ -7,18 +7,17 @@
  */
 package com.vincenthuto.hutoslib.client.render;
 
-import java.util.function.Function;
-
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
-
 import net.minecraft.Util;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderType.CompositeState;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.function.Function;
 
 //This extends RenderStateShard to get access to various protected members
 public class HLRenderStateShards extends RenderStateShard {

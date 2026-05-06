@@ -1,11 +1,11 @@
 package com.vincenthuto.hutoslib.client.particle;
 
+import com.vincenthuto.hutoslib.math.Vector3;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
-
-import com.vincenthuto.hutoslib.math.Vector3;
 
 public class ParticleLightningStorage {
 	class SegmentSorterLightValue implements Comparator<Segment> {

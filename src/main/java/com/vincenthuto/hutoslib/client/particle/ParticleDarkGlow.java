@@ -1,13 +1,12 @@
 package com.vincenthuto.hutoslib.client.particle;
 
-import java.util.Random;
-
 import com.vincenthuto.hutoslib.client.HLRenderTypeInit;
-
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
+
+import java.util.Random;
 
 public class ParticleDarkGlow extends TextureSheetParticle {
 	public float colorR = 0;

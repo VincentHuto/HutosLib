@@ -4,10 +4,7 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.HLTextUtils;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
-
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class HLLanguageProvider extends LanguageProvider {
