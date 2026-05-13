@@ -67,13 +67,14 @@ public class BannerSlotItemHandler implements IBannerSlot {
 	@Override
 	public void setContents(@Nonnull ItemStack stack) {
 		ItemStack oldStack = getContents();
-		if (oldStack == stack)
+		ItemStack newStack = stack.isEmpty() ? ItemStack.EMPTY : stack.copy();
+		if (ItemStack.matches(oldStack, newStack))
 			return;
 		if (!oldStack.isEmpty())
 			notifyUnequip(oldStack);
-		inventory.setStackInSlot(slot, stack);
-		if (!stack.isEmpty())
-			notifyEquip(stack);
+		inventory.setStackInSlot(slot, newStack);
+		if (!newStack.isEmpty())
+			notifyEquip(newStack);
 	}
 
 }

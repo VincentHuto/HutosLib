@@ -4,6 +4,7 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledge;
 import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.karma.Karma;
+import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -20,7 +21,8 @@ public class HLAttachmentTypes {
             ATTACHMENT_TYPES.register("karma", () -> AttachmentType.builder(Karma::new).build());
 
     public static final Supplier<AttachmentType<BannerExtensionSlot>> BANNER_SLOT =
-            ATTACHMENT_TYPES.register("banner_slot", () -> AttachmentType.builder(() -> new BannerExtensionSlot(null)).build());
+            ATTACHMENT_TYPES.register("banner_slot", () -> AttachmentType.serializable(
+                    holder -> new BannerExtensionSlot(holder instanceof LivingEntity living ? living : null)).build());
 
     public static final Supplier<AttachmentType<BookKnowledge>> BOOK_KNOWLEDGE =
             ATTACHMENT_TYPES.register("book_knowledge", () -> AttachmentType.builder(BookKnowledge::new).build());

@@ -96,7 +96,11 @@ public String getName() { return "banner_slot"; }
 @Override
 protected Optional<BannerGetter> getSlotFromId(Player player, JsonElement packetData) {
 BannerExtensionSlot ext = BannerExtensionSlot.get(player);
-return Optional.ofNullable(ext.getSlots().get(packetData.getAsInt()))
+int slotId = packetData.getAsInt();
+if (slotId < 0 || slotId >= ext.getSlots().size()) {
+return Optional.empty();
+}
+return Optional.ofNullable(ext.getSlots().get(slotId))
 .map(slot -> new ExtensionSlotBannerGetter(player, slot));
 }
 }

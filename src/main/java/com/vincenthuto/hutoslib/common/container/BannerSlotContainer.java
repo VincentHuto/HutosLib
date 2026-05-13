@@ -1,7 +1,5 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import com.vincenthuto.hutoslib.common.banner.BannerFinder;
-import com.vincenthuto.hutoslib.common.network.PacketContainerSlot;
 import com.vincenthuto.hutoslib.common.recipe.ArmBannerCraftRecipe;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
@@ -229,7 +227,7 @@ public class BannerSlotContainer extends AbstractCraftingMenu {
 		this.resultSlots.clearContent();
 		if (!playerIn.level().isClientSide()) {
 			this.clearContainer(playerIn, this.craftSlots);
-			BannerFinder.sendSync(playerIn);
+			BannerExtensionSlot.get(playerIn).syncToTracking();
 		}
 	}
 

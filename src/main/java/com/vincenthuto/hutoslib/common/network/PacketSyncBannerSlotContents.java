@@ -34,7 +34,7 @@ stacks.add(ItemStack.OPTIONAL_STREAM_CODEC.decode(buf));
 
 public PacketSyncBannerSlotContents(Player player, BannerExtensionSlot extension) {
 this.entityId = player.getId();
-extension.getSlots().stream().map(BannerSlotItemHandler::getContents).forEach(stacks::add);
+extension.getSlots().stream().map(BannerSlotItemHandler::getContents).map(ItemStack::copy).forEach(stacks::add);
 }
 
 public void encode(RegistryFriendlyByteBuf buf) {
@@ -52,6 +52,9 @@ if (receiver == null) return;
 var level = receiver.level();
 if (level == null) return;
 Entity entity = level.getEntity(msg.entityId);
+if (!(entity instanceof Player) && receiver.getId() == msg.entityId) {
+entity = receiver;
+}
 if (entity instanceof Player player) {
 BannerExtensionSlot.get(player).setAll(msg.stacks);
 }

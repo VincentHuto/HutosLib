@@ -1,6 +1,7 @@
 package com.vincenthuto.hutoslib.common.network;
 
 import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.common.container.BannerExtensionSlot;
 import com.vincenthuto.hutoslib.common.container.BannerSlotContainer;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,6 +30,7 @@ public class PacketOpenBanner implements CustomPacketPayload {
         ctx.enqueueWork(() -> {
             if (ctx.player() instanceof ServerPlayer sender)
                 if (sender != null) {
+                    BannerExtensionSlot.get(sender).syncToSelf();
                     sender.openMenu(new SimpleMenuProvider(
                             (i, playerInventory, playerEntity) -> new BannerSlotContainer(i, playerInventory),
                             Component.translatable("container.crafting")));
