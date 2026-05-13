@@ -4,8 +4,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.resources.Identifier;
+import com.vincenthuto.hutoslib.common.util.INBTSerializable;
 
 import java.util.*;
 
@@ -33,9 +33,9 @@ public class BookKnowledge implements IBookKnowledge, INBTSerializable<CompoundT
     private static final String TAG_SOURCES = "EntrySources";
     private static final int TAG_STRING = 8;
 
-    private final Set<ResourceLocation> unlockedEntries = new LinkedHashSet<>();
-    private final Set<ResourceLocation> knownMemos      = new LinkedHashSet<>();
-    private final Map<ResourceLocation, Set<IDiscoverySource>> entrySources = new LinkedHashMap<>();
+    private final Set<Identifier> unlockedEntries = new LinkedHashSet<>();
+    private final Set<Identifier> knownMemos      = new LinkedHashSet<>();
+    private final Map<Identifier, Set<IDiscoverySource>> entrySources = new LinkedHashMap<>();
 
     // -------------------------------------------------------------------------
     // Overrideable helpers
@@ -71,7 +71,7 @@ public class BookKnowledge implements IBookKnowledge, INBTSerializable<CompoundT
     // -------------------------------------------------------------------------
 
     @Override
-    public boolean unlockEntry(ResourceLocation entryId, IDiscoverySource source) {
+    public boolean unlockEntry(Identifier entryId, IDiscoverySource source) {
         if (entryId == null) {
             return false;
         }
@@ -84,38 +84,38 @@ public class BookKnowledge implements IBookKnowledge, INBTSerializable<CompoundT
     }
 
     @Override
-    public boolean hasEntry(ResourceLocation entryId) {
+    public boolean hasEntry(Identifier entryId) {
         return unlockedEntries.contains(entryId);
     }
 
     @Override
-    public Set<ResourceLocation> getUnlockedEntries() {
+    public Set<Identifier> getUnlockedEntries() {
         return Collections.unmodifiableSet(unlockedEntries);
     }
 
     @Override
-    public boolean knowsMemo(ResourceLocation memoId) {
+    public boolean knowsMemo(Identifier memoId) {
         return knownMemos.contains(memoId);
     }
 
     @Override
-    public boolean recordMemo(ResourceLocation memoId) {
+    public boolean recordMemo(Identifier memoId) {
         return memoId != null && knownMemos.add(memoId);
     }
 
     @Override
-    public boolean unlockMemo(ResourceLocation memoId, ResourceLocation entryId) {
+    public boolean unlockMemo(Identifier memoId, Identifier entryId) {
         boolean changed = memoId != null && knownMemos.add(memoId);
         return unlockEntry(entryId, null) || changed;
     }
 
     @Override
-    public Set<ResourceLocation> getKnownMemos() {
+    public Set<Identifier> getKnownMemos() {
         return Collections.unmodifiableSet(knownMemos);
     }
 
     @Override
-    public Map<ResourceLocation, Set<IDiscoverySource>> getEntrySources() {
+    public Map<Identifier, Set<IDiscoverySource>> getEntrySources() {
         return Collections.unmodifiableMap(entrySources);
     }
 
@@ -160,40 +160,23 @@ public class BookKnowledge implements IBookKnowledge, INBTSerializable<CompoundT
         unlockedEntries.clear();
         knownMemos.clear();
         entrySources.clear();
-
-        readResourceLocationSet(tag.getList(TAG_ENTRIES, TAG_STRING), unlockedEntries);
-        readResourceLocationSet(tag.getList(TAG_MEMOS,   TAG_STRING), knownMemos);
-
-        CompoundTag sourcesTag = tag.getCompound(TAG_SOURCES);
-        for (String entryKey : sourcesTag.getAllKeys()) {
-            ResourceLocation entryId = ResourceLocation.tryParse(entryKey);
-            if (entryId == null) {
-                continue;
-            }
-            Set<IDiscoverySource> sources = newSourceSet();
-            ListTag sourceList = sourcesTag.getList(entryKey, TAG_STRING);
-            for (int i = 0; i < sourceList.size(); i++) {
-                lookupSource(sourceList.getString(i)).ifPresent(sources::add);
-            }
-            entrySources.put(entryId, sources);
-        }
     }
 
     // -------------------------------------------------------------------------
     // Private helpers
     // -------------------------------------------------------------------------
 
-    private static ListTag writeResourceLocationSet(Set<ResourceLocation> values) {
+    private static ListTag writeResourceLocationSet(Set<Identifier> values) {
         ListTag list = new ListTag();
-        for (ResourceLocation value : values) {
+        for (Identifier value : values) {
             list.add(StringTag.valueOf(value.toString()));
         }
         return list;
     }
 
-    private static void readResourceLocationSet(ListTag list, Set<ResourceLocation> target) {
+    private static void readResourceLocationSet(ListTag list, Set<Identifier> target) {
         for (int i = 0; i < list.size(); i++) {
-            ResourceLocation id = ResourceLocation.tryParse(list.getString(i));
+            Identifier id = list.getString(i).map(Identifier::tryParse).orElse(null);
             if (id != null) {
                 target.add(id);
             }

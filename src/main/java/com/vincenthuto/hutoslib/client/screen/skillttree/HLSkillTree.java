@@ -15,7 +15,7 @@
 //
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.GuiGraphics;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.sounds.SoundEvent;
 //import net.minecraft.sounds.SoundEvents;
 //import net.minecraft.world.item.Item;
@@ -24,9 +24,9 @@
 //public class HLSkillTree extends HLAbstractSkillTreeScreen {
 //    public static final List<BookEntry> ENTRIES = new ArrayList<>();
 //	public static HLSkillTree screen;
-//	public static final ResourceLocation FRAME_TEXTURE = HutosLib.rloc("textures/gui/skilltree/frame.png");
-//	public static final ResourceLocation FADE_TEXTURE = HutosLib.rloc("textures/gui/skilltree/fade.png");
-//	public static final ResourceLocation BACKGROUND_TEXTURE = HutosLib.rloc("textures/gui/skilltree/background.png");
+//	public static final Identifier FRAME_TEXTURE = HutosLib.rloc("textures/gui/skilltree/frame.png");
+//	public static final Identifier FADE_TEXTURE = HutosLib.rloc("textures/gui/skilltree/fade.png");
+//	public static final Identifier BACKGROUND_TEXTURE = HutosLib.rloc("textures/gui/skilltree/background.png");
 //
 //	protected HLSkillTree() {
 //		super(1024, 2560);

@@ -6,7 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.biome.Biome;
@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * will have its entries unlocked automatically — no additional event code is
  * required in the consuming mod.
  */
-@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = HutosLib.MOD_ID)
 public final class BookDiscoveryEvents {
 
     /**
@@ -46,14 +46,14 @@ public final class BookDiscoveryEvents {
      * biome transitions without firing on every single tick.
      * Keyed by player UUID; entries are removed on logout.
      */
-    private static final Map<UUID, ResourceLocation> LAST_KNOWN_BIOME = new ConcurrentHashMap<>();
+    private static final Map<UUID, Identifier> LAST_KNOWN_BIOME = new ConcurrentHashMap<>();
 
     /**
      * Tracks which registered structures each online player is currently
      * standing inside so we only fire the unlock once per entry, not every
      * tick. Keyed by player UUID; entries are removed on logout.
      */
-    private static final Map<UUID, Set<ResourceLocation>> CURRENT_STRUCTURES =
+    private static final Map<UUID, Set<Identifier>> CURRENT_STRUCTURES =
             new ConcurrentHashMap<>();
 
     private BookDiscoveryEvents() {
@@ -73,7 +73,7 @@ public final class BookDiscoveryEvents {
         if (!(event.getPlayer() instanceof ServerPlayer player)) {
             return;
         }
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(event.getOriginalStack().getItem());
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(event.getOriginalStack().getItem());
         if (itemId == null) {
             return;
         }
@@ -94,7 +94,7 @@ public final class BookDiscoveryEvents {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
-        ResourceLocation advancementId = event.getAdvancement().id();
+        Identifier advancementId = event.getAdvancement().id();
         BookKnowledgeHelper.unlockForAdvancement(player, advancementId);
     }
 
@@ -113,7 +113,7 @@ public final class BookDiscoveryEvents {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) {
             return;
         }
-        ResourceLocation entityTypeId =
+        Identifier entityTypeId =
                 BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType());
         if (entityTypeId == null) {
             return;
@@ -173,10 +173,10 @@ public final class BookDiscoveryEvents {
             return;
         }
         Optional<ResourceKey<Biome>> biomeKey =
-                player.serverLevel().getBiome(player.blockPosition()).unwrapKey();
+                player.level().getBiome(player.blockPosition()).unwrapKey();
         biomeKey.ifPresent(key -> {
-            ResourceLocation biomeId = key.location();
-            ResourceLocation previous = LAST_KNOWN_BIOME.put(player.getUUID(), biomeId);
+            Identifier biomeId = key.identifier();
+            Identifier previous = LAST_KNOWN_BIOME.put(player.getUUID(), biomeId);
             if (!biomeId.equals(previous)) {
                 BookKnowledgeHelper.unlockForBiome(player, biomeId);
             }
@@ -187,13 +187,13 @@ public final class BookDiscoveryEvents {
         if (BookEntryRegistry.getStructureUnlocks().isEmpty()) {
             return;
         }
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         HolderLookup.RegistryLookup<Structure> structRegistry =
                 level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
 
-        Set<ResourceLocation> nowInside = new HashSet<>();
+        Set<Identifier> nowInside = new HashSet<>();
 
-        for (ResourceLocation structureId : BookEntryRegistry.getStructureUnlocks().keySet()) {
+        for (Identifier structureId : BookEntryRegistry.getStructureUnlocks().keySet()) {
             Optional<Holder.Reference<Structure>> holderOpt =
                     structRegistry.get(ResourceKey.create(Registries.STRUCTURE, structureId));
             if (holderOpt.isEmpty()) {
@@ -206,10 +206,10 @@ public final class BookDiscoveryEvents {
             }
         }
 
-        Set<ResourceLocation> known = CURRENT_STRUCTURES
+        Set<Identifier> known = CURRENT_STRUCTURES
                 .computeIfAbsent(player.getUUID(), id -> new HashSet<>());
 
-        for (ResourceLocation structureId : nowInside) {
+        for (Identifier structureId : nowInside) {
             if (known.add(structureId)) {
                 // Player just entered this structure for the first time this session;
                 // BookKnowledge.unlockEntry is idempotent so no duplicate unlock occurs.

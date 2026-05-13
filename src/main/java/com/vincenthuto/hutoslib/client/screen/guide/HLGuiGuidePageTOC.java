@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
-import com.vincenthuto.hutoslib.client.HLLocHelper;
+import com.vincenthuto.hutoslib.common.util.HLResourceUtils;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
@@ -16,7 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -114,7 +114,7 @@ public class HLGuiGuidePageTOC extends Screen {
 				(press) -> Minecraft.getInstance().setScreen(new HLGuiGuideTitlePage(book, tracker,
 						resolveViewerUuid(), resolveKnowledge()))));
 
-		ResourceLocation tabTex = resolveTabTexture();
+		Identifier tabTex = resolveTabTexture();
 		this.addRenderableWidget(buttonTitle = new HLButtonTextured(tabTex, TITLEBUTTON,
 				left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0,
 				(press) -> Minecraft.getInstance().setScreen(new HLGuiGuideTitlePage(book, tracker,
@@ -154,7 +154,7 @@ public class HLGuiGuidePageTOC extends Screen {
 
 			// Unread dot indicator
 			if (resolvedUuid != null) {
-				ResourceLocation pageId = chapterTemplate.getPages().get(i).getId();
+				Identifier pageId = chapterTemplate.getPages().get(i).getId();
 				boolean unread = pageId != null
 						? !BookReadTracker.isAcknowledged(resolvedUuid, pageId)
 						: resolvedKnowledge != null && buildPagePrefix(i) != null
@@ -205,12 +205,12 @@ public class HLGuiGuidePageTOC extends Screen {
 	// Theme helpers
 	// -------------------------------------------------------------------------
 
-	private ResourceLocation resolveTabTexture() {
+	private Identifier resolveTabTexture() {
 		BookTheme theme = book.getTheme();
 		if (theme != null && theme.tabTexture() != null) {
 			return theme.tabTexture();
 		}
-		return HLLocHelper.guiPrefix("book_tabs.png");
+		return HLResourceUtils.guiPrefix("book_tabs.png");
 	}
 
 	private int resolveAccentColor() {
@@ -238,7 +238,7 @@ public class HLGuiGuidePageTOC extends Screen {
 
 	/**
 	 * Derives a {@link BookReadTracker} prefix string for page {@code index}.
-	 * Uses the page's {@link net.minecraft.resources.ResourceLocation} ID if available,
+	 * Uses the page's {@link net.minecraft.resources.Identifier} ID if available,
 	 * falling back to the book's entry prefix.
 	 */
 	@Nullable

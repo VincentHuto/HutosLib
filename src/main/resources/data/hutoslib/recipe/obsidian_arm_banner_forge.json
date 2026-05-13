@@ -5,17 +5,11 @@
     " XS"
   ],
   "key": {
-    "X": {
-      "item": "minecraft:obsidian"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    },
-    "B": {
-      "tag": "c:slime_balls"
-    }
+    "X": "minecraft:obsidian",
+    "S": "minecraft:stick",
+    "B": "#c:slime_balls"
   },
   "result": {
-    "item": "hutoslib:obsidian_arm_banner"
+    "id": "hutoslib:obsidian_arm_banner"
   }
 }

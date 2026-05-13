@@ -1,7 +1,7 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.vincenthuto.hutoslib.client.HLLocHelper;
+import com.vincenthuto.hutoslib.common.util.HLResourceUtils;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
 import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
@@ -20,7 +20,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class HLGuiGuidePage extends Screen {
 					}
 				}));
 
-		ResourceLocation tabTex = resolveTabTexture();
+		Identifier tabTex = resolveTabTexture();
 		this.addRenderableWidget(buttonTitle = new HLButtonTextured(tabTex,
 				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0,
 				(press) -> mc.setScreen(new HLGuiGuideTitlePage(book, tracker,
@@ -254,7 +254,7 @@ public class HLGuiGuidePage extends Screen {
 	// -------------------------------------------------------------------------
 
 	/** Returns the background texture, preferring the theme's value when set. */
-	protected ResourceLocation resolvePageTexture() {
+	protected Identifier resolvePageTexture() {
 		BookTheme theme = book.getTheme();
 		if (theme != null && theme.backgroundTexture() != null) {
 			return theme.backgroundTexture();
@@ -263,12 +263,12 @@ public class HLGuiGuidePage extends Screen {
 	}
 
 	/** Returns the tab sprite-sheet, preferring the theme's value when set. */
-	protected ResourceLocation resolveTabTexture() {
+	protected Identifier resolveTabTexture() {
 		BookTheme theme = book.getTheme();
 		if (theme != null && theme.tabTexture() != null) {
 			return theme.tabTexture();
 		}
-		return HLLocHelper.guiPrefix("book_tabs.png");
+		return HLResourceUtils.guiPrefix("book_tabs.png");
 	}
 
 	/** Returns the accent colour from the theme, or white if none is set. */

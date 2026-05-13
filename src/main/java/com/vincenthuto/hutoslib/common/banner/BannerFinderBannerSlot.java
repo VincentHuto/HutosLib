@@ -59,7 +59,7 @@ public void setBanner(ItemStack stack) { slot.setContents(stack); }
 @Override
 public void syncToClients() {
 LivingEntity thePlayer = slot.getContainer().getOwner();
-if (thePlayer.level().isClientSide) return;
+if (thePlayer.level().isClientSide()) return;
 PacketBannerChange message = new PacketBannerChange(thePlayer, "banner_slot", new JsonPrimitive(0),
 slot.getContents());
 PacketDistributor.sendToPlayersTrackingEntityAndSelf(thePlayer, message);

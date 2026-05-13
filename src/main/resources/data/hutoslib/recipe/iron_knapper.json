@@ -1,15 +1,15 @@
 {
-  "type" : "minecraft:crafting_shaped",
-  "pattern" : [ "  P", " N ", "N  " ],
-  "key" : {
-    "N" : {
-      "item" : "minecraft:stick"
-    },
-    "P" : {
-      "tag" : "c:ingots/iron"
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  P",
+    " N ",
+    "N  "
+  ],
+  "key": {
+    "N": "minecraft:stick",
+    "P": "#c:ingots/iron"
   },
-  "result" : {
-    "id" : "hutoslib:iron_knapper"
+  "result": {
+    "id": "hutoslib:iron_knapper"
   }
 }

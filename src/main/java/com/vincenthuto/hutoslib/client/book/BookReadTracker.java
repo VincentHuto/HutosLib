@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.client.book;
 import com.google.gson.*;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -27,7 +27,7 @@ public final class BookReadTracker {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String ROOT_PLAYERS = "players";
 
-    private static final Map<UUID, Set<ResourceLocation>> ACKNOWLEDGED = new HashMap<>();
+    private static final Map<UUID, Set<Identifier>> ACKNOWLEDGED = new HashMap<>();
     private static boolean loaded;
     private static boolean dirty;
 
@@ -41,7 +41,7 @@ public final class BookReadTracker {
      * @param playerId the player's UUID
      * @param entryId  the entry ID to mark as read; ignored if {@code null}
      */
-    public static void acknowledge(UUID playerId, ResourceLocation entryId) {
+    public static void acknowledge(UUID playerId, Identifier entryId) {
         ensureLoaded();
         if (entryId != null) {
             boolean changed = ACKNOWLEDGED.computeIfAbsent(playerId, id -> new HashSet<>()).add(entryId);
@@ -59,7 +59,7 @@ public final class BookReadTracker {
      * @param playerId the player's UUID
      * @param entryIds the set of entry IDs to mark as read
      */
-    public static void acknowledge(UUID playerId, Collection<ResourceLocation> entryIds) {
+    public static void acknowledge(UUID playerId, Collection<Identifier> entryIds) {
         ensureLoaded();
         boolean changed = ACKNOWLEDGED.computeIfAbsent(playerId, id -> new HashSet<>()).addAll(entryIds);
         if (changed) {
@@ -77,12 +77,12 @@ public final class BookReadTracker {
      * @param playerId the player's UUID
      * @param entryIds the entry IDs to remove from the acknowledged/read set
      */
-    public static void unacknowledge(UUID playerId, Collection<ResourceLocation> entryIds) {
+    public static void unacknowledge(UUID playerId, Collection<Identifier> entryIds) {
         ensureLoaded();
         if (entryIds == null || entryIds.isEmpty()) {
             return;
         }
-        Set<ResourceLocation> acknowledged = ACKNOWLEDGED.get(playerId);
+        Set<Identifier> acknowledged = ACKNOWLEDGED.get(playerId);
         if (acknowledged == null || acknowledged.isEmpty()) {
             return;
         }
@@ -94,7 +94,7 @@ public final class BookReadTracker {
     }
 
     /** Returns whether {@code entryId} has been acknowledged for this player. */
-    public static boolean isAcknowledged(UUID playerId, ResourceLocation entryId) {
+    public static boolean isAcknowledged(UUID playerId, Identifier entryId) {
         ensureLoaded();
         return entryId != null
                 && ACKNOWLEDGED.getOrDefault(playerId, Collections.emptySet()).contains(entryId);
@@ -103,11 +103,11 @@ public final class BookReadTracker {
     /**
      * Counts how many explicit entry/page IDs are still unacknowledged.
      */
-    public static int countUnread(UUID playerId, Collection<ResourceLocation> entryIds) {
+    public static int countUnread(UUID playerId, Collection<Identifier> entryIds) {
         ensureLoaded();
-        Set<ResourceLocation> seen = ACKNOWLEDGED.getOrDefault(playerId, Collections.emptySet());
+        Set<Identifier> seen = ACKNOWLEDGED.getOrDefault(playerId, Collections.emptySet());
         int count = 0;
-        for (ResourceLocation entryId : entryIds) {
+        for (Identifier entryId : entryIds) {
             if (entryId != null && !seen.contains(entryId)) {
                 count++;
             }
@@ -139,9 +139,9 @@ public final class BookReadTracker {
      */
     public static int countUnread(UUID playerId, IBookKnowledge knowledge, String bookPrefix) {
         ensureLoaded();
-        Set<ResourceLocation> seen = ACKNOWLEDGED.getOrDefault(playerId, Collections.emptySet());
+        Set<Identifier> seen = ACKNOWLEDGED.getOrDefault(playerId, Collections.emptySet());
         int count = 0;
-        for (ResourceLocation entry : knowledge.getUnlockedEntries()) {
+        for (Identifier entry : knowledge.getUnlockedEntries()) {
             if (entry.getPath().startsWith(bookPrefix) && !seen.contains(entry)) {
                 count++;
             }
@@ -203,13 +203,13 @@ public final class BookReadTracker {
                     continue;
                 }
 
-                Set<ResourceLocation> ids = new HashSet<>();
+                Set<Identifier> ids = new HashSet<>();
                 JsonArray array = entry.getValue().getAsJsonArray();
                 for (JsonElement idElement : array) {
                     if (!idElement.isJsonPrimitive()) {
                         continue;
                     }
-                    ResourceLocation id = ResourceLocation.tryParse(idElement.getAsString());
+                    Identifier id = Identifier.tryParse(idElement.getAsString());
                     if (id != null) {
                         ids.add(id);
                     }
@@ -233,12 +233,12 @@ public final class BookReadTracker {
 
             JsonObject root = new JsonObject();
             JsonObject players = new JsonObject();
-            for (Map.Entry<UUID, Set<ResourceLocation>> entry : ACKNOWLEDGED.entrySet()) {
+            for (Map.Entry<UUID, Set<Identifier>> entry : ACKNOWLEDGED.entrySet()) {
                 if (entry.getValue().isEmpty()) {
                     continue;
                 }
                 JsonArray ids = new JsonArray();
-                for (ResourceLocation id : entry.getValue()) {
+                for (Identifier id : entry.getValue()) {
                     ids.add(id.toString());
                 }
                 players.add(entry.getKey().toString(), ids);

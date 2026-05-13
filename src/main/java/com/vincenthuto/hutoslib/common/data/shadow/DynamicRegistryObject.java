@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.common.data.shadow;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -9,12 +9,12 @@ import java.util.function.Supplier;
 @SuppressWarnings("rawtypes")
 public class DynamicRegistryObject<T extends TypeKeyed<? super T>> implements Supplier<T>, ListenerCallback {
 
-	protected final ResourceLocation id;
+	protected final Identifier id;
 	protected final PlaceboJsonReloadListener<? super T> manager;
 
 	protected T object;
 
-	public DynamicRegistryObject(ResourceLocation id, PlaceboJsonReloadListener<? super T> manager) {
+	public DynamicRegistryObject(Identifier id, PlaceboJsonReloadListener<? super T> manager) {
 		this.id = id;
 		this.manager = manager;
 	}
@@ -31,7 +31,7 @@ public class DynamicRegistryObject<T extends TypeKeyed<? super T>> implements Su
 	/**
 	 * @return The ID of the item being targetted
 	 */
-	public ResourceLocation getId() {
+	public Identifier getId() {
 		return this.id;
 	}
 

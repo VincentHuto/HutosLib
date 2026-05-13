@@ -5,11 +5,9 @@
     "XX"
   ],
   "key": {
-    "X": {
-      "item": "hutoslib:obsidian_flakes"
-    }
+    "X": "hutoslib:obsidian_flakes"
   },
   "result": {
-    "item": "minecraft:obsidian"
+    "id": "minecraft:obsidian"
   }
 }

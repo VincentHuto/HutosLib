@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +35,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Set;
 
-@EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID)
 public class HLClientEvents {
 
     public static KeyMapping OPEN_BANNER_SLOT_KEYBIND;
@@ -63,7 +63,7 @@ public class HLClientEvents {
         }
     }
 
-    @EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID)
     public static class ModBusEvents {
 
         @SubscribeEvent
@@ -117,7 +117,7 @@ public class HLClientEvents {
 
             // Prefer page-id based unread state, but keep a knowledge-prefix fallback
             // for books whose unlock IDs don't map 1:1 with page IDs.
-            Set<ResourceLocation> visiblePageIds = book.collectVisiblePageIds(player);
+            Set<Identifier> visiblePageIds = book.collectVisiblePageIds(player);
             int unreadByPages = visiblePageIds.isEmpty()
                     ? 0
                     : BookReadTracker.countUnread(player.getUUID(), visiblePageIds);

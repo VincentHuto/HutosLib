@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
 public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 
-	public static final ResourceLocation fallback = HutosLib.rloc(
+	public static final Identifier fallback = HutosLib.rloc(
 			"textures/entity/arm_banner/iron_arm_banner.png");
 	public static void render_plate(PoseStack ms, MultiBufferSource buffer, int combinedLight, int combinedOverlay,
 			ModelPart parts, Material material, boolean p_241717_6_, DyeColor baseColor, BannerPatternLayers patterns,
@@ -51,7 +51,7 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 			MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		Item item = stack.getItem();
 		if (item instanceof ItemArmBanner type) {
-			ResourceLocation texture = type.getTexture() != null ? type.getTexture() : fallback;
+			Identifier texture = type.getTexture() != null ? type.getTexture() : fallback;
 			if (p_239207_2_ == ItemDisplayContext.GUI) {
 				matrixStack.scale(0.45f, 0.45f, 0.45f);
 				matrixStack.mulPose(new Quaternion(Vector3.ZP, -73.5f, true).toMoj());

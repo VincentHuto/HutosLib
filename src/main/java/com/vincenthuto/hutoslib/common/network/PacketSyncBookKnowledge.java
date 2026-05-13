@@ -63,7 +63,7 @@ public class PacketSyncBookKnowledge implements CustomPacketPayload {
      * @param playerUuid the UUID of the player whose knowledge is being synced
      * @param knowledge  the knowledge object to serialize
      * @param registries the server's holder-lookup provider (required by
-     *                   {@link net.neoforged.neoforge.common.util.INBTSerializable})
+     *                   {@link com.vincenthuto.hutoslib.common.util.INBTSerializable})
      */
     public PacketSyncBookKnowledge(UUID playerUuid, BookKnowledge knowledge,
             net.minecraft.core.HolderLookup.Provider registries) {

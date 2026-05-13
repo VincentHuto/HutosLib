@@ -7,7 +7,7 @@ import com.vincenthuto.hutoslib.common.data.shadow.TypeKeyed;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public abstract class ReloadListenerPacket {
@@ -51,17 +51,17 @@ new CustomPacketPayload.Type<>(HutosLib.rloc("reload_listener_content"));
 public static final StreamCodec<FriendlyByteBuf, Content> CODEC = StreamCodec.of(
 (buf, msg) -> {
 buf.writeUtf(msg.path, 50);
-buf.writeResourceLocation(msg.key);
+buf.writeIdentifier(msg.key);
 writeItemUnchecked(msg.path, msg.item, buf);
 },
 buf -> {
 String path = buf.readUtf(50);
-ResourceLocation key = buf.readResourceLocation();
+Identifier key = buf.readIdentifier();
 Object item = PlaceboJsonReloadListener.readItem(path, key, buf);
 return new Content<>(path, key, (TypeKeyed) item);
 });
 
-final ResourceLocation key;
+final Identifier key;
 final V item;
 
 @SuppressWarnings("unchecked")
@@ -74,7 +74,7 @@ PlaceboJsonReloadListener.writeItem(path, (T) item, buf);
 	PlaceboJsonReloadListener.acceptItem(path, (T) item);
 	}
 
-public Content(String path, ResourceLocation key, V item) {
+public Content(String path, Identifier key, V item) {
 super(path);
 this.key = key;
 this.item = item;

@@ -1,17 +1,15 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import com.google.common.collect.Lists;
-import com.mojang.datafixers.util.Pair;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
 import com.vincenthuto.hutoslib.common.network.PacketContainerSlot;
-import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -23,12 +21,12 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
-public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
+public class BannerSlotContainer extends AbstractCraftingMenu {
 
 	private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{
 		EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
 	};
-	private static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[]{
+	private static final Identifier[] TEXTURE_EMPTY_SLOTS = new Identifier[]{
 		InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS,
 		InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS,
 		InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE,
@@ -36,8 +34,6 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 	};
 
 	private final IBannerSlot extensionSlot;
-	private final CraftingContainer craftingInventory = new TransientCraftingContainer(this, 2, 2);
-	private final ResultContainer craftResultInventory = new ResultContainer();
 	private final Player player;
 
 	@SuppressWarnings("unused")
@@ -46,14 +42,14 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 	}
 
 	public BannerSlotContainer(int id, Inventory playerInventory) {
-		super(HlContainerInit.banner_slot_container.get(), id);
+		super(HlContainerInit.banner_slot_container.get(), id, 2, 2);
 		this.player = playerInventory.player;
 		this.addSlot(
-				new ResultSlot(playerInventory.player, this.craftingInventory, this.craftResultInventory, 0, 154, 28));
+				new ResultSlot(playerInventory.player, this.craftSlots, this.resultSlots, 0, 154, 28));
 
 		for (int i = 0; i < 2; ++i) {
 			for (int j = 0; j < 2; ++j) {
-				this.addSlot(new Slot(this.craftingInventory, j + i * 2, 98 + j * 18, 18 + i * 18));
+				this.addSlot(new Slot(this.craftSlots, j + i * 2, 98 + j * 18, 18 + i * 18));
 			}
 		}
 
@@ -66,9 +62,8 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 				}
 
 				@Override
-				public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-					return Pair.of(InventoryMenu.BLOCK_ATLAS,
-							TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()]);
+				public Identifier getNoItemIcon() {
+					return TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()];
 				}
 
 				@Override
@@ -109,7 +104,7 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 
 		this.addSlot(new Slot(playerInventory, 40, 77, 62) {
 			{
-				setBackground(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
+				setBackground(InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
 			}
 		});
 
@@ -118,9 +113,6 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 
 		this.addSlot(new BannerSlot(BannerSlotContainer.this.extensionSlot, 77, 44));
 
-		if (playerInventory.player.level().isClientSide) {
-			PacketDistributor.sendToServer(new PacketContainerSlot());
-		}
 	}
 
 	@Override
@@ -130,35 +122,27 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 
 	@Override
 	public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
-		return slotIn.container != this.craftResultInventory && super.canTakeItemForPickAll(stack, slotIn);
+		return slotIn.container != this.resultSlots && super.canTakeItemForPickAll(stack, slotIn);
 	}
 
-	@Override
 	public void clearCraftingContent() {
-		this.craftResultInventory.clearContent();
-		this.craftingInventory.clearContent();
+		this.resultSlots.clearContent();
+		this.craftSlots.clearContent();
 	}
 
 	@Override
-	public void fillCraftSlotsStackedContents(StackedContents itemHelperIn) {
-		this.craftingInventory.fillStackedContents(itemHelperIn);
+	public void fillCraftSlotsStackedContents(StackedItemContents itemHelperIn) {
+		this.craftSlots.fillStackedContents(itemHelperIn);
 	}
 
 	@Override
-	public int getGridHeight() {
-		return this.craftingInventory.getHeight();
+	public Slot getResultSlot() {
+		return this.slots.get(0);
 	}
 
 	@Override
-	public int getGridWidth() {
-		return this.craftingInventory.getWidth();
-	}
-
-	@Override
-	public List<RecipeBookCategories> getRecipeBookCategories() {
-		return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH, RecipeBookCategories.CRAFTING_EQUIPMENT,
-				RecipeBookCategories.CRAFTING_BUILDING_BLOCKS, RecipeBookCategories.CRAFTING_MISC,
-				RecipeBookCategories.CRAFTING_REDSTONE);
+	public List<Slot> getInputGridSlots() {
+		return this.slots.subList(1, 5);
 	}
 
 	@Override
@@ -166,12 +150,6 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 		return RecipeBookType.CRAFTING;
 	}
 
-	@Override
-	public int getResultSlotIndex() {
-		return 0;
-	}
-
-	@Override
 	public int getSize() {
 		return 5;
 	}
@@ -238,34 +216,34 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 		return itemstack;
 	}
 
-	@Override
 	public boolean recipeMatches(RecipeHolder<CraftingRecipe> recipeIn) {
-		return recipeIn.value().matches(this.craftingInventory.asCraftInput(), this.player.level());
+		return recipeIn.value().matches(this.craftSlots.asCraftInput(), this.player.level());
 	}
 
 	@Override
 	public void removed(Player playerIn) {
 		super.removed(playerIn);
-		this.craftResultInventory.clearContent();
-		if (!playerIn.level().isClientSide) {
-			this.clearContainer(playerIn, this.craftingInventory);
+		this.resultSlots.clearContent();
+		if (!playerIn.level().isClientSide()) {
+			this.clearContainer(playerIn, this.craftSlots);
 			BannerFinder.sendSync(playerIn);
 		}
 	}
 
-	@Override
 	public boolean shouldMoveToInventory(int slot) {
-		return slot != this.getResultSlotIndex();
+		return slot != 0;
 	}
 
 	@Override
 	public void slotsChanged(Container inventoryIn) {
-		Bridge.slotChangedCraftingGridAccessor(this, this.player.level(), this.player, this.craftingInventory,
-				this.craftResultInventory, null);
+		if (this.player.level() instanceof ServerLevel serverLevel) {
+			Bridge.slotChangedCraftingGridAccessor(this, serverLevel, this.player, this.craftSlots,
+					this.resultSlots, null);
+		}
 	}
 
 	private static class Bridge extends CraftingMenu {
-		public static void slotChangedCraftingGridAccessor(AbstractContainerMenu container, Level level, Player player,
+		public static void slotChangedCraftingGridAccessor(AbstractContainerMenu container, ServerLevel level, Player player,
 				CraftingContainer craftingInventory, ResultContainer craftResultInventory,
 				RecipeHolder<CraftingRecipe> lastRecipe) {
 			CraftingMenu.slotChangedCraftingGrid(container, level, player, craftingInventory, craftResultInventory, lastRecipe);
@@ -280,6 +258,11 @@ public class BannerSlotContainer extends RecipeBookMenu<CraftingInput, CraftingR
 	@Override
 	public boolean stillValid(Player playerIn) {
 		return true;
+	}
+
+	@Override
+	protected Player owner() {
+		return this.player;
 	}
 }
 

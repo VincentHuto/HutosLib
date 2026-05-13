@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.common.data.book;
 import com.vincenthuto.hutoslib.common.book.BookTheme;
 import com.vincenthuto.hutoslib.common.book.filter.IBookPageFilter;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -16,7 +16,7 @@ public class BookCodeModel {
 	 */
 	public static final IBookPageFilter UNFILTERED = (source, player) -> source;
 
-	ResourceLocation resourceLocation;
+	Identifier Identifier;
 	BookTemplate template;
 	List<ChapterTemplate> chapters;
 
@@ -28,8 +28,8 @@ public class BookCodeModel {
 	@Nullable
 	private BookTheme theme;
 
-	public BookCodeModel(ResourceLocation resourceLocation, BookTemplate template) {
-		this.resourceLocation = resourceLocation;
+	public BookCodeModel(Identifier Identifier, BookTemplate template) {
+		this.Identifier = Identifier;
 		this.template = template;
 	}
 
@@ -50,12 +50,12 @@ public class BookCodeModel {
 	}
 
 
-	public ResourceLocation getResourceLocation() {
-		return resourceLocation;
+	public Identifier getResourceLocation() {
+		return Identifier;
 	}
 
-	public void setResourceLocation(ResourceLocation resourceLocation) {
-		this.resourceLocation = resourceLocation;
+	public void setResourceLocation(Identifier Identifier) {
+		this.Identifier = Identifier;
 	}
 
 	/**
@@ -91,12 +91,12 @@ public class BookCodeModel {
 
 	/**
 	 * Returns the canonical entry-prefix string for this book, i.e.
-	 * {@code resourceLocation.getPath() + "/"}. Used by
+	 * {@code Identifier.getPath() + "/"}. Used by
 	 * {@link com.vincenthuto.hutoslib.client.book.BookReadTracker} and similar
 	 * utilities to scope queries to this book's entries.
 	 */
 	public String getEntryPrefix() {
-		return resourceLocation.getPath() + "/";
+		return Identifier.getPath() + "/";
 	}
 
 	public int getTotalPages() {
@@ -117,12 +117,12 @@ public class BookCodeModel {
 
 	@Override
 	public String toString() {
-		return "Book Title: " + resourceLocation.getPath() + ", Book Name: " + template.getTitle() + " it has "
+		return "Book Title: " + Identifier.getPath() + ", Book Name: " + template.getTitle() + " it has "
 				+ chapters.size() + " Chapters, and " + getTotalPages() + " pages.";
 	}
 	public void encodeToBuf(FriendlyByteBuf buf) {
 		// Write Book location
-		buf.writeResourceLocation(resourceLocation);
+		buf.writeIdentifier(Identifier);
 
 		// Write book json
 		buf.writeUtf(template.coverLoc);

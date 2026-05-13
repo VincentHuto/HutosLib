@@ -2,29 +2,10 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideCraftingPage;
-import com.vincenthuto.hutoslib.common.data.shadow.LazySupplier;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
-import com.vincenthuto.hutoslib.common.data.shadow.RecipeHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeType;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Supplier;
 
 
 public class CraftingRecipeTemplate extends PageTemplate {
-	private final Supplier<RecipeHelper> recipeHelper = new LazySupplier<>(RecipeHelper::new);
-
 	public static final Codec<CraftingRecipeTemplate> CODEC = RecordCodecBuilder.create(inst -> inst
 			.group(Codec.INT.fieldOf("ordinality").forGetter(PageTemplate::getOrdinality),
 					Codec.STRING.fieldOf("texture").forGetter(PageTemplate::getTexture),
@@ -38,46 +19,6 @@ public class CraftingRecipeTemplate extends PageTemplate {
 	public CraftingRecipeTemplate(int ordinality, String texture, String title, String subtitle, String text,
 			String icon) {
 		super(ordinality, texture, title, subtitle, text, icon);
-	}
-
-	public GhostRecipe getItemRecipe() {
-		ClientLevel world = Objects.requireNonNull(Minecraft.getInstance().level);
-
-		var recipeStream = world.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING).stream()
-				.filter(holder -> holder.value().getResultItem(world.registryAccess()).getItem() == getIconItem().getItem());
-		var recipes = recipeStream.toList();
-
-		GhostRecipe ghost = new GhostRecipe();
-		if (!recipes.isEmpty()) {
-			float time = Minecraft.getInstance().level.getGameTime();
-			var test = Mth.floor(time / 30.0F) % recipes.size();
-			var currentHolder = recipes.get(test);
-			CraftingRecipe currentRecipe = currentHolder.value();
-			ghost.setRecipe(currentHolder);
-			ItemStack itemstack = currentRecipe.getResultItem(world.registryAccess());
-			ghost.addIngredient(Ingredient.of(itemstack), 1 * 18 + 98, 1 * 18 + 31);
-
-			List<Ingredient> inputs = currentRecipe.getIngredients();
-
-			int w = recipeHelper.get().getWidth(currentRecipe);
-			int h = recipeHelper.get().getHeight(currentRecipe);
-			List<Pair<Integer, Integer>> coords = new ArrayList<Pair<Integer, Integer>>();
-			for (int y = 0; y < 3; ++y) {
-				for (int x = 0; x < 3; ++x) {
-					coords.add(Pair.of(x * 18 + 29, y * 18 + 31));
-				}
-			}
-
-			for (int i = 0; i < inputs.size(); i++) {
-				int index = getCraftingIndex(i, w, h);
-				var coord = coords.get(index);
-				var ingredient = inputs.get(i);
-				ghost.addIngredient(ingredient, coord.getLeft(), coord.getRight());
-			}
-
-		}
-
-		return ghost;
 	}
 
 	public static int[][] getCoordinates(int position) {
@@ -134,7 +75,6 @@ public class CraftingRecipeTemplate extends PageTemplate {
 
 	@Override
 	public void getPageScreen(int pageNum, BookCodeModel book, ChapterTemplate chapter) {
-		HLGuiGuideCraftingPage.openScreenViaItem(pageNum, book, chapter);
 	}
 
 }

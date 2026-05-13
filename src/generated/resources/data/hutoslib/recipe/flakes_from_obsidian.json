@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:obsidians"
-    }
+    "#c:obsidians"
   ],
   "result": {
     "count": 4,

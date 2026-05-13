@@ -10,14 +10,14 @@ import com.mojang.serialization.JsonOps;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.network.ReloadListenerPacket;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.Logger;
@@ -45,7 +45,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	/**
 	 * The Default key is used when subtypes are not enabled.
 	 */
-	public static final ResourceLocation DEFAULT = ResourceLocation.fromNamespaceAndPath("minecraft", "default");
+	public static final Identifier DEFAULT = Identifier.fromNamespaceAndPath("minecraft", "default");
 
 	private static final Map<String, PlaceboJsonReloadListener<?>> SYNC_REGISTRY = new HashMap<>();
 
@@ -55,9 +55,9 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	protected final boolean subtypes;
 	protected final SerializerMap<V> serializers;
 
-	protected Map<ResourceLocation, V> registry = ImmutableMap.of();
+	protected Map<Identifier, V> registry = ImmutableMap.of();
 
-	private final Map<ResourceLocation, V> staged = new HashMap<>();
+	private final Map<Identifier, V> staged = new HashMap<>();
 	private final Set<ListenerCallback<V>> callbacks = new HashSet<>();
 
 	private WeakReference<Object> context = new WeakReference<>(null);
@@ -89,7 +89,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected final void apply(Map<ResourceLocation, JsonElement> objects, ResourceManager pResourceManager,
+	protected final void apply(Map<Identifier, JsonElement> objects, ResourceManager pResourceManager,
 			ProfilerFiller pProfiler) {
 		this.beginReload();
 		objects.forEach((key, ele) -> {
@@ -153,7 +153,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	 *                   this is ignored, and {@link #DEFAULT} is used.
 	 * @param serializer The serializer being registered.
 	 */
-	public final void registerSerializer(ResourceLocation id, PSerializer<? extends V> serializer) {
+	public final void registerSerializer(Identifier id, PSerializer<? extends V> serializer) {
 		serializer.validate(false, synced);
 		if (this.subtypes) {
 			if (this.serializers.contains(id))
@@ -193,7 +193,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	 * Registers a single item of this type to the registry during reload. You can
 	 * override this method to process things a bit differently.
 	 */
-	protected <T extends V> void register(ResourceLocation key, T item) {
+	protected <T extends V> void register(Identifier key, T item) {
 		if (item.getId() == null)
 			item.setId(key);
 		if (!item.getId().equals(key))
@@ -208,7 +208,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	/**
 	 * @return An immutable view of all keys registered for this type.
 	 */
-	public Set<ResourceLocation> getKeys() {
+	public Set<Identifier> getKeys() {
 		return this.registry.keySet();
 	}
 
@@ -223,21 +223,21 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	 * @return The item associated with this key, or null.
 	 */
 	@Nullable
-	public V getValue(ResourceLocation key) {
+	public V getValue(Identifier key) {
 		return this.getOrDefault(key, null);
 	}
 
 	/**
 	 * @return The item associated with this key, or the default value.
 	 */
-	public V getOrDefault(ResourceLocation key, V defValue) {
+	public V getOrDefault(Identifier key, V defValue) {
 		return this.registry.getOrDefault(key, defValue);
 	}
 
 	/**
 	 * Checks if an item is empty, and if it is, returns false and logs the key.
 	 */
-	public static boolean checkAndLogEmpty(JsonElement e, ResourceLocation id, String type, Logger logger) {
+	public static boolean checkAndLogEmpty(JsonElement e, Identifier id, String type, Logger logger) {
 		String s = e.toString();
 		if (s.isEmpty() || s.equals("{}")) {
 			logger.error(
@@ -258,7 +258,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	 * @param context The context object used for resolving conditions.
 	 * @return True if the item's conditions are met, false otherwise.
 	 */
-	public static boolean checkConditions(JsonElement e, ResourceLocation id, String type, Logger logger,
+	public static boolean checkConditions(JsonElement e, Identifier id, String type, Logger logger,
 			Object context) {
 		if (context instanceof ICondition.IContext ctx && e.isJsonObject()) {
 			JsonObject json = e.getAsJsonObject();
@@ -297,7 +297,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	}
 
 	@SuppressWarnings("unchecked")
-	public final <T extends V> DynamicRegistryObject<T> makeObj(ResourceLocation id) {
+	public final <T extends V> DynamicRegistryObject<T> makeObj(Identifier id) {
 		DynamicRegistryObject<T> obj = new DynamicRegistryObject<>(id, this);
 		this.registerCallback(obj);
 		return obj;
@@ -332,7 +332,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 		}
 	}
 
-	private final void addReloader(AddReloadListenerEvent e) {
+	private final void addReloader(AddServerReloadListenersEvent e) {
 		e.addListener(this);
 		this.context = new WeakReference<>(e.getConditionContext());
 	}
@@ -375,7 +375,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	 * @return An object of type V as deserialized from the network.
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public static <V extends TypeKeyed<V>> V readItem(String path, ResourceLocation key, FriendlyByteBuf buf) {
+	public static <V extends TypeKeyed<V>> V readItem(String path, Identifier key, FriendlyByteBuf buf) {
 		var listener = SYNC_REGISTRY.get(path);
 		if (listener == null)
 			throw new RuntimeException("Received sync packet for unknown registry!");

@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.client.particle.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+import com.vincenthuto.hutoslib.common.util.ParticleColor;
 import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 
 import net.minecraft.core.particles.ParticleOptions;

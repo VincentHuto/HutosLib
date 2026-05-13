@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.common.book.knowledge;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Collections;
 import java.util.Map;
@@ -10,31 +10,31 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Central registry that maps item, advancement, entity-type, biome, and
- * structure IDs to the book-entry {@link ResourceLocation}s that should be
+ * structure IDs to the book-entry {@link Identifier}s that should be
  * unlocked when the corresponding in-world event occurs.
  *
  * <p>Mods populate this registry during {@code FMLCommonSetupEvent} (or any
  * time before the first gameplay event fires):
  * <pre>{@code
  * BookEntryRegistry.registerItemUnlock(
- *         ResourceLocation.fromNamespaceAndPath("mymod", "my_item"),
- *         ResourceLocation.fromNamespaceAndPath("mymod", "guide/chapter"));
+ *         Identifier.fromNamespaceAndPath("mymod", "my_item"),
+ *         Identifier.fromNamespaceAndPath("mymod", "guide/chapter"));
  *
  * BookEntryRegistry.registerAdvancementUnlock(
- *         ResourceLocation.fromNamespaceAndPath("mymod", "advancements/root"),
- *         ResourceLocation.fromNamespaceAndPath("mymod", "guide/chapter"));
+ *         Identifier.fromNamespaceAndPath("mymod", "advancements/root"),
+ *         Identifier.fromNamespaceAndPath("mymod", "guide/chapter"));
  *
  * BookEntryRegistry.registerEntityKillUnlock(
- *         ResourceLocation.fromNamespaceAndPath("minecraft", "zombie"),
- *         ResourceLocation.fromNamespaceAndPath("mymod", "guide/undead"));
+ *         Identifier.fromNamespaceAndPath("minecraft", "zombie"),
+ *         Identifier.fromNamespaceAndPath("mymod", "guide/undead"));
  *
  * BookEntryRegistry.registerBiomeUnlock(
- *         ResourceLocation.fromNamespaceAndPath("minecraft", "deep_dark"),
- *         ResourceLocation.fromNamespaceAndPath("mymod", "guide/darkness"));
+ *         Identifier.fromNamespaceAndPath("minecraft", "deep_dark"),
+ *         Identifier.fromNamespaceAndPath("mymod", "guide/darkness"));
  *
  * BookEntryRegistry.registerStructureUnlock(
- *         ResourceLocation.fromNamespaceAndPath("minecraft", "stronghold"),
- *         ResourceLocation.fromNamespaceAndPath("mymod", "guide/stronghold"));
+ *         Identifier.fromNamespaceAndPath("minecraft", "stronghold"),
+ *         Identifier.fromNamespaceAndPath("mymod", "guide/stronghold"));
  * }</pre>
  *
  * <p>HutosLib's {@link BookDiscoveryEvents} listens to the relevant game-bus
@@ -44,23 +44,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class BookEntryRegistry {
 
     /** item registry ID → set of entry IDs to unlock on pickup */
-    private static final Map<ResourceLocation, Set<ResourceLocation>> ITEM_UNLOCKS =
+    private static final Map<Identifier, Set<Identifier>> ITEM_UNLOCKS =
             new ConcurrentHashMap<>();
 
     /** advancement ID → set of entry IDs to unlock when earned */
-    private static final Map<ResourceLocation, Set<ResourceLocation>> ADVANCEMENT_UNLOCKS =
+    private static final Map<Identifier, Set<Identifier>> ADVANCEMENT_UNLOCKS =
             new ConcurrentHashMap<>();
 
     /** entity-type registry ID → set of entry IDs to unlock on kill */
-    private static final Map<ResourceLocation, Set<ResourceLocation>> ENTITY_KILL_UNLOCKS =
+    private static final Map<Identifier, Set<Identifier>> ENTITY_KILL_UNLOCKS =
             new ConcurrentHashMap<>();
 
     /** biome registry ID → set of entry IDs to unlock on first entry */
-    private static final Map<ResourceLocation, Set<ResourceLocation>> BIOME_UNLOCKS =
+    private static final Map<Identifier, Set<Identifier>> BIOME_UNLOCKS =
             new ConcurrentHashMap<>();
 
     /** structure registry ID → set of entry IDs to unlock on first discovery */
-    private static final Map<ResourceLocation, Set<ResourceLocation>> STRUCTURE_UNLOCKS =
+    private static final Map<Identifier, Set<Identifier>> STRUCTURE_UNLOCKS =
             new ConcurrentHashMap<>();
 
     private BookEntryRegistry() {
@@ -78,7 +78,7 @@ public final class BookEntryRegistry {
      * @param entryId the book entry to unlock
      * @throws NullPointerException if {@code itemId} or {@code entryId} is null
      */
-    public static void registerItemUnlock(ResourceLocation itemId, ResourceLocation entryId) {
+    public static void registerItemUnlock(Identifier itemId, Identifier entryId) {
         Objects.requireNonNull(itemId,  "itemId must not be null");
         Objects.requireNonNull(entryId, "entryId must not be null");
         ITEM_UNLOCKS.computeIfAbsent(itemId, k -> ConcurrentHashMap.newKeySet()).add(entryId);
@@ -92,8 +92,8 @@ public final class BookEntryRegistry {
      * @param entryId       the book entry to unlock
      * @throws NullPointerException if {@code advancementId} or {@code entryId} is null
      */
-    public static void registerAdvancementUnlock(ResourceLocation advancementId,
-            ResourceLocation entryId) {
+    public static void registerAdvancementUnlock(Identifier advancementId,
+            Identifier entryId) {
         Objects.requireNonNull(advancementId, "advancementId must not be null");
         Objects.requireNonNull(entryId,       "entryId must not be null");
         ADVANCEMENT_UNLOCKS.computeIfAbsent(advancementId, k -> ConcurrentHashMap.newKeySet())
@@ -108,8 +108,8 @@ public final class BookEntryRegistry {
      * @param entryId      the book entry to unlock
      * @throws NullPointerException if {@code entityTypeId} or {@code entryId} is null
      */
-    public static void registerEntityKillUnlock(ResourceLocation entityTypeId,
-            ResourceLocation entryId) {
+    public static void registerEntityKillUnlock(Identifier entityTypeId,
+            Identifier entryId) {
         Objects.requireNonNull(entityTypeId, "entityTypeId must not be null");
         Objects.requireNonNull(entryId,      "entryId must not be null");
         ENTITY_KILL_UNLOCKS.computeIfAbsent(entityTypeId, k -> ConcurrentHashMap.newKeySet())
@@ -124,7 +124,7 @@ public final class BookEntryRegistry {
      * @param entryId the book entry to unlock
      * @throws NullPointerException if {@code biomeId} or {@code entryId} is null
      */
-    public static void registerBiomeUnlock(ResourceLocation biomeId, ResourceLocation entryId) {
+    public static void registerBiomeUnlock(Identifier biomeId, Identifier entryId) {
         Objects.requireNonNull(biomeId,  "biomeId must not be null");
         Objects.requireNonNull(entryId, "entryId must not be null");
         BIOME_UNLOCKS.computeIfAbsent(biomeId, k -> ConcurrentHashMap.newKeySet()).add(entryId);
@@ -138,8 +138,8 @@ public final class BookEntryRegistry {
      * @param entryId     the book entry to unlock
      * @throws NullPointerException if {@code structureId} or {@code entryId} is null
      */
-    public static void registerStructureUnlock(ResourceLocation structureId,
-            ResourceLocation entryId) {
+    public static void registerStructureUnlock(Identifier structureId,
+            Identifier entryId) {
         Objects.requireNonNull(structureId, "structureId must not be null");
         Objects.requireNonNull(entryId,     "entryId must not be null");
         STRUCTURE_UNLOCKS.computeIfAbsent(structureId, k -> ConcurrentHashMap.newKeySet())
@@ -154,7 +154,7 @@ public final class BookEntryRegistry {
      * Returns the set of entry IDs to unlock for the given item, or an empty
      * set if no mapping has been registered.
      */
-    public static Set<ResourceLocation> entriesForItem(ResourceLocation itemId) {
+    public static Set<Identifier> entriesForItem(Identifier itemId) {
         return ITEM_UNLOCKS.getOrDefault(itemId, Collections.emptySet());
     }
 
@@ -162,7 +162,7 @@ public final class BookEntryRegistry {
      * Returns the set of entry IDs to unlock for the given advancement, or an
      * empty set if no mapping has been registered.
      */
-    public static Set<ResourceLocation> entriesForAdvancement(ResourceLocation advancementId) {
+    public static Set<Identifier> entriesForAdvancement(Identifier advancementId) {
         return ADVANCEMENT_UNLOCKS.getOrDefault(advancementId, Collections.emptySet());
     }
 
@@ -170,7 +170,7 @@ public final class BookEntryRegistry {
      * Returns the set of entry IDs to unlock for killing the given entity type,
      * or an empty set if no mapping has been registered.
      */
-    public static Set<ResourceLocation> entriesForEntityKill(ResourceLocation entityTypeId) {
+    public static Set<Identifier> entriesForEntityKill(Identifier entityTypeId) {
         return ENTITY_KILL_UNLOCKS.getOrDefault(entityTypeId, Collections.emptySet());
     }
 
@@ -178,7 +178,7 @@ public final class BookEntryRegistry {
      * Returns the set of entry IDs to unlock for entering the given biome,
      * or an empty set if no mapping has been registered.
      */
-    public static Set<ResourceLocation> entriesForBiome(ResourceLocation biomeId) {
+    public static Set<Identifier> entriesForBiome(Identifier biomeId) {
         return BIOME_UNLOCKS.getOrDefault(biomeId, Collections.emptySet());
     }
 
@@ -186,7 +186,7 @@ public final class BookEntryRegistry {
      * Returns the set of entry IDs to unlock for entering the given structure,
      * or an empty set if no mapping has been registered.
      */
-    public static Set<ResourceLocation> entriesForStructure(ResourceLocation structureId) {
+    public static Set<Identifier> entriesForStructure(Identifier structureId) {
         return STRUCTURE_UNLOCKS.getOrDefault(structureId, Collections.emptySet());
     }
 
@@ -194,7 +194,7 @@ public final class BookEntryRegistry {
      * Returns an unmodifiable view of the full item-to-entries map.
      * Useful for inspection or debugging.
      */
-    public static Map<ResourceLocation, Set<ResourceLocation>> getItemUnlocks() {
+    public static Map<Identifier, Set<Identifier>> getItemUnlocks() {
         return Collections.unmodifiableMap(ITEM_UNLOCKS);
     }
 
@@ -202,7 +202,7 @@ public final class BookEntryRegistry {
      * Returns an unmodifiable view of the full advancement-to-entries map.
      * Useful for inspection or debugging.
      */
-    public static Map<ResourceLocation, Set<ResourceLocation>> getAdvancementUnlocks() {
+    public static Map<Identifier, Set<Identifier>> getAdvancementUnlocks() {
         return Collections.unmodifiableMap(ADVANCEMENT_UNLOCKS);
     }
 
@@ -210,7 +210,7 @@ public final class BookEntryRegistry {
      * Returns an unmodifiable view of the full entity-kill-to-entries map.
      * Useful for inspection or debugging.
      */
-    public static Map<ResourceLocation, Set<ResourceLocation>> getEntityKillUnlocks() {
+    public static Map<Identifier, Set<Identifier>> getEntityKillUnlocks() {
         return Collections.unmodifiableMap(ENTITY_KILL_UNLOCKS);
     }
 
@@ -218,7 +218,7 @@ public final class BookEntryRegistry {
      * Returns an unmodifiable view of the full biome-to-entries map.
      * Useful for inspection or debugging.
      */
-    public static Map<ResourceLocation, Set<ResourceLocation>> getBiomeUnlocks() {
+    public static Map<Identifier, Set<Identifier>> getBiomeUnlocks() {
         return Collections.unmodifiableMap(BIOME_UNLOCKS);
     }
 
@@ -226,7 +226,7 @@ public final class BookEntryRegistry {
      * Returns an unmodifiable view of the full structure-to-entries map.
      * Useful for inspection or debugging.
      */
-    public static Map<ResourceLocation, Set<ResourceLocation>> getStructureUnlocks() {
+    public static Map<Identifier, Set<Identifier>> getStructureUnlocks() {
         return Collections.unmodifiableMap(STRUCTURE_UNLOCKS);
     }
 }

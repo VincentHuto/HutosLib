@@ -3,9 +3,8 @@ package com.vincenthuto.hutoslib.math;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.resources.Identifier;
+import com.vincenthuto.hutoslib.common.util.INBTSerializable;
 
 import java.util.stream.Stream;
 
@@ -20,16 +19,16 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 		dp.deserializeNBT(provider, nbt);
 		return dp;
 	}
-	private ResourceLocation dimension;
+	private Identifier dimension;
 
 	private BlockPos position;
 	public DimensionalPosition() {
 	}
 
 	/*
-	 * to get RL Player().level.dimension().location();
+	 * to get RL Player().level.dimension().identifier();
 	 */
-	public DimensionalPosition(ResourceLocation dim, BlockPos pos) {
+	public DimensionalPosition(Identifier dim, BlockPos pos) {
 		this.dimension = dim;
 		this.position = pos;
 	}
@@ -37,16 +36,19 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 	@Override
 	public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
 		if (nbt.contains("dim")) {
-			ResourceLocation parsed = ResourceLocation.tryParse(nbt.getString("dim"));
+			Identifier parsed = nbt.getString("dim").map(Identifier::tryParse).orElse(null);
 			if (parsed != null) {
 				this.dimension = parsed;
 			}
 		}
 
-		NbtUtils.readBlockPos(nbt, "pos").ifPresent(pos -> this.position = pos);
+		int x = nbt.getInt("x").orElse(0);
+		int y = nbt.getInt("y").orElse(0);
+		int z = nbt.getInt("z").orElse(0);
+		this.position = new BlockPos(x, y, z);
 	}
 
-	public ResourceLocation getDimension() {
+	public Identifier getDimension() {
 		return this.dimension;
 	}
 
@@ -61,7 +63,9 @@ public class DimensionalPosition implements INBTSerializable<CompoundTag> {
 			nbt.putString("dim", dimension.toString());
 		}
 		if (position != null) {
-			nbt.put("pos", NbtUtils.writeBlockPos(position));
+			nbt.putInt("x", position.getX());
+			nbt.putInt("y", position.getY());
+			nbt.putInt("z", position.getZ());
 		}
 		return nbt;
 	}

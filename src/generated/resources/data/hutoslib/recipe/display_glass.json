@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:glow_berries"
-    },
-    {
-      "tag": "c:glass_blocks"
-    }
+    "minecraft:glow_berries",
+    "#c:glass_blocks"
   ],
   "result": {
     "count": 1,

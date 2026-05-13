@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.common.book;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Declares the visual identity of a book: which textures to use for the
@@ -14,9 +14,9 @@ import net.minecraft.resources.ResourceLocation;
  * <p>Example – a crimson-themed book:
  * <pre>{@code
  * book.setTheme(new BookTheme(
- *     ResourceLocation.fromNamespaceAndPath("hemomancy", "textures/gui/liber_bg.png"),
+ *     Identifier.fromNamespaceAndPath("hemomancy", "textures/gui/liber_bg.png"),
  *     0xAA0000,
- *     ResourceLocation.fromNamespaceAndPath("hemomancy", "textures/gui/liber_tabs.png")
+ *     Identifier.fromNamespaceAndPath("hemomancy", "textures/gui/liber_tabs.png")
  * ));
  * }</pre>
  *
@@ -26,9 +26,9 @@ import net.minecraft.resources.ResourceLocation;
  * @param tabTexture        the sprite sheet used to draw chapter-tab buttons
  */
 public record BookTheme(
-        ResourceLocation backgroundTexture,
+        Identifier backgroundTexture,
         int accentColor,
-        ResourceLocation tabTexture) {
+        Identifier tabTexture) {
 
     /** Default white accent – used when a theme supplies an override colour of 0. */
     public static final int DEFAULT_ACCENT = 0xFFFFFF;

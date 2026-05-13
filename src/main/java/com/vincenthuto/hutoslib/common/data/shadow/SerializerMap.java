@@ -5,7 +5,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer.PSerializable;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +29,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	/**
 	 * Registry of serializers.
 	 */
-	private final BiMap<ResourceLocation, PSerializer<? extends V>> serializers = HashBiMap.create();
+	private final BiMap<Identifier, PSerializer<? extends V>> serializers = HashBiMap.create();
 
 	/**
 	 * Creates a new SerializerMap with a fallback domain.<br>
@@ -60,7 +60,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	/**
 	 * Returns true if a serializer with the passed type id exists.
 	 */
-	public boolean contains(ResourceLocation typeId) {
+	public boolean contains(Identifier typeId) {
 		return this.serializers.containsKey(typeId);
 	}
 
@@ -70,7 +70,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	 * @return The serializer registered with the passed ID, or null, if none exists.
 	 */
 	@Nullable
-	public PSerializer<? extends V> get(ResourceLocation typeId) {
+	public PSerializer<? extends V> get(Identifier typeId) {
 		return this.serializers.get(typeId);
 	}
 
@@ -80,7 +80,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	 * @return The ID of the passed serializer, or null, if it is not registered.
 	 */
 	@Nullable
-	public ResourceLocation get(PSerializer<?> serializer) {
+	public Identifier get(PSerializer<?> serializer) {
 		return this.serializers.inverse().get(serializer);
 	}
 
@@ -90,7 +90,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	 * @param serializer The serializer being registered.
 	 * @throws RuntimeException if the key is already registered.
 	 */
-	public void register(ResourceLocation id, PSerializer<? extends V> serializer) {
+	public void register(Identifier id, PSerializer<? extends V> serializer) {
 		if (this.serializers.containsKey(id)) {
 			throw new RuntimeException("Attempted to register a " + this.name + " serializer with id " + id + " but one already exists!");
 		}
@@ -105,7 +105,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	 */
 	public V read(JsonObject obj) {
 		if (obj.has("type")) {
-			ResourceLocation type = defaultedReloc(obj.get("type").getAsString());
+			Identifier type = defaultedReloc(obj.get("type").getAsString());
 			var serializer = this.serializers.get(type);
 			if (serializer == null) throw new RuntimeException("Attempted to deserialize a " + this.name + " with type " + type + " but no serializer exists!");
 			return serializer.read(obj);
@@ -122,7 +122,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	@SuppressWarnings("unchecked")
 	public JsonObject write(V obj) {
 		JsonObject json = obj.getSerializer().writeUnchecked(obj).getAsJsonObject();
-		ResourceLocation type = this.get(obj.getSerializer());
+		Identifier type = this.get(obj.getSerializer());
 		json.addProperty("type", type.toString());
 		return json;
 	}
@@ -133,7 +133,7 @@ public class SerializerMap<V extends PSerializable<V>> {
 	 * @return The deserialized object.
 	 */
 	public V read(FriendlyByteBuf buf) {
-		ResourceLocation type = buf.readResourceLocation();
+		Identifier type = buf.readIdentifier();
 		var serializer = this.serializers.get(type);
 		return serializer.read(buf);
 	}
@@ -144,14 +144,14 @@ public class SerializerMap<V extends PSerializable<V>> {
 	 * @param buf The buffer being written to.
 	 */
 	public void write(V obj, FriendlyByteBuf buf) {
-		ResourceLocation type = this.get(obj.getSerializer());
-		buf.writeResourceLocation(type);
+		Identifier type = this.get(obj.getSerializer());
+		buf.writeIdentifier(type);
 		obj.getSerializer().writeUnchecked(obj, buf);
 	}
 
-	private ResourceLocation defaultedReloc(String reloc) {
-		if (reloc.indexOf(':') != -1) return ResourceLocation.parse(reloc);
-		return ResourceLocation.fromNamespaceAndPath(this.defaultDomain, reloc);
+	private Identifier defaultedReloc(String reloc) {
+		if (reloc.indexOf(':') != -1) return Identifier.parse(reloc);
+		return Identifier.fromNamespaceAndPath(this.defaultDomain, reloc);
 	}
 
 }

@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.common.event;
 
 import com.vincenthuto.hutoslib.HutosLib;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Holds the entry-ID constant used by the HutosLib guide's test locked pages.
@@ -20,7 +20,7 @@ public final class GuideBookUnlockEvents {
      * The single entry ID that guards the three locked test pages in the
      * HutosLib guide's {@code locked_test} chapter.
      */
-    public static final ResourceLocation LOCKED_TEST_ENTRY =
+    public static final Identifier LOCKED_TEST_ENTRY =
             HutosLib.rloc("guide/locked_test");
 
     private GuideBookUnlockEvents() {

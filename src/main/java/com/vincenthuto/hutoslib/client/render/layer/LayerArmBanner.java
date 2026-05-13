@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
 public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
 
-	public static final ResourceLocation fallback = HutosLib.rloc(
+	public static final Identifier fallback = HutosLib.rloc(
 			"textures/entity/arm_banner/arm_banner.png");
 
 	@SuppressWarnings("rawtypes")
@@ -59,7 +59,7 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 					matrixStack.pushPose();
 					this.translateToBody(matrixStack);
 					matrixStack.translate(-0.35, -0.05, 0);
-					ResourceLocation texture = type.getTexture() != null ? type.getTexture() : fallback;
+					Identifier texture = type.getTexture() != null ? type.getTexture() : fallback;
 					if (scaleFlag) {
 						matrixStack.scale(1.2f, 1.2f, 1.25f);
 						matrixStack.translate(0.01, 0.0, 0);

@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib;
 
-import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+import com.vincenthuto.hutoslib.common.util.ParticleColor;
 
 import net.minecraft.world.phys.Vec3;
 

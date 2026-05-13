@@ -1,8 +1,7 @@
 package com.vincenthuto.hutoslib.common.network;
 
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.particle.factory.LightningParticleFactory;
-import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+import com.vincenthuto.hutoslib.common.util.ParticleColor;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -21,14 +20,7 @@ public static final StreamCodec<FriendlyByteBuf, PacketSpawnLightningParticle> C
 
 public static void handle(PacketSpawnLightningParticle msg, IPayloadContext ctx) {
 ctx.enqueueWork(() -> {
-Player player = ctx.player();
-if (player == null) return;
-var level = player.level();
-if (level == null) return;
-level.addParticle(
-LightningParticleFactory.createData(msg.color, msg.getSpeed(), msg.maxAge, msg.fract, msg.getMaxOffset()),
-msg.getPosition().x, msg.getPosition().y, msg.getPosition().z,
-msg.getSpeedVec().x, msg.getSpeedVec().y, msg.getSpeedVec().z);
+// TODO 26.1: route this through the rewritten client particle factory.
 });
 }
 

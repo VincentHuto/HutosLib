@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.common.karma;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import com.vincenthuto.hutoslib.common.util.INBTSerializable;
 
 public class Karma implements IKarma, INBTSerializable<CompoundTag> {
 private boolean active = false;
@@ -19,8 +19,8 @@ return tag;
 @Override
 public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
 if (nbt.contains("Active") && nbt.contains("Amount")) {
-this.active = nbt.getBoolean("Active");
-this.karma = nbt.getFloat("Amount");
+this.active = nbt.getBoolean("Active").orElse(false);
+this.karma = nbt.getFloat("Amount").orElse(0.0F);
 }
 }
 

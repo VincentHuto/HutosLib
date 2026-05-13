@@ -1,37 +1,19 @@
 package com.vincenthuto.hutoslib.common.item;
 
-import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
-import com.vincenthuto.hutoslib.common.book.filter.EntryGatedBookFilter;
-import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
-import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
-
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class ItemHLGuideBook extends ItemGuideBook {
-
-	public ItemHLGuideBook(Properties prop, ResourceLocation texture) {
+	public ItemHLGuideBook(Properties prop, Identifier texture) {
 		super(prop, texture);
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level lvl, Player p_41433_, InteractionHand p_41434_) {
-		BookPlaceboReloadListener test = BookPlaceboReloadListener.INSTANCE;
-		BookCodeModel book = test.getBookByTitle(HutosLib.rloc("guide"));
-		if (test != null) {
-			if (lvl.isClientSide) {
-				if (book != null) {
-					BookCodeModel filtered = EntryGatedBookFilter.INSTANCE.filter(book, p_41433_);
-					HLGuiGuideTitlePage.openScreenViaItem(filtered);
-				}
-			}
-		}
-		return super.use(lvl, p_41433_, p_41434_);
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
+		// TODO 26.1: open the rewritten client guide screen through a client-only bridge.
+		return super.use(level, player, hand);
 	}
-
 }

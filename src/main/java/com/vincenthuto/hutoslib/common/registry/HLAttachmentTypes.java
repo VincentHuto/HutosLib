@@ -17,13 +17,13 @@ public class HLAttachmentTypes {
             DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, HutosLib.MOD_ID);
 
     public static final Supplier<AttachmentType<Karma>> KARMA =
-            ATTACHMENT_TYPES.register("karma", () -> AttachmentType.serializable(Karma::new).build());
+            ATTACHMENT_TYPES.register("karma", () -> AttachmentType.builder(Karma::new).build());
 
     public static final Supplier<AttachmentType<BannerExtensionSlot>> BANNER_SLOT =
-            ATTACHMENT_TYPES.register("banner_slot", () -> AttachmentType.serializable(() -> new BannerExtensionSlot(null)).build());
+            ATTACHMENT_TYPES.register("banner_slot", () -> AttachmentType.builder(() -> new BannerExtensionSlot(null)).build());
 
     public static final Supplier<AttachmentType<BookKnowledge>> BOOK_KNOWLEDGE =
-            ATTACHMENT_TYPES.register("book_knowledge", () -> AttachmentType.serializable(BookKnowledge::new).build());
+            ATTACHMENT_TYPES.register("book_knowledge", () -> AttachmentType.builder(BookKnowledge::new).build());
 
     public static void register(IEventBus modEventBus) {
         ATTACHMENT_TYPES.register(modEventBus);

@@ -1,7 +1,7 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
-import com.vincenthuto.hutoslib.client.HLLocHelper;
-import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+import com.vincenthuto.hutoslib.common.util.HLResourceUtils;
+import com.vincenthuto.hutoslib.common.util.ParticleColor;
 import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 
 import net.minecraft.client.gui.components.Button;
@@ -16,7 +16,7 @@ public class HLTomeCategoryTab extends HLButtonTextured {
 
 	public HLTomeCategoryTab(ParticleColor color, String category, int idIn, int x, int y, int locX, int locY,
 			Button.OnPress pressedAction) {
-		super(HLLocHelper.guiPrefix("book_tabs.png"), idIn, x, y, 24, 16, locX, locY, Component.literal(category),
+		super(HLResourceUtils.guiPrefix("book_tabs.png"), idIn, x, y, 24, 16, locX, locY, Component.literal(category),
 				pressedAction);
 		this.color = color;
 	}

@@ -1,7 +1,7 @@
 package com.vincenthuto.hutoslib.common.data;
 
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.HLTextUtils;
+import com.vincenthuto.hutoslib.common.util.HLTextUtils;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 import net.minecraft.data.PackOutput;

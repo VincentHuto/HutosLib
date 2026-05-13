@@ -2,18 +2,12 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.vincenthuto.hutoslib.client.HLLocHelper;
-import com.vincenthuto.hutoslib.client.book.BookReadTracker;
-import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuidePage;
-import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
+import com.vincenthuto.hutoslib.common.util.HLResourceUtils;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nullable;
-import java.util.UUID;
 
 
 public class PageTemplate extends BookDataTemplate {
@@ -59,7 +53,7 @@ public class PageTemplate extends BookDataTemplate {
 			if (split.length < 2) {
 				return ItemStack.EMPTY;
 			}
-			Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(split[0], split[1]));
+			Item item = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
 			}
@@ -67,9 +61,9 @@ public class PageTemplate extends BookDataTemplate {
 		return ItemStack.EMPTY;
 	}
 
-	public ResourceLocation getTextureLocation() {
+	public Identifier getTextureLocation() {
 
-		return HLLocHelper.getBySplit(texture);
+		return HLResourceUtils.getBySplit(texture);
 
 	}
 
@@ -136,14 +130,6 @@ public class PageTemplate extends BookDataTemplate {
 
 	@Override
 	public void getPageScreen(int pageNum, BookCodeModel book, ChapterTemplate chapter) {
-		HLGuiGuidePage.openScreenViaItem(pageNum, book, chapter);
-	}
-
-	@Override
-	public void getPageScreen(int pageNum, BookCodeModel book, ChapterTemplate chapter,
-			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid,
-			@Nullable IBookKnowledge knowledge) {
-		HLGuiGuidePage.openScreenViaItem(pageNum, book, chapter, tracker, viewerUuid, knowledge);
 	}
 
 	@Override

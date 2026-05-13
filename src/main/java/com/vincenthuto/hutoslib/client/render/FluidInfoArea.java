@@ -16,7 +16,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
 
@@ -31,10 +31,10 @@ public class FluidInfoArea extends InfoArea {
 	private final int overlayVMin;
 	private final int overlayWidth;
 	private final int overlayHeight;
-	private final ResourceLocation overlayTexture;
+	private final Identifier overlayTexture;
 
 	public FluidInfoArea(IFluidTank tank, Rect2i area, int overlayUMin, int overlayVMin, int overlayWidth,
-			int overlayHeight, ResourceLocation overlayTexture) {
+			int overlayHeight, Identifier overlayTexture) {
 		super(area);
 		this.tank = tank;
 		this.area = area;

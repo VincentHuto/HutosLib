@@ -1,11 +1,10 @@
 {
-  "type" : "minecraft:crafting_shapeless",
-  "ingredients" : [ {
-    "item" : "minecraft:paper"
-  }, {
-    "item" : "hutoslib:obsidian_flakes"
-  } ],
-  "result" : {
-    "item" : "hutoslib:logo_pattern"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:paper",
+    "hutoslib:obsidian_flakes"
+  ],
+  "result": {
+    "id": "hutoslib:hutoslib_logo"
   }
 }

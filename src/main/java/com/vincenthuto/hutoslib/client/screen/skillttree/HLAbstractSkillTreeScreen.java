@@ -7,8 +7,8 @@
 //import org.lwjgl.opengl.GL11;
 //
 //import com.mojang.blaze3d.systems.RenderSystem;
-//import com.vincenthuto.hutoslib.client.HLLocHelper;
-//import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+//import com.vincenthuto.hutoslib.common.util.HLResourceUtils;
+//import com.vincenthuto.hutoslib.common.util.ParticleColor;
 //import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
 //import com.vincenthuto.hutoslib.client.screen.codex.AbstractMalumScreen;
 //import com.vincenthuto.hutoslib.client.screen.codex.BookEntry;
@@ -20,7 +20,7 @@
 //import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 //import net.minecraft.client.sounds.SoundManager;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.sounds.SoundEvents;
 //
 //public abstract class HLAbstractSkillTreeScreen extends AbstractMalumScreen {
@@ -78,7 +78,7 @@
 //
 //	public abstract Collection<BookEntry> getEntries();
 //
-//	public void renderBackground(ResourceLocation texture, GuiGraphics graphics, float xModifier, float yModifier) {
+//	public void renderBackground(Identifier texture, GuiGraphics graphics, float xModifier, float yModifier) {
 //		int guiLeft = (width - bookWidth) / 2;
 //		int guiTop = (height - bookHeight) / 2;
 //		int insideLeft = guiLeft + 17;
@@ -201,7 +201,7 @@
 //
 //		public SkillIcon(ParticleColor color, String title, int idIn, int x, int y, int w, int h,
 //				Button.OnPress pressedAction) {
-//			super(HLLocHelper.guiPrefix("book_tabs.png"), idIn, x, y, w, h, 0, 192, Component.literal(title),
+//			super(HLResourceUtils.guiPrefix("book_tabs.png"), idIn, x, y, w, h, 0, 192, Component.literal(title),
 //					pressedAction);
 //			this.color = color;
 //		}

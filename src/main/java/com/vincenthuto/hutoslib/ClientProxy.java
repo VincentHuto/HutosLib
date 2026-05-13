@@ -4,7 +4,7 @@ import com.vincenthuto.hutoslib.client.HlClientTickHandler;
 import com.vincenthuto.hutoslib.client.particle.BoltRenderer;
 import com.vincenthuto.hutoslib.client.particle.data.BoltParticleData;
 import com.vincenthuto.hutoslib.client.particle.data.BoltParticleData.FadeFunction;
-import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+import com.vincenthuto.hutoslib.common.util.ParticleColor;
 
 import net.minecraft.world.phys.Vec3;
 

@@ -61,9 +61,9 @@ public class ParticleLightning extends TextureSheetParticle {
 	public ParticleLightning(ClientLevel worldIn, double startX, double startY, double startZ, double endX, double endY,
 			double endZ, SpriteSet sprite, float r, float g, float b) {
 		super(worldIn, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-		this.sprite = sprite.get(this.random);
+		this.sprite = sprite.get(this.getRandom());
 		this.data = new ParticleLightningStorage(new Vector3(startX, startY, startZ), new Vector3(endX, endY, endZ),
-				worldIn.random.nextLong());
+				worldIn.getRandom().nextLong());
 		this.age = this.data.getMaxAge() + 5;
 		this.setPos(startX, startY, startZ);
 		this.xd = 0.0;
@@ -89,9 +89,9 @@ public class ParticleLightning extends TextureSheetParticle {
 	public ParticleLightning(ClientLevel worldIn, double startX, double startY, double startZ, double endX, double endY,
 			double endZ, SpriteSet sprite, float r, float g, float b, float speed, int maxAge) {
 		super(worldIn, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-		this.sprite = sprite.get(this.random);
+		this.sprite = sprite.get(this.getRandom());
 		this.data = new ParticleLightningStorage(new Vector3(startX, startY, startZ), new Vector3(endX, endY, endZ),
-				worldIn.random.nextLong(), speed, maxAge);
+				worldIn.getRandom().nextLong(), speed, maxAge);
 		this.age = maxAge + 5;
 		this.setPos(startX, startY, startZ);
 		this.xd = 0.0;
@@ -117,9 +117,9 @@ public class ParticleLightning extends TextureSheetParticle {
 	public ParticleLightning(ClientLevel worldIn, double startX, double startY, double startZ, double endX, double endY,
 			double endZ, SpriteSet sprite, float r, float g, float b, float speed, int maxAge, int fract, float off) {
 		super(worldIn, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-		this.sprite = sprite.get(this.random);
+		this.sprite = sprite.get(this.getRandom());
 		this.data = new ParticleLightningStorage(new Vector3(startX, startY, startZ), new Vector3(endX, endY, endZ),
-				worldIn.random.nextLong(), speed, maxAge, fract, off);
+				worldIn.getRandom().nextLong(), speed, maxAge, fract, off);
 		this.age = maxAge + 5;
 		this.setPos(startX, startY, startZ);
 		this.xd = 0.0;

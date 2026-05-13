@@ -1,17 +1,17 @@
 package com.vincenthuto.hutoslib.common.data.skilltree;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
 public class TreeCodeModel {
-	ResourceLocation resourceLocation;
+	Identifier Identifier;
 	TreeTemplate template;
 	List<BranchTemplate> branchs;
 
-	public TreeCodeModel(ResourceLocation resourceLocation, TreeTemplate template) {
-		this.resourceLocation = resourceLocation;
+	public TreeCodeModel(Identifier Identifier, TreeTemplate template) {
+		this.Identifier = Identifier;
 		this.template = template;
 	}
 
@@ -32,12 +32,12 @@ public class TreeCodeModel {
 	}
 
 
-	public ResourceLocation getResourceLocation() {
-		return resourceLocation;
+	public Identifier getResourceLocation() {
+		return Identifier;
 	}
 
-	public void setResourceLocation(ResourceLocation resourceLocation) {
-		this.resourceLocation = resourceLocation;
+	public void setResourceLocation(Identifier Identifier) {
+		this.Identifier = Identifier;
 	}
 
 	public int getTotalPages() {
@@ -58,12 +58,12 @@ public class TreeCodeModel {
 
 	@Override
 	public String toString() {
-		return "Tree  Title: " + resourceLocation.getPath() + ", Tree  Name: " + template.getTitle() + " it has "
+		return "Tree  Title: " + Identifier.getPath() + ", Tree  Name: " + template.getTitle() + " it has "
 				+ branchs.size() + " Branchs, and " + getTotalPages() + " pages.";
 	}
 	public void encodeToBuf(FriendlyByteBuf buf) {
 		// Write Tree  location
-		buf.writeResourceLocation(resourceLocation);
+		buf.writeIdentifier(Identifier);
 
 		// Write book json
 		buf.writeUtf(template.coverLoc);

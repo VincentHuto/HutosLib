@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -18,7 +18,7 @@ import net.minecraft.world.inventory.Slot;
 
 public class BannerSlotScreen extends EffectRenderingInventoryScreen<BannerSlotContainer>
 		implements RecipeUpdateListener {
-	private static final ResourceLocation SCREEN_BACKGROUND = HutosLib.rloc(
+	private static final Identifier SCREEN_BACKGROUND = HutosLib.rloc(
 			"textures/gui/banner_slot.png");
 	private float oldMouseX;
 	private float oldMouseY;

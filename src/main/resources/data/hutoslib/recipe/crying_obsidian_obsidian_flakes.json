@@ -6,13 +6,10 @@
     " X "
   ],
   "key": {
-    "X": {
-      "item": "hutoslib:obsidian_flakes"
-    },"L": {
-      "item": "minecraft:lapis_lazuli"
-    }
+    "X": "hutoslib:obsidian_flakes",
+    "L": "minecraft:lapis_lazuli"
   },
   "result": {
-    "item": "minecraft:crying_obsidian"
+    "id": "minecraft:crying_obsidian"
   }
 }

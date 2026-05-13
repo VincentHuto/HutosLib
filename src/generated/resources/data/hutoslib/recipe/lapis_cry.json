@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "tag": "c:gems/lapis"
-    },
-    "X": {
-      "tag": "c:obsidians"
-    }
+    "L": "#c:gems/lapis",
+    "X": "#c:obsidians"
   },
   "pattern": [
     " X ",

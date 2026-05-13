@@ -1,7 +1,7 @@
 package com.vincenthuto.hutoslib.common.container;
 
 import com.vincenthuto.hutoslib.HutosLib;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 
 public class BannerSlot extends Slot {
-	public static final ResourceLocation SLOT_BACKGROUND = HutosLib.rloc(
+	public static final Identifier SLOT_BACKGROUND = HutosLib.rloc(
 			"gui/empty_banner_slot_background");
 
 	private static Container emptyInventory = new SimpleContainer(0);
@@ -21,7 +21,7 @@ public class BannerSlot extends Slot {
 	public BannerSlot(IBannerSlot slot, int x, int y) {
 		super(emptyInventory, 0, x, y);
 		this.slot = slot;
-		setBackground(InventoryMenu.BLOCK_ATLAS, SLOT_BACKGROUND);
+		setBackground(SLOT_BACKGROUND);
 	}
 
 	public IBannerSlot getExtensionSlot() {

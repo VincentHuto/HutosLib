@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.common.container;
 import com.google.common.collect.ImmutableSet;
 import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 
@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 public interface IBannerSlot {
 	static boolean isAcceptableSlot(@Nonnull IBannerSlot slot, @Nonnull ItemStack stack,
 			@Nonnull IBannerSlotItem extItem) {
-		ImmutableSet<ResourceLocation> slots = extItem.getAcceptableSlots(stack);
+		ImmutableSet<Identifier> slots = extItem.getAcceptableSlots(stack);
 		return slots.contains(BannerSlotCapability.ANY_SLOT) || slots.contains(slot.getType());
 	}
 
@@ -43,7 +43,7 @@ public interface IBannerSlot {
 	ItemStack getContents();
 
 	@Nonnull
-	ResourceLocation getType();
+	Identifier getType();
 
 	void onContentsChanged();
 

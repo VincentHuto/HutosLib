@@ -1,15 +1,11 @@
 package com.vincenthuto.hutoslib.math;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.joml.Vector3d;
 
 import java.math.BigDecimal;
@@ -270,11 +266,6 @@ public class Vector3 {
 
 	public Vector3d toVector3d() {
 		return new Vector3d(x, y, z);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public void vertex(Matrix4f mat, VertexConsumer buffer) {
-		buffer.addVertex(mat, x, y, z);
 	}
 
 	public Vector3 xCrossProduct() {

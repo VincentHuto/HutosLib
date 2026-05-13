@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "hutoslib:obsidian_flakes"
-    },
-    {
-      "item": "minecraft:book"
-    }
+    "hutoslib:obsidian_flakes",
+    "minecraft:book"
   ],
   "result": {
     "count": 1,

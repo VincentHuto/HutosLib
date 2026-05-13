@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.client.particle.factory;
 
 import com.vincenthuto.hutoslib.client.particle.ParticleDarkGlow;
 import com.vincenthuto.hutoslib.client.particle.data.DarkColorParticleData;
-import com.vincenthuto.hutoslib.client.particle.util.ParticleColor;
+import com.vincenthuto.hutoslib.common.util.ParticleColor;
 import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 
 import net.minecraft.client.multiplayer.ClientLevel;

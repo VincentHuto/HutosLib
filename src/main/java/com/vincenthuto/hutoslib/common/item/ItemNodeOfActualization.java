@@ -8,7 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,14 +23,14 @@ super(properties.stacksTo(1).rarity(Rarity.RARE));
 }
 
 @Override
-public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
 IKarma karmaCap = playerIn.getData(HLAttachmentTypes.KARMA.get());
 
-if (!worldIn.isClientSide) {
+if (!worldIn.isClientSide()) {
 karmaCap.toggleActive();
 PacketDistributor.sendToPlayer((ServerPlayer) playerIn, new PacketKarmaServer(karmaCap));
-playerIn.displayClientMessage(
-Component.literal(ChatFormatting.GOLD + "Toggling Karma to :" + karmaCap.isActive()), true);
+playerIn.sendOverlayMessage(
+Component.literal(ChatFormatting.GOLD + "Toggling Karma to :" + karmaCap.isActive()));
 }
 
 return super.use(worldIn, playerIn, handIn);

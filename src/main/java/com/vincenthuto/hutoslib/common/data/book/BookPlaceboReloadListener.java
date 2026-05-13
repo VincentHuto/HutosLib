@@ -5,14 +5,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.data.shadow.PlaceboJsonReloadListener;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 
 public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDataTemplate> {
 
 	public static final BookPlaceboReloadListener INSTANCE = new BookPlaceboReloadListener();
-	private Map<ResourceLocation, BookDataTemplate> byType = ImmutableMap.of();
+	private Map<Identifier, BookDataTemplate> byType = ImmutableMap.of();
 	public List<BookCodeModel> books = ImmutableList.of();
 	private static final Gson GSON = new Gson();
 
@@ -20,7 +20,7 @@ public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDat
 		super(HutosLib.LOGGER, "books", true, true);
 	}
 	
-	public BookCodeModel getBookByTitle(ResourceLocation rl) {
+	public BookCodeModel getBookByTitle(Identifier rl) {
 		Optional<BookCodeModel> optional = this.books.parallelStream().filter(p -> p.getResourceLocation().equals(rl))
 				.findFirst();
 		return optional.isPresent() ? optional.get() : null;
@@ -29,7 +29,7 @@ public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDat
 	@Override
 	protected void onReload() {
 		super.onReload();
-		ImmutableMap.Builder<ResourceLocation, BookDataTemplate> builder = ImmutableMap.builder();
+		ImmutableMap.Builder<Identifier, BookDataTemplate> builder = ImmutableMap.builder();
 		this.registry.values().forEach(a -> {
 			builder.put(a.id, a);
 		});
@@ -46,7 +46,7 @@ public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDat
 
 	}
 
-	public Map<ResourceLocation, BookDataTemplate> getTypeMap() {
+	public Map<Identifier, BookDataTemplate> getTypeMap() {
 		return this.byType;
 	}
 
@@ -58,7 +58,7 @@ public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDat
 		return "books";
 	}
 
-	public void bindBooks(Map<ResourceLocation, BookDataTemplate> resourceManager) {
+	public void bindBooks(Map<Identifier, BookDataTemplate> resourceManager) {
 		HutosLib.LOGGER.info("Binding Books:");
 		ImmutableList.Builder<BookCodeModel> builder = ImmutableList.builder();
 
@@ -87,7 +87,7 @@ public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDat
 			if (bookNames.get(i).template() instanceof BookTemplate b) {
 				String bookTitle = bookNames.get(i).getBook();
 				BookCodeModel book = new BookCodeModel(
-						ResourceLocation.fromNamespaceAndPath(bookNames.get(i).resourceLocation().getNamespace(),
+						Identifier.fromNamespaceAndPath(bookNames.get(i).Identifier().getNamespace(),
 								bookNames.get(i).getBook()),
 						b);
 				List<ChapterTemplate> chapters = new ArrayList<ChapterTemplate>();

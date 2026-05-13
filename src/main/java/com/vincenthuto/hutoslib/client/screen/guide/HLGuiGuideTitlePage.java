@@ -15,7 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -25,8 +25,8 @@ import java.util.*;
 public class HLGuiGuideTitlePage extends Screen {
 
 	private static HLGuiGuideTitlePage screen;
-	final ResourceLocation texture;
-	final ResourceLocation overlay;
+	final Identifier texture;
+	final Identifier overlay;
 	int guiWidth = 186;
 	int guiHeight = 240;
 	double xDragPos = 0;
@@ -127,7 +127,7 @@ public class HLGuiGuideTitlePage extends Screen {
 	 * newly-discovered book entries from the server and need existing stale
 	 * client read-state to stop suppressing unread/new-entry badges.
 	 */
-	public static void markEntriesUnreadAndRefreshIfOpen(UUID playerId, Collection<ResourceLocation> entryIds) {
+	public static void markEntriesUnreadAndRefreshIfOpen(UUID playerId, Collection<Identifier> entryIds) {
 		BookReadTracker.unacknowledge(playerId, entryIds);
 		refreshIfOpen();
 	}
@@ -192,7 +192,7 @@ public class HLGuiGuideTitlePage extends Screen {
 		this.buttonList.clear();
 		this.clearWidgets();
 
-		ResourceLocation overlayTex = resolveOverlayTexture();
+		Identifier overlayTex = resolveOverlayTexture();
 //		this.addRenderableWidget(
 //				buttonclose = new HLButtonTextured(overlayTex, BUTTONCLOSE,
 //						(int) (centerX + (guiWidth * 0.05f)),
@@ -309,7 +309,7 @@ public class HLGuiGuideTitlePage extends Screen {
 	// Theme helpers
 	// -------------------------------------------------------------------------
 
-	private ResourceLocation resolveOverlayTexture() {
+	private Identifier resolveOverlayTexture() {
 		BookTheme theme = book.getTheme();
 		if (theme != null && theme.backgroundTexture() != null) {
 			return theme.backgroundTexture();
@@ -399,7 +399,7 @@ public class HLGuiGuideTitlePage extends Screen {
 	}
 
 	private int countUnreadForBook(UUID playerId, @Nullable IBookKnowledge knowledge) {
-		Set<ResourceLocation> pageIds = collectPageIds(chapters);
+		Set<Identifier> pageIds = collectPageIds(chapters);
 		int unreadByPages = pageIds.isEmpty() ? 0 : BookReadTracker.countUnread(playerId, pageIds);
 		int unreadByKnowledge = knowledge != null
 				? BookReadTracker.countUnread(playerId, knowledge, book.getEntryPrefix())
@@ -408,7 +408,7 @@ public class HLGuiGuideTitlePage extends Screen {
 	}
 
 	private int countUnreadForChapter(UUID playerId, ChapterTemplate chapter, @Nullable IBookKnowledge knowledge) {
-		Set<ResourceLocation> pageIds = collectPageIds(List.of(chapter));
+		Set<Identifier> pageIds = collectPageIds(List.of(chapter));
 		int unreadByPages = pageIds.isEmpty() ? 0 : BookReadTracker.countUnread(playerId, pageIds);
 		String chapterPrefix = buildChapterPrefix(chapter);
 		int unreadByKnowledge = (chapterPrefix == null || knowledge == null)
@@ -417,8 +417,8 @@ public class HLGuiGuideTitlePage extends Screen {
 		return Math.max(unreadByPages, unreadByKnowledge);
 	}
 
-	private static Set<ResourceLocation> collectPageIds(List<ChapterTemplate> sourceChapters) {
-		Set<ResourceLocation> ids = new HashSet<>();
+	private static Set<Identifier> collectPageIds(List<ChapterTemplate> sourceChapters) {
+		Set<Identifier> ids = new HashSet<>();
 		for (ChapterTemplate chapter : sourceChapters) {
 			for (var page : chapter.getPages()) {
 				if (page.getId() != null) {

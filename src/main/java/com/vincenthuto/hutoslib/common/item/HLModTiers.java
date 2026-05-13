@@ -1,80 +1,22 @@
 package com.vincenthuto.hutoslib.common.item;
 
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.ToolMaterial;
 
-import java.util.function.Supplier;
+public enum HLModTiers {
+	WOOD(ToolMaterial.WOOD),
+	STONE(ToolMaterial.STONE),
+	IRON(ToolMaterial.IRON),
+	DIAMOND(ToolMaterial.DIAMOND),
+	GOLD(ToolMaterial.GOLD),
+	NETHERITE(ToolMaterial.NETHERITE);
 
-public enum HLModTiers implements Tier {
+	private final ToolMaterial material;
 
-	WOOD(3, 59, 2.0F, 0.0F, 15, () -> {
-		return Ingredient.of(ItemTags.PLANKS);
-	}), STONE(3, 131, 4.0F, 1.0F, 5, () -> {
-		return Ingredient.of(ItemTags.STONE_TOOL_MATERIALS);
-	}), IRON(3, 250, 6.0F, 2.0F, 14, () -> {
-		return Ingredient.of(Items.IRON_INGOT);
-	}), DIAMOND(3, 1561, 8.0F, 3.0F, 10, () -> {
-		return Ingredient.of(Items.DIAMOND);
-	}), GOLD(3, 32, 12.0F, 0.0F, 22, () -> {
-		return Ingredient.of(Items.GOLD_INGOT);
-	}), NETHERITE(4, 2031, 9.0F, 4.0F, 15, () -> {
-		return Ingredient.of(Items.NETHERITE_INGOT);
-	});
-
-	private final int maxUses;
-	private final float efficiency;
-	private final float attackDamage;
-	private final int enchantability;
-	private final Supplier<Ingredient> repairMaterial;
-
-	HLModTiers(int harvestLevelIn, int maxUsesIn, float efficiencyIn, float attackDamageIn,
-			int enchantabilityIn, Supplier<Ingredient> repairMaterialIn) {
-		this.maxUses = maxUsesIn;
-		this.efficiency = efficiencyIn;
-		this.attackDamage = attackDamageIn;
-		this.enchantability = enchantabilityIn;
-		this.repairMaterial = repairMaterialIn;
+	HLModTiers(ToolMaterial material) {
+		this.material = material;
 	}
 
-	@Override
-	public float getAttackDamageBonus() {
-		return this.attackDamage;
-	}
-
-	@Override
-	public int getEnchantmentValue() {
-		return this.enchantability;
-	}
-
-	@Override
-	public Ingredient getRepairIngredient() {
-		return this.repairMaterial.get();
-	}
-
-	@Override
-	public float getSpeed() {
-		return this.efficiency;
-	}
-
-	@Override
-	public int getUses() {
-		return this.maxUses;
-	}
-
-	@Override
-	public TagKey<Block> getIncorrectBlocksForDrops() {
-		return switch (this) {
-		case WOOD -> BlockTags.INCORRECT_FOR_WOODEN_TOOL;
-		case STONE -> BlockTags.INCORRECT_FOR_STONE_TOOL;
-		case IRON -> BlockTags.INCORRECT_FOR_IRON_TOOL;
-		case DIAMOND -> BlockTags.INCORRECT_FOR_DIAMOND_TOOL;
-		case GOLD -> BlockTags.INCORRECT_FOR_GOLD_TOOL;
-		case NETHERITE -> BlockTags.INCORRECT_FOR_NETHERITE_TOOL;
-		};
+	public ToolMaterial material() {
+		return material;
 	}
 }

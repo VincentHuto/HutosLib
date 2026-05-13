@@ -2,12 +2,11 @@ package com.vincenthuto.hutoslib.common.data.book;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.vincenthuto.hutoslib.client.HLLocHelper;
-import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideTitlePage;
+import com.vincenthuto.hutoslib.common.util.HLResourceUtils;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -53,12 +52,12 @@ public class BookTemplate extends BookDataTemplate {
 		return coverLoc;
 	}
 
-	public ResourceLocation getOverlayImage() {
-		return HLLocHelper.getBySplit(overlayLoc);
+	public Identifier getOverlayImage() {
+		return HLResourceUtils.getBySplit(overlayLoc);
 	}
 
-	public ResourceLocation getCoverImage() {
-		return HLLocHelper.getBySplit(coverLoc);
+	public Identifier getCoverImage() {
+		return HLResourceUtils.getBySplit(coverLoc);
 
 	}
 
@@ -68,7 +67,7 @@ public class BookTemplate extends BookDataTemplate {
 			if (split.length < 2) {
 				return ItemStack.EMPTY;
 			}
-			Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(split[0], split[1]));
+			Item item = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(split[0], split[1]));
 			if (item != null) {
 				return new ItemStack(item);
 			}
@@ -115,7 +114,6 @@ public class BookTemplate extends BookDataTemplate {
 
 	@Override
 	public void getPageScreen(int pageNum, BookCodeModel book, ChapterTemplate chapter) {
-		HLGuiGuideTitlePage.openScreenViaItem(pageNum, book, chapter);
 	}
 
 	@Override

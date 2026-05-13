@@ -6,7 +6,7 @@ import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookDataTemplate;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
@@ -54,7 +54,7 @@ public final class EntryGatedBookFilter implements IBookPageFilter {
 
             for (BookDataTemplate page : chapter.getPages()) {
                 if (page instanceof PageTemplate pt && !pt.getRequiresEntry().isEmpty()) {
-                    ResourceLocation entryId = ResourceLocation.tryParse(pt.getRequiresEntry());
+                    Identifier entryId = Identifier.tryParse(pt.getRequiresEntry());
                     if (entryId == null || knowledge == null || !knowledge.hasEntry(entryId)) {
                         continue; // locked or malformed entry ID — skip this page
                     }

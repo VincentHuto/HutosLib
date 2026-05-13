@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.common.container;
 import com.google.common.collect.ImmutableSet;
 import com.vincenthuto.hutoslib.common.banner.BannerSlotCapability;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 
@@ -24,7 +24,7 @@ public interface IBannerSlotItem {
 	}
 
 	@Nonnull
-	default ImmutableSet<ResourceLocation> getAcceptableSlots(@Nonnull ItemStack stack) {
+	default ImmutableSet<Identifier> getAcceptableSlots(@Nonnull ItemStack stack) {
 		return BannerSlotCapability.ANY_SLOT_LIST;
 	}
 

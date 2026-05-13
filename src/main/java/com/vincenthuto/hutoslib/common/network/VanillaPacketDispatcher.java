@@ -16,7 +16,7 @@ public final class VanillaPacketDispatcher {
 		BlockPos pos = tile.getBlockPos();
 
 		if (packet != null && tile.getLevel() instanceof ServerLevel) {
-			((ServerChunkCache) tile.getLevel().getChunkSource()).chunkMap.getPlayers(new ChunkPos(pos), false)
+			((ServerChunkCache) tile.getLevel().getChunkSource()).chunkMap.getPlayers(new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4), false)
 					.forEach(e -> e.connection.send(packet));
 		}
 	}

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:slime_balls"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    },
-    "X": {
-      "tag": "c:ingots/iron"
-    }
+    "B": "#c:slime_balls",
+    "S": "#c:rods/wooden",
+    "X": "#c:ingots/iron"
   },
   "pattern": [
     "XXB",

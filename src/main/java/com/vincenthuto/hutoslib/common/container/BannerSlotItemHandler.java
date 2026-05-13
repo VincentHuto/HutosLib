@@ -1,6 +1,6 @@
 package com.vincenthuto.hutoslib.common.container;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
@@ -8,11 +8,11 @@ import javax.annotation.Nonnull;
 
 public class BannerSlotItemHandler implements IBannerSlot {
 	protected final IBannerContainer owner;
-	protected final ResourceLocation slotType;
+	protected final Identifier slotType;
 	protected final int slot;
 	protected final IItemHandlerModifiable inventory;
 
-	public BannerSlotItemHandler(IBannerContainer owner, ResourceLocation slotType, IItemHandlerModifiable inventory,
+	public BannerSlotItemHandler(IBannerContainer owner, Identifier slotType, IItemHandlerModifiable inventory,
 			int slot) {
 		this.owner = owner;
 		this.slotType = slotType;
@@ -34,7 +34,7 @@ public class BannerSlotItemHandler implements IBannerSlot {
 
 	@Nonnull
 	@Override
-	public ResourceLocation getType() {
+	public Identifier getType() {
 		return slotType;
 	}
 

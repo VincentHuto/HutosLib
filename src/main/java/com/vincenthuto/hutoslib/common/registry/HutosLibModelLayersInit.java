@@ -8,7 +8,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-@EventBusSubscriber(modid = HutosLib.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = HutosLib.MOD_ID, value = Dist.CLIENT)
 public class HutosLibModelLayersInit {
 
 	public static final ModelLayerLocation arm_banner = new ModelLayerLocation(

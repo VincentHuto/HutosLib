@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "item": "hutoslib:obsidian_flakes"
-    }
+    "X": "hutoslib:obsidian_flakes"
   },
   "pattern": [
     "XX",

@@ -7,10 +7,10 @@ import com.vincenthuto.hutoslib.common.container.HLInvHelper;
 import com.vincenthuto.hutoslib.common.network.VanillaPacketDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class BlockDisplayPedestal extends BaseEntityBlock {
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 	private static final MapCodec<BlockDisplayPedestal> CODEC = simpleCodec(BlockDisplayPedestal::new);
 	private static final VoxelShape SHAPE_N = Stream
 			.of(Block.box(3, 0, 3, 13, 4, 13), Block.box(4, 4, 4, 12, 11, 12), Block.box(3, 11, 3, 13, 15, 13))
@@ -78,7 +78,7 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState p_153183_,
 			BlockEntityType<T> p_153184_) {
-		return level.isClientSide
+		return level.isClientSide()
 				? createTickerHelper(p_153184_, HLBlockEntityInit.display_pedestal.get(),
 						DisplayPedestalBlockEntity::animTick)
 				: null;
@@ -102,17 +102,15 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 	}
 	
 	@Override
-	public void onRemove(BlockState state, Level level, BlockPos worldPosition, BlockState newState, boolean movedByPiston) {
-		if (!state.is(newState.getBlock())) {
-			if (level.getBlockEntity(worldPosition) instanceof DisplayPedestalBlockEntity te && !te.inventory.isEmpty()) {
-				double d0 = Mth.randomBetween(level.random, -0.2F, 0.2F);
-				double d1 = Mth.randomBetween(level.random, -0.2F, 0.2F);
-				double d2 = Mth.randomBetween(level.random, -0.2F, 0.2F);
-				level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1,
-						worldPosition.getZ(), te.inventory.get(0), d0, d1, d2));
-			}
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos worldPosition, boolean movedByPiston) {
+		if (level.getBlockEntity(worldPosition) instanceof DisplayPedestalBlockEntity te && !te.inventory.isEmpty()) {
+			double d0 = Mth.randomBetween(level.getRandom(), -0.2F, 0.2F);
+			double d1 = Mth.randomBetween(level.getRandom(), -0.2F, 0.2F);
+			double d2 = Mth.randomBetween(level.getRandom(), -0.2F, 0.2F);
+			level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1,
+					worldPosition.getZ(), te.inventory.get(0), d0, d1, d2));
 		}
-		super.onRemove(state, level, worldPosition, newState, movedByPiston);
+		super.affectNeighborsAfterRemoval(state, level, worldPosition, movedByPiston);
 	}
 
 	@Override
@@ -130,20 +128,20 @@ public class BlockDisplayPedestal extends BaseEntityBlock {
 	}
 
 	@Override
-	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
+	public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
 			InteractionHand hand, BlockHitResult result) {
 		DisplayPedestalBlockEntity te = (DisplayPedestalBlockEntity) world.getBlockEntity(pos);
 		if (te == null) {
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		}
 		if (player.isShiftKeyDown()) {
 			HLInvHelper.withdrawFromInventory(te, player);
 			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(te);
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		} else {
 			boolean hit = te.addItem(player, stack, hand);
 			VanillaPacketDispatcher.dispatchTEToNearbyPlayers(te);
-			return hit ? ItemInteractionResult.SUCCESS : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return hit ? InteractionResult.SUCCESS : InteractionResult.TRY_WITH_EMPTY_HAND;
 		}
 	}
 

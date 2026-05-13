@@ -3,7 +3,7 @@ package com.vincenthuto.hutoslib.math;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -14,11 +14,11 @@ import java.util.List;
 public class MultiblockPatternKey {
 	private final String symbol;
 	private final Block fallbackBlock;
-	private final ResourceLocation tagId;
+	private final Identifier tagId;
 	private final List<Block> displayBlocks;
 	private List<Block> resolvedDisplayBlocks;
 
-	private MultiblockPatternKey(String symbol, Block fallbackBlock, ResourceLocation tagId, List<Block> displayBlocks) {
+	private MultiblockPatternKey(String symbol, Block fallbackBlock, Identifier tagId, List<Block> displayBlocks) {
 		this.symbol = symbol;
 		this.fallbackBlock = fallbackBlock;
 		this.tagId = tagId;
@@ -29,11 +29,11 @@ public class MultiblockPatternKey {
 		return new MultiblockPatternKey(symbol, block, null, List.of(block));
 	}
 
-	public static MultiblockPatternKey tag(String symbol, ResourceLocation tagId, Block fallbackBlock) {
+	public static MultiblockPatternKey tag(String symbol, Identifier tagId, Block fallbackBlock) {
 		return new MultiblockPatternKey(symbol, fallbackBlock, tagId, List.of());
 	}
 
-	public static MultiblockPatternKey tag(String symbol, ResourceLocation tagId, Block fallbackBlock,
+	public static MultiblockPatternKey tag(String symbol, Identifier tagId, Block fallbackBlock,
 			List<Block> displayBlocks) {
 		return new MultiblockPatternKey(symbol, fallbackBlock, tagId, displayBlocks);
 	}
@@ -50,7 +50,7 @@ public class MultiblockPatternKey {
 		return tagId != null;
 	}
 
-	public ResourceLocation tagId() {
+	public Identifier tagId() {
 		return tagId;
 	}
 
@@ -92,19 +92,13 @@ public class MultiblockPatternKey {
 		}
 
 		TagKey<Block> tag = TagKey.create(Registries.BLOCK, tagId);
-		List<Block> resolved = BuiltInRegistries.BLOCK.getTag(tag)
-				.map(named -> {
-					List<Block> blocks = new ArrayList<>();
-					for (Holder<Block> holder : named) {
-						Block block = holder.value();
-						if (block != Blocks.AIR) {
-							blocks.add(block);
-						}
-					}
-					return blocks;
-				})
-				.filter(blocks -> !blocks.isEmpty())
-				.orElseGet(List::of);
+		List<Block> resolved = new ArrayList<>();
+		for (Holder<Block> holder : BuiltInRegistries.BLOCK.getTagOrEmpty(tag)) {
+			Block block = holder.value();
+			if (block != Blocks.AIR) {
+				resolved.add(block);
+			}
+		}
 
 		// Some setups only bind tags via BlockState#is(tag); fall back to a
 		// slow registry scan if the named-tag lookup didn't find anything.

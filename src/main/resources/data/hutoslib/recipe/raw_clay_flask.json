@@ -1,12 +1,14 @@
 {
-  "type" : "minecraft:crafting_shaped",
-  "pattern" : [ " C ", "C C", "CCC" ],
-  "key" : {
-    "C" : {
-      "item" : "minecraft:clay_ball"
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "C C",
+    "CCC"
+  ],
+  "key": {
+    "C": "minecraft:clay_ball"
   },
-  "result" : {
-    "id" : "hutoslib:raw_clay_flask"
+  "result": {
+    "id": "hutoslib:raw_clay_flask"
   }
 }

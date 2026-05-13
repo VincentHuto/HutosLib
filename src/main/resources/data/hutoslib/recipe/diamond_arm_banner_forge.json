@@ -5,17 +5,11 @@
     " XS"
   ],
   "key": {
-    "X": {
-      "item": "minecraft:diamond"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    },
-    "B": {
-      "tag": "c:slime_balls"
-    }
+    "X": "minecraft:diamond",
+    "S": "minecraft:stick",
+    "B": "#c:slime_balls"
   },
   "result": {
-    "item": "hutoslib:diamond_arm_banner"
+    "id": "hutoslib:diamond_arm_banner"
   }
 }
