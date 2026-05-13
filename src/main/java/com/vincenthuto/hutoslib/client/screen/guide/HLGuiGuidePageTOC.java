@@ -1,294 +1,85 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
-import com.vincenthuto.hutoslib.common.util.HLResourceUtils;
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
-import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
-import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
-import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
-import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.common.book.BookTheme;
-import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.common.data.book.BookDataTemplate;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class HLGuiGuidePageTOC extends Screen {
-	double xDragPos = 0;
-	double yDragPos = 0;
-	public double dragLeftRight = 0;
-	public double dragUpDown    = 0;
-	protected int left;
-	protected int top;
-	public int guiHeight = 228, guiWidth = 174;
-	HLButtonTextured buttonTitle, buttonCloseTab;
-	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
-	HLButtonArrow arrowF, arrowB;
-	public List<HLButtonTextured> pageButtons = new ArrayList<>();
-	private final ChapterTemplate chapterTemplate;
+	private static final Identifier BACKGROUND = HutosLib.rloc("textures/gui/guide/hl_guide_book_background.png");
 	private final BookCodeModel book;
+	private final ChapterTemplate chapter;
+	private int left;
+	private int top;
 
-	/** Optional tracker for highlighting unread pages. */
-	@Nullable
-	private final BookReadTracker tracker;
-	/** UUID of the viewing player (needed by {@link BookReadTracker}). */
-	@Nullable
-	private final UUID viewerUuid;
-	/** Optional knowledge source for counting unread pages per chapter. */
-	@Nullable
-	private final IBookKnowledge knowledge;
-
-	// -------------------------------------------------------------------------
-	// Constructors
-	// -------------------------------------------------------------------------
-
-	/** Basic constructor – no unread badges. */
 	public HLGuiGuidePageTOC(BookCodeModel book, ChapterTemplate chapterTemplate) {
 		this(book, chapterTemplate, null, null, null);
 	}
 
-	/**
-	 * Extended constructor that enables unread-badge rendering.
-	 *
-	 * @param tracker    the client-side read tracker (or {@code null} to disable)
-	 * @param viewerUuid UUID of the player opening the screen
-	 * @param knowledge  the player's book knowledge capability
-	 */
 	public HLGuiGuidePageTOC(BookCodeModel book, ChapterTemplate chapterTemplate,
-			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid,
-			@Nullable IBookKnowledge knowledge) {
-		super(Component.literal(chapterTemplate.getTitle()));
-		this.chapterTemplate = chapterTemplate;
-		this.book            = book;
-		this.tracker         = tracker;
-		this.viewerUuid      = viewerUuid;
-		this.knowledge       = knowledge;
+			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid, @Nullable IBookKnowledge knowledge) {
+		super(Component.literal(chapterTemplate != null ? safe(chapterTemplate.getTitle()) : "Chapter"));
+		this.book = book;
+		this.chapter = chapterTemplate;
 	}
-
-	// -------------------------------------------------------------------------
-	// Screen lifecycle
-	// -------------------------------------------------------------------------
 
 	@Override
 	protected void init() {
-		left = width / 2 - guiWidth / 2;
-		top  = height / 2 - guiHeight / 2;
-		int sideLoc    = left + guiWidth;
-		int verticalLoc = top + guiHeight;
+		this.left = (this.width - 256) / 2;
+		this.top = (this.height - 192) / 2;
 		this.clearWidgets();
-		pageButtons.clear();
-		super.init();
-
-		for (int i = 0; i < chapterTemplate.getPages().size(); i++) {
-			pageButtons.add(new HLButtonTextured(chapterTemplate.getTextureLocation(), i, sideLoc - (guiWidth - 5),
-					(verticalLoc - 210) + (i * 15), 163, 14, 5, 228, (press) -> {
-						if (press instanceof HLButtonTextured button) {
-							chapterTemplate.getPages().get(button.getId()).getPageScreen(button.getId(), book,
-									chapterTemplate, tracker, resolveViewerUuid(), resolveKnowledge());
-						}
-					}));
-		}
-
-		for (HLButtonTextured pageButton : pageButtons) {
-			this.addRenderableWidget(pageButton);
-		}
-
-		this.addRenderableWidget(arrowF = new HLButtonArrow(ArrowDirection.FORWARD, ARROWF,
-				left + guiWidth - 18, top + guiHeight - 7,
-				(press) -> chapterTemplate.getPages().get(0).getPageScreen(0, book,
-						chapterTemplate, tracker, resolveViewerUuid(), resolveKnowledge())));
-
-		this.addRenderableWidget(arrowB = new HLButtonArrow(ArrowDirection.BACKWARD, ARROWB,
-				left, top + guiHeight - 7,
-				(press) -> Minecraft.getInstance().setScreen(new HLGuiGuideTitlePage(book, tracker,
-						resolveViewerUuid(), resolveKnowledge()))));
-
-		Identifier tabTex = resolveTabTexture();
-		this.addRenderableWidget(buttonTitle = new HLButtonTextured(tabTex, TITLEBUTTON,
-				left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0,
-				(press) -> Minecraft.getInstance().setScreen(new HLGuiGuideTitlePage(book, tracker,
-						resolveViewerUuid(), resolveKnowledge()))));
-
-		this.addRenderableWidget(buttonCloseTab = new HLButtonTextured(tabTex, CLOSEBUTTON,
-				left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32,
-				(press) -> this.onClose()));
-	}
-
-	// -------------------------------------------------------------------------
-	// Rendering
-	// -------------------------------------------------------------------------
-
-	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		this.renderMenuBackground(graphics);
-		left = width / 2 - guiWidth / 2;
-		top  = height / 2 - guiHeight / 2;
-		pageButtons.sort(Comparator.comparingInt(HLButtonTextured::getId));
-
-		int accentColor = resolveAccentColor();
-
-		// Determine UUID and knowledge to use – prefer explicitly-provided values,
-		// otherwise fall back to the local player so the standard opening path works too.
-		UUID resolvedUuid = resolveViewerUuid();
-		IBookKnowledge resolvedKnowledge = resolveKnowledge();
-
-		for (int i = 0; i < pageButtons.size(); i++) {
-			HLButtonTextured btn = pageButtons.get(i);
-			btn.render(graphics, mouseX, mouseY, partialTicks);
-			HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (i + 1)),
-					btn.posX + 5, btn.posY + 2, 150, 0xffffff, true);
-			HLGuiUtils.drawMaxWidthString(font,
-					Component.literal(((PageTemplate) chapterTemplate.getPages().get(i)).getTitle()),
-					btn.posX + 30, btn.posY + 2, 150, 0xffffff, true);
-
-			// Unread dot indicator
-			if (resolvedUuid != null) {
-				Identifier pageId = chapterTemplate.getPages().get(i).getId();
-				boolean unread = pageId != null
-						? !BookReadTracker.isAcknowledged(resolvedUuid, pageId)
-						: resolvedKnowledge != null && buildPagePrefix(i) != null
-								&& BookReadTracker.countUnread(resolvedUuid, resolvedKnowledge, buildPagePrefix(i)) > 0;
-				if (unread) {
-					graphics.fill(btn.posX + btn.getWidth() - 8, btn.posY + 3,
-							btn.posX + btn.getWidth() - 3, btn.posY + 8, 0xFF000000 | accentColor);
-				}
-			}
-		}
-
-		arrowF.render(graphics, mouseX, mouseY, partialTicks);
-		arrowB.render(graphics, mouseX, mouseY, partialTicks);
-		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
-		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
-
-		List<Component> titlePage = new ArrayList<>();
-		titlePage.add(Component.literal("Title"));
-		titlePage.add(Component.literal("Return to Categories"));
-		if (buttonTitle.isHovered()) {
-			graphics.renderComponentTooltip(font, titlePage, mouseX, mouseY);
-		}
-		List<Component> closePage = new ArrayList<>();
-		closePage.add(Component.literal("Close Book"));
-		if (buttonCloseTab.isHoveredOrFocused()) {
-			graphics.renderComponentTooltip(font, closePage, mouseX, mouseY);
+		this.addRenderableWidget(Button.builder(Component.literal("Back"),
+				button -> Minecraft.getInstance().setScreen(new HLGuiGuideTitlePage(this.book)))
+				.bounds(this.left + 24, this.top + 154, 64, 20)
+				.build());
+		List<BookDataTemplate> pages = this.chapter != null && this.chapter.getPages() != null
+				? this.chapter.getPages()
+				: Collections.emptyList();
+		for (int i = 0; i < pages.size(); i++) {
+			BookDataTemplate page = pages.get(i);
+			String label = page instanceof PageTemplate template ? safe(template.getTitle()) : "Page " + (i + 1);
+			int y = this.top + 42 + i * 20;
+			int pageNum = i;
+			this.addRenderableWidget(Button.builder(Component.literal(label),
+					button -> Minecraft.getInstance().setScreen(new HLGuiGuidePage(pageNum, this.book, this.chapter)))
+					.bounds(this.left + 44, y, 168, 18)
+					.build());
 		}
 	}
 
 	@Override
-	public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		// TOC renders its own panel background; suppress Screen's default in-world blur path.
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+		this.extractBackground(graphics, mouseX, mouseY, partialTick);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.left, this.top, 0, 0, 256, 192, 256, 256);
+		graphics.centeredText(this.font, this.title, this.left + 128, this.top + 18, 0x3F2B1F);
+		super.extractRenderState(graphics, mouseX, mouseY, partialTick);
 	}
 
-	@Override
-	protected void renderBlurredBackground(float partialTicks) {
-		// Explicitly disable blur for this screen.
+	public static void openScreenViaItem(int pageNum, BookCodeModel book, ChapterTemplate chapterTemplate) {
+		Minecraft.getInstance().setScreen(new HLGuiGuidePageTOC(book, chapterTemplate));
 	}
 
-	@Override
-	protected void renderMenuBackground(GuiGraphics graphics) {
-		left = width / 2 - guiWidth / 2;
-		top  = height / 2 - guiHeight / 2;
-		graphics.blit(chapterTemplate.getTextureLocation(), left, top, 0, 0, guiWidth, guiHeight);
-	}
-
-	// -------------------------------------------------------------------------
-	// Theme helpers
-	// -------------------------------------------------------------------------
-
-	private Identifier resolveTabTexture() {
-		BookTheme theme = book.getTheme();
-		if (theme != null && theme.tabTexture() != null) {
-			return theme.tabTexture();
-		}
-		return HLResourceUtils.guiPrefix("book_tabs.png");
-	}
-
-	private int resolveAccentColor() {
-		BookTheme theme = book.getTheme();
-		if (theme != null) {
-			return theme.accentColor() != 0 ? theme.accentColor() : BookTheme.DEFAULT_ACCENT;
-		}
-		return BookTheme.DEFAULT_ACCENT;
-	}
-
-	@Nullable
-	private UUID resolveViewerUuid() {
-		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
-		return viewerUuid != null ? viewerUuid : (localPlayer != null ? localPlayer.getUUID() : null);
-	}
-
-	@Nullable
-	private IBookKnowledge resolveKnowledge() {
-		if (knowledge != null) {
-			return knowledge;
-		}
-		net.minecraft.world.entity.player.Player localPlayer = Minecraft.getInstance().player;
-		return localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null;
-	}
-
-	/**
-	 * Derives a {@link BookReadTracker} prefix string for page {@code index}.
-	 * Uses the page's {@link net.minecraft.resources.Identifier} ID if available,
-	 * falling back to the book's entry prefix.
-	 */
-	@Nullable
-	private String buildPagePrefix(int index) {
-		var page = chapterTemplate.getPages().get(index);
-		if (page.getId() != null) {
-			return page.getId().getPath();
-		}
-		return null;
-	}
-
-	// -------------------------------------------------------------------------
-	// Drag / misc
-	// -------------------------------------------------------------------------
-
-	@Override
-	public boolean isPauseScreen() {
-		return false;
-	}
-
-	@Override
-	public boolean mouseDragged(double xPos, double yPos, int button, double dragLeftRight, double dragUpDown) {
-		xDragPos = xPos;
-		yDragPos = yPos;
-		this.dragLeftRight += dragLeftRight / 2;
-		this.dragUpDown    -= dragUpDown / 2;
-		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
-	}
-
-	// -------------------------------------------------------------------------
-	// Static openers
-	// -------------------------------------------------------------------------
-
-	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {
-		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuidePageTOC(pBook, pChapterTemplate));
-	}
-
-	/**
-	 * Opens the TOC screen with unread-badge support.
-	 *
-	 * @param pBook             the book model
-	 * @param pChapterTemplate  the chapter to show
-	 * @param tracker           client-side read tracker
-	 * @param viewerUuid        UUID of the viewing player
-	 * @param knowledge         the player's book knowledge
-	 */
-	public static void openScreenViaItem(BookCodeModel pBook, ChapterTemplate pChapterTemplate,
+	public static void openScreenViaItem(BookCodeModel book, ChapterTemplate chapterTemplate,
 			BookReadTracker tracker, UUID viewerUuid, IBookKnowledge knowledge) {
-		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuidePageTOC(pBook, pChapterTemplate, tracker, viewerUuid, knowledge));
+		Minecraft.getInstance().setScreen(new HLGuiGuidePageTOC(book, chapterTemplate, tracker, viewerUuid, knowledge));
+	}
+
+	private static String safe(String value) {
+		return value == null || value.isBlank() ? "Untitled" : value;
 	}
 }

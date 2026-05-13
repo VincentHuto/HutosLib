@@ -3,64 +3,78 @@ package com.vincenthuto.hutoslib.client.render.block;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.common.block.entity.DisplayPedestalBlockEntity;
 import com.vincenthuto.hutoslib.math.Vector3;
-
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
-public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPedestalBlockEntity> {
-	   private final ItemRenderer itemRenderer;
+public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPedestalBlockEntity, RenderTileDisplayPedestal.DisplayPedestalRenderState> {
+	private final ItemModelResolver itemModelResolver;
 
-	public RenderTileDisplayPedestal(BlockEntityRendererProvider.Context pContext) {
-	      this.itemRenderer = pContext.getItemRenderer();
-
+	public RenderTileDisplayPedestal(BlockEntityRendererProvider.Context context) {
+		this.itemModelResolver = context.itemModelResolver();
 	}
 
 	@Override
-	public void render(DisplayPedestalBlockEntity te, float partialTicks, PoseStack matrixStackIn,
-			MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-		
-
-		renderItems(te, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
-
+	public DisplayPedestalRenderState createRenderState() {
+		return new DisplayPedestalRenderState();
 	}
 
-
-	
-	public void renderItems(DisplayPedestalBlockEntity te, float partialTicks, PoseStack matrixStackIn,
-			MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {		
-		int items = 0;
-		for (int i = 0; i < te.inventory.size(); i++)
-			if (te.inventory.get(i).isEmpty())
-				break;
-			else
-				items++;
-		float[] angles = new float[te.inventory.size()];
-
-		float anglePer = 360F / items;
-		float totalAngle = 0F;
-		for (int i = 0; i < angles.length; i++)
-			angles[i] = totalAngle += anglePer;
-
-		for (int i = 0; i < te.inventory.size(); i++) {
-			matrixStackIn.pushPose();
-			matrixStackIn.translate(0.5F, 1.55F, 0.5F);
-			matrixStackIn.mulPose(Vector3.YP.rotationDegrees(angles[i] + te.getLevel().getGameTime()).toMoj()); // Edit
-			matrixStackIn.translate(0.025F, -0.5F, 0.025F);
-			matrixStackIn.mulPose(Vector3.YP.rotationDegrees(90f).toMoj()); // Edit Radius Movement
-			matrixStackIn.translate(0D, 0.175D + i * 0.25, 0F); // Block/Item Scale
-			matrixStackIn.scale(0.5f, 0.5f, 0.5f);
-			ItemStack stack = te.inventory.get(i);
+	@Override
+	public void extractRenderState(DisplayPedestalBlockEntity pedestal, DisplayPedestalRenderState state,
+			float partialTicks, Vec3 cameraPos, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+		BlockEntityRenderState.extractBase(pedestal, state, crumblingOverlay);
+		state.items = 0;
+		state.rotation = pedestal.getLevel() == null ? 0.0F : pedestal.getLevel().getGameTime() + partialTicks;
+		for (int i = 0; i < pedestal.inventory.size() && i < state.itemStates.length; i++) {
+			var stack = pedestal.inventory.get(i);
+			state.itemStates[i].clear();
 			if (!stack.isEmpty()) {
-				  this.itemRenderer.renderStatic(null, stack, ItemDisplayContext.FIXED, true, matrixStackIn, bufferIn, null,
-						combinedLightIn, combinedOverlayIn, i);
+				state.items++;
+				this.itemModelResolver.updateForTopItem(state.itemStates[i], stack, ItemDisplayContext.FIXED,
+						pedestal.getLevel(), (ItemOwner) null, i);
 			}
-			matrixStackIn.popPose();
+		}
+	}
+
+	@Override
+	public void submit(DisplayPedestalRenderState state, PoseStack poseStack, SubmitNodeCollector nodes,
+			CameraRenderState cameraState) {
+		if (state.items == 0) {
+			return;
 		}
 
+		float anglePer = 360F / state.items;
+		float totalAngle = 0F;
+		for (int i = 0; i < state.itemStates.length; i++) {
+			ItemStackRenderState item = state.itemStates[i];
+			if (item.isEmpty()) {
+				continue;
+			}
+
+			poseStack.pushPose();
+			poseStack.translate(0.5F, 1.55F, 0.5F);
+			poseStack.mulPose(Vector3.YP.rotationDegrees((totalAngle += anglePer) + state.rotation).toMoj());
+			poseStack.translate(0.025F, -0.5F, 0.025F);
+			poseStack.mulPose(Vector3.YP.rotationDegrees(90f).toMoj());
+			poseStack.translate(0D, 0.175D + i * 0.25, 0F);
+			poseStack.scale(0.5f, 0.5f, 0.5f);
+			item.submit(poseStack, nodes, state.lightCoords, OverlayTexture.NO_OVERLAY, -1);
+			poseStack.popPose();
+		}
 	}
 
+	public static class DisplayPedestalRenderState extends BlockEntityRenderState {
+		public final ItemStackRenderState[] itemStates = { new ItemStackRenderState() };
+		public int items;
+		public float rotation;
+	}
 }

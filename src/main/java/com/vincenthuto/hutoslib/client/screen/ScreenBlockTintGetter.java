@@ -3,8 +3,9 @@ package com.vincenthuto.hutoslib.client.screen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.ColorResolver;
+import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,18 +43,8 @@ public class ScreenBlockTintGetter implements BlockAndTintGetter {
 	}
 
 	@Override
-	public int getHeight() {
-		return 256;
-	}
-
-	@Override
 	public LevelLightEngine getLightEngine() {
 		return null;
-	}
-
-	@Override
-	public int getMinBuildHeight() {
-		return 0;
 	}
 
 	@Override
@@ -62,7 +53,17 @@ public class ScreenBlockTintGetter implements BlockAndTintGetter {
 	}
 
 	@Override
-	public float getShade(Direction p_45522_, boolean p_45523_) {
-		return 50f;
+	public int getHeight() {
+		return 256;
+	}
+
+	@Override
+	public int getMinY() {
+		return 0;
+	}
+
+	@Override
+	public CardinalLighting cardinalLighting() {
+		return CardinalLighting.DEFAULT;
 	}
 }

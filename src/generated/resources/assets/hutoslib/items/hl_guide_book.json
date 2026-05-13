@@ -1,6 +1,10 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "hutoslib:item/hl_guide_book"
+    "type": "minecraft:special",
+    "base": "hutoslib:item/hl_guide_book",
+    "model": {
+      "type": "hutoslib:guide_book",
+      "texture": "hutoslib:textures/gui/guide/hl_guide_model.png"
+    }
   }
 }

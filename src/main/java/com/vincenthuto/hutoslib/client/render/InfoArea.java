@@ -9,6 +9,7 @@
 package com.vincenthuto.hutoslib.client.render;
 
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 
@@ -32,5 +33,9 @@ public abstract class InfoArea implements Renderable {
 	}
 
 	protected abstract void fillTooltipOverArea(int mouseX, int mouseY, List<Component> tooltip);
+
+	@Override
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+	}
 
 }

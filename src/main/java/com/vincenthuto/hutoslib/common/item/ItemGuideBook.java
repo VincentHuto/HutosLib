@@ -9,7 +9,9 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 public class ItemGuideBook extends Item {
@@ -68,6 +70,10 @@ public class ItemGuideBook extends Item {
 
 	public Identifier getTexture() {
 		return texture;
+	}
+
+	public Set<Identifier> collectVisiblePageIds(Player player) {
+		return Collections.emptySet();
 	}
 
 	public void setTexture(Identifier texture) {

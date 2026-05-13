@@ -10,6 +10,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.RandomSource;
 
 public class DarkGlowParticleFactory implements ParticleProvider<DarkColorParticleData> {
 	public static final String NAME = "dark_glow";
@@ -25,7 +26,7 @@ public class DarkGlowParticleFactory implements ParticleProvider<DarkColorPartic
 
 	@Override
 	public Particle createParticle(DarkColorParticleData data, ClientLevel worldIn, double x, double y, double z,
-			double xSpeed, double ySpeed, double zSpeed) {
+			double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
 		return new ParticleDarkGlow(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(),
 				data.color.getBlue(), 1.0f, .035f, 136, this.spriteSet);
 

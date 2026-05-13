@@ -1,6 +1,9 @@
 package com.vincenthuto.hutoslib.common.data;
 
 import com.vincenthuto.hutoslib.HutosLib;
+import com.vincenthuto.hutoslib.client.render.item.ArmBannerSpecialRenderer;
+import com.vincenthuto.hutoslib.client.render.item.GuideBookSpecialRenderer;
+import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -52,10 +55,21 @@ public class HLModelProvider extends ModelProvider {
 				.forEach(item -> itemModels.generateFlatItem(item, ModelTemplates.FLAT_ITEM));
 		HLItemInit.HANDHELDITEMS.getEntries().forEach(item ->
 				itemModels.generateFlatItem(item.get(), ModelTemplates.FLAT_HANDHELD_ITEM));
-		HLItemInit.SPECIALITEMS.getEntries().forEach(item ->
-				itemModels.itemModelOutput.accept(
-						item.get(),
-						ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item.get()))));
+		HLItemInit.SPECIALITEMS.getEntries().forEach(item -> {
+			Item value = item.get();
+			if (value instanceof ItemArmBanner banner) {
+				itemModels.itemModelOutput.accept(value,
+						ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value),
+								new ArmBannerSpecialRenderer.Unbaked(banner.getTexture())));
+			} else if (value == HLItemInit.hl_guide_book.get()) {
+				itemModels.itemModelOutput.accept(value,
+						ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value),
+								new GuideBookSpecialRenderer.Unbaked(HLItemInit.hl_guide_book_text)));
+			} else {
+				itemModels.itemModelOutput.accept(value,
+						ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(value)));
+			}
+		});
 	}
 
 	@Override

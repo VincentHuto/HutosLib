@@ -1,57 +1,15 @@
-/*
- *  Modified code from BluSunrize
- *  Copyright (c) 2021
- *
- *  This code is licensed under "Blu's License of Common Sense"
- *  Details can be found in the license file in the root folder of this project
- */
 package com.vincenthuto.hutoslib.client.render;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat.Mode;
-import net.minecraft.Util;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderType.CompositeState;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 
-import java.util.function.Function;
-
-//This extends RenderStateShard to get access to various protected members
-public class HLRenderStateShards extends RenderStateShard {
-	private static final Function<Identifier, RenderType> GUI_CUTOUT;
-	private static final Function<Identifier, RenderType> GUI_TRANSLUCENT;
-
-	static {
-		GUI_CUTOUT = Util.memoize(texture -> createDefault("gui_" + texture, DefaultVertexFormat.POSITION_TEX_COLOR ,
-				Mode.QUADS, makeGuiState(texture).createCompositeState(false)));
-		GUI_TRANSLUCENT = Util.memoize(texture -> createDefault("gui_translucent_" + texture,
-				DefaultVertexFormat.POSITION_TEX_COLOR , Mode.QUADS,
-				makeGuiState(texture).setTransparencyState(TRANSLUCENT_TRANSPARENCY).createCompositeState(false)));
-	}
-
-	private HLRenderStateShards(String p_110161_, Runnable p_110162_, Runnable p_110163_) {
-		super(p_110161_, p_110162_, p_110163_);
-	}
-
+public class HLRenderStateShards {
 	public static RenderType getGui(Identifier texture) {
-		return GUI_CUTOUT.apply(texture);
+		return RenderTypes.entityCutout(texture);
 	}
 
 	public static RenderType getGuiTranslucent(Identifier texture) {
-		return GUI_TRANSLUCENT.apply(texture);
+		return RenderTypes.entityTranslucent(texture);
 	}
-
-	private static CompositeState.CompositeStateBuilder makeGuiState(Identifier texture) {
-		return RenderType.CompositeState.builder().setTextureState(new TextureStateShard(texture, false, false))
-				.setShaderState(new ShaderStateShard(GameRenderer::getPositionTexColorShader));
-	}
-
-	private static RenderType createDefault(String name, VertexFormat format, VertexFormat.Mode mode,
-			RenderType.CompositeState state) {
-		return RenderType.create(name, format, mode, 256, false, false, state);
-	}
-
 }

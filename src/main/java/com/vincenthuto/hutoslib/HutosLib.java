@@ -10,6 +10,7 @@ import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
+import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -53,6 +54,7 @@ public class HutosLib {
         HLBlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
         HlContainerInit.CONTAINERS.register(modEventBus);
         HlContainerInit.RECIPESERIALIZERS.register(modEventBus);
+        HLParticleInit.PARTICLE_TYPES.register(modEventBus);
         HLAttachmentTypes.register(modEventBus);
     }
 

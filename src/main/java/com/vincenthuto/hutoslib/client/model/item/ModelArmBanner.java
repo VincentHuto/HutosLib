@@ -2,17 +2,20 @@ package com.vincenthuto.hutoslib.client.model.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModelArmBanner<T extends LivingEntity> extends EntityModel<T> {
+public class ModelArmBanner extends Model<ModelArmBanner.State> {
+	public record State(boolean plateOnly) {
+		public static final State SHOULDER = new State(false);
+		public static final State PLATE = new State(true);
+	}
 	@SuppressWarnings("unused")
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
@@ -40,9 +43,11 @@ public class ModelArmBanner<T extends LivingEntity> extends EntityModel<T> {
 	public final ModelPart leftShoulder;
 
 	private final ModelPart plate;
+	private final ModelPart root;
 
 	public ModelArmBanner(ModelPart root) {
-		super(RenderType::entitySolid);
+		super(root, RenderTypes::entitySolid);
+		this.root = root;
 		this.leftShoulder = root.getChild("leftShoulder");
 		this.plate = root.getChild("plate");
 
@@ -52,16 +57,15 @@ public class ModelArmBanner<T extends LivingEntity> extends EntityModel<T> {
 		return this.plate;
 	}
 
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
+	public void renderShoulder(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
 			int color) {
 		leftShoulder.render(poseStack, buffer, packedLight, packedOverlay, color);
 	}
 
 	@Override
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
-			float headPitch) {
-
+	public void setupAnim(State state) {
+		this.leftShoulder.visible = !state.plateOnly();
+		this.plate.visible = state.plateOnly();
 	}
 
 }

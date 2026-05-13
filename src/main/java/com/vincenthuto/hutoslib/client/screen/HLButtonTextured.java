@@ -1,12 +1,12 @@
 package com.vincenthuto.hutoslib.client.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
 public class HLButtonTextured extends Button {
-
 	public final Identifier texture;
 	public int id, posX, posY, buttonWidth, buttonHeight, u, v, adjV, newV;
 	boolean state;
@@ -15,21 +15,8 @@ public class HLButtonTextured extends Button {
 
 	public HLButtonTextured(Identifier texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, boolean stateIn, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonWidthIn, buttonHeightIn, Component.literal(""), actionIn, DEFAULT_NARRATION);
-		this.texture = texIn;
-		this.id = idIn;
-		this.posX = posXIn;
-		this.posY = posYIn;
-		this.width = buttonWidthIn;
-		this.height = buttonHeightIn;
-		this.u = uIn;
-		this.v = vIn;
-		this.adjV = vIn + buttonHeightIn;
-		this.newV = vIn;
-		this.action = actionIn;
-		this.state = stateIn;
-		this.text = Component.literal("");
-
+		this(texIn, idIn, posXIn, posYIn, buttonWidthIn, buttonHeightIn, uIn, vIn, stateIn,
+				Component.empty(), actionIn);
 	}
 
 	public HLButtonTextured(Identifier texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
@@ -48,45 +35,16 @@ public class HLButtonTextured extends Button {
 		this.action = actionIn;
 		this.state = stateIn;
 		this.text = text;
-
 	}
-
-	/***
-	 *
-	 * @param texIn          Texture Location
-	 * @param idIn           Button Id
-	 * @param posXIn         Screen X
-	 * @param posYIn         Screen Y
-	 * @param buttonWidthIn  Button Size Width
-	 * @param buttonHeightIn Button Size Height
-	 * @param uIn            Texture X Loc
-	 * @param vIn            Texture Y Loc
-	 * @param actionIn       On Pressed Action
-	 */
 
 	public HLButtonTextured(Identifier texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, Button.OnPress actionIn) {
 		this(texIn, idIn, posXIn, posYIn, buttonWidthIn, buttonHeightIn, uIn, vIn, false, actionIn);
-
 	}
 
 	public HLButtonTextured(Identifier texIn, int idIn, int posXIn, int posYIn, int buttonWidthIn,
 			int buttonHeightIn, int uIn, int vIn, Component text, Button.OnPress actionIn) {
-		super(posXIn, posYIn, buttonWidthIn, buttonHeightIn, text, actionIn, DEFAULT_NARRATION);
-		this.texture = texIn;
-		this.id = idIn;
-		this.posX = posXIn;
-		this.posY = posYIn;
-		this.width = buttonWidthIn;
-		this.height = buttonHeightIn;
-		this.u = uIn;
-		this.v = vIn;
-		this.adjV = vIn + buttonHeightIn;
-		this.newV = vIn;
-		this.action = actionIn;
-		this.state = false;
-		this.text = text;
-
+		this(texIn, idIn, posXIn, posYIn, buttonWidthIn, buttonHeightIn, uIn, vIn, false, text, actionIn);
 	}
 
 	public Button.OnPress getAction() {
@@ -102,24 +60,16 @@ public class HLButtonTextured extends Button {
 	}
 
 	@Override
-	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float particks) {
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		this.posX = this.getX();
 		this.posY = this.getY();
-		if (visible) {
-			if (this.isMouseOver(mouseX, mouseY)) {
-				this.isHovered = true;
-				v = newV;
-				graphics.blit(texture, this.getX(), this.getY(), u, adjV, width, height);
-			} else if (state) {
-				v = newV;
-				graphics.blit(texture, this.getX(), this.getY(), u, adjV, width, height);
-			} else {
-				this.isHovered = false;
-				newV = v;
-				graphics.blit(texture, this.getX(), this.getY(), u, v, width, height);
-			}
+		int drawV = (this.isHoveredOrFocused() || this.state) ? this.adjV : this.v;
+		graphics.blit(RenderPipelines.GUI_TEXTURED, this.texture, this.getX(), this.getY(), this.u, drawV,
+				this.width, this.height, 256, 256);
+		if (!this.text.getString().isEmpty()) {
+			graphics.centeredText(net.minecraft.client.Minecraft.getInstance().font, this.text,
+					this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, 0x404040);
 		}
-
 	}
 
 	public void setAction(Button.OnPress action) {

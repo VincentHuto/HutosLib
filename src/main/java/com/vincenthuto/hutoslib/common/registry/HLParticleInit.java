@@ -1,25 +1,15 @@
 package com.vincenthuto.hutoslib.common.registry;
 
 import com.vincenthuto.hutoslib.HutosLib;
-import com.vincenthuto.hutoslib.client.particle.factory.DarkGlowParticleFactory;
-import com.vincenthuto.hutoslib.client.particle.factory.EmberParticleFactory;
-import com.vincenthuto.hutoslib.client.particle.factory.GlowParticleFactory;
-import com.vincenthuto.hutoslib.client.particle.factory.LightningParticleFactory;
 import com.vincenthuto.hutoslib.client.particle.type.DarkGlowParticleType;
 import com.vincenthuto.hutoslib.client.particle.type.EmberParticleType;
 import com.vincenthuto.hutoslib.client.particle.type.GlowParticleType;
 import com.vincenthuto.hutoslib.client.particle.type.LightningParticleType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-@EventBusSubscriber(modid = HutosLib.MOD_ID, value = Dist.CLIENT)
 public class HLParticleInit {
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister
@@ -36,14 +26,5 @@ public class HLParticleInit {
 
 	public static final DeferredHolder<ParticleType<?>, EmberParticleType> ember = PARTICLE_TYPES.register("ember",
 			() -> new EmberParticleType());
-
-	@SubscribeEvent
-	public static void registerParticleFactories(RegisterParticleProvidersEvent  event) {
-		Minecraft.getInstance().particleEngine.register(glow.get(), GlowParticleFactory::new);
-		Minecraft.getInstance().particleEngine.register(dark_glow.get(), DarkGlowParticleFactory::new);
-		Minecraft.getInstance().particleEngine.register(lightning_bolt.get(), LightningParticleFactory::new);
-		Minecraft.getInstance().particleEngine.register(ember.get(), EmberParticleFactory::new);
-
-	}
 
 }

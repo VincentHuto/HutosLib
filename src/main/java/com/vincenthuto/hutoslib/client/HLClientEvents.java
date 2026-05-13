@@ -3,34 +3,44 @@ package com.vincenthuto.hutoslib.client;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.particle.BoltRenderer;
-import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
-import com.vincenthuto.hutoslib.client.render.item.RenderItemGuideBook;
+import com.vincenthuto.hutoslib.client.particle.factory.DarkGlowParticleFactory;
+import com.vincenthuto.hutoslib.client.particle.factory.EmberParticleFactory;
+import com.vincenthuto.hutoslib.client.particle.factory.GlowParticleFactory;
+import com.vincenthuto.hutoslib.client.particle.factory.LightningParticleFactory;
+import com.vincenthuto.hutoslib.client.render.block.RenderTileDisplayPedestal;
+import com.vincenthuto.hutoslib.client.render.item.ArmBannerSpecialRenderer;
+import com.vincenthuto.hutoslib.client.render.item.GuideBookSpecialRenderer;
 import com.vincenthuto.hutoslib.client.render.layer.LayerArmBanner;
+import com.vincenthuto.hutoslib.common.banner.BannerFinder;
+import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
+import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.item.ItemGuideBook;
 import com.vincenthuto.hutoslib.common.network.PacketOpenBanner;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
+import com.vincenthuto.hutoslib.common.registry.HLParticleInit;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Avatar;
+import net.minecraft.world.entity.player.PlayerModelType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.IItemDecorator;
+import net.neoforged.neoforge.client.extensions.IRenderStateExtension;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.client.renderstate.AvatarRenderStateModifier;
+import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Set;
@@ -38,6 +48,7 @@ import java.util.Set;
 @EventBusSubscriber(value = Dist.CLIENT, modid = HutosLib.MOD_ID)
 public class HLClientEvents {
 
+    public static final KeyMapping.Category HUTOSLIB_KEY_CATEGORY = KeyMapping.Category.register(HutosLib.rloc("hutoslib"));
     public static KeyMapping OPEN_BANNER_SLOT_KEYBIND;
 
     @SubscribeEvent
@@ -49,8 +60,8 @@ public class HLClientEvents {
     }
 
     @SubscribeEvent
-    public static void skybox(RenderLevelStageEvent event) {
-        BoltRenderer.onWorldRenderLast(event.getPartialTick().getGameTimeDeltaPartialTick(true), event.getPoseStack());
+    public static void skybox(RenderLevelStageEvent.AfterTranslucentParticles event) {
+        BoltRenderer.onWorldRenderLast(Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true), event.getPoseStack());
     }
 
     @SubscribeEvent
@@ -58,7 +69,7 @@ public class HLClientEvents {
         Minecraft mc = Minecraft.getInstance();
         while (HLClientEvents.OPEN_BANNER_SLOT_KEYBIND.consumeClick()) {
             if (mc.screen == null) {
-                PacketDistributor.sendToServer(new PacketOpenBanner());
+                ClientPacketDistributor.sendToServer(new PacketOpenBanner());
             }
         }
     }
@@ -68,7 +79,7 @@ public class HLClientEvents {
 
         @SubscribeEvent
         public static void initKeybinds(RegisterKeyMappingsEvent ev) {
-            ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V, "key.armbanner.category"));
+            ev.register(OPEN_BANNER_SLOT_KEYBIND = new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V, HUTOSLIB_KEY_CATEGORY));
         }
 
 
@@ -130,51 +141,53 @@ public class HLClientEvents {
 
 
         @SubscribeEvent
-        public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-            IClientItemExtensions armBannerRenderer = new IClientItemExtensions() {
-                @Override
-                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                    return new RenderItemArmBanner(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
-                }
-            };
-
-            event.registerItem(armBannerRenderer, HLItemInit.leather_arm_banner.get(), HLItemInit.iron_arm_banner.get(), HLItemInit.gold_arm_banner.get(), HLItemInit.diamond_arm_banner.get(), HLItemInit.obsidian_arm_banner.get(), HLItemInit.netherite_arm_banner.get());
-
-            event.registerItem(new IClientItemExtensions() {
-                @Override
-                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                    return new RenderItemGuideBook(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
-                }
-            }, HLItemInit.hl_guide_book.get());
+        public static void registerSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {
+            event.register(ArmBannerSpecialRenderer.TYPE, ArmBannerSpecialRenderer.Unbaked.MAP_CODEC);
+            event.register(GuideBookSpecialRenderer.TYPE, GuideBookSpecialRenderer.Unbaked.MAP_CODEC);
         }
 
         @SuppressWarnings({"rawtypes", "unchecked"})
-        private static <T extends LivingEntity, M extends HumanoidModel<T>, R extends LivingEntityRenderer<T, M>> void addLayerToEntity(EntityRenderersEvent.AddLayers event, EntityType<? extends T> entityType) {
-            R renderer = event.getRenderer(entityType);
-            if (renderer != null) {
-                renderer.addLayer(new LayerArmBanner(renderer));
-            }
-        }
-
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        private static void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, PlayerSkin.Model skinModel) {
-            EntityRenderer<? extends Player> render = event.getSkin(skinModel);
+        private static void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, PlayerModelType skinModel) {
+            EntityRenderer render = event.getPlayerRenderer(skinModel);
             if (render instanceof LivingEntityRenderer livingRenderer) {
-                livingRenderer.addLayer(new LayerArmBanner<>(livingRenderer));
+                livingRenderer.addLayer(new LayerArmBanner(livingRenderer));
             }
         }
 
 
         @SubscribeEvent
         public static void constructLayers(EntityRenderersEvent.AddLayers event) {
-            addLayerToEntity(event, EntityType.ARMOR_STAND);
-            addLayerToEntity(event, EntityType.ZOMBIE);
-            addLayerToEntity(event, EntityType.SKELETON);
-            addLayerToEntity(event, EntityType.HUSK);
-            addLayerToEntity(event, EntityType.DROWNED);
-            addLayerToEntity(event, EntityType.STRAY);
-            addLayerToPlayerSkin(event, PlayerSkin.Model.WIDE);
-            addLayerToPlayerSkin(event, PlayerSkin.Model.SLIM);
+            addLayerToPlayerSkin(event, PlayerModelType.WIDE);
+            addLayerToPlayerSkin(event, PlayerModelType.SLIM);
+        }
+
+        @SubscribeEvent
+        public static void registerRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
+            event.registerAvatarEntityModifier(new AvatarRenderStateModifier() {
+                @Override
+                public <T extends Avatar & ClientAvatarEntity> void accept(T player, AvatarRenderState state) {
+                    ItemStack banner = BannerFinder.findBanner(player, true).map(getter -> getter.getBanner().copy()).orElse(ItemStack.EMPTY);
+                    ((IRenderStateExtension) state).setRenderData(LayerArmBanner.ARM_BANNER_STACK, banner);
+                }
+            });
+        }
+
+        @SubscribeEvent
+        public static void registerScreens(RegisterMenuScreensEvent event) {
+            event.register(HlContainerInit.banner_slot_container.get(), com.vincenthuto.hutoslib.client.screen.BannerSlotScreen::new);
+        }
+
+        @SubscribeEvent
+        public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerBlockEntityRenderer(HLBlockEntityInit.display_pedestal.get(), RenderTileDisplayPedestal::new);
+        }
+
+        @SubscribeEvent
+        public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
+            event.registerSpriteSet(HLParticleInit.glow.get(), GlowParticleFactory::new);
+            event.registerSpriteSet(HLParticleInit.dark_glow.get(), DarkGlowParticleFactory::new);
+            event.registerSpriteSet(HLParticleInit.lightning_bolt.get(), LightningParticleFactory::new);
+            event.registerSpriteSet(HLParticleInit.ember.get(), EmberParticleFactory::new);
         }
     }
 }

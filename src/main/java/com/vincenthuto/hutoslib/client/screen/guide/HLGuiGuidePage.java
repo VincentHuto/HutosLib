@@ -1,334 +1,92 @@
 package com.vincenthuto.hutoslib.client.screen.guide;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.vincenthuto.hutoslib.common.util.HLResourceUtils;
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
-import com.vincenthuto.hutoslib.client.screen.HLButtonArrow;
-import com.vincenthuto.hutoslib.client.screen.HLButtonArrow.ArrowDirection;
-import com.vincenthuto.hutoslib.client.screen.HLButtonTextured;
-import com.vincenthuto.hutoslib.client.screen.HLGuiUtils;
-import com.vincenthuto.hutoslib.common.book.BookTheme;
-import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
 import com.vincenthuto.hutoslib.common.data.book.BookDataTemplate;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class HLGuiGuidePage extends Screen {
-
-	// -------------------------------------------------------------------------
-	// Layout constants
-	// -------------------------------------------------------------------------
-	/** Y offset from (top + guiHeight) at which the title row begins. */
-	protected static final int TEXT_TOP_OFFSET  = 220;
-	/** Additional pixels dropped for a subtitle row beneath the title. */
-	protected static final int SUBTITLE_Y_DELTA = 10;
-	/** Additional pixels dropped for the body row beneath the subtitle (or title). */
-	protected static final int BODY_Y_DELTA     = 10;
-	/** Maximum width (pixels) available for title and subtitle text (slightly wider than body). */
-	protected static final int HEADING_MAX_WIDTH = 165;
-	/** Maximum width (pixels) available for body text. */
-	protected static final int TEXT_MAX_WIDTH   = 160;
-	/** Padding from the left edge of the gui. */
-	protected static final int TEXT_LEFT_OFFSET = 180;
-
-	// -------------------------------------------------------------------------
-	// Fields
-	// -------------------------------------------------------------------------
-	public int left;
-	public int top;
-	double xDragPos = 0;
-	double yDragPos = 0;
-	public double dragLeftRight = 0;
-	public double dragUpDown    = 0;
-	final int ARROWF = 0, ARROWB = 1, TITLEBUTTON = 2, CLOSEBUTTON = 3;
-	public int pageNum;
-	public int guiHeight = 228;
-	public int guiWidth  = 174;
-	HLButtonArrow arrowF, arrowB;
-	HLButtonTextured buttonTitle, buttonCloseTab;
-
-	protected Minecraft mc = Minecraft.getInstance();
-	BookDataTemplate pageTemplate;
-	public BookCodeModel book;
-	public ChapterTemplate chapter;
-	@Nullable
-	private final BookReadTracker tracker;
-	@Nullable
-	private final UUID viewerUuid;
-	@Nullable
-	private final IBookKnowledge knowledge;
+	private static final Identifier BACKGROUND = HutosLib.rloc("textures/gui/guide/hl_guide_book_background.png");
+	protected final int pageNum;
+	protected final BookCodeModel book;
+	protected final ChapterTemplate chapter;
+	protected int left;
+	protected int top;
 
 	public HLGuiGuidePage(int pageNum, BookCodeModel book, ChapterTemplate chapter) {
 		this(pageNum, book, chapter, null, null, null);
 	}
 
 	public HLGuiGuidePage(int pageNum, BookCodeModel book, ChapterTemplate chapter,
-			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid,
-			@Nullable IBookKnowledge knowledge) {
-		super(Component.literal(""));
-		this.pageNum      = pageNum;
-		this.book         = book;
-		this.chapter      = chapter;
-		this.pageTemplate = chapter.getPages().get(pageNum);
-		this.tracker      = tracker;
-		this.viewerUuid   = viewerUuid;
-		this.knowledge    = knowledge;
+			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid, @Nullable IBookKnowledge knowledge) {
+		super(Component.literal(titleFor(chapter, pageNum)));
+		this.pageNum = pageNum;
+		this.book = book;
+		this.chapter = chapter;
 	}
-
-	// -------------------------------------------------------------------------
-	// Screen lifecycle
-	// -------------------------------------------------------------------------
 
 	@Override
 	protected void init() {
-		left = width / 2 - guiWidth / 2;
-		top  = height / 2 - guiHeight / 2;
+		this.left = (this.width - 256) / 2;
+		this.top = (this.height - 192) / 2;
 		this.clearWidgets();
-		if (pageNum != (chapter.getPages().size() - 1)) {
-			this.addRenderableWidget(arrowF = new HLButtonArrow(ArrowDirection.FORWARD, ARROWF,
-					left + guiWidth - 18, top + guiHeight - 7, (press) -> {
-						if (pageNum != (chapter.getPages().size() - 1)) {
-							chapter.getPages().get(pageNum + 1).getPageScreen(pageNum + 1, book, chapter,
-									tracker, resolveViewerUuid(), resolveKnowledge());
-						} else {
-							chapter.getPages().get(pageNum).getPageScreen(pageNum, book, chapter,
-									tracker, resolveViewerUuid(), resolveKnowledge());
-						}
-					}));
-		}
-		this.addRenderableWidget(
-				arrowB = new HLButtonArrow(ArrowDirection.BACKWARD, ARROWB, left, top + guiHeight - 7, (press) -> {
-					if (pageNum > 0) {
-						chapter.getPages().get(pageNum - 1).getPageScreen(pageNum - 1, book, chapter,
-								tracker, resolveViewerUuid(), resolveKnowledge());
-					} else {
-						mc.setScreen(new HLGuiGuidePageTOC(book, chapter, tracker,
-								resolveViewerUuid(), resolveKnowledge()));
-					}
-				}));
-
-		Identifier tabTex = resolveTabTexture();
-		this.addRenderableWidget(buttonTitle = new HLButtonTextured(tabTex,
-				TITLEBUTTON, left - guiWidth + 150, top + guiHeight - 210 - 16, 24, 16, 24, 0,
-				(press) -> mc.setScreen(new HLGuiGuideTitlePage(book, tracker,
-						resolveViewerUuid(), resolveKnowledge()))));
-
-		this.addRenderableWidget(buttonCloseTab = new HLButtonTextured(tabTex,
-				CLOSEBUTTON, left - guiWidth + 150, top + guiHeight - 192 - 16, 24, 16, 24, 32,
-				(press) -> this.onClose()));
-		super.init();
-
-		// Acknowledge this page as read when the player actually views it.
-		net.minecraft.world.entity.player.Player localPlayer = mc.player;
-		if (localPlayer != null && pageTemplate.getId() != null) {
-			BookReadTracker.acknowledge(localPlayer.getUUID(), pageTemplate.getId());
-		}
+		this.addRenderableWidget(Button.builder(Component.literal("Contents"),
+				button -> Minecraft.getInstance().setScreen(new HLGuiGuidePageTOC(this.book, this.chapter)))
+				.bounds(this.left + 24, this.top + 154, 78, 20)
+				.build());
 	}
 
 	@Override
-	public boolean isPauseScreen() {
-		return false;
-	}
-
-	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		return super.keyPressed(keyCode, scanCode, modifiers);
-	}
-
-	// -------------------------------------------------------------------------
-	// Rendering
-	// -------------------------------------------------------------------------
-
-	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		this.renderMenuBackground(graphics);
-		left = width / 2 - guiWidth / 2;
-		top  = height / 2 - guiHeight / 2;
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, resolvePageTexture());
-
-		int accentColor = resolveAccentColor();
-
-		// Page number
-		HLGuiUtils.drawMaxWidthString(font, Component.literal("Pg." + (pageNum + 1)),
-				left + guiWidth - 26, top + guiHeight - 15, 50, accentColor, true);
-
-		// Icon item
-		graphics.renderFakeItem(((PageTemplate) pageTemplate).getIconItem(),
-				left + guiWidth - 32, top + guiHeight - 220);
-
-		// Page content – delegate to custom renderer if present, else default layout
-		IBookPageRenderer customRenderer = pageTemplate.getPageRenderer();
-		if (customRenderer != null) {
-			customRenderer.render(graphics, pageTemplate, this, mouseX, mouseY, partialTicks);
-		} else {
-			renderDefaultPageContent(graphics, accentColor);
-		}
-
-		if (pageNum != (chapter.getPages().size() - 1)) {
-			arrowF.render(graphics, mouseX, mouseY, partialTicks);
-		}
-		if (pageNum >= 0) {
-			arrowB.render(graphics, mouseX, mouseY, partialTicks);
-		}
-		buttonTitle.render(graphics, mouseX, mouseY, partialTicks);
-		buttonCloseTab.render(graphics, mouseX, mouseY, partialTicks);
-
-		// Icon tooltip
-		if (mouseX >= left + guiWidth - 32 && mouseX <= left + guiWidth - 10
-				&& mouseY >= top + guiHeight - 220 && mouseY <= top + guiHeight - 200) {
-			List<Component> text = new ArrayList<>();
-			if (!((PageTemplate) pageTemplate).getIconItem().isEmpty()) {
-				text.add(Component.literal(I18n.get(
-						((PageTemplate) pageTemplate).getIconItem().getHoverName().getString())));
-				graphics.renderComponentTooltip(font, text, left + guiWidth - 32, top + guiHeight - 220);
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+		this.extractBackground(graphics, mouseX, mouseY, partialTick);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.left, this.top, 0, 0, 256, 192, 256, 256);
+		BookDataTemplate page = page();
+		if (page instanceof PageTemplate template) {
+			graphics.centeredText(this.font, Component.literal(safe(template.getTitle())), this.left + 128, this.top + 20, 0x3F2B1F);
+			if (template.getSubtitle() != null && !template.getSubtitle().isBlank()) {
+				graphics.centeredText(this.font, Component.literal(template.getSubtitle()), this.left + 128, this.top + 34, 0x5A4638);
 			}
+			graphics.textWithWordWrap(this.font, Component.literal(template.getText() == null ? "" : template.getText()),
+					this.left + 34, this.top + 54, 188, 0x3F2B1F);
+		} else {
+			graphics.centeredText(this.font, Component.literal("Page " + (this.pageNum + 1)), this.left + 128, this.top + 20, 0x3F2B1F);
 		}
-
-		// Tab button tooltips
-		List<Component> titlePage = new ArrayList<>();
-		titlePage.add(Component.literal("Title"));
-		titlePage.add(Component.literal("Return to Categories"));
-		if (buttonTitle.isHovered()) {
-			graphics.renderComponentTooltip(font, titlePage, mouseX, mouseY);
-		}
-		List<Component> closePage = new ArrayList<>();
-		closePage.add(Component.literal("Close Book"));
-		if (buttonCloseTab.isHoveredOrFocused()) {
-			graphics.renderComponentTooltip(font, closePage, mouseX, mouseY);
-		}
+		super.extractRenderState(graphics, mouseX, mouseY, partialTick);
 	}
 
-	/**
-	 * Renders title → subtitle → body in a single sequential pass so each
-	 * element is positioned relative to its predecessor's height instead of
-	 * being hardcoded.
-	 */
-	protected void renderDefaultPageContent(GuiGraphics graphics, int color) {
-		PageTemplate page    = (PageTemplate) pageTemplate;
-		int textX            = left - guiWidth + TEXT_LEFT_OFFSET;
-		int currentY         = top + guiHeight - TEXT_TOP_OFFSET;
-
-		if (!page.getTitle().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(page.getTitle())),
-					textX, currentY, HEADING_MAX_WIDTH, color, true);
-			currentY += SUBTITLE_Y_DELTA;
-		}
-
-		if (!page.getSubtitle().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(page.getSubtitle())),
-					textX, currentY, HEADING_MAX_WIDTH, color, true);
-			currentY += BODY_Y_DELTA;
-		}
-
-		if (!page.getText().isEmpty()) {
-			HLGuiUtils.drawMaxWidthString(font, Component.literal(I18n.get(page.getText())),
-					textX, currentY, TEXT_MAX_WIDTH, color, true);
-		}
+	protected BookDataTemplate page() {
+		List<BookDataTemplate> pages = this.chapter != null ? this.chapter.getPages() : null;
+		return pages != null && this.pageNum >= 0 && this.pageNum < pages.size() ? pages.get(this.pageNum) : null;
 	}
 
-	@Override
-	protected void renderMenuBackground(GuiGraphics graphics) {
-		left = width / 2 - guiWidth / 2;
-		top  = height / 2 - guiHeight / 2;
-		graphics.blit(resolvePageTexture(), left, top, 0, 0, guiWidth, guiHeight);
+	public static void openScreenViaItem(int pageNum, BookCodeModel book, ChapterTemplate chapterTemplate) {
+		Minecraft.getInstance().setScreen(new HLGuiGuidePage(pageNum, book, chapterTemplate));
 	}
 
-	// -------------------------------------------------------------------------
-	// Theme helpers
-	// -------------------------------------------------------------------------
-
-	/** Returns the background texture, preferring the theme's value when set. */
-	protected Identifier resolvePageTexture() {
-		BookTheme theme = book.getTheme();
-		if (theme != null && theme.backgroundTexture() != null) {
-			return theme.backgroundTexture();
-		}
-		return ((PageTemplate) pageTemplate).getTextureLocation();
+	public static void openScreenViaItem(int pageNum, BookCodeModel book, ChapterTemplate chapterTemplate,
+			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid, @Nullable IBookKnowledge knowledge) {
+		Minecraft.getInstance().setScreen(new HLGuiGuidePage(pageNum, book, chapterTemplate, tracker, viewerUuid, knowledge));
 	}
 
-	/** Returns the tab sprite-sheet, preferring the theme's value when set. */
-	protected Identifier resolveTabTexture() {
-		BookTheme theme = book.getTheme();
-		if (theme != null && theme.tabTexture() != null) {
-			return theme.tabTexture();
-		}
-		return HLResourceUtils.guiPrefix("book_tabs.png");
+	private static String titleFor(ChapterTemplate chapter, int pageNum) {
+		return chapter != null ? safe(chapter.getTitle()) + " " + (pageNum + 1) : "Guide Page";
 	}
 
-	/** Returns the accent colour from the theme, or white if none is set. */
-	protected int resolveAccentColor() {
-		BookTheme theme = book.getTheme();
-		if (theme != null) {
-			return theme.accentColor() != 0 ? theme.accentColor() : BookTheme.DEFAULT_ACCENT;
-		}
-		return BookTheme.DEFAULT_ACCENT;
-	}
-
-	@Nullable
-	private UUID resolveViewerUuid() {
-		net.minecraft.world.entity.player.Player localPlayer = mc.player;
-		return viewerUuid != null ? viewerUuid : (localPlayer != null ? localPlayer.getUUID() : null);
-	}
-
-	@Nullable
-	private IBookKnowledge resolveKnowledge() {
-		if (knowledge != null) {
-			return knowledge;
-		}
-		net.minecraft.world.entity.player.Player localPlayer = mc.player;
-		return localPlayer != null ? BookKnowledgeProvider.get(localPlayer) : null;
-	}
-
-	// -------------------------------------------------------------------------
-	// Drag
-	// -------------------------------------------------------------------------
-
-	@Override
-	public boolean mouseDragged(double xPos, double yPos, int button, double dragLeftRight, double dragUpDown) {
-		xDragPos = xPos;
-		yDragPos = yPos;
-		this.dragLeftRight += dragLeftRight / 2;
-		this.dragUpDown    -= dragUpDown / 2;
-		return super.mouseDragged(xPos, yPos, button, dragLeftRight, dragUpDown);
-	}
-
-	// -------------------------------------------------------------------------
-	// Accessors / static openers
-	// -------------------------------------------------------------------------
-
-	public BookDataTemplate getPageTemplate() {
-		return pageTemplate;
-	}
-
-	public void setPageTemplate(BookDataTemplate pageTemplate) {
-		this.pageTemplate = pageTemplate;
-	}
-
-	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {
-		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuidePage(pNum, pBook, pChapterTemplate));
-	}
-
-	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate,
-			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid,
-			@Nullable IBookKnowledge knowledge) {
-		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuidePage(pNum, pBook, pChapterTemplate, tracker, viewerUuid, knowledge));
+	private static String safe(String value) {
+		return value == null || value.isBlank() ? "Untitled" : value;
 	}
 }

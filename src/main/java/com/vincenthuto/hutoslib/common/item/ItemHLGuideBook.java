@@ -1,5 +1,6 @@
 package com.vincenthuto.hutoslib.common.item;
 
+import com.vincenthuto.hutoslib.client.HLGuideBookClient;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -13,7 +14,10 @@ public class ItemHLGuideBook extends ItemGuideBook {
 
 	@Override
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
-		// TODO 26.1: open the rewritten client guide screen through a client-only bridge.
-		return super.use(level, player, hand);
+		if (level.isClientSide()) {
+			HLGuideBookClient.open(this, player);
+			return InteractionResult.SUCCESS;
+		}
+		return InteractionResult.PASS;
 	}
 }

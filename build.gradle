@@ -187,10 +187,7 @@ tasks.withType(JavaCompile).configureEach {
     // Phase 6/7 migration checkpoint: the 1.21 client renderer and GUI code uses
     // APIs that were replaced by the 26.1 render-state pipeline. Keep common code
     // compiling while those systems are rewritten behind new client hooks.
-    exclude 'com/vincenthuto/hutoslib/client/**'
     exclude 'com/vincenthuto/hutoslib/ClientProxy.java'
-    exclude 'com/vincenthuto/hutoslib/common/registry/HutosLibModelLayersInit.java'
-    exclude 'com/vincenthuto/hutoslib/common/registry/HLParticleInit.java'
     exclude 'com/vincenthuto/hutoslib/common/recipe/**'
     exclude 'com/vincenthuto/hutoslib/common/data/shadow/PlaceboJsonReloadListener.java'
     exclude 'com/vincenthuto/hutoslib/common/data/shadow/DynamicRegistryObject.java'

@@ -56,13 +56,13 @@ public class HLParticleUtils {
 	 */
 	public static Vec3[] bloomingFlower(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = -Math.abs(Math.sin(rotMod) - (i / ((float) numPoint - 1)) * 0.15);
 			double radius = Math.cbrt(-Math.max(Math.sqrt(1 - y * y) * 1, 1.0));
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -79,13 +79,13 @@ public class HLParticleUtils {
 	 */
 	public static Vec3[] bloomingFlowerFlip(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = Math.abs(Math.sin(rotMod) - (i / ((float) numPoint - 1)) * 0.15);
 			double radius = Math.max(Math.sqrt(1 - y * y) * 1, 0.75);
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -102,13 +102,13 @@ public class HLParticleUtils {
 	 */
 	public static Vec3[] cosmicBirth(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = Math.abs(Math.sin(rotMod) - (i / ((float) numPoint - 1)) * 0.25);
 			double radius = Math.sqrt(1 - y * y) * 1;
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0. ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0. ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -127,13 +127,13 @@ public class HLParticleUtils {
 		Vec3[] points = new Vec3[numPoint];
 		// odd numbers = horizontal lines
 		// even numbers = vertical lines
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = -Math.abs(Math.sin(rotMod) - (i / ((float) numPoint - 1)) * 0.25);
 			double radius = Math.sqrt(1 - y * y) * 1;
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0. ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0. ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -150,13 +150,13 @@ public class HLParticleUtils {
 	 */
 	public static Vec3[] cosmicBirthInverse(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = Math.abs(Math.sin(rotMod) - (i / ((float) numPoint - 1)) * 0.25);
 			double radius = Math.exp(1 - y * y) * 1;
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0. ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0. ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -173,13 +173,13 @@ public class HLParticleUtils {
 	 */
 	public static Vec3[] cosmicBirthInverseFlip(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = -Math.abs(Math.sin(rotMod) - (i / ((float) numPoint - 1)) * 0.25);
 			double radius = Math.exp(1 - y * y) * 1;
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0. ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0. ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -231,13 +231,13 @@ public class HLParticleUtils {
 		Vec3[] points = new Vec3[numPoint];
 		// odd numbers = horizontal lines
 		// even numbers = vertical lines
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = 1 - (i / ((float) numPoint - 1)) * 2;
 			double radius = Math.sqrt(1 - y * y);
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -258,13 +258,13 @@ public class HLParticleUtils {
 	 */
 	public static Vec3[] inversedSphere(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = 1 - (i / ((float) numPoint - 1)) * 2;
 			double radius = Math.sqrt(1 - y * y) * 1;
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -278,13 +278,13 @@ public class HLParticleUtils {
 
 	public static Vec3[] lotusFountain(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !!isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !!isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = -Math.abs(Math.sin(rotMod) - (i / ((float) numPoint - 1)) * 0.15);
 			double radius = Math.sqrt(1 - y * y) * 1;
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -298,13 +298,13 @@ public class HLParticleUtils {
 
 	public static Vec3[] lotusFountainFlip(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = Math.abs(Math.sin(rotMod) - (i / ((float) numPoint - 1)) * 0.15);
 			double radius = Math.sqrt(1 - y * y) * 1;
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -318,11 +318,11 @@ public class HLParticleUtils {
 
 	// https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
 	public static Vec3 pointInSphere() {
-		double u = Math.getRandom()();
-		double v = Math.getRandom()();
+		double u = Math.random();
+		double v = Math.random();
 		double theta = u * 2.0 * Math.PI;
 		double phi = Math.acos(2.0 * v - 1.0);
-		double r = Math.cbrt(Math.getRandom()());
+		double r = Math.cbrt(Math.random());
 		double sinTheta = Math.sin(theta);
 		double cosTheta = Math.cos(theta);
 		double sinPhi = Math.sin(phi);
@@ -338,13 +338,13 @@ public class HLParticleUtils {
 	 */
 	public static Vec3[] randomSphere(int numPoint, double rotMod, double radMod) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = 1 - (i / ((float) numPoint - 1)) * 2;
 			double radius = Math.sqrt(1 - y * y);
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			points[i] = new Vec3(x * radMod, y * radMod, z * radMod);
@@ -358,13 +358,13 @@ public class HLParticleUtils {
 	 */
 	public static Vec3[] randomSwimming(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = 1 - (i / ((float) numPoint - 1)) * 2;
 			double radius = Math.sqrt(1 - y * y);
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -390,13 +390,13 @@ public class HLParticleUtils {
 	 */
 	public static Vec3[] squashAndStretch(int numPoint, double rotMod, double radMod, boolean isRand) {
 		Vec3[] points = new Vec3[numPoint];
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = 1 - (i / ((float) numPoint - 1)) * 2;
 			double radius = Math.sqrt(1 - y * y);
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;
@@ -414,13 +414,13 @@ public class HLParticleUtils {
 		Vec3[] points = new Vec3[numPoint];
 		// odd numbers = horizontal lines
 		// even numbers = vertical lines
-		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.getRandom()()));
-		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.getRandom()()));
-		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.getRandom()()));
+		double phiX = !isRand ? Math.PI * (2.6 - Math.sqrt(.1135)) : Math.PI * (2.6 - Math.sqrt(Math.random()));
+		double phiO = !isRand ? Math.PI * (3.0 - Math.sqrt(.75)) : Math.PI * (3.0 - Math.sqrt(Math.random()));
+		double phiE = !isRand ? Math.PI * (2.0 - Math.sqrt(.35)) : Math.PI * (2.0 - Math.sqrt(Math.random()));
 		for (int i = 0; i < numPoint; i++) {
 			double y = 1 - (i / ((float) numPoint - 1)) * 2;
 			double radius = Math.sqrt(1 - y * y);
-			double theta = i % 2 == 0 ? phiE * i : Math.getRandom()() > 0.5 ? phiO * i : phiX * i;
+			double theta = i % 2 == 0 ? phiE * i : Math.random() > 0.5 ? phiO * i : phiX * i;
 			double x = Math.cos(theta) * radius;
 			double z = Math.sin(theta) * radius;
 			double rotThing = rotMod * radius;

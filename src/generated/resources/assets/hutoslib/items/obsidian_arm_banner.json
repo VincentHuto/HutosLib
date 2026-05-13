@@ -1,6 +1,10 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "hutoslib:item/obsidian_arm_banner"
+    "type": "minecraft:special",
+    "base": "hutoslib:item/obsidian_arm_banner",
+    "model": {
+      "type": "hutoslib:arm_banner",
+      "texture": "hutoslib:textures/entity/arm_banner/obsidian_arm_banner.png"
+    }
   }
 }

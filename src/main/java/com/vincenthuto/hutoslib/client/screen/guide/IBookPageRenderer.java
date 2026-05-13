@@ -2,7 +2,7 @@ package com.vincenthuto.hutoslib.client.screen.guide;
 
 import com.vincenthuto.hutoslib.common.data.book.BookDataTemplate;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 /**
  * Optional custom renderer for a specific {@link BookDataTemplate} type.
@@ -31,6 +31,6 @@ public interface IBookPageRenderer {
      * @param mouseY      current mouse Y in screen coordinates
      * @param partialTick partial tick fraction
      */
-    void render(GuiGraphics graphics, BookDataTemplate page, HLGuiGuidePage screen,
+    void render(GuiGraphicsExtractor graphics, BookDataTemplate page, HLGuiGuidePage screen,
                 int mouseX, int mouseY, float partialTick);
 }
