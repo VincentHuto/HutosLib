@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 
 public class BannerSlot extends Slot {
 	public static final Identifier SLOT_BACKGROUND = HutosLib.rloc(
-			"gui/empty_banner_slot_background");
+			"container/slot/banner");
 
 	private static Container emptyInventory = new SimpleContainer(0);
 	private final IBannerSlot slot;

@@ -5,6 +5,8 @@ import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookEntryRegistry;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
 import com.vincenthuto.hutoslib.common.data.HLDataGeneration;
+import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
+import com.vincenthuto.hutoslib.common.data.skilltree.SkillTreePlaceboReloadListener;
 import com.vincenthuto.hutoslib.common.event.GuideBookUnlockEvents;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
@@ -64,6 +66,8 @@ public class HutosLib {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         BannerFinderBannerSlot.initFinder();
+        BookPlaceboReloadListener.INSTANCE.registerToBus();
+        SkillTreePlaceboReloadListener.INSTANCE.registerToBus();
         // Register test unlock: picking up a diamond unlocks the guide's locked_test chapter
         BookEntryRegistry.registerItemUnlock(
                 BuiltInRegistries.ITEM.getKey(Items.DRAGON_EGG),

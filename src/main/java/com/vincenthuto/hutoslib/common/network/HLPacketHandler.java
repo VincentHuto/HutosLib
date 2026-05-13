@@ -37,6 +37,12 @@ PacketKarmaClient::handle);
 
 registrar.playToClient(PacketSyncBookKnowledge.TYPE, PacketSyncBookKnowledge.CODEC,
 PacketSyncBookKnowledge::handle);
+registrar.playToClient(ReloadListenerPacket.Start.TYPE, ReloadListenerPacket.Start.CODEC,
+ReloadListenerPacket.Start::handle);
+registrar.playToClient(ReloadListenerPacket.Content.TYPE, ReloadListenerPacket.Content.CODEC,
+ReloadListenerPacket.Content::handle);
+registrar.playToClient(ReloadListenerPacket.End.TYPE, ReloadListenerPacket.End.CODEC,
+ReloadListenerPacket.End::handle);
 }
 
 public static void sendLightningSpawn(Vec3 entVec, Vec3 endVec, float radius, ResourceKey<Level> dimension,

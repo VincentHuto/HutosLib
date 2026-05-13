@@ -50,13 +50,14 @@ public class LayerArmBanner<S extends HumanoidRenderState, M extends HumanoidMod
 			poseStack.translate(0.01, 0.0, 0);
 		}
 
-		Identifier texture = type.getTexture() != null ? type.getTexture() : FALLBACK;
 		int overlay = LivingEntityRenderer.getOverlayCoords(renderState, 0.0F);
+		Identifier texture = type.getTexture() != null ? type.getTexture() : FALLBACK;
 		nodes.submitModel(this.modelPauldron, ModelArmBanner.State.SHOULDER, poseStack, texture, light, overlay,
-				-1, null);
+				0, null);
 
 		BannerPatternLayers patterns = banner.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY);
-		if (!patterns.layers().isEmpty()) {
+		DyeColor baseColor = banner.get(DataComponents.BASE_COLOR);
+		if (baseColor != null || !patterns.layers().isEmpty()) {
 			poseStack.pushPose();
 			poseStack.scale(1.0F, -1.0F, -1.0F);
 			poseStack.mulPose(new Quaternion(Vector3.YN, 90, true).toMoj());
@@ -65,7 +66,7 @@ public class LayerArmBanner<S extends HumanoidRenderState, M extends HumanoidMod
 			poseStack.scale(0.5f, 0.5f, 0.5f);
 			BannerRenderer.submitPatterns(Minecraft.getInstance().getAtlasManager(), poseStack, nodes, light,
 					overlay, this.modelPauldron, ModelArmBanner.State.PLATE, false,
-					banner.getOrDefault(DataComponents.BASE_COLOR, DyeColor.WHITE), patterns, null);
+					baseColor != null ? baseColor : DyeColor.WHITE, patterns, null);
 			poseStack.popPose();
 		}
 

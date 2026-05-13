@@ -2,18 +2,20 @@ package com.vincenthuto.hutoslib.common.data.shadow;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
+import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.network.ReloadListenerPacket;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -23,6 +25,8 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
@@ -40,7 +44,8 @@ import java.util.*;
  *
  * @param <V> The base type of objects stored in this reload listener.
  */
-public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends SimpleJsonResourceReloadListener {
+public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>>
+		extends SimplePreparableReloadListener<Map<Identifier, JsonElement>> {
 
 	/**
 	 * The Default key is used when subtypes are not enabled.
@@ -61,6 +66,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	private final Set<ListenerCallback<V>> callbacks = new HashSet<>();
 
 	private WeakReference<Object> context = new WeakReference<>(null);
+	private final FileToIdConverter fileLister;
 
 	/**
 	 * Constructs a new JSON reload listener. All parameters will be saved finally
@@ -75,16 +81,34 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	 *                 key on top-level objects).
 	 */
 	public PlaceboJsonReloadListener(Logger logger, String path, boolean synced, boolean subtypes) {
-		super(new GsonBuilder().setLenient().create(), path);
 		this.logger = logger;
 		this.path = path;
 		this.synced = synced;
 		this.subtypes = subtypes;
+		this.fileLister = FileToIdConverter.json(path);
 		this.serializers = new SerializerMap<>(path);
 		this.registerBuiltinSerializers();
 		if (this.serializers.isEmpty())
 			throw new RuntimeException(
 					"Attempted to create a json reload listener for " + path + " with no built-in serializers!");
+	}
+
+	@Override
+	protected Map<Identifier, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+		Map<Identifier, JsonElement> objects = new HashMap<>();
+		this.fileLister.listMatchingResources(resourceManager).forEach((fileId, resource) -> {
+			Identifier dataId = this.fileLister.fileToId(fileId);
+			try (BufferedReader reader = resource.openAsReader()) {
+				JsonElement element = JsonParser.parseReader(reader);
+				if (element != null) {
+					objects.put(dataId, element);
+				}
+			} catch (IOException | RuntimeException ex) {
+				this.logger.error("Failed loading {} file {} from pack {}.", this.path, dataId, resource.sourcePackId());
+				this.logger.error("Underlying Exception: ", ex);
+			}
+		});
+		return objects;
 	}
 
 	@Override
@@ -333,7 +357,7 @@ public abstract class PlaceboJsonReloadListener<V extends TypeKeyed<V>> extends 
 	}
 
 	private final void addReloader(AddServerReloadListenersEvent e) {
-		e.addListener(this);
+		e.addListener(HutosLib.rloc(this.path), this);
 		this.context = new WeakReference<>(e.getConditionContext());
 	}
 

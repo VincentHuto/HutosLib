@@ -4,6 +4,7 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.container.BannerSlotContainer;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -19,7 +20,6 @@ public class BannerSlotScreen extends AbstractContainerScreen<BannerSlotContaine
 
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-		this.extractBackground(graphics, mouseX, mouseY, partialTicks);
 		super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 	}
 
@@ -28,6 +28,12 @@ public class BannerSlotScreen extends AbstractContainerScreen<BannerSlotContaine
 		super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 		graphics.blit(RenderPipelines.GUI_TEXTURED, SCREEN_BACKGROUND, this.leftPos, this.topPos, 0, 0,
 				this.imageWidth, this.imageHeight, 256, 256);
+		if (this.minecraft != null && this.minecraft.player != null) {
+			InventoryScreen.extractEntityInInventoryFollowsMouse(graphics,
+					this.leftPos + 26, this.topPos + 8,
+					this.leftPos + 75, this.topPos + 78,
+					30, 0.0625F, mouseX, mouseY, this.minecraft.player);
+		}
 	}
 
 	@Override

@@ -112,6 +112,8 @@ public class BookPlaceboReloadListener extends PlaceboJsonReloadListener<BookDat
 						}
 					}
 				}
+				Collections.sort(chapters,
+						(obj1, obj2) -> Integer.compare(obj1.getOrdinality(), obj2.getOrdinality()));
 				book.setChapters(chapters);
 				builder.add(book);
 

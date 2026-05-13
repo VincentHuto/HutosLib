@@ -5,11 +5,17 @@ import com.vincenthuto.hutoslib.common.book.filter.IBookPageFilter;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookKnowledgeProvider;
 import com.vincenthuto.hutoslib.common.book.knowledge.IBookKnowledge;
 import com.vincenthuto.hutoslib.common.data.book.BookCodeModel;
+import com.vincenthuto.hutoslib.common.data.book.BookDataTemplate;
+import com.vincenthuto.hutoslib.common.data.book.BookPlaceboReloadListener;
+import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
+import com.vincenthuto.hutoslib.common.data.book.PageTemplate;
+import com.vincenthuto.hutoslib.HutosLib;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -73,7 +79,28 @@ public class ItemGuideBook extends Item {
 	}
 
 	public Set<Identifier> collectVisiblePageIds(Player player) {
-		return Collections.emptySet();
+		String prefix = bookPrefix == null || bookPrefix.isBlank() ? "guide" : bookPrefix.replaceAll("/+$", "");
+		BookCodeModel loaded = BookPlaceboReloadListener.INSTANCE.getBookByTitle(HutosLib.rloc(prefix));
+		if (loaded == null) {
+			return Set.of();
+		}
+		BookCodeModel filtered = applyVisibilityFilters(loaded, player);
+		Set<Identifier> ids = new HashSet<>();
+		List<ChapterTemplate> chapters = filtered.getChapters();
+		if (chapters == null) {
+			return Set.of();
+		}
+		for (ChapterTemplate chapter : chapters) {
+			if (chapter.getPages() == null) {
+				continue;
+			}
+			for (BookDataTemplate page : chapter.getPages()) {
+				if (page instanceof PageTemplate && page.getId() != null) {
+					ids.add(page.getId());
+				}
+			}
+		}
+		return ids;
 	}
 
 	public void setTexture(Identifier texture) {

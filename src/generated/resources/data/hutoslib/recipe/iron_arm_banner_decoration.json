@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_special_shielddecoration",
+  "banner": "#minecraft:banners",
+  "result": {
+    "id": "hutoslib:iron_arm_banner"
+  },
+  "target": "hutoslib:iron_arm_banner"
+}

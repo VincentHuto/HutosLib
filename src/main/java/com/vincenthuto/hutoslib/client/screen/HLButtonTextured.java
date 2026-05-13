@@ -68,7 +68,7 @@ public class HLButtonTextured extends Button {
 				this.width, this.height, 256, 256);
 		if (!this.text.getString().isEmpty()) {
 			graphics.centeredText(net.minecraft.client.Minecraft.getInstance().font, this.text,
-					this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, 0x404040);
+					this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, 0xFF404040);
 		}
 	}
 

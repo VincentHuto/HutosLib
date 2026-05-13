@@ -8,9 +8,19 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class HLRecipeJsonProvider implements DataProvider {
+	private static final List<String> ARM_BANNERS = List.of(
+			"leather_arm_banner",
+			"iron_arm_banner",
+			"gold_arm_banner",
+			"diamond_arm_banner",
+			"obsidian_arm_banner",
+			"netherite_arm_banner");
+
 	private final PackOutput.PathProvider recipes;
 
 	public HLRecipeJsonProvider(PackOutput output) {
@@ -19,7 +29,14 @@ public class HLRecipeJsonProvider implements DataProvider {
 
 	@Override
 	public CompletableFuture<?> run(CachedOutput output) {
-		return DataProvider.saveStable(output, glimmerRecipe(), recipePath("glimmer"));
+		List<CompletableFuture<?>> futures = new ArrayList<>();
+		futures.add(DataProvider.saveStable(output, glimmerRecipe(), recipePath("glimmer")));
+		futures.add(DataProvider.saveStable(output, armBannerCraftRecipe(), recipePath("arm_banner_craft")));
+		for (String armBanner : ARM_BANNERS) {
+			futures.add(DataProvider.saveStable(output, armBannerDecorationRecipe(armBanner),
+					recipePath(armBanner + "_decoration")));
+		}
+		return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
 	}
 
 	@Override
@@ -50,6 +67,26 @@ public class HLRecipeJsonProvider implements DataProvider {
 		JsonObject result = new JsonObject();
 		result.addProperty("id", "minecraft:enchanted_book");
 		result.add("components", components);
+		recipe.add("result", result);
+
+		return recipe;
+	}
+
+	private static JsonObject armBannerCraftRecipe() {
+		JsonObject recipe = new JsonObject();
+		recipe.addProperty("type", "hutoslib:arm_banner_craft");
+		return recipe;
+	}
+
+	private static JsonObject armBannerDecorationRecipe(String armBanner) {
+		String itemId = HutosLib.MOD_ID + ":" + armBanner;
+		JsonObject recipe = new JsonObject();
+		recipe.addProperty("type", "minecraft:crafting_special_shielddecoration");
+		recipe.addProperty("banner", "#minecraft:banners");
+		recipe.addProperty("target", itemId);
+
+		JsonObject result = new JsonObject();
+		result.addProperty("id", itemId);
 		recipe.add("result", result);
 
 		return recipe;

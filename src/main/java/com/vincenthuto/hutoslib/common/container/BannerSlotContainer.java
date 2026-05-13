@@ -2,9 +2,12 @@ package com.vincenthuto.hutoslib.common.container;
 
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
 import com.vincenthuto.hutoslib.common.network.PacketContainerSlot;
+import com.vincenthuto.hutoslib.common.recipe.ArmBannerCraftRecipe;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
@@ -237,6 +240,17 @@ public class BannerSlotContainer extends AbstractCraftingMenu {
 	@Override
 	public void slotsChanged(Container inventoryIn) {
 		if (this.player.level() instanceof ServerLevel serverLevel) {
+			ItemStack armBannerResult = ArmBannerCraftRecipe.assembleArmBanner(this.craftSlots.asCraftInput());
+			if (!armBannerResult.isEmpty()) {
+				this.resultSlots.setItem(0, armBannerResult);
+				this.setRemoteSlot(0, armBannerResult);
+				if (this.player instanceof ServerPlayer serverPlayer) {
+					serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(
+							this.containerId, this.incrementStateId(), 0, armBannerResult));
+				}
+				return;
+			}
+
 			Bridge.slotChangedCraftingGridAccessor(this, serverLevel, this.player, this.craftSlots,
 					this.resultSlots, null);
 		}

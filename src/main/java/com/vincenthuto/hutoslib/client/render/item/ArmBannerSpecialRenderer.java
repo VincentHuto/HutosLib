@@ -5,6 +5,8 @@ import com.mojang.serialization.MapCodec;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.model.item.ModelArmBanner;
 import com.vincenthuto.hutoslib.common.registry.HutosLibModelLayersInit;
+import com.vincenthuto.hutoslib.math.Quaternion;
+import com.vincenthuto.hutoslib.math.Vector3;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
@@ -33,19 +35,35 @@ public class ArmBannerSpecialRenderer implements SpecialModelRenderer<ArmBannerS
 
 	@Override
 	public RenderData extractArgument(ItemStack stack) {
+		DyeColor baseColor = stack.get(DataComponents.BASE_COLOR);
+		BannerPatternLayers patterns = stack.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY);
 		return new RenderData(
-				stack.getOrDefault(DataComponents.BASE_COLOR, DyeColor.WHITE),
-				stack.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
+				baseColor != null ? baseColor : DyeColor.WHITE,
+				patterns,
+				baseColor != null || !patterns.layers().isEmpty());
 	}
 
 	@Override
 	public void submit(RenderData data, PoseStack poseStack, SubmitNodeCollector nodes, int light, int overlay,
 			boolean foil, int outlineColor) {
+		poseStack.pushPose();
+		poseStack.scale(4.1F, 5.0F, 4.1F);
+		poseStack.translate(-0.21, 0.02, -0.53);
+		poseStack.mulPose(new Quaternion(Vector3.ZP, -105.0F, true).toMoj());
+		poseStack.mulPose(new Quaternion(Vector3.YP, -90.0F, true).toMoj());
 		nodes.submitModel(this.model, ModelArmBanner.State.SHOULDER, poseStack, this.texture, light, overlay,
 				outlineColor, null);
-		if (!data.patterns().layers().isEmpty()) {
+		poseStack.popPose();
+
+		if (data.hasBannerData()) {
+			poseStack.pushPose();
+			poseStack.scale(1.0F, -1.0F, -1.0F);
+			poseStack.translate(0, 0.05, -0.25);
+			poseStack.mulPose(new Quaternion(Vector3.ZN, 75.0F, true).toMoj());
+			poseStack.scale(1.7F, 1.7F, 1.7F);
 			BannerRenderer.submitPatterns(this.sprites, poseStack, nodes, light, overlay, this.model,
 					ModelArmBanner.State.PLATE, false, data.baseColor(), data.patterns(), null);
+			poseStack.popPose();
 		}
 	}
 
@@ -54,7 +72,7 @@ public class ArmBannerSpecialRenderer implements SpecialModelRenderer<ArmBannerS
 		this.model.root().getExtentsForGui(new PoseStack(), output);
 	}
 
-	public record RenderData(DyeColor baseColor, BannerPatternLayers patterns) {
+	public record RenderData(DyeColor baseColor, BannerPatternLayers patterns, boolean hasBannerData) {
 	}
 
 	public record Unbaked(Identifier texture) implements SpecialModelRenderer.Unbaked<RenderData> {

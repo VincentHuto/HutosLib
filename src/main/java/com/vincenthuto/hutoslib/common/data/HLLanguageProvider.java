@@ -5,6 +5,7 @@ import com.vincenthuto.hutoslib.common.util.HLTextUtils;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.BlockItem;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -22,6 +23,7 @@ public class HLLanguageProvider extends LanguageProvider {
 		add("item_group.hutoslib.hutoslibtab", "HutosLib:A Library Mod");
 		add("container.crafting",  "Crafting");
 		add("item.hutoslib.hutoslib_logo.desc", "HutosLibe");
+		add("tooltip.hutoslib.arm_banner.base_color", "Base Color: %s");
 
 		addArmBannerTranslation("leather");
 		addArmBannerTranslation("gold");
@@ -85,36 +87,10 @@ public class HLLanguageProvider extends LanguageProvider {
 
 
 	public void addArmBannerTranslation(String prefix) {
-		add("item.hutoslib." + prefix + "_arm_banner.black",
-				"Black " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.red", "Red " + HLTextUtils.convertInitToLang("_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.green",
-				"Green " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.brown",
-				"Brown " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.blue",
-				"Blue " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.purple",
-				"Purple " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.cyan",
-				"Cyan " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.silver",
-				"Light Gray " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.gray",
-				"Gray " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.pink",
-				"Pink " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.lime",
-				"Lime " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.yellow",
-				"Yellow " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.lightBlue",
-				"Light " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.magenta",
-				"Magenta " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.orange",
-				"Orange " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
-		add("item.hutoslib." + prefix + "_arm_banner.white",
-				"White " + HLTextUtils.convertInitToLang(prefix + "_arm_banner"));
+		String itemName = HLTextUtils.convertInitToLang(prefix + "_arm_banner");
+		for (DyeColor color : DyeColor.values()) {
+			add("item.hutoslib." + prefix + "_arm_banner." + color.getName(),
+					HLTextUtils.convertInitToLang(color.getName()) + " " + itemName);
+		}
 	}
 }

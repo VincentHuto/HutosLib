@@ -8,7 +8,6 @@ import com.vincenthuto.hutoslib.common.data.book.BookTemplate;
 import com.vincenthuto.hutoslib.common.data.book.ChapterTemplate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -22,7 +21,11 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class HLGuiGuideTitlePage extends Screen {
-	private static final Identifier FALLBACK_BACKGROUND = HutosLib.rloc("textures/gui/guide/hl_guide_book_background.png");
+	private static final Identifier FALLBACK_BACKGROUND = HutosLib.rloc("textures/gui/guide/title.png");
+	private static final int COVER_WIDTH = 185;
+	private static final int COVER_HEIGHT = 240;
+	private static final int TITLE_COLOR = 0xFFFFFFFF;
+	private static final int SUBTITLE_COLOR = 0xFFE6E6E6;
 	private final BookCodeModel book;
 	private final Supplier<BookCodeModel> refresher;
 	private int left;
@@ -46,30 +49,32 @@ public class HLGuiGuideTitlePage extends Screen {
 
 	@Override
 	protected void init() {
-		this.left = (this.width - 256) / 2;
-		this.top = (this.height - 192) / 2;
+		this.left = (this.width - COVER_WIDTH) / 2;
+		this.top = (this.height - COVER_HEIGHT) / 2;
 		this.clearWidgets();
 		List<ChapterTemplate> chapters = this.book.getChapters() != null ? this.book.getChapters() : Collections.emptyList();
 		for (int i = 0; i < chapters.size(); i++) {
 			ChapterTemplate chapter = chapters.get(i);
-			int y = this.top + 46 + i * 22;
-			this.addRenderableWidget(Button.builder(Component.literal(safe(chapter.getTitle())),
-					button -> Minecraft.getInstance().setScreen(new HLGuiGuidePageTOC(this.book, chapter)))
-					.bounds(this.left + 34, y, 188, 20)
-					.build());
+			int x = this.left + COVER_WIDTH - 1 + (i % 2 == 0 ? 0 : 7);
+			int y = this.top + 34 + i * 18;
+			this.addRenderableWidget(new HLTomeCategoryTab(chapter.getChapterRGB(), safe(chapter.getTitle()), i,
+					x, y, 0, 0,
+					button -> Minecraft.getInstance().setScreen(new HLGuiGuidePageTOC(this.book, chapter))));
 		}
 	}
 
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		this.extractBackground(graphics, mouseX, mouseY, partialTick);
-		graphics.blit(RenderPipelines.GUI_TEXTURED, backgroundOf(this.book), this.left, this.top, 0, 0, 256, 192, 256, 256);
-		graphics.centeredText(this.font, this.title, this.left + 128, this.top + 18, 0x3F2B1F);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, backgroundOf(this.book), this.left, this.top, 0, 0, 256, 256, 256, 256);
 		BookTemplate template = this.book.getTemplate();
-		if (template != null && template.getSubtitle() != null) {
-			graphics.centeredText(this.font, Component.literal(template.getSubtitle()), this.left + 128, this.top + 30, 0x5A4638);
+		if (template != null && template.getOverlayLoc() != null && !template.getOverlayLoc().isBlank()) {
+			graphics.blit(RenderPipelines.GUI_TEXTURED, template.getOverlayImage(), this.left, this.top, 0, 0, 256, 256, 256, 256);
 		}
 		super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+		graphics.centeredText(this.font, this.title, this.left + COVER_WIDTH / 2, this.top + 36, TITLE_COLOR);
+		if (template != null && template.getSubtitle() != null) {
+			graphics.centeredText(this.font, Component.literal(template.getSubtitle()), this.left + COVER_WIDTH / 2, this.top + 51, SUBTITLE_COLOR);
+		}
 	}
 
 	public void refresh() {

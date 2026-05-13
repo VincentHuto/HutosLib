@@ -49,10 +49,18 @@ public final class EntryGatedBookFilter implements IBookPageFilter {
 
         List<ChapterTemplate> filteredChapters = new ArrayList<>();
 
+        if (source.getChapters() == null) {
+            BookCodeModel filtered = new BookCodeModel(source.getResourceLocation(), source.getTemplate());
+            filtered.setChapters(List.of());
+            filtered.setTheme(source.getTheme());
+            return filtered;
+        }
+
         for (ChapterTemplate chapter : source.getChapters()) {
             List<BookDataTemplate> visiblePages = new ArrayList<>();
 
-            for (BookDataTemplate page : chapter.getPages()) {
+            List<BookDataTemplate> pages = chapter.getPages() != null ? chapter.getPages() : List.of();
+            for (BookDataTemplate page : pages) {
                 if (page instanceof PageTemplate pt && !pt.getRequiresEntry().isEmpty()) {
                     Identifier entryId = Identifier.tryParse(pt.getRequiresEntry());
                     if (entryId == null || knowledge == null || !knowledge.hasEntry(entryId)) {

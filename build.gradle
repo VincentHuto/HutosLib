@@ -188,13 +188,6 @@ tasks.withType(JavaCompile).configureEach {
     // APIs that were replaced by the 26.1 render-state pipeline. Keep common code
     // compiling while those systems are rewritten behind new client hooks.
     exclude 'com/vincenthuto/hutoslib/ClientProxy.java'
-    exclude 'com/vincenthuto/hutoslib/common/recipe/**'
-    exclude 'com/vincenthuto/hutoslib/common/data/shadow/PlaceboJsonReloadListener.java'
-    exclude 'com/vincenthuto/hutoslib/common/data/shadow/DynamicRegistryObject.java'
-    exclude 'com/vincenthuto/hutoslib/common/data/shadow/ListenerCallback.java'
-    exclude 'com/vincenthuto/hutoslib/common/data/book/BookPlaceboReloadListener.java'
-    exclude 'com/vincenthuto/hutoslib/common/data/skilltree/SkillTreePlaceboReloadListener.java'
-    exclude 'com/vincenthuto/hutoslib/common/network/ReloadListenerPacket.java'
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
