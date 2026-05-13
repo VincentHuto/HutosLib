@@ -4,6 +4,7 @@ import com.vincenthuto.hutoslib.common.banner.BannerFinderBannerSlot;
 import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.book.knowledge.BookEntryRegistry;
 import com.vincenthuto.hutoslib.common.container.HlContainerInit;
+import com.vincenthuto.hutoslib.common.data.HLDataGeneration;
 import com.vincenthuto.hutoslib.common.event.GuideBookUnlockEvents;
 import com.vincenthuto.hutoslib.common.network.HLPacketHandler;
 import com.vincenthuto.hutoslib.common.registry.HLAttachmentTypes;
@@ -40,6 +41,8 @@ public class HutosLib {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::buildContents);
         modEventBus.addListener(HLPacketHandler::registerPayloads);
+        modEventBus.addListener(HLDataGeneration::gatherClientData);
+        modEventBus.addListener(HLDataGeneration::gatherServerData);
         HLItemInit.ITEMS.register(modEventBus);
         HLItemInit.HANDHELDITEMS.register(modEventBus);
         HLItemInit.SPECIALITEMS.register(modEventBus);

@@ -4,16 +4,14 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.ItemTagsProvider;
-import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ItemTagsProvider;
 
 import java.util.concurrent.CompletableFuture;
 
 public class HLItemTagProvider extends ItemTagsProvider {
 
-    public HLItemTagProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, BlockTagsProvider blockTags, ExistingFileHelper helper) {
-        super(packOutput, lookupProvider, blockTags.contentsGetter(), HutosLib.MOD_ID, helper);
+    public HLItemTagProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider, HutosLib.MOD_ID);
     }
 
     @Override

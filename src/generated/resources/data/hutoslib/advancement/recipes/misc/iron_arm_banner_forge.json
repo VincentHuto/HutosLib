@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_diamond": {
+    "has_material": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:diamond"
+            "items": "minecraft:iron_ingot"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "hutoslib:diamond_knapper"
+        "recipe": "hutoslib:iron_arm_banner_forge"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_diamond"
+      "has_material"
     ]
   ],
   "rewards": {
     "recipes": [
-      "hutoslib:diamond_knapper"
+      "hutoslib:iron_arm_banner_forge"
     ]
   }
 }

@@ -1,12 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "minecraft:glow_berries",
-    "#c:glass_blocks"
+  "key": {
+    "C": "minecraft:glass",
+    "S": "minecraft:glowstone_dust"
+  },
+  "pattern": [
+    " C ",
+    "CSC",
+    " C "
   ],
   "result": {
-    "count": 1,
+    "count": 4,
     "id": "hutoslib:display_glass"
   }
 }

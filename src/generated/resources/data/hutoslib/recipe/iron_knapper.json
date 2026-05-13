@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "N": "#c:rods/wooden",
+    "N": "minecraft:stick",
     "P": "#c:ingots/iron"
   },
   "pattern": [
@@ -11,7 +11,6 @@
     "N  "
   ],
   "result": {
-    "count": 1,
     "id": "hutoslib:iron_knapper"
   }
 }

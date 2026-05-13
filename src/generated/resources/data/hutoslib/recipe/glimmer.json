@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:book",
+    "minecraft:glowstone_dust",
+    "minecraft:glow_ink_sac"
+  ],
+  "result": {
+    "components": {
+      "minecraft:stored_enchantments": {
+        "hutoslib:glimmer": 1
+      }
+    },
+    "id": "minecraft:enchanted_book"
+  }
+}

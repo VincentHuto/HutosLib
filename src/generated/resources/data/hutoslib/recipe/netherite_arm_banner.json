@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smithing_transform",
   "addition": "minecraft:netherite_ingot",
-  "base": "hutoslib:diamond_knapper",
+  "base": "hutoslib:diamond_arm_banner",
   "result": {
-    "id": "hutoslib:netherite_knapper"
+    "id": "hutoslib:netherite_arm_banner"
   },
   "template": "minecraft:netherite_upgrade_smithing_template"
 }

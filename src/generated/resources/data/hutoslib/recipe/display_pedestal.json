@@ -3,16 +3,15 @@
   "category": "misc",
   "key": {
     "C": "minecraft:chiseled_stone_bricks",
-    "E": "#c:ender_pearls",
+    "E": "minecraft:ender_pearl",
     "S": "minecraft:stone_bricks"
   },
   "pattern": [
-    "CSC",
-    "ESE",
-    "CSC"
+    "ECE",
+    " S ",
+    "ECE"
   ],
   "result": {
-    "count": 1,
     "id": "hutoslib:display_pedestal"
   }
 }

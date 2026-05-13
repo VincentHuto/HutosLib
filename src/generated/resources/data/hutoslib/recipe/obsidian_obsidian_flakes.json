@@ -2,14 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": "minecraft:clay_ball"
+    "X": "hutoslib:obsidian_flakes"
   },
   "pattern": [
-    " C ",
-    "C C",
-    "CCC"
+    "XX",
+    "XX"
   ],
   "result": {
-    "id": "hutoslib:raw_clay_flask"
+    "id": "minecraft:obsidian"
   }
 }

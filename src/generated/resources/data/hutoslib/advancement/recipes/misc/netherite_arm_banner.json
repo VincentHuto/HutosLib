@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_diamond": {
+    "has_netherite_ingot": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:diamond"
+            "items": "minecraft:netherite_ingot"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "hutoslib:diamond_knapper"
+        "recipe": "hutoslib:netherite_arm_banner"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_diamond"
+      "has_netherite_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
-      "hutoslib:diamond_knapper"
+      "hutoslib:netherite_arm_banner"
     ]
   }
 }

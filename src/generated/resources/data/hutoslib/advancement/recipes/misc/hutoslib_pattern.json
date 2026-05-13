@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_diamond": {
+    "has_obsidian_flakes": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:diamond"
+            "items": "hutoslib:obsidian_flakes"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "hutoslib:diamond_knapper"
+        "recipe": "hutoslib:hutoslib_pattern"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_diamond"
+      "has_obsidian_flakes"
     ]
   ],
   "rewards": {
     "recipes": [
-      "hutoslib:diamond_knapper"
+      "hutoslib:hutoslib_pattern"
     ]
   }
 }

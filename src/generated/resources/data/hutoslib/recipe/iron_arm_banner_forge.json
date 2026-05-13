@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "#c:slime_balls",
+    "S": "minecraft:stick",
+    "X": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "XXB",
+    " XS"
+  ],
+  "result": {
+    "id": "hutoslib:iron_arm_banner"
+  }
+}

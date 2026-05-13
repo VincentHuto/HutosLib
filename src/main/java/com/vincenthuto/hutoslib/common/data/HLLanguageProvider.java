@@ -5,6 +5,7 @@ import com.vincenthuto.hutoslib.common.util.HLTextUtils;
 import com.vincenthuto.hutoslib.common.registry.HLBlockInit;
 import com.vincenthuto.hutoslib.common.registry.HLItemInit;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.BlockItem;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class HLLanguageProvider extends LanguageProvider {
@@ -33,8 +34,10 @@ public class HLLanguageProvider extends LanguageProvider {
 
 		
 		for (var i : HLItemInit.ITEMS.getEntries()) {
-			add(i.get(),
-					HLTextUtils.convertInitToLang(i.get().asItem().getDescriptionId().replace("item.hutoslib.", "")));
+			if (!(i.get() instanceof BlockItem)) {
+				add(i.get(),
+						HLTextUtils.convertInitToLang(i.get().asItem().getDescriptionId().replace("item.hutoslib.", "")));
+			}
 		}
 		for (var i : HLItemInit.SPECIALITEMS.getEntries()) {
 			add(i.get(),
