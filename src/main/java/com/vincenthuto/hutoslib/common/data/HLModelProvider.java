@@ -18,10 +18,24 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import com.mojang.math.Transformation;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.stream.Stream;
 
 public class HLModelProvider extends ModelProvider {
+	private static final Transformation ARM_BANNER_ITEM_TRANSFORM = new Transformation(
+			new Vector3f(),
+			new Quaternionf(),
+			new Vector3f(1.15F, -1.15F, -1.15F),
+			new Quaternionf());
+	private static final Transformation GUIDE_BOOK_ITEM_TRANSFORM = new Transformation(
+			new Vector3f(),
+			new Quaternionf(),
+			new Vector3f(1.0F, -1.0F, -1.0F),
+			new Quaternionf());
+
 	public HLModelProvider(PackOutput output) {
 		super(output, HutosLib.MOD_ID);
 	}
@@ -59,11 +73,11 @@ public class HLModelProvider extends ModelProvider {
 			Item value = item.get();
 			if (value instanceof ItemArmBanner banner) {
 				itemModels.itemModelOutput.accept(value,
-						ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value),
+						ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value), ARM_BANNER_ITEM_TRANSFORM,
 								new ArmBannerSpecialRenderer.Unbaked(banner.getTexture())));
 			} else if (value == HLItemInit.hl_guide_book.get()) {
 				itemModels.itemModelOutput.accept(value,
-						ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value),
+						ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value), GUIDE_BOOK_ITEM_TRANSFORM,
 								new GuideBookSpecialRenderer.Unbaked(HLItemInit.hl_guide_book_text)));
 			} else {
 				itemModels.itemModelOutput.accept(value,

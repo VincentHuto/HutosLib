@@ -5,6 +5,30 @@
     "model": {
       "type": "hutoslib:arm_banner",
       "texture": "hutoslib:textures/entity/arm_banner/netherite_arm_banner.png"
+    },
+    "transformation": {
+      "left_rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "right_rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.15,
+        -1.15,
+        -1.15
+      ],
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ]
     }
   }
 }

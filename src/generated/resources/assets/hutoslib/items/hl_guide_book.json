@@ -5,6 +5,30 @@
     "model": {
       "type": "hutoslib:guide_book",
       "texture": "hutoslib:textures/gui/guide/hl_guide_model.png"
+    },
+    "transformation": {
+      "left_rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "right_rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        -1.0,
+        -1.0
+      ],
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ]
     }
   }
 }

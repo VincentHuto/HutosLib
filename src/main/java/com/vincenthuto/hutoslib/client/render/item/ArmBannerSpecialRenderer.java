@@ -50,7 +50,7 @@ public class ArmBannerSpecialRenderer implements SpecialModelRenderer<ArmBannerS
 		poseStack.scale(4.1F, 5.0F, 4.1F);
 		poseStack.translate(-0.21, 0.02, -0.53);
 		poseStack.mulPose(new Quaternion(Vector3.ZP, -105.0F, true).toMoj());
-		poseStack.mulPose(new Quaternion(Vector3.YP, -90.0F, true).toMoj());
+		poseStack.mulPose(new Quaternion(Vector3.YP, 90.0F, true).toMoj());
 		nodes.submitModel(this.model, ModelArmBanner.State.SHOULDER, poseStack, this.texture, light, overlay,
 				outlineColor, null);
 		poseStack.popPose();

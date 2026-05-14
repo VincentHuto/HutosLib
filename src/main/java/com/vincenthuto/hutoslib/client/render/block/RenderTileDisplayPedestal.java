@@ -67,7 +67,7 @@ public class RenderTileDisplayPedestal implements BlockEntityRenderer<DisplayPed
 			poseStack.mulPose(Vector3.YP.rotationDegrees(90f).toMoj());
 			poseStack.translate(0D, 0.175D + i * 0.25, 0F);
 			poseStack.scale(0.5f, 0.5f, 0.5f);
-			item.submit(poseStack, nodes, state.lightCoords, OverlayTexture.NO_OVERLAY, -1);
+			item.submit(poseStack, nodes, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 			poseStack.popPose();
 		}
 	}
