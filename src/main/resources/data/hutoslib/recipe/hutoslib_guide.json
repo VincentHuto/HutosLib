@@ -6,6 +6,6 @@
     "item" : "minecraft:obsidian"
   } ],
   "result" : {
-    "item" : "hutoslib:hl_guide_book"
+    "id" : "hutoslib:hl_guide_book"
   }
 }
