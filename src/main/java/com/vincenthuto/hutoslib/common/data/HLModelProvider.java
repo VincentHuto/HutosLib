@@ -13,10 +13,12 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.renderer.item.properties.select.DisplayContext;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
 import com.mojang.math.Transformation;
 import org.joml.Quaternionf;
@@ -25,6 +27,8 @@ import org.joml.Vector3f;
 import java.util.stream.Stream;
 
 public class HLModelProvider extends ModelProvider {
+	private static final net.minecraft.resources.Identifier ARM_BANNER_GUI_BASE = HutosLib.rloc("item/arm_banner_base_gui");
+	private static final net.minecraft.resources.Identifier ARM_BANNER_HELD_BASE = HutosLib.rloc("item/arm_banner_base_held");
 	private static final Transformation ARM_BANNER_ITEM_TRANSFORM = new Transformation(
 			new Vector3f(),
 			new Quaternionf(),
@@ -72,9 +76,12 @@ public class HLModelProvider extends ModelProvider {
 		HLItemInit.SPECIALITEMS.getEntries().forEach(item -> {
 			Item value = item.get();
 			if (value instanceof ItemArmBanner banner) {
-				itemModels.itemModelOutput.accept(value,
-						ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value), ARM_BANNER_ITEM_TRANSFORM,
-								new ArmBannerSpecialRenderer.Unbaked(banner.getTexture())));
+				var guiModel = ItemModelUtils.specialModel(ARM_BANNER_GUI_BASE, ARM_BANNER_ITEM_TRANSFORM,
+						new ArmBannerSpecialRenderer.Unbaked(banner.getTexture(), ArmBannerSpecialRenderer.Profile.GUI));
+				var heldModel = ItemModelUtils.specialModel(ARM_BANNER_HELD_BASE, ARM_BANNER_ITEM_TRANSFORM,
+						new ArmBannerSpecialRenderer.Unbaked(banner.getTexture(), ArmBannerSpecialRenderer.Profile.HELD));
+				itemModels.itemModelOutput.accept(value, ItemModelUtils.select(new DisplayContext(), heldModel,
+						ItemModelUtils.when(ItemDisplayContext.GUI, guiModel)));
 			} else if (value == HLItemInit.hl_guide_book.get()) {
 				itemModels.itemModelOutput.accept(value,
 						ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value), GUIDE_BOOK_ITEM_TRANSFORM,

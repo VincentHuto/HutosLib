@@ -1,34 +1,76 @@
 {
   "model": {
-    "type": "minecraft:special",
-    "base": "hutoslib:item/iron_arm_banner",
-    "model": {
-      "type": "hutoslib:arm_banner",
-      "texture": "hutoslib:textures/entity/arm_banner/iron_arm_banner.png"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:special",
+          "base": "hutoslib:item/arm_banner_base_gui",
+          "model": {
+            "type": "hutoslib:arm_banner",
+            "profile": "gui",
+            "texture": "hutoslib:textures/entity/arm_banner/iron_arm_banner.png"
+          },
+          "transformation": {
+            "left_rotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "right_rotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1.15,
+              -1.15,
+              -1.15
+            ],
+            "translation": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "when": "gui"
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:special",
+      "base": "hutoslib:item/arm_banner_base_held",
+      "model": {
+        "type": "hutoslib:arm_banner",
+        "texture": "hutoslib:textures/entity/arm_banner/iron_arm_banner.png"
+      },
+      "transformation": {
+        "left_rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "right_rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.15,
+          -1.15,
+          -1.15
+        ],
+        "translation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
     },
-    "transformation": {
-      "left_rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "right_rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": [
-        1.15,
-        -1.15,
-        -1.15
-      ],
-      "translation": [
-        0.0,
-        0.0,
-        0.0
-      ]
-    }
+    "property": "minecraft:display_context"
   }
 }
