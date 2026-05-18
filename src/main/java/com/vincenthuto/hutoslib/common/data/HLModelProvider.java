@@ -83,9 +83,16 @@ public class HLModelProvider extends ModelProvider {
 				itemModels.itemModelOutput.accept(value, ItemModelUtils.select(new DisplayContext(), heldModel,
 						ItemModelUtils.when(ItemDisplayContext.GUI, guiModel)));
 			} else if (value == HLItemInit.hl_guide_book.get()) {
-				itemModels.itemModelOutput.accept(value,
-						ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value), GUIDE_BOOK_ITEM_TRANSFORM,
-								new GuideBookSpecialRenderer.Unbaked(HLItemInit.hl_guide_book_text)));
+				var guiModel = ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value),
+						GUIDE_BOOK_ITEM_TRANSFORM,
+						new GuideBookSpecialRenderer.Unbaked(HLItemInit.hl_guide_book_text,
+								GuideBookSpecialRenderer.Profile.GUI));
+				var heldModel = ItemModelUtils.specialModel(ModelLocationUtils.getModelLocation(value),
+						GUIDE_BOOK_ITEM_TRANSFORM,
+						new GuideBookSpecialRenderer.Unbaked(HLItemInit.hl_guide_book_text,
+								GuideBookSpecialRenderer.Profile.HELD));
+				itemModels.itemModelOutput.accept(value, ItemModelUtils.select(new DisplayContext(), heldModel,
+						ItemModelUtils.when(ItemDisplayContext.GUI, guiModel)));
 			} else {
 				itemModels.itemModelOutput.accept(value,
 						ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(value)));

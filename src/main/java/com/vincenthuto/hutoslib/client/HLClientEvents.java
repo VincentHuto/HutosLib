@@ -67,6 +67,7 @@ public class HLClientEvents {
     @SubscribeEvent
     public static void handleKeys(ClientTickEvent.Pre ev) {
         Minecraft mc = Minecraft.getInstance();
+        ItemGuideBook.clientTickAnimation(mc.player);
         while (HLClientEvents.OPEN_BANNER_SLOT_KEYBIND.consumeClick()) {
             if (mc.screen == null) {
                 ClientPacketDistributor.sendToServer(new PacketOpenBanner());

@@ -19,4 +19,6 @@ public final class BookAnimState {
 	public float pageAngle;
 	public float tRot;
 	public float close;
+	public boolean wasHeld;
+	public int heldTicks;
 }
