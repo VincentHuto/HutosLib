@@ -3,11 +3,14 @@ package com.vincenthuto.hutoslib.client.render.layer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.model.item.ModelArmBanner;
+import com.vincenthuto.hutoslib.client.render.item.ArmBannerRenderState;
 import com.vincenthuto.hutoslib.common.banner.BannerFinder;
 import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
 import com.vincenthuto.hutoslib.common.registry.HutosLibModelLayersInit;
 import com.vincenthuto.hutoslib.math.Quaternion;
 import com.vincenthuto.hutoslib.math.Vector3;
+
+import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -67,18 +70,21 @@ public class LayerArmBanner<T extends LivingEntity, M extends HumanoidModel<T>> 
 					} else {
 						renderColoredCutoutModel(modelPauldron, texture, matrixStack, buffer, lightness, player, -1);
 					}
-					BannerPatternLayers patterns = banner.get(DataComponents.BANNER_PATTERNS);
-					boolean flag = patterns != null && !patterns.layers().isEmpty();
+					BannerPatternLayers patterns = banner.getOrDefault(DataComponents.BANNER_PATTERNS,
+							BannerPatternLayers.EMPTY);
+					DyeColor bannerColor = banner.get(DataComponents.BASE_COLOR);
+					ArmBannerRenderState bannerState = ArmBannerRenderState.fromBannerData(bannerColor != null,
+							patterns.layers().size());
 					matrixStack.pushPose();
 					matrixStack.scale(1.0F, -1.0F, -1.0F);
-					Material material = flag ? ModelBakery.SHIELD_BASE : ModelBakery.NO_PATTERN_SHIELD;
-					if (flag) {
+					Material material = bannerState.shouldRenderPlate() ? ModelBakery.SHIELD_BASE
+							: ModelBakery.NO_PATTERN_SHIELD;
+					if (bannerState.shouldRenderPlate()) {
 						matrixStack.mulPose(new Quaternion(Vector3.YN, 90, true).toMoj());
 						matrixStack.mulPose(new Quaternion(Vector3.ZP, 180, true).toMoj());
 						matrixStack.translate(0, 0.3, -0.55);
 						matrixStack.scale(0.5f, 0.5f, 0.5f);
-						DyeColor bannerColor = banner.get(DataComponents.BASE_COLOR);
-						DyeColor baseColor = bannerColor != null ? bannerColor : DyeColor.WHITE;
+						DyeColor baseColor = Objects.requireNonNullElse(bannerColor, DyeColor.WHITE);
 						BannerRenderer.renderPatterns(matrixStack, buffer, lightness, OverlayTexture.NO_OVERLAY,
 								this.modelPauldron.plate(), material, false, baseColor, patterns, banner.hasFoil());
 					}

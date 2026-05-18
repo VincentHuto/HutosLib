@@ -9,6 +9,8 @@ import com.vincenthuto.hutoslib.common.registry.HutosLibModelLayersInit;
 import com.vincenthuto.hutoslib.math.Quaternion;
 import com.vincenthuto.hutoslib.math.Vector3;
 
+import java.util.Objects;
+
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -90,20 +92,19 @@ public class RenderItemArmBanner extends BlockEntityWithoutLevelRenderer {
 			modelPauldron.renderToBuffer(matrixStack, vb, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 			matrixStack.popPose();
 
-			boolean flag = stack.get(DataComponents.BANNER_PATTERNS) != null
-					&& !stack.get(DataComponents.BANNER_PATTERNS).layers().isEmpty();
+			BannerPatternLayers patterns = stack.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY);
+			DyeColor bannerColor = stack.get(DataComponents.BASE_COLOR);
+			ArmBannerRenderState bannerState = ArmBannerRenderState.fromBannerData(bannerColor != null,
+					patterns.layers().size());
 			matrixStack.pushPose();
 			matrixStack.scale(1.0F, -1.0F, -1.0F);
 
-			Material material = flag ? ModelBakery.SHIELD_BASE : ModelBakery.NO_PATTERN_SHIELD;
-			if (flag) {
+			Material material = bannerState.shouldRenderPlate() ? ModelBakery.SHIELD_BASE : ModelBakery.NO_PATTERN_SHIELD;
+			if (bannerState.shouldRenderPlate()) {
 				matrixStack.translate(0, 0.05, -0.25);
 				matrixStack.mulPose(new Quaternion(Vector3.ZN, 75, true).toMoj());
 				matrixStack.scale(1.7f, 1.7f, 1.7f);
-				DyeColor baseColor = stack.get(DataComponents.BASE_COLOR) != null
-						? stack.get(DataComponents.BASE_COLOR)
-						: DyeColor.WHITE;
-				BannerPatternLayers patterns = stack.get(DataComponents.BANNER_PATTERNS);
+				DyeColor baseColor = Objects.requireNonNullElse(bannerColor, DyeColor.WHITE);
 				BannerRenderer.renderPatterns(matrixStack, buffer, combinedLight, combinedOverlay,
 						this.modelPauldron.plate(), material, false, baseColor, patterns, stack.hasFoil());
 			}

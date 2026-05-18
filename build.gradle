@@ -89,6 +89,7 @@ configurations {
 }
 
 repositories {
+    mavenCentral()
     maven {
         name = "BlameJared"
         url = "https://maven.blamejared.com"
@@ -101,6 +102,13 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${minecraft_version}-common:${jei_version}"
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+
+    testImplementation platform("org.junit:junit-bom:5.10.2")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform()
 }
 
 // Expands template variables into neoforge.mods.toml from src/main/templates.
