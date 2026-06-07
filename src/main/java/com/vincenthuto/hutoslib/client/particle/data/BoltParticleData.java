@@ -90,6 +90,10 @@ public class BoltParticleData {
 					this.segmentSpreader);
 		}
 
+		public float getSpreadFactor() {
+			return spreadFactor;
+		}
+
 		public BoltRenderInfo randomFunction(RandomFunction randomFunction) {
 			return new BoltRenderInfo(this.parallelNoise, this.spreadFactor, this.branchInitiationFactor,
 					this.branchContinuationFactor, this.color, randomFunction, this.spreadFunction,
@@ -381,25 +385,27 @@ public class BoltParticleData {
 
 	private Pair<BoltQuads, QuadCache> createQuads(@Nullable QuadCache cache, Vec3 startPos, Vec3 end, float size) {
 		Vec3 diff = end.subtract(startPos);
-		Vec3 rightAdd = perpendicularBasis(diff, size);
-		Vec3 backAdd = diff.cross(rightAdd).normalize().scale(size);
+		Vec3 rightAdd = perpendicularBasis(diff, size * 0.5F);
+		Vec3 backAdd = diff.cross(rightAdd).normalize().scale(size * 0.5F);
 		if (backAdd.lengthSqr() < 1.0E-8) {
-			backAdd = new Vec3(0, size, 0);
+			backAdd = new Vec3(0, size * 0.5F, 0);
 		}
-		Vec3 rightAddSplit = rightAdd.scale(0.5F);
 
 		Vec3 start = cache != null ? cache.prevEnd() : startPos;
 		Vec3 startRight = cache != null ? cache.prevEndRight() : start.add(rightAdd);
-		Vec3 startBack = cache != null ? cache.prevEndBack() : start.add(rightAddSplit).add(backAdd);
+		Vec3 startLeft = start.subtract(startRight.subtract(start));
+		Vec3 startBack = cache != null ? cache.prevEndBack() : start.add(backAdd);
+		Vec3 startFront = start.subtract(startBack.subtract(start));
 		Vec3 endRight = end.add(rightAdd);
-		Vec3 endBack = end.add(rightAddSplit).add(backAdd);
+		Vec3 endLeft = end.subtract(rightAdd);
+		Vec3 endBack = end.add(backAdd);
+		Vec3 endFront = end.subtract(backAdd);
 
 		BoltQuads quads = new BoltQuads();
-		quads.addQuad(start, end, endRight, startRight);
-		quads.addQuad(startRight, endRight, end, start);
-
-		quads.addQuad(startRight, endRight, endBack, startBack);
-		quads.addQuad(startBack, endBack, endRight, startRight);
+		quads.addQuad(startLeft, endLeft, endRight, startRight);
+		quads.addQuad(startRight, endRight, endLeft, startLeft);
+		quads.addQuad(startFront, endFront, endBack, startBack);
+		quads.addQuad(startBack, endBack, endFront, startFront);
 
 		return Pair.of(quads, new QuadCache(end, endRight, endBack));
 	}
@@ -483,8 +489,20 @@ public class BoltParticleData {
 		return end;
 	}
 
+	public BoltRenderInfo getRenderInfo() {
+		return renderInfo;
+	}
+
+	public int getSegments() {
+		return segments;
+	}
+
 	public int getLifespan() {
 		return lifespan;
+	}
+
+	public float getSize() {
+		return size;
 	}
 
 	public SpawnFunction getSpawnFunction() {

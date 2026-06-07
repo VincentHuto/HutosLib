@@ -18,10 +18,11 @@ public class HLRenderTypeInit extends RenderType {
 
 	static RenderType.CompositeState lightningState = RenderType.CompositeState.builder()
 			.setShaderState(POSITION_COLOR_SHADER).setTransparencyState(LIGHTNING_TRANSPARENCY)
+			.setWriteMaskState(COLOR_WRITE)
 			.createCompositeState(false);
 
 	public static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR,
-			VertexFormat.Mode.QUADS, 4096, false, false, lightningState);
+			VertexFormat.Mode.QUADS, 4096, false, true, lightningState);
 	public static final ParticleRenderType GLOW_RENDER = new ParticleRenderType() {
 		@SuppressWarnings("deprecation")
 		@Override

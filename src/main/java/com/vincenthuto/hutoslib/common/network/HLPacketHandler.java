@@ -33,6 +33,12 @@ ReloadListenerPacket.End::handle);
 
 registrar.playBidirectional(PacketSpawnLightningParticle.TYPE, PacketSpawnLightningParticle.CODEC,
 PacketSpawnLightningParticle::handle);
+registrar.playToClient(PacketSpawnLightningTest.TYPE, PacketSpawnLightningTest.CODEC,
+PacketSpawnLightningTest::handle);
+registrar.playToServer(PacketLightningTesterItem.TYPE, PacketLightningTesterItem.CODEC,
+PacketLightningTesterItem::handle);
+registrar.playToServer(PacketLightningTesterBlock.TYPE, PacketLightningTesterBlock.CODEC,
+PacketLightningTesterBlock::handle);
 registrar.playToClient(PacketSyncBannerSlotContents.TYPE, PacketSyncBannerSlotContents.CODEC,
 PacketSyncBannerSlotContents::handle);
 registrar.playToServer(PacketOpenBanner.TYPE, PacketOpenBanner.CODEC,

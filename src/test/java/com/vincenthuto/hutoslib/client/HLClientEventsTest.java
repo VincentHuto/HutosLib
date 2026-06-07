@@ -10,6 +10,7 @@ class HLClientEventsTest {
 	@Test
 	void boltRendererOnlyRunsAfterParticles() {
 		assertTrue(HLClientEvents.shouldRenderBoltStage("after_particles"));
+		assertTrue(HLClientEvents.shouldRenderBoltStage("minecraft:after_particles"));
 		assertFalse(HLClientEvents.shouldRenderBoltStage("after_sky"));
 		assertFalse(HLClientEvents.shouldRenderBoltStage("after_entities"));
 		assertFalse(HLClientEvents.shouldRenderBoltStage("after_level"));

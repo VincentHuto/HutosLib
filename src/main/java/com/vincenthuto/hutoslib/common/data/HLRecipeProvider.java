@@ -52,6 +52,17 @@ public class HLRecipeProvider extends RecipeProvider {
                     ItemPredicate.Builder.item().of(Items.CLAY_BALL).build()))
             .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLItemInit.lightning_tester.get())
+            .pattern(" L ")
+            .pattern(" F ")
+            .pattern(" S ")
+            .define('L', Items.LIGHTNING_ROD)
+            .define('F', HLItemInit.obsidian_flakes.get())
+            .define('S', Tags.Items.RODS_WOODEN)
+            .unlockedBy("has_lightning_rod", InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item().of(Items.LIGHTNING_ROD).build()))
+            .save(output);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.OBSIDIAN)
             .pattern("XX")
             .pattern("XX")
@@ -159,6 +170,19 @@ public class HLRecipeProvider extends RecipeProvider {
             .define('S', Items.STONE_BRICKS)
             .unlockedBy("has_stone_bricks", InventoryChangeTrigger.TriggerInstance.hasItems(
                     ItemPredicate.Builder.item().of(Items.STONE_BRICKS).build()))
+            .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLBlockInit.lightning_tester_block.get())
+            .pattern("RLR")
+            .pattern("OFO")
+            .pattern("SSS")
+            .define('R', Tags.Items.DUSTS_REDSTONE)
+            .define('L', Items.LIGHTNING_ROD)
+            .define('O', Tags.Items.OBSIDIANS)
+            .define('F', HLItemInit.obsidian_flakes.get())
+            .define('S', Items.STONE_BRICKS)
+            .unlockedBy("has_lightning_rod", InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item().of(Items.LIGHTNING_ROD).build()))
             .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.CRYING_OBSIDIAN)

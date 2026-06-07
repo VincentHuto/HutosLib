@@ -24,8 +24,8 @@ public class ClientProxy implements IProxy {
 		float partialTicks = HlClientTickHandler.partialTicks;
 		BoltRenderer.INSTANCE.add(new BoltParticleData(vectorStart, vectorEnd, seed, colorOuter).size(0.08F)
 				.lifespan(lifespan).fade(FadeFunction.fade(0.125f)), partialTicks);
-		BoltRenderer.INSTANCE.add(new BoltParticleData(vectorStart, vectorEnd, seed ^ 0x9E3779B97F4A7C15L, colorInner)
-				.size(0.035F).lifespan(lifespan).fade(FadeFunction.fade(0.125f)), partialTicks);
+		BoltRenderer.INSTANCE.add(new BoltParticleData(vectorStart, vectorEnd, seed, colorInner).size(0.035F)
+				.lifespan(lifespan).fade(FadeFunction.fade(0.125f)), partialTicks);
 
 	}
 

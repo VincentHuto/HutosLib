@@ -3,6 +3,7 @@ package com.vincenthuto.hutoslib.common.registry;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.block.BlockDisplayGlass;
 import com.vincenthuto.hutoslib.common.block.BlockDisplayPedestal;
+import com.vincenthuto.hutoslib.common.block.BlockLightningTester;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
@@ -21,4 +22,8 @@ Block.Properties.of().requiresCorrectToolForDrops().strength(1.5F, 6.0F).sound(S
 public static final DeferredHolder<Block, Block> display_glass = BLOCKS.register("display_glass",
 () -> new BlockDisplayGlass(
 Block.Properties.of().strength(0.3f).sound(SoundType.GLASS).noOcclusion()));
+
+public static final DeferredHolder<Block, Block> lightning_tester_block = BLOCKS.register("lightning_tester_block",
+() -> new BlockLightningTester(
+Block.Properties.of().strength(1.5F, 6.0F).sound(SoundType.AMETHYST).noOcclusion()));
 }
