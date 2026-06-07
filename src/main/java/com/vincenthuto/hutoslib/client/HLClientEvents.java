@@ -46,11 +46,23 @@ public class HLClientEvents {
             ItemGuideBook.clearState(event.getPlayer().getUUID());
             BookReadTracker.flush();
         }
+        BoltRenderer.INSTANCE.clear();
     }
 
     @SubscribeEvent
     public static void skybox(RenderLevelStageEvent event) {
+        if (!shouldRenderBolts(event.getStage())) {
+            return;
+        }
         BoltRenderer.onWorldRenderLast(event.getPartialTick().getGameTimeDeltaPartialTick(true), event.getPoseStack());
+    }
+
+    static boolean shouldRenderBolts(RenderLevelStageEvent.Stage stage) {
+        return shouldRenderBoltStage(stage.toString());
+    }
+
+    static boolean shouldRenderBoltStage(String stageName) {
+        return "after_particles".equals(stageName);
     }
 
     @SubscribeEvent

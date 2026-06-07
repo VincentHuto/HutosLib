@@ -264,6 +264,39 @@ public class BoltParticleData {
 		return vec.cross(newVec).normalize();
 	}
 
+	private static float normalizeColorComponent(float value) {
+		return value > 1.0F ? value / 255.0F : value;
+	}
+
+	private static Vector4f normalizeColor(ParticleColor color) {
+		return new Vector4f(normalizeColorComponent(color.getRed()), normalizeColorComponent(color.getGreen()),
+				normalizeColorComponent(color.getBlue()), 0.8F);
+	}
+
+	private static Vector4f packedColor(int color) {
+		float alpha = (color >>> 24) & 0xFF;
+		if (alpha == 0) {
+			alpha = 0.8F;
+		} else {
+			alpha /= 255.0F;
+		}
+		return new Vector4f(((color >>> 16) & 0xFF) / 255.0F, ((color >>> 8) & 0xFF) / 255.0F,
+				(color & 0xFF) / 255.0F, alpha);
+	}
+
+	private static Vec3 perpendicularBasis(Vec3 diff, float size) {
+		if (diff.lengthSqr() < 1.0E-8) {
+			return new Vec3(size, 0, 0);
+		}
+		Vec3 direction = diff.normalize();
+		Vec3 axis = Math.abs(direction.y) < 0.75 ? new Vec3(0, 1, 0) : new Vec3(1, 0, 0);
+		Vec3 right = direction.cross(axis);
+		if (right.lengthSqr() < 1.0E-8) {
+			right = direction.cross(new Vec3(0, 0, 1));
+		}
+		return right.normalize().scale(size);
+	}
+
 	private final BoltRenderInfo renderInfo;
 
 	private final Vec3 start;
@@ -282,6 +315,8 @@ public class BoltParticleData {
 
 	private final FadeFunction fadeFunction;
 
+	private final long seed;
+
 	public BoltParticleData(BoltRenderInfo info, Vec3 start, Vec3 end) {
 		this(info, start, end, (int) (Math.sqrt(start.distanceTo(end) * 100)));
 	}
@@ -292,6 +327,11 @@ public class BoltParticleData {
 
 	public BoltParticleData(BoltRenderInfo info, Vec3 start, Vec3 end, int segments, int count, float size,
 			int lifespan, SpawnFunction spawnFunction, FadeFunction fadeFunction) {
+		this(info, start, end, segments, count, size, lifespan, spawnFunction, fadeFunction, System.nanoTime());
+	}
+
+	public BoltParticleData(BoltRenderInfo info, Vec3 start, Vec3 end, int segments, int count, float size,
+			int lifespan, SpawnFunction spawnFunction, FadeFunction fadeFunction, long seed) {
 		this.renderInfo = info;
 		this.start = start;
 		this.end = end;
@@ -301,16 +341,34 @@ public class BoltParticleData {
 		this.lifespan = lifespan;
 		this.spawnFunction = spawnFunction;
 		this.fadeFunction = fadeFunction;
+		this.seed = seed;
 	}
 
 	public BoltParticleData(Vec3 start, Vec3 end) {
 		this(BoltRenderInfo.DEFAULT, start, end);
 	}
 
+	public BoltParticleData(Vec3 start, Vec3 end, long seed) {
+		this(BoltRenderInfo.DEFAULT, start, end, (int) (Math.sqrt(start.distanceTo(end) * 100)), 1, 0.1F, 30,
+				SpawnFunction.delay(60), FadeFunction.fade(0.5F), seed);
+	}
+
 	public BoltParticleData(Vec3 start, Vec3 end, ParticleColor color) {
-		this(new BoltRenderInfo(0.1F, 0.1F, 0.0F, 0.0F,
-				new Vector4f(color.getRed(), color.getGreen(), color.getBlue(), 0.8F), RandomFunction.GAUSSIAN,
-				SpreadFunction.SINE, SegmentSpreader.NO_MEMORY), start, end);
+		this(start, end, System.nanoTime(), color);
+	}
+
+	public BoltParticleData(Vec3 start, Vec3 end, long seed, ParticleColor color) {
+		this(new BoltRenderInfo(0.1F, 0.1F, 0.0F, 0.0F, normalizeColor(color), RandomFunction.GAUSSIAN,
+				SpreadFunction.SINE, SegmentSpreader.NO_MEMORY), start, end,
+				(int) (Math.sqrt(start.distanceTo(end) * 100)), 1, 0.1F, 30, SpawnFunction.delay(60),
+				FadeFunction.fade(0.5F), seed);
+	}
+
+	public BoltParticleData(Vec3 start, Vec3 end, long seed, int color) {
+		this(new BoltRenderInfo(0.1F, 0.1F, 0.0F, 0.0F, packedColor(color), RandomFunction.GAUSSIAN,
+				SpreadFunction.SINE, SegmentSpreader.NO_MEMORY), start, end,
+				(int) (Math.sqrt(start.distanceTo(end) * 100)), 1, 0.1F, 30, SpawnFunction.delay(60),
+				FadeFunction.fade(0.5F), seed);
 	}
 
 	/**
@@ -318,13 +376,16 @@ public class BoltParticleData {
 	 */
 	public BoltParticleData count(int count) {
 		return new BoltParticleData(this.renderInfo, this.start, this.end, this.segments, count, this.size,
-				this.lifespan, this.spawnFunction, this.fadeFunction);
+				this.lifespan, this.spawnFunction, this.fadeFunction, this.seed);
 	}
 
 	private Pair<BoltQuads, QuadCache> createQuads(@Nullable QuadCache cache, Vec3 startPos, Vec3 end, float size) {
 		Vec3 diff = end.subtract(startPos);
-		Vec3 rightAdd = diff.cross(new Vec3(0.5, 0.5, 0.5)).normalize().scale(size);
+		Vec3 rightAdd = perpendicularBasis(diff, size);
 		Vec3 backAdd = diff.cross(rightAdd).normalize().scale(size);
+		if (backAdd.lengthSqr() < 1.0E-8) {
+			backAdd = new Vec3(0, size, 0);
+		}
 		Vec3 rightAddSplit = rightAdd.scale(0.5F);
 
 		Vec3 start = cache != null ? cache.prevEnd() : startPos;
@@ -350,11 +411,11 @@ public class BoltParticleData {
 	 */
 	public BoltParticleData fade(FadeFunction fadeFunction) {
 		return new BoltParticleData(this.renderInfo, this.start, this.end, this.segments, this.count, this.size,
-				this.lifespan, this.spawnFunction, fadeFunction);
+				this.lifespan, this.spawnFunction, fadeFunction, this.seed);
 	}
 
 	public List<BoltQuads> generate() {
-		Random random = new Random();
+		Random random = new Random(seed);
 		List<BoltQuads> quads = new ArrayList<>();
 		Vec3 diff = end.subtract(start);
 		float totalDistance = (float) diff.length();
@@ -414,6 +475,14 @@ public class BoltParticleData {
 		return fadeFunction;
 	}
 
+	public Vec3 getStart() {
+		return start;
+	}
+
+	public Vec3 getEnd() {
+		return end;
+	}
+
 	public int getLifespan() {
 		return lifespan;
 	}
@@ -430,7 +499,7 @@ public class BoltParticleData {
 	 */
 	public BoltParticleData lifespan(int lifespan) {
 		return new BoltParticleData(this.renderInfo, this.start, this.end, this.segments, this.count, this.size,
-				lifespan, this.spawnFunction, this.fadeFunction);
+				lifespan, this.spawnFunction, this.fadeFunction, this.seed);
 	}
 
 	/**
@@ -440,7 +509,7 @@ public class BoltParticleData {
 	 */
 	public BoltParticleData size(float size) {
 		return new BoltParticleData(this.renderInfo, this.start, this.end, this.segments, this.count, size,
-				this.lifespan, this.spawnFunction, this.fadeFunction);
+				this.lifespan, this.spawnFunction, this.fadeFunction, this.seed);
 	}
 
 	/**
@@ -450,6 +519,6 @@ public class BoltParticleData {
 	 */
 	public BoltParticleData spawn(SpawnFunction spawnFunction) {
 		return new BoltParticleData(this.renderInfo, this.start, this.end, this.segments, this.count, this.size,
-				this.lifespan, spawnFunction, this.fadeFunction);
+				this.lifespan, spawnFunction, this.fadeFunction, this.seed);
 	}
 }

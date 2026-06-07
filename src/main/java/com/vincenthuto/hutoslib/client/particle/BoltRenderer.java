@@ -74,7 +74,13 @@ public class BoltRenderer {
 		}
 
 		public boolean shouldRemove(Timestamp timestamp) {
-			return bolts.isEmpty() && timestamp.isPassed(lastUpdateTimestamp, MAX_OWNER_TRACK_TIME);
+			if (!bolts.isEmpty()) {
+				return false;
+			}
+			if (lastBolt == null || !lastBolt.getSpawnFunction().isConsecutive()) {
+				return true;
+			}
+			return timestamp.isPassed(lastUpdateTimestamp, MAX_OWNER_TRACK_TIME);
 		}
 	}
 	private static class Timestamp {
@@ -118,11 +124,13 @@ public class BoltRenderer {
 	public static final BoltRenderer INSTANCE = new BoltRenderer();
 
 	private static final float REFRESH_TIME = 3F;
+	private static final int MAX_ACTIVE_OWNERS = 256;
+	private static final double MAX_RENDER_DISTANCE_SQR = 128 * 128;
 	/**
-	 * We will keep track of an owner's render data for 100 ticks after there are no
+	 * We will keep track of a consecutive owner's render data briefly after there are no
 	 * bolts remaining.
 	 */
-	private static final double MAX_OWNER_TRACK_TIME = 100;
+	private static final double MAX_OWNER_TRACK_TIME = 20;
 
 	public static void onWorldRenderLast(float partialTicks, PoseStack ps) {
 		ps.pushPose();
@@ -149,6 +157,9 @@ public class BoltRenderer {
 		if (minecraft.level == null) {
 			return;
 		}
+		if (!isCloseEnoughToRender(newBoltData)) {
+			return;
+		}
 		var data = new BoltOwnerData();
 		data.lastBolt = newBoltData;
 		Timestamp timestamp = new Timestamp(minecraft.level.getGameTime(), partialTicks);
@@ -160,12 +171,30 @@ public class BoltRenderer {
 		// todo XXX ItemThunderSword calls this method from logical server in SP, don't
 		// do that.
 		synchronized (boltOwners) {
+			boltOwners.removeIf(owner -> owner.shouldRemove(timestamp));
+			while (boltOwners.size() >= MAX_ACTIVE_OWNERS) {
+				boltOwners.remove(0);
+			}
 			boltOwners.add(data);
 		}
 	}
 
-	public void render(float partialTicks, PoseStack matrixStack, MultiBufferSource buffers) {
+	public void clear() {
+		synchronized (boltOwners) {
+			boltOwners.clear();
+		}
+	}
 
+	private boolean isCloseEnoughToRender(BoltParticleData bolt) {
+		Vec3 camVec = minecraft.gameRenderer.getMainCamera().getPosition();
+		return bolt.getStart().distanceToSqr(camVec) <= MAX_RENDER_DISTANCE_SQR
+				|| bolt.getEnd().distanceToSqr(camVec) <= MAX_RENDER_DISTANCE_SQR;
+	}
+
+	public void render(float partialTicks, PoseStack matrixStack, MultiBufferSource buffers) {
+		if (minecraft.level == null) {
+			return;
+		}
 		VertexConsumer buffer = buffers.getBuffer(HLRenderTypeInit.LIGHTNING);
 		Matrix4f matrix = matrixStack.last().pose();
 		Timestamp timestamp = new Timestamp(minecraft.level.getGameTime(), partialTicks);

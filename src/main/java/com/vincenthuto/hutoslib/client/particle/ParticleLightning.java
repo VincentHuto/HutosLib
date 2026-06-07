@@ -189,14 +189,6 @@ public class ParticleLightning extends TextureSheetParticle {
 					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
 			buffer.addVertex((float)avector3f[1].x, (float)avector3f[1].y, (float)avector3f[1].z).setUv(minU, maxV)
 					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
-			buffer.addVertex((float)avector3f[3].x, (float)avector3f[3].y, (float)avector3f[3].z).setUv(maxU, maxV)
-					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
-			buffer.addVertex((float)avector3f[2].x, (float)avector3f[2].y, (float)avector3f[2].z).setUv(maxU, minV)
-					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
-			buffer.addVertex((float)avector3f[0].x, (float)avector3f[0].y, (float)avector3f[0].z).setUv(minU, minV)
-					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
-			buffer.addVertex((float)avector3f[1].x, (float)avector3f[1].y, (float)avector3f[1].z).setUv(minU, maxV)
-					.setColor(this.colorR, this.colorG, this.colorB, this.alpha).setUv2(j, j);
 			++count;
 		}
 	}

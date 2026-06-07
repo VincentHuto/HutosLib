@@ -67,6 +67,7 @@ public class ParticleLightningStorage {
 		this.age = 0;
 		this.segments.add(new Segment(this.start, this.end));
 		this.fract = fract;
+		this.maxOffset = maxOff;
 
 	}
 
