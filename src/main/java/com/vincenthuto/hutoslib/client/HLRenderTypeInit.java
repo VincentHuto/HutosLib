@@ -17,12 +17,12 @@ import net.minecraft.client.renderer.texture.TextureManager;
 public class HLRenderTypeInit extends RenderType {
 
 	static RenderType.CompositeState lightningState = RenderType.CompositeState.builder()
-			.setShaderState(POSITION_COLOR_SHADER).setTransparencyState(LIGHTNING_TRANSPARENCY)
+			.setShaderState(POSITION_COLOR_SHADER).setTransparencyState(TRANSLUCENT_TRANSPARENCY)
 			.setWriteMaskState(COLOR_WRITE)
 			.createCompositeState(false);
 
 	public static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR,
-			VertexFormat.Mode.QUADS, 4096, false, true, lightningState);
+			VertexFormat.Mode.QUADS, 4096, false, false, lightningState);
 	public static final ParticleRenderType GLOW_RENDER = new ParticleRenderType() {
 		@SuppressWarnings("deprecation")
 		@Override

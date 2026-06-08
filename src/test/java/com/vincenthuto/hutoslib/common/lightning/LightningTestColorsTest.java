@@ -24,6 +24,12 @@ class LightningTestColorsTest {
 	}
 
 	@Test
+	void parsesCssRgbaHexValues() {
+		assertEquals(0x8012ABEF, LightningTestColors.parseColor("#12abef80").orElseThrow());
+		assertEquals(0x4000FF00, LightningTestColors.parseColor("00ff0040").orElseThrow());
+	}
+
+	@Test
 	void rejectsInvalidColorInput() {
 		assertTrue(LightningTestColors.parseColor("").isEmpty());
 		assertTrue(LightningTestColors.parseColor("storm-blue").isEmpty());

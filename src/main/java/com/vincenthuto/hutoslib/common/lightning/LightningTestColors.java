@@ -58,6 +58,7 @@ public final class LightningTestColors {
 		if (named != null) {
 			return OptionalInt.of(named);
 		}
+		boolean argbHex = value.startsWith("0x");
 		if (value.startsWith("#")) {
 			value = value.substring(1);
 		} else if (value.startsWith("0x")) {
@@ -70,6 +71,8 @@ public final class LightningTestColors {
 			long parsed = Long.parseUnsignedLong(value, 16);
 			if (value.length() == 6) {
 				parsed |= 0xFF000000L;
+			} else if (!argbHex) {
+				parsed = ((parsed & 0xFFL) << 24) | ((parsed >>> 8) & 0xFFFFFFL);
 			}
 			return OptionalInt.of((int) parsed);
 		} catch (NumberFormatException ignored) {
