@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "hutoslib:obsidian_flakes"
+    },
+    "L": {
+      "item": "minecraft:lightning_rod"
+    },
+    "S": {
+      "tag": "c:rods/wooden"
+    }
+  },
+  "pattern": [
+    " L ",
+    " F ",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "hutoslib:lightning_tester"
+  }
+}

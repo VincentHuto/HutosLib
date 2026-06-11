@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hutoslib:block/lightning_tester_block"
+    }
+  }
+}

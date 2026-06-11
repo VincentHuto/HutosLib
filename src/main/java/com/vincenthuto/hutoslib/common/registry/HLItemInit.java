@@ -6,6 +6,7 @@ import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
 import com.vincenthuto.hutoslib.common.item.ItemHLGuideBook;
 import com.vincenthuto.hutoslib.common.item.ItemKnapper;
 import com.vincenthuto.hutoslib.common.item.ItemLightningTester;
+import com.vincenthuto.hutoslib.common.item.ItemTendrilTester;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -60,6 +61,8 @@ public class HLItemInit {
 			() -> new Item(new Item.Properties()));
 	public static final DeferredHolder<Item, ? extends Item> lightning_tester = ITEMS.register("lightning_tester",
 			() -> new ItemLightningTester(new Item.Properties()));
+	public static final DeferredHolder<Item, ? extends Item> tendril_tester = ITEMS.register("tendril_tester",
+			() -> new ItemTendrilTester(new Item.Properties()));
 
 	// Banners and Patterns
 

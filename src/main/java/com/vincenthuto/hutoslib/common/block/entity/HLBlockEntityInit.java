@@ -20,4 +20,8 @@ public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DisplayPe
 public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LightningTesterBlockEntity>> lightning_tester = BLOCK_ENTITIES
 .register("lightning_tester_block", () -> BlockEntityType.Builder
 .of(LightningTesterBlockEntity::new, HLBlockInit.lightning_tester_block.get()).build(null));
+
+public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TendrilTesterBlockEntity>> tendril_tester = BLOCK_ENTITIES
+.register("tendril_tester_block", () -> BlockEntityType.Builder
+.of(TendrilTesterBlockEntity::new, HLBlockInit.tendril_tester_block.get()).build(null));
 }

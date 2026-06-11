@@ -20,6 +20,8 @@ public class HLBlockLootTableProvider extends BlockLootSubProvider {
     protected void generate() {
         dropSelf(HLBlockInit.display_glass.get());
         dropSelf(HLBlockInit.display_pedestal.get());
+        dropSelf(HLBlockInit.lightning_tester_block.get());
+        dropSelf(HLBlockInit.tendril_tester_block.get());
     }
 
     @Override

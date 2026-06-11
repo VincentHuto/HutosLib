@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "hutoslib:obsidian_flakes"
+    },
+    "S": {
+      "tag": "c:rods/wooden"
+    },
+    "V": {
+      "item": "minecraft:twisting_vines"
+    }
+  },
+  "pattern": [
+    " V ",
+    " F ",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "hutoslib:tendril_tester"
+  }
+}

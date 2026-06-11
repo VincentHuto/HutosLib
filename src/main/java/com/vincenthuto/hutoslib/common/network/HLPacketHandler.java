@@ -35,10 +35,16 @@ registrar.playBidirectional(PacketSpawnLightningParticle.TYPE, PacketSpawnLightn
 PacketSpawnLightningParticle::handle);
 registrar.playToClient(PacketSpawnLightningTest.TYPE, PacketSpawnLightningTest.CODEC,
 PacketSpawnLightningTest::handle);
+registrar.playToClient(PacketSpawnTendrilEffect.TYPE, PacketSpawnTendrilEffect.CODEC,
+PacketSpawnTendrilEffect::handle);
 registrar.playToServer(PacketLightningTesterItem.TYPE, PacketLightningTesterItem.CODEC,
 PacketLightningTesterItem::handle);
 registrar.playToServer(PacketLightningTesterBlock.TYPE, PacketLightningTesterBlock.CODEC,
 PacketLightningTesterBlock::handle);
+registrar.playToServer(PacketTendrilTesterItem.TYPE, PacketTendrilTesterItem.CODEC,
+PacketTendrilTesterItem::handle);
+registrar.playToServer(PacketTendrilTesterBlock.TYPE, PacketTendrilTesterBlock.CODEC,
+PacketTendrilTesterBlock::handle);
 registrar.playToClient(PacketSyncBannerSlotContents.TYPE, PacketSyncBannerSlotContents.CODEC,
 PacketSyncBannerSlotContents::handle);
 registrar.playToServer(PacketOpenBanner.TYPE, PacketOpenBanner.CODEC,

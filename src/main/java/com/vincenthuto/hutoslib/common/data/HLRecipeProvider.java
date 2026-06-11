@@ -63,6 +63,17 @@ public class HLRecipeProvider extends RecipeProvider {
                     ItemPredicate.Builder.item().of(Items.LIGHTNING_ROD).build()))
             .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLItemInit.tendril_tester.get())
+            .pattern(" V ")
+            .pattern(" F ")
+            .pattern(" S ")
+            .define('V', Items.TWISTING_VINES)
+            .define('F', HLItemInit.obsidian_flakes.get())
+            .define('S', Tags.Items.RODS_WOODEN)
+            .unlockedBy("has_twisting_vines", InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item().of(Items.TWISTING_VINES).build()))
+            .save(output);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.OBSIDIAN)
             .pattern("XX")
             .pattern("XX")
@@ -183,6 +194,19 @@ public class HLRecipeProvider extends RecipeProvider {
             .define('S', Items.STONE_BRICKS)
             .unlockedBy("has_lightning_rod", InventoryChangeTrigger.TriggerInstance.hasItems(
                     ItemPredicate.Builder.item().of(Items.LIGHTNING_ROD).build()))
+            .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLBlockInit.tendril_tester_block.get())
+            .pattern("VTV")
+            .pattern("OFO")
+            .pattern("SSS")
+            .define('V', Items.TWISTING_VINES)
+            .define('T', Items.WEEPING_VINES)
+            .define('O', Tags.Items.OBSIDIANS)
+            .define('F', HLItemInit.obsidian_flakes.get())
+            .define('S', Items.STONE_BRICKS)
+            .unlockedBy("has_twisting_vines", InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item().of(Items.TWISTING_VINES).build()))
             .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.CRYING_OBSIDIAN)

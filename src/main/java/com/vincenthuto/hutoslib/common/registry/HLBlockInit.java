@@ -4,6 +4,7 @@ import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.block.BlockDisplayGlass;
 import com.vincenthuto.hutoslib.common.block.BlockDisplayPedestal;
 import com.vincenthuto.hutoslib.common.block.BlockLightningTester;
+import com.vincenthuto.hutoslib.common.block.BlockTendrilTester;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
@@ -25,5 +26,9 @@ Block.Properties.of().strength(0.3f).sound(SoundType.GLASS).noOcclusion()));
 
 public static final DeferredHolder<Block, Block> lightning_tester_block = BLOCKS.register("lightning_tester_block",
 () -> new BlockLightningTester(
+Block.Properties.of().strength(1.5F, 6.0F).sound(SoundType.AMETHYST).noOcclusion()));
+
+public static final DeferredHolder<Block, Block> tendril_tester_block = BLOCKS.register("tendril_tester_block",
+() -> new BlockTendrilTester(
 Block.Properties.of().strength(1.5F, 6.0F).sound(SoundType.AMETHYST).noOcclusion()));
 }

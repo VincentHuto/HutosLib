@@ -23,6 +23,10 @@ public class HLRenderTypeInit extends RenderType {
 
 	public static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR,
 			VertexFormat.Mode.QUADS, 4096, false, false, lightningState);
+	public static final RenderType TENDRIL_CORE = create("tendril_core", DefaultVertexFormat.POSITION_COLOR,
+			VertexFormat.Mode.QUADS, 8192, false, false, lightningState);
+	public static final RenderType TENDRIL_GLOW = create("tendril_glow", DefaultVertexFormat.POSITION_COLOR,
+			VertexFormat.Mode.QUADS, 8192, false, false, lightningState);
 	public static final ParticleRenderType GLOW_RENDER = new ParticleRenderType() {
 		@SuppressWarnings("deprecation")
 		@Override

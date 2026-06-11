@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "hutoslib:obsidian_flakes"
+    },
+    "O": {
+      "tag": "c:obsidians"
+    },
+    "S": {
+      "item": "minecraft:stone_bricks"
+    },
+    "T": {
+      "item": "minecraft:weeping_vines"
+    },
+    "V": {
+      "item": "minecraft:twisting_vines"
+    }
+  },
+  "pattern": [
+    "VTV",
+    "OFO",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hutoslib:tendril_tester_block"
+  }
+}

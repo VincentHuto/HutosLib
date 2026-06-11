@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hutoslib:block/tendril_tester_block"
+    }
+  }
+}

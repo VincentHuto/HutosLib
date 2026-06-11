@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "hutoslib:obsidian_flakes"
+    },
+    "L": {
+      "item": "minecraft:lightning_rod"
+    },
+    "O": {
+      "tag": "c:obsidians"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "S": {
+      "item": "minecraft:stone_bricks"
+    }
+  },
+  "pattern": [
+    "RLR",
+    "OFO",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hutoslib:lightning_tester_block"
+  }
+}

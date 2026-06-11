@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFW;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
 import com.vincenthuto.hutoslib.client.particle.BoltRenderer;
+import com.vincenthuto.hutoslib.client.particle.TendrilRenderer;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemArmBanner;
 import com.vincenthuto.hutoslib.client.render.item.RenderItemGuideBook;
 import com.vincenthuto.hutoslib.client.render.layer.LayerArmBanner;
@@ -54,6 +55,7 @@ public class HLClientEvents {
 			BookReadTracker.flush();
 		}
 		BoltRenderer.INSTANCE.clear();
+		TendrilRenderer.INSTANCE.clear();
 	}
 
 	@SubscribeEvent
@@ -62,6 +64,8 @@ public class HLClientEvents {
 			return;
 		}
 		BoltRenderer.onWorldRenderLast(event.getPartialTick().getGameTimeDeltaPartialTick(true), event.getPoseStack());
+		TendrilRenderer.onWorldRenderLast(event.getPartialTick().getGameTimeDeltaPartialTick(true),
+				event.getPoseStack());
 	}
 
 	static boolean shouldRenderBolts(RenderLevelStageEvent.Stage stage) {

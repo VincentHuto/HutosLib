@@ -16,6 +16,8 @@ public class HLBlockStateProvider extends BlockStateProvider {
 	@Override
 	protected void registerStatesAndModels() {
 		simpleBlock(HLBlockInit.display_glass.get());
+		simpleBlock(HLBlockInit.lightning_tester_block.get());
+		simpleBlock(HLBlockInit.tendril_tester_block.get());
 		for (var b : HLBlockInit.MODELEDBLOCKS.getEntries()) {
 			ModelFile mf = new ModelFile(
 					HutosLib.rloc("block/" + b.get().asItem().getDescriptionId().replace("block.hutoslib.", ""))) {
