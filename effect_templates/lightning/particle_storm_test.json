@@ -1,0 +1,21 @@
+{
+  "type": "lightning",
+  "config": {
+    "backend": "PARTICLE",
+    "colorPreset": -13734913,
+    "outerColor": -13734913,
+    "innerColor": -1,
+    "range": 18.0,
+    "targetOffsetX": 0.0,
+    "targetOffsetY": 2.0,
+    "targetOffsetZ": 0.0,
+    "ticksPerMeter": 96.0,
+    "speed": 3.0,
+    "maxAge": 18,
+    "fract": 12,
+    "maxOffset": 0.75,
+    "size": 0.045,
+   "fixedSeed": false,
+    "seed": 8080
+  }
+}

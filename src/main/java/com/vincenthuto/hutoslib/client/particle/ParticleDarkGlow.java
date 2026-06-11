@@ -31,12 +31,12 @@ public class ParticleDarkGlow extends TextureSheetParticle {
 			this.colorB = this.colorB / 255.0f;
 		}
 		this.setColor(colorR, colorG, colorB);
-		this.age = (int) (lifetime * 0.5f);
+		this.lifetime = (int) (lifetime * 0.5f);
 		this.quadSize = scale / 8;
 		this.initScale = scale;
 		this.xd = vx * 2.0f;
 		this.yd = vy * 2.0f;
-		this.yd = vz * 2.0f;
+		this.zd = vz * 2.0f;
 		this.initAlpha = a;
 		this.pickSprite(sprite);
 	}
@@ -53,7 +53,7 @@ public class ParticleDarkGlow extends TextureSheetParticle {
 
 	@Override
 	public boolean isAlive() {
-		return this.age < this.age;
+		return this.age < this.lifetime;
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class ParticleDarkGlow extends TextureSheetParticle {
 		if (new Random().nextInt(6) == 0) {
 			this.age++;
 		}
-		float lifeCoeff = (float) this.age / (float) this.age;
+		float lifeCoeff = (float) this.age / (float) this.lifetime;
 		this.quadSize = initScale - initScale * lifeCoeff;
 		this.alpha = initAlpha * (1.0f - lifeCoeff);
 		this.oRoll = roll;

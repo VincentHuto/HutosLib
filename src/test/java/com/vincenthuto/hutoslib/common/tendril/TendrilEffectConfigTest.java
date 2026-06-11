@@ -1,6 +1,8 @@
 package com.vincenthuto.hutoslib.common.tendril;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,13 +24,14 @@ class TendrilEffectConfigTest {
 		assertEquals(1, config.strandCount());
 		assertEquals(0.12F, config.baseWidth());
 		assertEquals(0.12F, config.surfaceLift());
+		assertTrue(config.blendColors());
 	}
 
 	@Test
 	void clampsExtremeValues() {
 		TendrilEffectConfig config = new TendrilEffectConfig(null, 0xFFFFFFFF, 0x80FF0000, -2.0F, 999.0F,
 				-999.0F, 999.0F, 0, 0, 0, 1, 0, -1.0F, -2.0F, -4, -1, -5.0F, -2.0F, -1.0F, -1.0F, -9.0F,
-				9.0F, -3.0F, -1.0F, true, 42L, true, 1);
+				9.0F, -3.0F, -1.0F, true, true, 42L, true, 1);
 
 		TendrilEffectConfig clamped = config.clamped();
 
@@ -54,6 +57,7 @@ class TendrilEffectConfigTest {
 		assertEquals(0.0F, clamped.surfaceSnapDistance());
 		assertEquals(0.0F, clamped.surfaceLift());
 		assertEquals(5, clamped.repeatInterval());
+		assertTrue(clamped.blendColors());
 	}
 
 	@Test
@@ -61,9 +65,10 @@ class TendrilEffectConfigTest {
 		TendrilEffectConfig config = TendrilEffectConfig.defaults().withMode(TendrilEffectConfig.Mode.SURFACE)
 				.withTargetOffset(2.0F, 3.0F, 4.0F).withLifecycle(12, 20, 8).withShape(24, 2, 0.18F, 0.08F)
 				.withBranching(5, 2, 0.42F, 0.9F).withWrithe(0.2F, 0.07F, 1.4F, -0.3F)
-				.withSurface(2.5F, 0.18F).withFixedSeed(true, 1234L).withRepeat(true, 16);
+				.withSurface(2.5F, 0.18F).withBlendColors(false).withFixedSeed(true, 1234L).withRepeat(true, 16);
 
 		assertEquals(config, TendrilEffectConfig.fromTag(config.toTag()));
+		assertFalse(TendrilEffectConfig.fromTag(config.toTag()).blendColors());
 	}
 
 	@Test
@@ -71,12 +76,14 @@ class TendrilEffectConfigTest {
 		TendrilEffectConfig config = TendrilEffectConfig.defaults().withMode(TendrilEffectConfig.Mode.SURFACE)
 				.withColors(0xCC11070A, 0x88B70B19).withTargetOffset(-2.0F, 4.0F, 1.0F)
 				.withLifecycle(6, 14, 9).withShape(28, 3, 0.22F, 0.05F).withBranching(6, 3, 0.3F, 1.2F)
-				.withWrithe(0.28F, 0.09F, 0.8F, 0.4F).withSurface(3.0F, 0.2F)
+				.withWrithe(0.28F, 0.09F, 0.8F, 0.4F).withSurface(3.0F, 0.2F).withBlendColors(false)
 				.withFixedSeed(true, 9876L).withRepeat(true, 25);
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
 		config.toBuffer(buf);
+		TendrilEffectConfig decoded = TendrilEffectConfig.fromBuffer(buf);
 
-		assertEquals(config, TendrilEffectConfig.fromBuffer(buf));
+		assertEquals(config, decoded);
+		assertFalse(decoded.blendColors());
 	}
 }

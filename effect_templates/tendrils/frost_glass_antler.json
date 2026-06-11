@@ -1,0 +1,29 @@
+{
+  "type": "tendril",
+  "config": {
+    "mode": "FREEFORM",
+    "coreColor": -859964417,
+    "glowColor": -1436092161,
+    "range": 22.0,
+    "targetOffsetX": 0.0,
+    "targetOffsetY": 3.75,
+    "targetOffsetZ": 0.0,
+    "growTicks": 26,
+    "holdTicks": 34,
+    "fadeTicks": 34,
+    "segments": 36,
+    "strandCount": 5,
+    "baseWidth": 0.11,
+    "tipScale": 0.02,
+    "branchCount": 13,
+    "branchDepth": 3,
+    "branchLength": 0.62,
+    "branchSpread": 1.15,
+    "writheAmplitude": 0.05,
+    "writheFrequency": 0.020,
+    "curl": 0.25,
+    "sag": -0.85,
+    "fixedSeed": true,
+    "seed": 9004
+  }
+}

@@ -4,7 +4,9 @@ import com.mojang.serialization.MapCodec;
 import com.vincenthuto.hutoslib.client.screen.lightning.LightningTesterBlockScreen;
 import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.block.entity.LightningTesterBlockEntity;
+import com.vincenthuto.hutoslib.common.lightning.LightningTestConfig;
 import com.vincenthuto.hutoslib.common.lightning.LightningTesterSpawner;
+import com.vincenthuto.hutoslib.common.template.EffectTemplateType;
 
 import javax.annotation.Nullable;
 
@@ -87,6 +89,17 @@ public class BlockLightningTester extends BaseEntityBlock {
 	@Override
 	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
 			InteractionHand hand, BlockHitResult hitResult) {
+		if (EffectTemplateType.LIGHTNING.matches(stack)) {
+			if (level instanceof ServerLevel serverLevel
+					&& level.getBlockEntity(pos) instanceof LightningTesterBlockEntity blockEntity) {
+				LightningTestConfig config = LightningTestConfig.fromItem(stack);
+				blockEntity.setConfig(config);
+				Vec3 start = Vec3.atCenterOf(pos);
+				LightningTesterSpawner.spawn(serverLevel, (ServerPlayer) player, start,
+						start.add(config.targetOffset()), config);
+			}
+			return ItemInteractionResult.SUCCESS;
+		}
 		InteractionResult result = useWithoutItem(state, level, pos, player, hitResult);
 		return result.consumesAction() ? ItemInteractionResult.SUCCESS : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}

@@ -5,6 +5,7 @@ import com.vincenthuto.hutoslib.common.block.entity.TendrilTesterBlockEntity;
 import com.vincenthuto.hutoslib.common.tendril.TendrilAnchor;
 import com.vincenthuto.hutoslib.common.tendril.TendrilEffectConfig;
 import com.vincenthuto.hutoslib.common.tendril.TendrilEffectSpawner;
+import com.vincenthuto.hutoslib.common.tendril.TendrilTesterBlockTarget;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -43,7 +44,9 @@ public record PacketTendrilTesterBlock(BlockPos pos, boolean save, boolean test,
 			if (msg.test()) {
 				Vec3 start = Vec3.atCenterOf(msg.pos());
 				TendrilEffectSpawner.spawn(level, (ServerPlayer) player, new TendrilAnchor.Point(start),
-						new TendrilAnchor.Point(start.add(config.targetOffset())), config);
+						new TendrilAnchor.Point(TendrilTesterBlockTarget.endForManualSpawn(start, msg.pos(), config,
+								blockEntity.nextManualSpawnStep())),
+						config);
 			}
 		});
 	}

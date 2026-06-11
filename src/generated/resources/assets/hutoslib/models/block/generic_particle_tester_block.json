@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "hutoslib:block/generic_particle_tester_block"
+  }
+}

@@ -229,11 +229,20 @@ public class TendrilRenderer {
 
 	static void emitGeometryPasses(TendrilGeometry geometry, TendrilEffectConfig config, float growProgress,
 			float alphaScale, GeometryPassConsumer consumer) {
+		if (!config.blendColors()) {
+			emitGlowPasses(geometry, config, growProgress, alphaScale, consumer);
+		}
 		for (TendrilGeometry.Strand strand : geometry.strands()) {
 			TendrilGeometry.TubeQuads coreQuads = TendrilGeometry.createTubeQuads(strand, growProgress, alphaScale);
 			consumer.accept(GeometryPass.CORE, coreQuads.vertices());
 		}
+		if (config.blendColors()) {
+			emitGlowPasses(geometry, config, growProgress, alphaScale, consumer);
+		}
+	}
 
+	private static void emitGlowPasses(TendrilGeometry geometry, TendrilEffectConfig config, float growProgress,
+			float alphaScale, GeometryPassConsumer consumer) {
 		if (unpack(config.glowColor(), alphaScale).a() <= 0.0F) {
 			return;
 		}

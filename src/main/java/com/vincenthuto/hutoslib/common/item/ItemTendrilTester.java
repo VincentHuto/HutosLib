@@ -5,6 +5,7 @@ import com.vincenthuto.hutoslib.common.tendril.TendrilAnchor;
 import com.vincenthuto.hutoslib.common.tendril.TendrilEffectConfig;
 import com.vincenthuto.hutoslib.common.tendril.TendrilEffectSpawner;
 import com.vincenthuto.hutoslib.common.tendril.TendrilTesterOrigin;
+import com.vincenthuto.hutoslib.common.template.EffectTemplateType;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +28,7 @@ public class ItemTendrilTester extends Item {
 	@Override
 	public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target,
 			InteractionHand usedHand) {
-		TendrilEffectConfig config = TendrilEffectConfig.fromItem(stack);
+		TendrilEffectConfig config = configForUse(stack, player);
 		if (player.isShiftKeyDown()) {
 			if (player.level().isClientSide) {
 				TendrilTesterItemScreen.open(usedHand, config);
@@ -45,7 +46,7 @@ public class ItemTendrilTester extends Item {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
 		ItemStack stack = player.getItemInHand(usedHand);
-		TendrilEffectConfig config = TendrilEffectConfig.fromItem(stack);
+		TendrilEffectConfig config = configForUse(stack, player);
 		if (player.isShiftKeyDown()) {
 			if (level.isClientSide) {
 				TendrilTesterItemScreen.open(usedHand, config);
@@ -68,7 +69,7 @@ public class ItemTendrilTester extends Item {
 			return InteractionResult.PASS;
 		}
 		ItemStack stack = context.getItemInHand();
-		TendrilEffectConfig config = TendrilEffectConfig.fromItem(stack);
+		TendrilEffectConfig config = configForUse(stack, player);
 		if (player.isShiftKeyDown()) {
 			if (context.getLevel().isClientSide) {
 				TendrilTesterItemScreen.open(context.getHand(), config);
@@ -81,5 +82,13 @@ public class ItemTendrilTester extends Item {
 					new TendrilAnchor.Point(Vec3.atCenterOf(context.getClickedPos())), config);
 		}
 		return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+	}
+
+	private static TendrilEffectConfig configForUse(ItemStack stack, Player player) {
+		ItemStack offhand = player.getOffhandItem();
+		if (EffectTemplateType.TENDRIL.matches(offhand)) {
+			return TendrilEffectConfig.fromItem(offhand);
+		}
+		return TendrilEffectConfig.fromItem(stack);
 	}
 }

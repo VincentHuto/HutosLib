@@ -24,4 +24,8 @@ public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<Lightning
 public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TendrilTesterBlockEntity>> tendril_tester = BLOCK_ENTITIES
 .register("tendril_tester_block", () -> BlockEntityType.Builder
 .of(TendrilTesterBlockEntity::new, HLBlockInit.tendril_tester_block.get()).build(null));
+
+public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GenericParticleTesterBlockEntity>> generic_particle_tester = BLOCK_ENTITIES
+.register("generic_particle_tester_block", () -> BlockEntityType.Builder
+.of(GenericParticleTesterBlockEntity::new, HLBlockInit.generic_particle_tester_block.get()).build(null));
 }

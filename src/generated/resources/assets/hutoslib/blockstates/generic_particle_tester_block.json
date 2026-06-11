@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hutoslib:block/generic_particle_tester_block"
+    }
+  }
+}

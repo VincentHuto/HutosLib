@@ -22,6 +22,7 @@ public class HLBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(HLBlockInit.display_pedestal.get());
         dropSelf(HLBlockInit.lightning_tester_block.get());
         dropSelf(HLBlockInit.tendril_tester_block.get());
+        dropSelf(HLBlockInit.generic_particle_tester_block.get());
     }
 
     @Override

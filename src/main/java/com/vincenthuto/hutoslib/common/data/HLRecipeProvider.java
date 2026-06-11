@@ -74,6 +74,31 @@ public class HLRecipeProvider extends RecipeProvider {
                     ItemPredicate.Builder.item().of(Items.TWISTING_VINES).build()))
             .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLItemInit.generic_particle_tester.get())
+            .pattern(" G ")
+            .pattern(" F ")
+            .pattern(" S ")
+            .define('G', Items.GLOWSTONE_DUST)
+            .define('F', HLItemInit.obsidian_flakes.get())
+            .define('S', Tags.Items.RODS_WOODEN)
+            .unlockedBy("has_glowstone_dust", InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item().of(Items.GLOWSTONE_DUST).build()))
+            .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, HLItemInit.lightning_template.get())
+            .requires(Items.PAPER)
+            .requires(Items.LIGHTNING_ROD)
+            .unlockedBy("has_lightning_rod", InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item().of(Items.LIGHTNING_ROD).build()))
+            .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, HLItemInit.tendril_template.get())
+            .requires(Items.PAPER)
+            .requires(Items.TWISTING_VINES)
+            .unlockedBy("has_twisting_vines", InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item().of(Items.TWISTING_VINES).build()))
+            .save(output);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.OBSIDIAN)
             .pattern("XX")
             .pattern("XX")
@@ -207,6 +232,19 @@ public class HLRecipeProvider extends RecipeProvider {
             .define('S', Items.STONE_BRICKS)
             .unlockedBy("has_twisting_vines", InventoryChangeTrigger.TriggerInstance.hasItems(
                     ItemPredicate.Builder.item().of(Items.TWISTING_VINES).build()))
+            .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, HLBlockInit.generic_particle_tester_block.get())
+            .pattern("GEG")
+            .pattern("OFO")
+            .pattern("SSS")
+            .define('G', Items.GLOWSTONE_DUST)
+            .define('E', Items.ENDER_PEARL)
+            .define('O', Tags.Items.OBSIDIANS)
+            .define('F', HLItemInit.obsidian_flakes.get())
+            .define('S', Items.STONE_BRICKS)
+            .unlockedBy("has_glowstone_dust", InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item().of(Items.GLOWSTONE_DUST).build()))
             .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.CRYING_OBSIDIAN)

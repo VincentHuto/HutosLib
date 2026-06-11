@@ -1,0 +1,21 @@
+{
+  "type": "lightning",
+  "config": {
+    "backend": "BOLT",
+    "colorPreset": -16722325,
+    "outerColor": -16722325,
+    "innerColor": -2359340,
+    "range": 34.0,
+    "targetOffsetX": 7.0,
+    "targetOffsetY": 0.5,
+    "targetOffsetZ": -7.0,
+    "ticksPerMeter": 76.0,
+    "speed": 1.7,
+    "maxAge": 26,
+    "fract": 12,
+    "maxOffset": 2.10,
+    "size": 0.09,
+    "fixedSeed": true,
+    "seed": 9905
+  }
+}

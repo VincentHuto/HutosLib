@@ -3,6 +3,7 @@ package com.vincenthuto.hutoslib.common.block.entity;
 import com.vincenthuto.hutoslib.common.tendril.TendrilAnchor;
 import com.vincenthuto.hutoslib.common.tendril.TendrilEffectConfig;
 import com.vincenthuto.hutoslib.common.tendril.TendrilEffectSpawner;
+import com.vincenthuto.hutoslib.common.tendril.TendrilTesterBlockTarget;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -21,6 +22,7 @@ public class TendrilTesterBlockEntity extends BlockEntity {
 
 	private TendrilEffectConfig config = TendrilEffectConfig.defaults();
 	private int repeatTicks;
+	private long manualSpawnStep;
 
 	public TendrilTesterBlockEntity(BlockPos pos, BlockState state) {
 		super(HLBlockEntityInit.tendril_tester.get(), pos, state);
@@ -33,10 +35,15 @@ public class TendrilTesterBlockEntity extends BlockEntity {
 	public void setConfig(TendrilEffectConfig config) {
 		this.config = config.clamped();
 		this.repeatTicks = 0;
+		this.manualSpawnStep = 0L;
 		setChanged();
 		if (level != null) {
 			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
 		}
+	}
+
+	public long nextManualSpawnStep() {
+		return manualSpawnStep++;
 	}
 
 	public static void serverTick(Level level, BlockPos pos, BlockState state, TendrilTesterBlockEntity blockEntity) {
@@ -51,7 +58,8 @@ public class TendrilTesterBlockEntity extends BlockEntity {
 		blockEntity.repeatTicks = 0;
 		Vec3 start = Vec3.atCenterOf(pos);
 		TendrilEffectSpawner.spawn(serverLevel, new TendrilAnchor.Point(start),
-				new TendrilAnchor.Point(start.add(config.targetOffset())), config);
+				new TendrilAnchor.Point(TendrilTesterBlockTarget.end(start, pos, config, serverLevel.getGameTime())),
+				config);
 	}
 
 	@Override

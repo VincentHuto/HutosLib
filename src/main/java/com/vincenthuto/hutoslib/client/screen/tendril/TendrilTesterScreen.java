@@ -157,8 +157,8 @@ abstract class TendrilTesterScreen extends Screen {
 		return switch (section) {
 		case TARGET -> blockScreen ? 6 : 4;
 		case LIFECYCLE, SHAPE, BRANCHING, WRITHE -> 4;
-		case COLORS, SEED -> 2;
-		case SURFACE -> 3;
+		case SEED -> 2;
+		case COLORS, SURFACE -> 3;
 		};
 	}
 
@@ -256,6 +256,9 @@ abstract class TendrilTesterScreen extends Screen {
 				config.coreColor(), value)), "Wider outer tendril sheath color.");
 		addColor(layout, column, "Inner", () -> config.coreColor(), value -> set(config.withColors(value,
 				config.glowColor())), "Darker inner tendril core color.");
+		addToggle(layout, column, "Blend", () -> onOff(config.blendColors()), () -> onOff(config.blendColors()),
+				"ON lets the outer sheath wash over the core; OFF redraws the core last for high-contrast colors.",
+				() -> set(config.withBlendColors(!config.blendColors())));
 	}
 
 	private void addLifecycleControls(CompactLayout layout, int column) {

@@ -3,9 +3,12 @@ package com.vincenthuto.hutoslib.common.registry;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.item.HLModTiers;
 import com.vincenthuto.hutoslib.common.item.ItemArmBanner;
+import com.vincenthuto.hutoslib.common.item.ItemGenericParticleTester;
 import com.vincenthuto.hutoslib.common.item.ItemHLGuideBook;
 import com.vincenthuto.hutoslib.common.item.ItemKnapper;
+import com.vincenthuto.hutoslib.common.item.ItemLightningTemplate;
 import com.vincenthuto.hutoslib.common.item.ItemLightningTester;
+import com.vincenthuto.hutoslib.common.item.ItemTendrilTemplate;
 import com.vincenthuto.hutoslib.common.item.ItemTendrilTester;
 
 import net.minecraft.core.registries.Registries;
@@ -63,6 +66,12 @@ public class HLItemInit {
 			() -> new ItemLightningTester(new Item.Properties()));
 	public static final DeferredHolder<Item, ? extends Item> tendril_tester = ITEMS.register("tendril_tester",
 			() -> new ItemTendrilTester(new Item.Properties()));
+	public static final DeferredHolder<Item, ? extends Item> generic_particle_tester = ITEMS.register("generic_particle_tester",
+			() -> new ItemGenericParticleTester(new Item.Properties()));
+	public static final DeferredHolder<Item, ? extends Item> lightning_template = ITEMS.register("lightning_template",
+			() -> new ItemLightningTemplate(new Item.Properties()));
+	public static final DeferredHolder<Item, ? extends Item> tendril_template = ITEMS.register("tendril_template",
+			() -> new ItemTendrilTemplate(new Item.Properties()));
 
 	// Banners and Patterns
 

@@ -45,6 +45,12 @@ registrar.playToServer(PacketTendrilTesterItem.TYPE, PacketTendrilTesterItem.COD
 PacketTendrilTesterItem::handle);
 registrar.playToServer(PacketTendrilTesterBlock.TYPE, PacketTendrilTesterBlock.CODEC,
 PacketTendrilTesterBlock::handle);
+registrar.playToServer(PacketEffectTemplateItem.TYPE, PacketEffectTemplateItem.CODEC,
+PacketEffectTemplateItem::handle);
+registrar.playToServer(PacketGenericParticleTesterItem.TYPE, PacketGenericParticleTesterItem.CODEC,
+PacketGenericParticleTesterItem::handle);
+registrar.playToServer(PacketGenericParticleTesterBlock.TYPE, PacketGenericParticleTesterBlock.CODEC,
+PacketGenericParticleTesterBlock::handle);
 registrar.playToClient(PacketSyncBannerSlotContents.TYPE, PacketSyncBannerSlotContents.CODEC,
 PacketSyncBannerSlotContents::handle);
 registrar.playToServer(PacketOpenBanner.TYPE, PacketOpenBanner.CODEC,

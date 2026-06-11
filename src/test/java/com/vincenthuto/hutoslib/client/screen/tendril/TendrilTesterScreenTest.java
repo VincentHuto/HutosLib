@@ -46,11 +46,11 @@ class TendrilTesterScreenTest {
 
 	@Test
 	void collapsedSectionsKeepHeaderRowsButHideControls() {
-		assertEquals(35, TendrilTesterScreen.visibleSectionRowCount(EnumSet.noneOf(TendrilTesterScreen.Section.class),
+		assertEquals(36, TendrilTesterScreen.visibleSectionRowCount(EnumSet.noneOf(TendrilTesterScreen.Section.class),
 				false));
-		assertEquals(27, TendrilTesterScreen.visibleSectionRowCount(EnumSet.of(TendrilTesterScreen.Section.SHAPE,
+		assertEquals(28, TendrilTesterScreen.visibleSectionRowCount(EnumSet.of(TendrilTesterScreen.Section.SHAPE,
 				TendrilTesterScreen.Section.WRITHE), false));
-		assertEquals(31, TendrilTesterScreen.visibleSectionRowCount(EnumSet.of(TendrilTesterScreen.Section.TARGET),
+		assertEquals(32, TendrilTesterScreen.visibleSectionRowCount(EnumSet.of(TendrilTesterScreen.Section.TARGET),
 				true));
 	}
 

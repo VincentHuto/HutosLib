@@ -7,7 +7,10 @@ import com.vincenthuto.hutoslib.client.screen.tendril.TendrilTesterBlockScreen;
 import com.vincenthuto.hutoslib.common.block.entity.HLBlockEntityInit;
 import com.vincenthuto.hutoslib.common.block.entity.TendrilTesterBlockEntity;
 import com.vincenthuto.hutoslib.common.tendril.TendrilAnchor;
+import com.vincenthuto.hutoslib.common.tendril.TendrilEffectConfig;
 import com.vincenthuto.hutoslib.common.tendril.TendrilEffectSpawner;
+import com.vincenthuto.hutoslib.common.tendril.TendrilTesterBlockTarget;
+import com.vincenthuto.hutoslib.common.template.EffectTemplateType;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -88,15 +91,31 @@ public class BlockTendrilTester extends BaseEntityBlock {
 	@Override
 	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
 			InteractionHand hand, BlockHitResult hitResult) {
+		if (EffectTemplateType.TENDRIL.matches(stack)) {
+			if (level instanceof ServerLevel serverLevel
+					&& level.getBlockEntity(pos) instanceof TendrilTesterBlockEntity blockEntity) {
+				TendrilEffectConfig config = TendrilEffectConfig.fromItem(stack);
+				blockEntity.setConfig(config);
+				Vec3 start = Vec3.atCenterOf(pos);
+				TendrilEffectSpawner.spawn(serverLevel, (ServerPlayer) player, new TendrilAnchor.Point(start),
+						new TendrilAnchor.Point(TendrilTesterBlockTarget.endForManualSpawn(start, pos, config,
+								blockEntity.nextManualSpawnStep())),
+						config);
+			}
+			return ItemInteractionResult.SUCCESS;
+		}
 		InteractionResult result = useWithoutItem(state, level, pos, player, hitResult);
 		return result.consumesAction() ? ItemInteractionResult.SUCCESS : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	private static void spawn(Level level, Player player, BlockPos pos, TendrilTesterBlockEntity blockEntity) {
 		if (level instanceof ServerLevel serverLevel) {
+			TendrilEffectConfig config = blockEntity.getConfig();
 			Vec3 start = Vec3.atCenterOf(pos);
 			TendrilEffectSpawner.spawn(serverLevel, (ServerPlayer) player, new TendrilAnchor.Point(start),
-					new TendrilAnchor.Point(start.add(blockEntity.getConfig().targetOffset())), blockEntity.getConfig());
+					new TendrilAnchor.Point(TendrilTesterBlockTarget.endForManualSpawn(start, pos, config,
+							blockEntity.nextManualSpawnStep())),
+					config);
 		}
 	}
 }

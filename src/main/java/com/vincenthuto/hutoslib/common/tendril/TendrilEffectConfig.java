@@ -11,7 +11,7 @@ public record TendrilEffectConfig(Mode mode, int coreColor, int glowColor, float
 		float targetOffsetY, float targetOffsetZ, int growTicks, int holdTicks, int fadeTicks, int segments,
 		int strandCount, float baseWidth, float tipScale, int branchCount, int branchDepth, float branchLength,
 		float branchSpread, float writheAmplitude, float writheFrequency, float curl, float sag,
-		float surfaceSnapDistance, float surfaceLift, boolean fixedSeed, long seed, boolean repeat,
+		float surfaceSnapDistance, float surfaceLift, boolean blendColors, boolean fixedSeed, long seed, boolean repeat,
 		int repeatInterval) {
 
 	private static final String ROOT_KEY = "hutoslib_tendril_tester";
@@ -32,7 +32,7 @@ public record TendrilEffectConfig(Mode mode, int coreColor, int glowColor, float
 	public static TendrilEffectConfig defaults() {
 		return new TendrilEffectConfig(Mode.FREEFORM, 0xDD10070A, 0x88B70B19, 16.0F, 0.0F, 2.0F, 0.0F, 10,
 				10, 10, 16, 1, 0.12F, 0.12F, 3, 2, 0.35F, 0.8F, 0.14F, 0.06F, 0.7F, 0.15F, 2.0F, 0.12F,
-				false, 0L, false, 20);
+				true, false, 0L, false, 20);
 	}
 
 	public static TendrilEffectConfig fromBuffer(FriendlyByteBuf buf) {
@@ -40,7 +40,7 @@ public record TendrilEffectConfig(Mode mode, int coreColor, int glowColor, float
 				buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readInt(), buf.readInt(), buf.readInt(),
 				buf.readInt(), buf.readInt(), buf.readFloat(), buf.readFloat(), buf.readInt(), buf.readInt(),
 				buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(),
-				buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readLong(), buf.readBoolean(),
+				buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readBoolean(), buf.readLong(), buf.readBoolean(),
 				buf.readInt()).clamped();
 	}
 
@@ -77,6 +77,7 @@ public record TendrilEffectConfig(Mode mode, int coreColor, int glowColor, float
 				tag.contains("surfaceSnapDistance") ? tag.getFloat("surfaceSnapDistance")
 						: defaults.surfaceSnapDistance(),
 				tag.contains("surfaceLift") ? tag.getFloat("surfaceLift") : defaults.surfaceLift(),
+				tag.contains("blendColors") ? tag.getBoolean("blendColors") : defaults.blendColors(),
 				tag.contains("fixedSeed") ? tag.getBoolean("fixedSeed") : defaults.fixedSeed(),
 				tag.contains("seed") ? tag.getLong("seed") : defaults.seed(),
 				tag.contains("repeat") ? tag.getBoolean("repeat") : defaults.repeat(),
@@ -101,7 +102,7 @@ public record TendrilEffectConfig(Mode mode, int coreColor, int glowColor, float
 				clamp(branchLength, 0.05F, 1.0F), clamp(branchSpread, 0.0F, 3.14159F),
 				clamp(writheAmplitude, 0.0F, 2.0F), clamp(writheFrequency, 0.001F, 1.0F),
 				clamp(curl, -4.0F, 4.0F), clamp(sag, -4.0F, 4.0F),
-				clamp(surfaceSnapDistance, 0.0F, 8.0F), clamp(surfaceLift, 0.0F, 1.0F), fixedSeed, seed,
+				clamp(surfaceSnapDistance, 0.0F, 8.0F), clamp(surfaceLift, 0.0F, 1.0F), blendColors, fixedSeed, seed,
 				repeat, clamp(repeatInterval, 5, 200));
 	}
 
@@ -141,6 +142,7 @@ public record TendrilEffectConfig(Mode mode, int coreColor, int glowColor, float
 		tag.putFloat("sag", config.sag());
 		tag.putFloat("surfaceSnapDistance", config.surfaceSnapDistance());
 		tag.putFloat("surfaceLift", config.surfaceLift());
+		tag.putBoolean("blendColors", config.blendColors());
 		tag.putBoolean("fixedSeed", config.fixedSeed());
 		tag.putLong("seed", config.seed());
 		tag.putBoolean("repeat", config.repeat());
@@ -174,6 +176,7 @@ public record TendrilEffectConfig(Mode mode, int coreColor, int glowColor, float
 		buf.writeFloat(config.sag());
 		buf.writeFloat(config.surfaceSnapDistance());
 		buf.writeFloat(config.surfaceLift());
+		buf.writeBoolean(config.blendColors());
 		buf.writeBoolean(config.fixedSeed());
 		buf.writeLong(config.seed());
 		buf.writeBoolean(config.repeat());
@@ -189,69 +192,76 @@ public record TendrilEffectConfig(Mode mode, int coreColor, int glowColor, float
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 
 	public TendrilEffectConfig withColors(int coreColor, int glowColor) {
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
+	}
+
+	public TendrilEffectConfig withBlendColors(boolean blendColors) {
+		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
+				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
+				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 
 	public TendrilEffectConfig withFixedSeed(boolean fixedSeed, long seed) {
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 
 	public TendrilEffectConfig withLifecycle(int growTicks, int holdTicks, int fadeTicks) {
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 
 	public TendrilEffectConfig withMode(Mode mode) {
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 
 	public TendrilEffectConfig withRange(float range) {
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 
 	public TendrilEffectConfig withRepeat(boolean repeat, int repeatInterval) {
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 
 	public TendrilEffectConfig withShape(int segments, int strandCount, float baseWidth, float tipScale) {
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 
 	public TendrilEffectConfig withSurface(float surfaceSnapDistance, float surfaceLift) {
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 
 	public TendrilEffectConfig withTargetOffset(float x, float y, float z) {
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, x, y, z, growTicks, holdTicks, fadeTicks,
 				segments, strandCount, baseWidth, tipScale, branchCount, branchDepth, branchLength, branchSpread,
-				writheAmplitude, writheFrequency, curl, sag, surfaceSnapDistance, surfaceLift, fixedSeed, seed,
+				writheAmplitude, writheFrequency, curl, sag, surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed,
 				repeat, repeatInterval).clamped();
 	}
 
@@ -259,6 +269,6 @@ public record TendrilEffectConfig(Mode mode, int coreColor, int glowColor, float
 		return new TendrilEffectConfig(mode, coreColor, glowColor, range, targetOffsetX, targetOffsetY,
 				targetOffsetZ, growTicks, holdTicks, fadeTicks, segments, strandCount, baseWidth, tipScale,
 				branchCount, branchDepth, branchLength, branchSpread, writheAmplitude, writheFrequency, curl, sag,
-				surfaceSnapDistance, surfaceLift, fixedSeed, seed, repeat, repeatInterval).clamped();
+				surfaceSnapDistance, surfaceLift, blendColors, fixedSeed, seed, repeat, repeatInterval).clamped();
 	}
 }

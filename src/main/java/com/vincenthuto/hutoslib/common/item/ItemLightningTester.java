@@ -3,6 +3,7 @@ package com.vincenthuto.hutoslib.common.item;
 import com.vincenthuto.hutoslib.client.screen.lightning.LightningTesterItemScreen;
 import com.vincenthuto.hutoslib.common.lightning.LightningTestConfig;
 import com.vincenthuto.hutoslib.common.lightning.LightningTesterSpawner;
+import com.vincenthuto.hutoslib.common.template.EffectTemplateType;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,8 +34,9 @@ public class ItemLightningTester extends Item {
 			return InteractionResult.sidedSuccess(player.level().isClientSide);
 		}
 		if (player.level() instanceof ServerLevel level) {
+			LightningTestConfig config = configForUse(stack, player);
 			LightningTesterSpawner.spawn(level, (ServerPlayer) player, player.getEyePosition(),
-					target.position().add(0, target.getBbHeight() * 0.5, 0), LightningTestConfig.fromItem(stack));
+					target.position().add(0, target.getBbHeight() * 0.5, 0), config);
 		}
 		return InteractionResult.sidedSuccess(player.level().isClientSide);
 	}
@@ -42,7 +44,7 @@ public class ItemLightningTester extends Item {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
 		ItemStack stack = player.getItemInHand(usedHand);
-		LightningTestConfig config = LightningTestConfig.fromItem(stack);
+		LightningTestConfig config = configForUse(stack, player);
 		if (player.isShiftKeyDown()) {
 			if (level.isClientSide) {
 				LightningTesterItemScreen.open(usedHand, config);
@@ -64,7 +66,7 @@ public class ItemLightningTester extends Item {
 			return InteractionResult.PASS;
 		}
 		ItemStack stack = context.getItemInHand();
-		LightningTestConfig config = LightningTestConfig.fromItem(stack);
+		LightningTestConfig config = configForUse(stack, player);
 		if (player.isShiftKeyDown()) {
 			if (context.getLevel().isClientSide) {
 				LightningTesterItemScreen.open(context.getHand(), config);
@@ -76,5 +78,13 @@ public class ItemLightningTester extends Item {
 					Vec3.atCenterOf(context.getClickedPos()), config);
 		}
 		return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+	}
+
+	private static LightningTestConfig configForUse(ItemStack stack, Player player) {
+		ItemStack offhand = player.getOffhandItem();
+		if (EffectTemplateType.LIGHTNING.matches(offhand)) {
+			return LightningTestConfig.fromItem(offhand);
+		}
+		return LightningTestConfig.fromItem(stack);
 	}
 }

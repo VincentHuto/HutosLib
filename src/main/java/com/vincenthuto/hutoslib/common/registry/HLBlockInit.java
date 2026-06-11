@@ -3,6 +3,7 @@ package com.vincenthuto.hutoslib.common.registry;
 import com.vincenthuto.hutoslib.HutosLib;
 import com.vincenthuto.hutoslib.common.block.BlockDisplayGlass;
 import com.vincenthuto.hutoslib.common.block.BlockDisplayPedestal;
+import com.vincenthuto.hutoslib.common.block.BlockGenericParticleTester;
 import com.vincenthuto.hutoslib.common.block.BlockLightningTester;
 import com.vincenthuto.hutoslib.common.block.BlockTendrilTester;
 
@@ -30,5 +31,9 @@ Block.Properties.of().strength(1.5F, 6.0F).sound(SoundType.AMETHYST).noOcclusion
 
 public static final DeferredHolder<Block, Block> tendril_tester_block = BLOCKS.register("tendril_tester_block",
 () -> new BlockTendrilTester(
+Block.Properties.of().strength(1.5F, 6.0F).sound(SoundType.AMETHYST).noOcclusion()));
+
+public static final DeferredHolder<Block, Block> generic_particle_tester_block = BLOCKS.register("generic_particle_tester_block",
+() -> new BlockGenericParticleTester(
 Block.Properties.of().strength(1.5F, 6.0F).sound(SoundType.AMETHYST).noOcclusion()));
 }
