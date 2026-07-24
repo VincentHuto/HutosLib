@@ -1,13 +1,15 @@
 package com.vincenthuto.hutoslib.common.item;
 
 /**
- * Per-entity client-side animation state for an {@link ItemGuideBook}.
+ * Per-player, per-item-type client-side animation state for an
+ * {@link ItemGuideBook}.
  *
- * <p>One instance is kept in {@link ItemGuideBook#ANIM_STATES} per entity UUID
- * so that every player (or NPC) holding the book has independent animation
- * state rather than sharing the item singleton's fields.
+ * <p>Each guide-book item singleton gets an independent state for every player,
+ * preventing other guide-book types in the same inventory from modifying its
+ * animation.
  */
 public final class BookAnimState {
+	public long  lastAnimationTick = Long.MIN_VALUE;
 	public int   ticks;
 	public float flip;
 	public float oFlip;

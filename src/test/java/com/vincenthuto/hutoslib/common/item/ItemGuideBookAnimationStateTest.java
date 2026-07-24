@@ -6,29 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.UUID;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 
 class ItemGuideBookAnimationStateTest {
 	private final UUID firstPlayer = UUID.randomUUID();
 	private final UUID secondPlayer = UUID.randomUUID();
-
-	@AfterEach
-	void clearAnimationStates() {
-		ItemGuideBook.clearState(firstPlayer);
-		ItemGuideBook.clearState(secondPlayer);
-	}
+	private final BookAnimStateCache states = new BookAnimStateCache();
 
 	@Test
 	void differentGuideBookItemsHaveIndependentStateForOnePlayer() {
-		ItemGuideBook firstBook = book("first");
-		ItemGuideBook secondBook = book("second");
+		Object firstBook = new Object();
+		Object secondBook = new Object();
 
-		BookAnimState firstState = ItemGuideBook.getOrCreateState(firstPlayer, firstBook);
-		BookAnimState secondState = ItemGuideBook.getOrCreateState(firstPlayer, secondBook);
+		BookAnimState firstState = states.getOrCreate(firstPlayer, firstBook);
+		BookAnimState secondState = states.getOrCreate(firstPlayer, secondBook);
 
 		assertNotSame(firstState, secondState);
 
@@ -41,8 +32,8 @@ class ItemGuideBookAnimationStateTest {
 
 	@Test
 	void duplicateStacksOfOneBookTypeUpdateOnlyOncePerGameTick() {
-		ItemGuideBook guideBook = book("duplicate");
-		BookAnimState state = ItemGuideBook.getOrCreateState(firstPlayer, guideBook);
+		Object guideBook = new Object();
+		BookAnimState state = states.getOrCreate(firstPlayer, guideBook);
 
 		ItemGuideBook.tickAnimation(state, 20L, true);
 		ItemGuideBook.tickAnimation(state, 20L, false);
@@ -52,8 +43,8 @@ class ItemGuideBookAnimationStateTest {
 
 	@Test
 	void stateCanUpdateAgainOnTheNextGameTick() {
-		ItemGuideBook guideBook = book("next_tick");
-		BookAnimState state = ItemGuideBook.getOrCreateState(firstPlayer, guideBook);
+		Object guideBook = new Object();
+		BookAnimState state = states.getOrCreate(firstPlayer, guideBook);
 
 		ItemGuideBook.tickAnimation(state, 30L, true);
 		ItemGuideBook.tickAnimation(state, 31L, true);
@@ -63,22 +54,16 @@ class ItemGuideBookAnimationStateTest {
 
 	@Test
 	void clearingPlayerRemovesAllOfThatPlayersBookStatesOnly() {
-		ItemGuideBook firstBook = book("clear_first");
-		ItemGuideBook secondBook = book("clear_second");
-		BookAnimState firstState = ItemGuideBook.getOrCreateState(firstPlayer, firstBook);
-		BookAnimState secondState = ItemGuideBook.getOrCreateState(firstPlayer, secondBook);
-		BookAnimState otherPlayerState = ItemGuideBook.getOrCreateState(secondPlayer, firstBook);
+		Object firstBook = new Object();
+		Object secondBook = new Object();
+		BookAnimState firstState = states.getOrCreate(firstPlayer, firstBook);
+		BookAnimState secondState = states.getOrCreate(firstPlayer, secondBook);
+		BookAnimState otherPlayerState = states.getOrCreate(secondPlayer, firstBook);
 
-		ItemGuideBook.clearState(firstPlayer);
+		states.clear(firstPlayer);
 
-		assertNotSame(firstState, ItemGuideBook.getOrCreateState(firstPlayer, firstBook));
-		assertNotSame(secondState, ItemGuideBook.getOrCreateState(firstPlayer, secondBook));
-		assertSame(otherPlayerState, ItemGuideBook.getOrCreateState(secondPlayer, firstBook));
-	}
-
-	private static ItemGuideBook book(String path) {
-		return new ItemGuideBook(
-				new Item.Properties(),
-				ResourceLocation.fromNamespaceAndPath("hutoslib", path));
+		assertNotSame(firstState, states.getOrCreate(firstPlayer, firstBook));
+		assertNotSame(secondState, states.getOrCreate(firstPlayer, secondBook));
+		assertSame(otherPlayerState, states.getOrCreate(secondPlayer, firstBook));
 	}
 }
