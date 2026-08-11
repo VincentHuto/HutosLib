@@ -46,12 +46,18 @@ public class TendrilRenderer {
 		private final TendrilAnchorState startState;
 		private final TendrilAnchorState endState;
 		private final Timestamp createdTimestamp;
+		private final Vec3 preferredUp;
 
 		TendrilInstance(TendrilEffectData data, Timestamp createdTimestamp) {
+			this(data, createdTimestamp, Vec3.ZERO);
+		}
+
+		TendrilInstance(TendrilEffectData data, Timestamp createdTimestamp, Vec3 preferredUp) {
 			this.data = data;
 			this.startState = new TendrilAnchorState(data.start());
 			this.endState = new TendrilAnchorState(data.end());
 			this.createdTimestamp = createdTimestamp;
+			this.preferredUp = preferredUp == null ? Vec3.ZERO : preferredUp;
 		}
 
 		Optional<ResolvedAnchors> resolve(TendrilAnchor.EntityResolver resolver) {
@@ -81,7 +87,7 @@ public class TendrilRenderer {
 			}
 
 			TendrilGeometry geometry = TendrilGeometry.generate(anchors.get().start(), anchors.get().end(), config,
-					data.seed(), age, surfaceResolver(level, config));
+					data.seed(), age, surfaceResolver(level, config), preferredUp);
 			renderGeometry(matrix, buffers, geometry, config, growProgress, alphaScale);
 			return true;
 		}
@@ -148,10 +154,14 @@ public class TendrilRenderer {
 	private final List<TendrilInstance> tendrils = new LinkedList<>();
 
 	public void add(TendrilEffectData data, float partialTicks) {
+		add(data, partialTicks, Vec3.ZERO);
+	}
+
+	public void add(TendrilEffectData data, float partialTicks, Vec3 preferredUp) {
 		if (minecraft.level == null) {
 			return;
 		}
-		TendrilInstance instance = new TendrilInstance(data, currentTimestamp(partialTicks));
+		TendrilInstance instance = new TendrilInstance(data, currentTimestamp(partialTicks), preferredUp);
 		Optional<ResolvedAnchors> anchors = instance.resolve(TendrilAnchor.forLevel(minecraft.level));
 		if (anchors.isEmpty() || !isCloseEnoughToRender(anchors.get())) {
 			return;

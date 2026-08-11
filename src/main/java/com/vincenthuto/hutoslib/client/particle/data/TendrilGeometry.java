@@ -46,16 +46,21 @@ public record TendrilGeometry(List<TendrilGeometry.Strand> strands) {
 	}
 
 	public static TendrilGeometry generate(Vec3 start, Vec3 end, TendrilEffectConfig config, long seed, float time) {
-		return generate(start, end, config, seed, time, SurfaceResolver.NONE);
+		return generate(start, end, config, seed, time, SurfaceResolver.NONE, Vec3.ZERO);
 	}
 
 	public static TendrilGeometry generate(Vec3 start, Vec3 end, TendrilEffectConfig config, long seed, float time,
 			SurfaceResolver surfaceResolver) {
+		return generate(start, end, config, seed, time, surfaceResolver, Vec3.ZERO);
+	}
+
+	public static TendrilGeometry generate(Vec3 start, Vec3 end, TendrilEffectConfig config, long seed, float time,
+			SurfaceResolver surfaceResolver, Vec3 preferredUp) {
 		TendrilEffectConfig clamped = config.clamped();
 		Random random = new Random(seed);
 		List<Strand> strands = new ArrayList<>();
 		List<Strand> branchParents = new ArrayList<>();
-		Basis basis = basis(end.subtract(start));
+		Basis basis = basis(end.subtract(start), preferredUp);
 		int strandCount = clamped.strandCount();
 		for (int i = 0; i < strandCount; i++) {
 			float offsetScale = strandCount == 1 ? 0.0F : clamped.baseWidth() * 0.7F;
@@ -65,7 +70,7 @@ public record TendrilGeometry(List<TendrilGeometry.Strand> strands) {
 			float strandCurl = clamped.curl() * (0.75F + random.nextFloat() * 0.5F);
 			float phase = random.nextFloat() * (float) (Math.PI * 2.0D);
 			Strand strand = createStrand(start.add(offset), end.add(offset), clamped, seed + i * 31L, time, 0,
-					false, clamped.baseWidth(), strandCurl, phase, clamped.segments(), surfaceResolver);
+				false, clamped.baseWidth(), strandCurl, phase, clamped.segments(), surfaceResolver, preferredUp);
 			strands.add(strand);
 			branchParents.add(strand);
 		}
@@ -91,7 +96,7 @@ public record TendrilGeometry(List<TendrilGeometry.Strand> strands) {
 				Strand branch = createStrand(fork.center(), fork.center().add(branchDir.scale(length)), clamped,
 						seed + 1000L + i * 97L, time, depth, true, branchWidth,
 						clamped.curl() * (random.nextFloat() - 0.5F), random.nextFloat() * 6.28318F,
-						Math.max(2, clamped.segments() / 3), surfaceResolver);
+						Math.max(2, clamped.segments() / 3), surfaceResolver, preferredUp);
 				strands.add(branch);
 				if (depth < clamped.branchDepth()) {
 					branchParents.add(branch);
@@ -142,8 +147,16 @@ public record TendrilGeometry(List<TendrilGeometry.Strand> strands) {
 		}
 	}
 
-	private static Basis basis(Vec3 diff) {
+	private static Basis basis(Vec3 diff, Vec3 preferredUp) {
 		Vec3 direction = safeNormalize(diff, new Vec3(1, 0, 0));
+		if (preferredUp != null && preferredUp.lengthSqr() > 1.0E-8D) {
+			Vec3 projectedUp = preferredUp.subtract(direction.scale(preferredUp.dot(direction)));
+			if (projectedUp.lengthSqr() > 1.0E-8D) {
+				Vec3 up = safeNormalize(projectedUp, new Vec3(0, 1, 0));
+				Vec3 right = safeNormalize(direction.cross(up), new Vec3(0, 0, 1));
+				return new Basis(direction, right, safeNormalize(right.cross(direction), up));
+			}
+		}
 		Vec3 axis = Math.abs(direction.y) < 0.75D ? new Vec3(0, 1, 0) : new Vec3(1, 0, 0);
 		Vec3 right = direction.cross(axis);
 		if (right.lengthSqr() < 1.0E-8D) {
@@ -164,8 +177,8 @@ public record TendrilGeometry(List<TendrilGeometry.Strand> strands) {
 
 	private static Strand createStrand(Vec3 start, Vec3 end, TendrilEffectConfig config, long seed, float time,
 			int depth, boolean branch, float baseWidth, float curl, float phase, int segments,
-			SurfaceResolver surfaceResolver) {
-		Basis basis = basis(end.subtract(start));
+			SurfaceResolver surfaceResolver, Vec3 preferredUp) {
+		Basis basis = basis(end.subtract(start), preferredUp);
 		Random random = new Random(seed);
 		List<Ring> rings = new ArrayList<>();
 		Vec3 diff = end.subtract(start);

@@ -49,6 +49,25 @@ class TendrilGeometryTest {
 	}
 
 	@Test
+	void preferredUpKeepsSagAlignedWithEachTendrilRoot() {
+		TendrilEffectConfig config = TendrilEffectConfig.defaults()
+				.withShape(8, 1, 0.1F, 0.1F)
+				.withWrithe(0.0F, 0.08F, 0.0F, -1.0F);
+
+		TendrilGeometry xGeometry = TendrilGeometry.generate(new Vec3(2.0, 0.0, 0.0),
+				new Vec3(0.0, 5.0, 0.0), config, 3L, 0.0F,
+				TendrilGeometry.SurfaceResolver.NONE, new Vec3(1.0, 0.0, 0.0));
+		TendrilGeometry zGeometry = TendrilGeometry.generate(new Vec3(0.0, 0.0, 2.0),
+				new Vec3(0.0, 5.0, 0.0), config, 4L, 0.0F,
+				TendrilGeometry.SurfaceResolver.NONE, new Vec3(0.0, 0.0, 1.0));
+
+		Vec3 xMidpoint = xGeometry.strands().get(0).rings().get(4).center();
+		Vec3 zMidpoint = zGeometry.strands().get(0).rings().get(4).center();
+		assertTrue(xMidpoint.x > 1.8D, "the x-root should bow outward along +x");
+		assertTrue(zMidpoint.z > 1.8D, "the z-root should bow outward along +z");
+	}
+
+	@Test
 	void branchGenerationRespectsGlobalCountAndDepthLimits() {
 		TendrilEffectConfig config = TendrilEffectConfig.defaults().withShape(12, 1, 0.16F, 0.08F)
 				.withBranching(4, 2, 0.4F, 1.0F);
