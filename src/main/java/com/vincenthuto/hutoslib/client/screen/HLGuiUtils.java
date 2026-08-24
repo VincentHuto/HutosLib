@@ -139,9 +139,16 @@ public class HLGuiUtils {
 		matrices.translate(relX, relY, 100.0D);
 		matrices.scale(8.0F, -8.0F, 8.0F);
 		MultiBufferSource.BufferSource src = Minecraft.getInstance().renderBuffers().bufferSource();
-		BlockEntityRenderDispatcher d = Minecraft.getInstance().getBlockEntityRenderDispatcher();
-		pattern.getDisplayBlockPosBlockList(multiblockCycleIndex())
-				.forEach((box) -> box.render(pattern, matrices, partialTicks, getter, src, d));
+		for (BlockPosBlockPair box : pattern.getDisplayBlockPosBlockList(multiblockCycleIndex())) {
+			if (box.getBlock() == null) continue;
+			matrices.pushPose();
+			matrices.translate((box.getPos().getX() - (pattern.getBlockPattern().getWidth() / 2)) - 0.5,
+					(box.getPos().getY() - (pattern.getBlockPattern().getHeight() / 2)) - 0.5,
+					(box.getPos().getZ() - (pattern.getBlockPattern().getDepth() / 2)) - 0.5);
+			Minecraft.getInstance().getBlockRenderer().renderSingleBlock(box.getBlock().defaultBlockState(), matrices,
+					src, 0xF000F0, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY);
+			matrices.popPose();
+		}
 		src.endBatch();
 		matrices.popPose();
 
