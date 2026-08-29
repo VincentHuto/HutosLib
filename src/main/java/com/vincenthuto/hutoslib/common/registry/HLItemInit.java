@@ -62,6 +62,8 @@ public class HLItemInit {
 					new Item.Properties()));
 	public static final DeferredHolder<Item, Item> obsidian_flakes = ITEMS.register("obsidian_flakes",
 			() -> new Item(new Item.Properties()));
+	public static final DeferredHolder<Item, Item> effect_source_lens = ITEMS.register("effect_source_lens",
+			() -> new Item(new Item.Properties().stacksTo(1)));
 	public static final DeferredHolder<Item, ? extends Item> lightning_tester = ITEMS.register("lightning_tester",
 			() -> new ItemLightningTester(new Item.Properties()));
 	public static final DeferredHolder<Item, ? extends Item> tendril_tester = ITEMS.register("tendril_tester",

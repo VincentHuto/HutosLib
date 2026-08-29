@@ -40,6 +40,7 @@
   "item.hutoslib.diamond_arm_banner.white": "White Diamond Arm Banner",
   "item.hutoslib.diamond_arm_banner.yellow": "Yellow Diamond Arm Banner",
   "item.hutoslib.diamond_knapper": "Diamond Knapper",
+  "item.hutoslib.effect_source_lens": "Effect Source Lens",
   "item.hutoslib.gold_arm_banner": "Gold Arm Banner",
   "item.hutoslib.gold_arm_banner.black": "Black Gold Arm Banner",
   "item.hutoslib.gold_arm_banner.blue": "Blue Gold Arm Banner",
@@ -140,5 +141,19 @@
   "item_group.hutoslib.hutoslibtab": "HutosLib:A Library Mod",
   "key.armbanner.category": "Open Arm Banner Slot",
   "key.banner_slot.slot": "Open Arm Banner Slot",
-  "key.toolbanner.category": "HutosLib"
+  "key.toolbanner.category": "HutosLib",
+  "tooltip.hutoslib.effect_source_lens.heading": "Effect Source",
+  "tooltip.hutoslib.effect_source_lens.effect_id": "Effect ID: %s",
+  "tooltip.hutoslib.effect_source_lens.owner": "Owner: %s (%s) v%s",
+  "tooltip.hutoslib.effect_source_lens.implementation": "Implementation: %s",
+  "tooltip.hutoslib.effect_source_lens.effect_jar": "Effect JAR: %s",
+  "tooltip.hutoslib.effect_source_lens.latest_application": "Latest application",
+  "tooltip.hutoslib.effect_source_lens.source": "Source [explicit]: %s [%s]",
+  "tooltip.hutoslib.effect_source_lens.source_uuid": "Source UUID: %s",
+  "tooltip.hutoslib.effect_source_lens.items": "Items [inferred]: main %s | off %s | target use %s",
+  "tooltip.hutoslib.effect_source_lens.caller": "Caller [inferred]: %s#%s(%s:%s)",
+  "tooltip.hutoslib.effect_source_lens.caller_owner": "Caller owner [inferred]: %s (%s) v%s",
+  "tooltip.hutoslib.effect_source_lens.caller_jar": "Caller JAR: %s",
+  "tooltip.hutoslib.effect_source_lens.confidence": "Confidence: %s",
+  "tooltip.hutoslib.effect_source_lens.unknown": "Unknown"
 }
