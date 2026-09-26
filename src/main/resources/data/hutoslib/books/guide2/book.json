@@ -1,9 +1,10 @@
 {
   "type": "hutoslib:book",
-  "coverLoc" : "hutoslib:textures/gui/guide/title.png",
-  "overlayLoc" : "hutoslib:textures/gui/guide/guide_overlay.png",
-  "title" : "HutosLib",
-  "subtitle" : "a Library Mod+",
-  "text" : "reee",
-  "icon" : "diamond_knapper"
+  "coverLoc": "hutoslib:textures/gui/guide/title.png",
+  "overlayLoc": "hutoslib:textures/gui/guide/guide_overlay.png",
+  "title": "HutosLib",
+  "subtitle": "a Library Mod+",
+  "text": "Tools, building blocks, and a few useful extras.",
+  "icon": "hutoslib:diamond_knapper",
+  "theme": "hutoslib:guide"
 }

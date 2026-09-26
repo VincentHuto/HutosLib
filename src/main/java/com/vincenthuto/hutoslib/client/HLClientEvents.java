@@ -73,9 +73,15 @@ public class HLClientEvents {
 			ItemGuideBook.clearState(event.getPlayer().getUUID());
 			BookReadTracker.flush();
 		}
+		com.vincenthuto.hutoslib.client.book.BookClientHooks.disconnect();
 		BoltRenderer.INSTANCE.clear();
 		TendrilRenderer.INSTANCE.clear();
 		EffectSourceClientCache.clear();
+	}
+
+	@SubscribeEvent
+	public static void tickBookNotices(net.neoforged.neoforge.client.event.ClientTickEvent.Post event) {
+		com.vincenthuto.hutoslib.client.book.BookClientHooks.tick();
 	}
 
 	@SubscribeEvent
@@ -243,6 +249,11 @@ public class HLClientEvents {
 	public static class ModBusEvents {
 
 		@SubscribeEvent
+		public static void registerBookThemes(net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent event) {
+			event.registerReloadListener(com.vincenthuto.hutoslib.client.book.BookThemeManager.INSTANCE);
+		}
+
+		@SubscribeEvent
 		public static void initKeybinds(RegisterKeyMappingsEvent event) {
 			event.register(OPEN_BANNER_SLOT_KEYBIND =
 					new KeyMapping("key.banner_slot.slot", GLFW.GLFW_KEY_V, "key.armbanner.category"));
@@ -270,7 +281,7 @@ public class HLClientEvents {
 
 						int dotX = itemX + 12;
 						int dotY = itemY;
-						int color = 0xFFFFD700;
+						int color = book.getNoticeStyle().attentionColor();
 						graphics.fill(dotX + 1, dotY, dotX + 3, dotY + 1, color);
 						graphics.fill(dotX, dotY + 1, dotX + 4, dotY + 3, color);
 						graphics.fill(dotX + 1, dotY + 3, dotX + 3, dotY + 4, color);
@@ -288,15 +299,7 @@ public class HLClientEvents {
 				return false;
 			}
 
-			Set<ResourceLocation> visiblePageIds = book.collectVisiblePageIds(player);
-			int unreadByPages = visiblePageIds.isEmpty()
-					? 0
-					: BookReadTracker.countUnread(player.getUUID(), visiblePageIds);
-			int unreadByKnowledge = knowledge != null
-					? BookReadTracker.countUnread(player.getUUID(), knowledge, prefix)
-					: 0;
-
-			return Math.max(unreadByPages, unreadByKnowledge) > 0;
+			return com.vincenthuto.hutoslib.client.book.BookClientHooks.attention(player,book) > 0;
 		}
 
 		@SubscribeEvent

@@ -102,6 +102,7 @@ public class HutosLib {
 
     private void clientSetup(final FMLClientSetupEvent event) {
         BlockEntityRenderers.register(HLBlockEntityInit.display_pedestal.get(), RenderTileDisplayPedestal::new);
+        BlockEntityRenderers.register(HLBlockEntityInit.dictation_table.get(), com.vincenthuto.hutoslib.client.render.block.DictationTableRenderer::new);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

@@ -35,6 +35,12 @@ public class HLGuiGuideMultiblockPage extends HLGuiGuidePage {
 	}
 
 	@Override
+	protected void init() {
+		pageTemplate.setBodyRenderer(BookBuiltinRenderers.multiblock(pattern));
+		BookReaderScreen.openEntry(book, chapter, chapter.getPages().indexOf(pageTemplate));
+	}
+
+	@Override
 	public boolean mouseDragged(double xPos, double yPos, int button, double dragLeftRight, double dragUpDown) {
 		xDragPos = xPos;
 		yDragPos = yPos;

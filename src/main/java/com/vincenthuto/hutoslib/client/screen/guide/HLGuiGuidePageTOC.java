@@ -274,7 +274,7 @@ public class HLGuiGuidePageTOC extends Screen {
 
 	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {
 		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuidePageTOC(pBook, pChapterTemplate));
+		BookReaderScreen.openChapter(pBook, pChapterTemplate);
 	}
 
 	/**
@@ -289,6 +289,7 @@ public class HLGuiGuidePageTOC extends Screen {
 	public static void openScreenViaItem(BookCodeModel pBook, ChapterTemplate pChapterTemplate,
 			BookReadTracker tracker, UUID viewerUuid, IBookKnowledge knowledge) {
 		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuidePageTOC(pBook, pChapterTemplate, tracker, viewerUuid, knowledge));
+		if (!(mc.screen instanceof BookReaderScreen)) BookReaderScreen.open(pBook, null, null, knowledge);
+		BookReaderScreen.openChapter(pBook, pChapterTemplate);
 	}
 }

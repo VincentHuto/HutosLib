@@ -95,7 +95,10 @@ public class PacketSyncBookKnowledge implements CustomPacketPayload {
             var player = ctx.player();
             if (player != null && player.getUUID().equals(msg.playerUuid)) {
                 BookKnowledge knowledge = BookKnowledgeProvider.get(player);
+                var before = java.util.Set.copyOf(knowledge.getUnlockedEntries());
                 msg.applyTo(knowledge, player.level().registryAccess());
+                com.vincenthuto.hutoslib.client.book.BookClientHooks.knowledgeSnapshot(player, knowledge,
+                        before, java.util.Set.copyOf(knowledge.getUnlockedEntries()), java.util.Set.of());
             }
         });
     }

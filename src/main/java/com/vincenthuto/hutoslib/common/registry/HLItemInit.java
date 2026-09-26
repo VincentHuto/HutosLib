@@ -39,7 +39,7 @@ public class HLItemInit {
 	public static final DeferredHolder<Item, ? extends Item> hl_guide_book = SPECIALITEMS.register("hl_guide_book",
 			() -> new ItemHLGuideBook(new Item.Properties().stacksTo(1),
 					hl_guide_book_text)
-					.withBookPrefix("guide/"));
+					.withBookId(HutosLib.rloc("guide")));
 
 	// Materials
 	public static final DeferredHolder<Item, Item> raw_clay_flask = ITEMS.register("raw_clay_flask",

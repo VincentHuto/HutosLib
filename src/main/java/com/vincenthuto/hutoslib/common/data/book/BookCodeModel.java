@@ -1,12 +1,18 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
 import com.vincenthuto.hutoslib.common.book.BookTheme;
+import com.vincenthuto.hutoslib.common.book.BookReaderHooks;
 import com.vincenthuto.hutoslib.common.book.filter.IBookPageFilter;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.function.IntFunction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 
 public class BookCodeModel {
 
@@ -27,6 +33,10 @@ public class BookCodeModel {
 	/** Optional visual theme for this book's screens. {@code null} = use default textures/colors. */
 	@Nullable
 	private BookTheme theme;
+	private BookSourceIndex sourceIndex = BookSourceIndex.EMPTY;
+	private List<GlossaryTermTemplate> glossary = List.of();
+	private BookReaderHooks readerHooks = BookReaderHooks.DEFAULT;
+	private static final java.util.Set<ResourceLocation> WARNED_MISSING_REVEAL = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
 	public BookCodeModel(ResourceLocation resourceLocation, BookTemplate template) {
 		this.resourceLocation = resourceLocation;
@@ -47,6 +57,46 @@ public class BookCodeModel {
 
 	public void setChapters(List<ChapterTemplate> chapters) {
 		this.chapters = chapters;
+	}
+
+	public BookCodeModel copyWithChapters(List<ChapterTemplate> visibleChapters) {
+		BookCodeModel copy = new BookCodeModel(resourceLocation, template);
+		copy.chapters = new java.util.ArrayList<>(visibleChapters);
+		copy.pageFilter = pageFilter;
+		copy.theme = theme;
+		copy.sourceIndex = sourceIndex;
+		copy.glossary = glossary;
+		copy.readerHooks = readerHooks;
+		return copy;
+	}
+
+	public BookSourceIndex getSourceIndex() { return sourceIndex; }
+	public void setSourceIndex(BookSourceIndex sourceIndex) { this.sourceIndex = sourceIndex; }
+	public List<GlossaryTermTemplate> getGlossary() { return glossary; }
+	public void setGlossary(List<GlossaryTermTemplate> glossary) { this.glossary = List.copyOf(glossary); }
+	public BookReaderHooks getReaderHooks() { return readerHooks; }
+
+	public void setRedactionPredicate(BiPredicate<Player, Integer> predicate) {
+		readerHooks = new BookReaderHooks(predicate, readerHooks.requirement(), readerHooks.owner(), readerHooks.status());
+	}
+	public void setRevealRequirementLabel(IntFunction<Component> label) {
+		readerHooks = new BookReaderHooks(readerHooks.reveal(), label, readerHooks.owner(), readerHooks.status());
+	}
+	public void setOwnerLine(Function<Player, Component> owner) {
+		readerHooks = new BookReaderHooks(readerHooks.reveal(), readerHooks.requirement(), owner, readerHooks.status());
+	}
+	public void setStatusLine(Function<Player, Component> status) {
+		readerHooks = new BookReaderHooks(readerHooks.reveal(), readerHooks.requirement(), readerHooks.owner(), status);
+	}
+	public boolean canReveal(Player player, int level) {
+		if (level == 0) return true;
+		if (level < 0) return false;
+		if (readerHooks.reveal() != null) return readerHooks.reveal().test(player, level);
+		if (WARNED_MISSING_REVEAL.add(resourceLocation)) {
+			org.apache.logging.log4j.LogManager.getLogger(BookCodeModel.class)
+					.warn("Book {} has gated content but no reveal predicate; concealing it", resourceLocation);
+		}
+		return false;
 	}
 
 

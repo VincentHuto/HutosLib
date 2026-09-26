@@ -76,6 +76,15 @@ public class HLGuiGuidePage extends Screen {
 		this(pageNum, book, chapter, null, null, null);
 	}
 
+	/** Session host constructor; the active entry and chapter are supplied by the reader view. */
+	protected HLGuiGuidePage(BookCodeModel book) {
+		super(Component.empty());
+		this.book = book;
+		this.tracker = null;
+		this.viewerUuid = null;
+		this.knowledge = null;
+	}
+
 	public HLGuiGuidePage(int pageNum, BookCodeModel book, ChapterTemplate chapter,
 			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid,
 			@Nullable IBookKnowledge knowledge) {
@@ -322,13 +331,14 @@ public class HLGuiGuidePage extends Screen {
 
 	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {
 		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuidePage(pNum, pBook, pChapterTemplate));
+		BookReaderScreen.openEntry(pBook, pChapterTemplate, pNum);
 	}
 
 	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate,
 			@Nullable BookReadTracker tracker, @Nullable UUID viewerUuid,
 			@Nullable IBookKnowledge knowledge) {
 		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuidePage(pNum, pBook, pChapterTemplate, tracker, viewerUuid, knowledge));
+		if (!(mc.screen instanceof BookReaderScreen)) BookReaderScreen.open(pBook, null, null, knowledge);
+		BookReaderScreen.openEntry(pBook, pChapterTemplate, pNum);
 	}
 }

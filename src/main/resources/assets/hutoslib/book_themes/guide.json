@@ -1,0 +1,15 @@
+{
+  "parent": "hutoslib:default",
+  "textures": {
+    "cover": "hutoslib:textures/gui/book/default/cover.png",
+    "spread": "hutoslib:textures/gui/book/default/spread.png"
+  },
+  "layout": {
+    "spread": "auto",
+    "tabStyle": "fore_edge",
+    "redaction": "none",
+    "decals": 0,
+    "rule": true,
+    "locked": "hide"
+  }
+}

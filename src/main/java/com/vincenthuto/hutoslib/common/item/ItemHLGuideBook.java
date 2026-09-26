@@ -23,14 +23,9 @@ public class ItemHLGuideBook extends ItemGuideBook {
 	public InteractionResultHolder<ItemStack> use(Level lvl, Player p_41433_, InteractionHand p_41434_) {
 		BookPlaceboReloadListener test = BookPlaceboReloadListener.INSTANCE;
 		BookCodeModel book = test.getBookByTitle(HutosLib.rloc("guide"));
-		if (test != null) {
-			if (lvl.isClientSide) {
-				if (book != null) {
-					BookCodeModel filtered = EntryGatedBookFilter.INSTANCE.filter(book, p_41433_);
-					HLGuiGuideTitlePage.openScreenViaItem(filtered);
-				}
-			}
-		}
+        if (lvl.isClientSide && book != null) {
+            com.vincenthuto.hutoslib.client.screen.guide.BookReaderScreen.open(book, this, null, null);
+        }
 		return super.use(lvl, p_41433_, p_41434_);
 	}
 

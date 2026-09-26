@@ -5,5 +5,7 @@
   "color": "0,1,0",
   "title": "Misc Blocks",
   "subtitle": "Display Your Goods.",
-  "icon": "hutoslib:display_pedestal"
+  "icon": "hutoslib:display_pedestal",
+  "layout": "chapter",
+  "tabColor": "#70583C"
 }

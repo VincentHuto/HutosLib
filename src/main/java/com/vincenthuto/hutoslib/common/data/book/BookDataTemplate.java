@@ -16,6 +16,12 @@ public abstract class BookDataTemplate extends TypeKeyedBase<BookDataTemplate> {
 	/** Optional custom renderer; {@code null} means use the default layout. */
 	@Nullable
 	private transient IBookPageRenderer pageRenderer;
+	@Nullable
+	private transient com.vincenthuto.hutoslib.client.screen.guide.BookBodyRenderer bodyRenderer;
+
+	@Nullable
+	public com.vincenthuto.hutoslib.client.screen.guide.BookBodyRenderer getBodyRenderer() { return bodyRenderer; }
+	public void setBodyRenderer(@Nullable com.vincenthuto.hutoslib.client.screen.guide.BookBodyRenderer renderer) { bodyRenderer = renderer; }
 
 	// So GSON.toJson doesnt like nonprimatives so imma split this like Im doing the
 	// icon item thing

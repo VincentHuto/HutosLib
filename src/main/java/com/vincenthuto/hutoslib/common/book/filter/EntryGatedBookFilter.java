@@ -66,23 +66,9 @@ public final class EntryGatedBookFilter implements IBookPageFilter {
                 continue; // all pages locked — hide the whole chapter tab
             }
 
-            ChapterTemplate copy = new ChapterTemplate(
-                    chapter.getOrdinality(),
-                    chapter.getTexture(),
-                    chapter.getColor(),
-                    chapter.getTitle(),
-                    chapter.getSubtitle(),
-                    chapter.getIcon());
-            if (chapter.getId() != null) {
-                copy.setId(chapter.getId());
-            }
-            copy.setPages(visiblePages);
-            filteredChapters.add(copy);
+            filteredChapters.add(chapter.copyWithPages(visiblePages));
         }
 
-        BookCodeModel filtered = new BookCodeModel(source.getResourceLocation(), source.getTemplate());
-        filtered.setChapters(filteredChapters);
-        filtered.setTheme(source.getTheme());
-        return filtered;
+        return source.copyWithChapters(filteredChapters);
     }
 }

@@ -1,7 +1,6 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.client.screen.guide.HLGuiGuideCraftingPage;
 import com.vincenthuto.hutoslib.common.data.shadow.LazySupplier;
 import com.vincenthuto.hutoslib.common.data.shadow.PSerializer;
@@ -25,19 +24,18 @@ import java.util.function.Supplier;
 public class CraftingRecipeTemplate extends PageTemplate {
 	private final Supplier<RecipeHelper> recipeHelper = new LazySupplier<>(RecipeHelper::new);
 
-	public static final Codec<CraftingRecipeTemplate> CODEC = RecordCodecBuilder.create(inst -> inst
-			.group(Codec.INT.fieldOf("ordinality").forGetter(PageTemplate::getOrdinality),
-					Codec.STRING.fieldOf("texture").forGetter(PageTemplate::getTexture),
-					Codec.STRING.fieldOf("title").forGetter(PageTemplate::getTitle),
-					Codec.STRING.fieldOf("subtitle").forGetter(PageTemplate::getSubtitle),
-					Codec.STRING.fieldOf("text").forGetter(PageTemplate::getText),
-					Codec.STRING.fieldOf("icon").forGetter(PageTemplate::getIcon))
-			.apply(inst, CraftingRecipeTemplate::new));
+	public static final Codec<CraftingRecipeTemplate> CODEC = PageTemplate.CODEC
+			.xmap(CraftingRecipeTemplate::new, page -> page);
 	public static final PSerializer<CraftingRecipeTemplate> SERIALIZER = PSerializer.fromCodec("craftingpage", CODEC);
 
 	public CraftingRecipeTemplate(int ordinality, String texture, String title, String subtitle, String text,
 			String icon) {
 		super(ordinality, texture, title, subtitle, text, icon);
+	}
+
+	private CraftingRecipeTemplate(PageTemplate source) {
+		super(source.getOrdinality(), source.getTexture(), source.getTitle(), source.getSubtitle(), source.getText(),
+				source.getIcon(), source.getRequiresEntry(), source.getPresentation());
 	}
 
 	public GhostRecipe getItemRecipe() {
@@ -78,6 +76,12 @@ public class CraftingRecipeTemplate extends PageTemplate {
 		}
 
 		return ghost;
+	}
+
+	@Override
+	public com.vincenthuto.hutoslib.client.screen.guide.BookBodyRenderer getBodyRenderer() {
+		return super.getBodyRenderer() != null ? super.getBodyRenderer()
+				: com.vincenthuto.hutoslib.client.screen.guide.BookBuiltinRenderers.CRAFTING;
 	}
 
 	public static int[][] getCoordinates(int position) {

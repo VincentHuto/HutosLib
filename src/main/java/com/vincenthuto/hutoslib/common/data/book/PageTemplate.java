@@ -1,6 +1,7 @@
 package com.vincenthuto.hutoslib.common.data.book;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.vincenthuto.hutoslib.client.HLLocHelper;
 import com.vincenthuto.hutoslib.client.book.BookReadTracker;
@@ -18,21 +19,24 @@ import java.util.UUID;
 
 public class PageTemplate extends BookDataTemplate {
 
-	public static final Codec<PageTemplate> CODEC = RecordCodecBuilder
-			.create(inst -> inst
+	public static final MapCodec<PageTemplate> MAP_CODEC = RecordCodecBuilder
+			.mapCodec(inst -> inst
 					.group(Codec.INT.fieldOf("ordinality").forGetter(PageTemplate::getOrdinality),
 							Codec.STRING.fieldOf("texture").forGetter(PageTemplate::getTexture),
 							Codec.STRING.fieldOf("title").forGetter(PageTemplate::getTitle),
 							Codec.STRING.fieldOf("subtitle").forGetter(PageTemplate::getSubtitle),
 							Codec.STRING.fieldOf("text").forGetter(PageTemplate::getText),
 							Codec.STRING.fieldOf("icon").forGetter(PageTemplate::getIcon),
-							Codec.STRING.optionalFieldOf("requiresEntry", "").forGetter(PageTemplate::getRequiresEntry))
+							Codec.STRING.optionalFieldOf("requiresEntry", "").forGetter(PageTemplate::getRequiresEntry),
+							PagePresentation.CODEC.forGetter(PageTemplate::getPresentation))
 					.apply(inst, PageTemplate::new));
+	public static final Codec<PageTemplate> CODEC = MAP_CODEC.codec();
 	public static final PSerializer<PageTemplate> SERIALIZER = PSerializer.fromCodec("page", CODEC);
 
 	String title, chapter, subtitle, text, icon, texture;
 	/** Entry ID that must be unlocked before this page is visible. Empty string = always visible. */
 	String requiresEntry = "";
+	private PagePresentation presentation = PagePresentation.DEFAULT;
 
 	public PageTemplate() {
 		super(0);
@@ -44,6 +48,11 @@ public class PageTemplate extends BookDataTemplate {
 
 	public PageTemplate(int ordinality, String texture, String title, String subtitle, String text, String icon,
 			String requiresEntry) {
+		this(ordinality, texture, title, subtitle, text, icon, requiresEntry, PagePresentation.DEFAULT);
+	}
+
+	public PageTemplate(int ordinality, String texture, String title, String subtitle, String text, String icon,
+			String requiresEntry, PagePresentation presentation) {
 		super(ordinality);
 		this.texture = texture;
 		this.title = title;
@@ -51,6 +60,15 @@ public class PageTemplate extends BookDataTemplate {
 		this.text = text;
 		this.icon = icon;
 		this.requiresEntry = requiresEntry != null ? requiresEntry : "";
+		this.presentation = presentation;
+	}
+
+	public PagePresentation getPresentation() {
+		return presentation;
+	}
+
+	public void setPresentation(PagePresentation presentation) {
+		this.presentation = java.util.Objects.requireNonNull(presentation);
 	}
 
 	public ItemStack getIconItem() {

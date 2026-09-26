@@ -5,5 +5,7 @@
   "color": "0,1,1",
   "title": "Locked Test",
   "subtitle": "Pick up a Dragon Egg  to unlock!",
-  "icon": "minecraft:diamond"
+  "icon": "minecraft:diamond",
+  "layout": "chapter",
+  "tabColor": "#70583C"
 }

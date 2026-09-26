@@ -16,6 +16,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class HLBlockInit {
 public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, HutosLib.MOD_ID);
 public static final DeferredRegister<Block> MODELEDBLOCKS = DeferredRegister.create(Registries.BLOCK, HutosLib.MOD_ID);
+public static final DeferredHolder<Block, Block> dictation_table = MODELEDBLOCKS.register("dictation_table",
+() -> new com.vincenthuto.hutoslib.common.block.DictationTableBlock());
 
 public static final DeferredHolder<Block, Block> display_pedestal = MODELEDBLOCKS.register("display_pedestal",
 () -> new BlockDisplayPedestal(

@@ -12,6 +12,8 @@ public class HLBlockEntityInit {
 
 public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister
 .create(Registries.BLOCK_ENTITY_TYPE, HutosLib.MOD_ID);
+public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DictationTableBlockEntity>> dictation_table = BLOCK_ENTITIES
+.register("dictation_table", () -> BlockEntityType.Builder.of(DictationTableBlockEntity::new, HLBlockInit.dictation_table.get()).build(null));
 
 public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DisplayPedestalBlockEntity>> display_pedestal = BLOCK_ENTITIES
 .register("display_pedestal", () -> BlockEntityType.Builder

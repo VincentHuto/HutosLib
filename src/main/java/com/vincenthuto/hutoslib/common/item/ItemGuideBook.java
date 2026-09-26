@@ -61,6 +61,9 @@ public class ItemGuideBook extends Item {
      * <p>Set via {@link #withBookPrefix(String)}.
      */
     private String bookPrefix;
+    private ResourceLocation bookId;
+    private com.vincenthuto.hutoslib.common.book.BookNoticeStyle noticeStyle = com.vincenthuto.hutoslib.common.book.BookNoticeStyle.DEFAULT;
+    private java.util.function.Consumer<BookCodeModel> readerConfiguration = book -> {};
 
     /**
      * Function that retrieves the player's {@link IBookKnowledge} for this book.
@@ -131,40 +134,28 @@ public class ItemGuideBook extends Item {
 
     @OnlyIn(Dist.CLIENT)
     private int countUnreadForDisplay(Player player, IBookKnowledge knowledge) {
-        Set<ResourceLocation> visiblePageIds = collectVisiblePageIds(player);
-        String prefix = this.getBookPrefix();
-        int unreadByPages = visiblePageIds.isEmpty()
-                ? 0
-                : BookReadTracker.countUnread(player.getUUID(), visiblePageIds);
-        int unreadByKnowledge = knowledge != null
-                ? BookReadTracker.countUnread(player.getUUID(), knowledge, prefix)
-                : 0;
-        return Math.max(unreadByPages, unreadByKnowledge);
+        return com.vincenthuto.hutoslib.client.book.BookClientHooks.attention(player,this);
     }
 
     @OnlyIn(Dist.CLIENT)
     public Set<ResourceLocation> collectVisiblePageIds(Player player) {
         Set<ResourceLocation> ids = new HashSet<>();
-        String prefix = this.getBookPrefix();
-        if (prefix == null || prefix.isEmpty()) {
-            return ids;
-        }
-
-        for (BookCodeModel loadedBook : BookPlaceboReloadListener.INSTANCE.getBooks()) {
-            if (!loadedBook.getEntryPrefix().equals(prefix)) {
-                continue;
-            }
+        ResourceLocation resolvedId = resolveBookId().orElse(null);
+        if (resolvedId == null) return ids;
+        BookCodeModel loadedBook = BookPlaceboReloadListener.INSTANCE.getBookByTitle(resolvedId);
+        if (loadedBook != null) {
             // Match the same visibility rules used when opening the guide from the item.
             BookCodeModel filtered = applyVisibilityFilters(loadedBook, player);
             if (filtered.getChapters() == null) {
-                continue;
+                return ids;
             }
             for (var chapter : filtered.getChapters()) {
                 if (chapter.getPages() == null) {
                     continue;
                 }
                 for (var page : chapter.getPages()) {
-                    if (page.getId() != null) {
+                    if (page.getId() != null && (!(page instanceof com.vincenthuto.hutoslib.common.data.book.PageTemplate entry)
+                            || filtered.canReveal(player, entry.getPresentation().revealLevel()))) {
                         ids.add(page.getId());
                     }
                 }
@@ -176,14 +167,33 @@ public class ItemGuideBook extends Item {
     @OnlyIn(Dist.CLIENT)
     public BookCodeModel applyVisibilityFilters(BookCodeModel loadedBook, Player player) {
         IBookPageFilter filter = pageFilterOverride != null ? pageFilterOverride : loadedBook.getPageFilter();
-        BookCodeModel filtered = filter.filter(loadedBook, player);
+        BookCodeModel configured = loadedBook.copyWithChapters(loadedBook.getChapters());
+        readerConfiguration.accept(configured);
+        BookCodeModel filtered = filter.filter(configured, player);
         IBookKnowledge knowledge = getKnowledgeProvider().apply(player).orElse(null);
-        filtered = knowledge != null
-                ? EntryGatedBookFilter.INSTANCE.filter(filtered, knowledge)
-                : EntryGatedBookFilter.INSTANCE.filter(filtered, player);
+        filtered = EntryGatedBookFilter.INSTANCE.filter(filtered, knowledge);
         filtered.setPageFilter(filter);
         filtered.setTheme(loadedBook.getTheme());
         return filtered;
+    }
+
+    public ItemGuideBook withBookId(ResourceLocation id) {
+        this.bookId = Objects.requireNonNull(id);
+        return this;
+    }
+
+    public Optional<ResourceLocation> resolveBookId() {
+        return BookPlaceboReloadListener.INSTANCE.resolveBookId(bookId, bookPrefix);
+    }
+
+    public ResourceLocation getBookId() { return bookId; }
+    public com.vincenthuto.hutoslib.common.book.BookNoticeStyle getNoticeStyle() { return noticeStyle; }
+    public ItemGuideBook withNotices(com.vincenthuto.hutoslib.common.book.BookNoticeStyle style) { noticeStyle=Objects.requireNonNull(style); return this; }
+
+    /** Applied again after data reload and before every filtered view is built. */
+    public ItemGuideBook withReaderConfiguration(java.util.function.Consumer<BookCodeModel> configuration) {
+        readerConfiguration = Objects.requireNonNull(configuration);
+        return this;
     }
 
     /**
@@ -228,7 +238,7 @@ public class ItemGuideBook extends Item {
      * Returns the entry-path prefix for this book, or {@code null} if not set.
      */
     public String getBookPrefix() {
-        return bookPrefix;
+        return bookId != null ? bookId.getPath() + "/" : bookPrefix;
     }
 
     /**

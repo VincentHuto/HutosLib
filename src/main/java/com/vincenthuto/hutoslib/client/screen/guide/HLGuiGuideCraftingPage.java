@@ -95,7 +95,7 @@ public class HLGuiGuideCraftingPage extends HLGuiGuidePage {
 
 	public static void openScreenViaItem(int pNum, BookCodeModel pBook, ChapterTemplate pChapterTemplate) {
 		Minecraft mc = Minecraft.getInstance();
-		mc.setScreen(new HLGuiGuideCraftingPage(pNum, pBook, pChapterTemplate));
+		BookReaderScreen.openEntry(pBook, pChapterTemplate, pNum);
 	}
 
 }

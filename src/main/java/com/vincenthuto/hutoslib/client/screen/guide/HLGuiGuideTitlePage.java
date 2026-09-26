@@ -70,11 +70,7 @@ public class HLGuiGuideTitlePage extends Screen {
 	}
 
 	public static void openScreen(BookCodeModel book, boolean ignoreNextMouseClick) {
-		if (screen == null) {
-			screen = new HLGuiGuideTitlePage(book);
-		}
-		screen = new HLGuiGuideTitlePage(book);
-		Minecraft.getInstance().setScreen(screen);
+		BookReaderScreen.open(book, null, null, null);
 	}
 
 	/**
@@ -87,8 +83,7 @@ public class HLGuiGuideTitlePage extends Screen {
 	 */
 	public static void openScreen(BookCodeModel book, BookReadTracker tracker,
 			UUID viewerUuid, IBookKnowledge knowledge) {
-		Minecraft.getInstance().setScreen(
-				new HLGuiGuideTitlePage(book, tracker, viewerUuid, knowledge));
+		BookReaderScreen.open(book, null, null, knowledge);
 	}
 
 	/**
@@ -102,9 +97,7 @@ public class HLGuiGuideTitlePage extends Screen {
 	public static void openScreen(BookCodeModel book, BookReadTracker tracker,
 			UUID viewerUuid, IBookKnowledge knowledge,
 			@Nullable java.util.function.Supplier<BookCodeModel> refresher) {
-		HLGuiGuideTitlePage page = new HLGuiGuideTitlePage(book, tracker, viewerUuid, knowledge);
-		page.refresher = refresher;
-		Minecraft.getInstance().setScreen(page);
+		BookReaderScreen.open(book, null, refresher, knowledge);
 	}
 
 	/**
@@ -115,6 +108,7 @@ public class HLGuiGuideTitlePage extends Screen {
 	 * {@code IPayloadContext#enqueueWork}).
 	 */
 	public static void refreshIfOpen() {
+		BookReaderScreen.refreshIfOpen();
 		Screen current = Minecraft.getInstance().screen;
 		if (current instanceof HLGuiGuideTitlePage page) {
 			page.refresh();
@@ -395,7 +389,7 @@ public class HLGuiGuideTitlePage extends Screen {
 		BookCodeModel filtered = player != null
 				? pBook.getPageFilter().filter(pBook, player)
 				: pBook;
-		mc.setScreen(new HLGuiGuideTitlePage(filtered));
+		BookReaderScreen.open(filtered, null, null, null);
 	}
 
 	private int countUnreadForBook(UUID playerId, @Nullable IBookKnowledge knowledge) {

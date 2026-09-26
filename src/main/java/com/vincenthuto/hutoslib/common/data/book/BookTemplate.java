@@ -10,6 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import java.util.Optional;
 
 
 public class BookTemplate extends BookDataTemplate {
@@ -21,13 +22,20 @@ public class BookTemplate extends BookDataTemplate {
 							Codec.STRING.fieldOf("title").forGetter(BookTemplate::getTitle),
 							Codec.STRING.fieldOf("subtitle").forGetter(BookTemplate::getSubtitle),
 							Codec.STRING.fieldOf("text").forGetter(BookTemplate::getText),
-							Codec.STRING.fieldOf("icon").forGetter(BookTemplate::getIcon))
+							Codec.STRING.fieldOf("icon").forGetter(BookTemplate::getIcon),
+							ResourceLocation.CODEC.optionalFieldOf("theme").forGetter(BookTemplate::getThemeId))
 					.apply(inst, BookTemplate::new));
 	public static final PSerializer<BookTemplate> SERIALIZER = PSerializer.fromCodec("book", CODEC);
 
 	String title, subtitle, coverLoc, overlayLoc, text, icon;
+	private final Optional<ResourceLocation> themeId;
 
 	public BookTemplate(String coverLoc, String overlayLoc, String title, String subtitle, String text, String icon) {
+		this(coverLoc, overlayLoc, title, subtitle, text, icon, Optional.empty());
+	}
+
+	public BookTemplate(String coverLoc, String overlayLoc, String title, String subtitle, String text, String icon,
+			Optional<ResourceLocation> themeId) {
 		super(0);
 		this.coverLoc = coverLoc;
 		this.overlayLoc = overlayLoc;
@@ -35,6 +43,11 @@ public class BookTemplate extends BookDataTemplate {
 		this.subtitle = subtitle;
 		this.text = text;
 		this.icon = icon;
+		this.themeId = themeId;
+	}
+
+	public Optional<ResourceLocation> getThemeId() {
+		return themeId;
 	}
 
 	public String getOverlayLoc() {

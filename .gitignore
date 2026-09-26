@@ -38,6 +38,8 @@ repo/
 /tools/dialogue_editor/node_modules/
 /tools/dialogue_editor/dist/
 /tools/*
+!/tools/book_kit/
+/tools/book_kit/__pycache__/
 !/tools/skill_tree_editor/
 !/tools/skill_tree_editor/**
 /tools/skill_tree_editor/node_modules/
@@ -48,3 +50,4 @@ repo/
 /.superpowers/
 /.codex-remote-attachments/
 /Notes.txt
+/logs/

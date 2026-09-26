@@ -5,5 +5,7 @@
   "color": "0,1,1",
   "title": "Arm Banners",
   "subtitle": "Display your fealty!",
-  "icon": "hutoslib:iron_arm_banner"
+  "icon": "hutoslib:iron_arm_banner",
+  "layout": "chapter",
+  "tabColor": "#70583C"
 }

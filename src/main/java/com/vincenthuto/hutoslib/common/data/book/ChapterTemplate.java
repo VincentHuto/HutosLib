@@ -22,21 +22,42 @@ public class ChapterTemplate extends BookDataTemplate {
 					Codec.STRING.fieldOf("color").forGetter(ChapterTemplate::getColor),
 					Codec.STRING.fieldOf("title").forGetter(ChapterTemplate::getTitle),
 					Codec.STRING.fieldOf("subtitle").forGetter(ChapterTemplate::getSubtitle),
-					Codec.STRING.fieldOf("icon").forGetter(ChapterTemplate::getIcon))
+					Codec.STRING.fieldOf("icon").forGetter(ChapterTemplate::getIcon),
+					ChapterPresentation.CODEC.forGetter(ChapterTemplate::getPresentation))
 			.apply(inst, ChapterTemplate::new));
 	public static final PSerializer<ChapterTemplate> SERIALIZER = PSerializer.fromCodec("chapter", CODEC);
 
 	String color, title, subtitle, icon, texture;
+	private final ChapterPresentation presentation;
 
 	List<BookDataTemplate> pages;
 
 	public ChapterTemplate(int ordinality, String texture, String color, String title, String subtitle, String icon) {
+		this(ordinality, texture, color, title, subtitle, icon, ChapterPresentation.DEFAULT);
+	}
+
+	public ChapterTemplate(int ordinality, String texture, String color, String title, String subtitle, String icon,
+			ChapterPresentation presentation) {
 		super(ordinality);
 		this.texture = texture;
 		this.color = color;
 		this.title = title;
 		this.subtitle = subtitle;
 		this.icon = icon;
+		this.presentation = presentation;
+	}
+
+	public ChapterPresentation getPresentation() {
+		return presentation;
+	}
+
+	public ChapterTemplate copyWithPages(List<BookDataTemplate> visiblePages) {
+		ChapterTemplate copy = new ChapterTemplate(getOrdinality(), texture, color, title, subtitle, icon, presentation);
+		if (getId() != null) copy.setId(getId());
+		copy.setPageRenderer(getPageRenderer());
+		copy.setBodyRenderer(getBodyRenderer());
+		copy.setPages(new java.util.ArrayList<>(visiblePages));
+		return copy;
 	}
 
 	public List<BookDataTemplate> getPages() {
