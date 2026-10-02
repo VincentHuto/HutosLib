@@ -8,10 +8,12 @@ import java.util.List;
 
 /** Shared measurements for displayed leaves and the unfiltered page-number index. */
 public final class BookEntryLayout {
+    public static final int SUBTITLE_RISE = 6;
     private BookEntryLayout() {}
     public static int bodyOffset(BookEntryContent content, BookCanvas canvas, BookGeometry geometry) {
-        return 13+16+canvas.heading(content.title(),"title",geometry.textWidth()).size()*16
-                +(content.subtitle().isBlank()?0:11)+9;
+        return 13+16+Math.max(0,canvas.headingLineHeight()-16)
+                +canvas.headingLineHeight()
+                +(content.subtitle().isBlank()?0:11-SUBTITLE_RISE)+9;
     }
     public static int bodyHeight(int offset, BookGeometry geometry) {
         return Math.max(18,geometry.leafHeight()-offset-(geometry.compact()?44:24));
@@ -28,7 +30,8 @@ public final class BookEntryLayout {
             (kind==BookPaginator.Kind.MARGIN||kind==BookPaginator.Kind.FOOTNOTE?companion:main).add(block);
         });
         for(int i=0;i<page.getPresentation().seeAlso().size();i++) companion.add(new BookPaginator.Block("seeAlso/"+i,BookText.parse(""),BookPaginator.Kind.SEE_ALSO,18,"",page.getPresentation().seeAlso().get(i)));
-        return BookPaginator.paginate(main,companion,page.getPresentation().layout().equals("record"),geometry.spread(),geometry.textWidth(),bodyHeight,bodyHeight+bodyOffset-13,
+        int continuationHeight=bodyHeight+bodyOffset-13;
+        return BookPaginator.paginate(main,companion,page.getPresentation().layout().equals("record"),geometry.spread(),geometry.textWidth(),bodyHeight,continuationHeight,continuationHeight,
                 new BookPaginator.Measurer() {
                     @Override public int width(BookText.Run run) { return canvas.width(run,"body"); }
                     @Override public int width(BookText.Run run,BookPaginator.Kind kind) {

@@ -225,7 +225,7 @@ public final class BookReaderScreen extends HLGuiGuidePage {
     private void buildTabs() {
         if (geometry.compact() || visual.layout().tabStyle().equals("none")) return;
         boolean head=visual.layout().tabStyle().equals("head");
-        int capacity=head?(geometry.spread()?8:4):9;
+        int capacity=head?(geometry.spread()?8:4):Math.min(9,Math.max(1,(geometry.outerHeight()-36)/21));
         List<ChapterTemplate> chapters=book.getChapters();
         tabOffset=Math.clamp(tabOffset,0,Math.max(0,chapters.size()-capacity));
         for (int i=0;i<Math.min(capacity,chapters.size()-tabOffset);i++) {
@@ -260,7 +260,7 @@ public final class BookReaderScreen extends HLGuiGuidePage {
         }
         if(chapters.size()>capacity) {
             int x=head?left+geometry.outerWidth()-10:left+geometry.outerWidth();
-            int y=head?top-10:top+204;
+            int y=head?top-10:top+geometry.outerHeight()-28;
             button(x,y,10,10,Component.literal(tr("previous")),()->tabOffset=Math.max(0,tabOffset-capacity),(g,b,mx,my)->canvas.text(g,"<","label","accent",x+2,y+1));
             button(x+12,y,10,10,Component.literal(tr("more_chapters")),()->tabOffset=Math.min(chapters.size()-capacity,tabOffset+capacity),(g,b,mx,my)->canvas.text(g,">","label","accent",x+14,y+1));
         }
@@ -373,7 +373,7 @@ public final class BookReaderScreen extends HLGuiGuidePage {
     }
 
     private int contentOffset(int index) {
-        return geometry.spread()&&index==1&&pageTemplate instanceof PageTemplate page&&page.getPresentation().layout().equals("record")?13:bodyOffset;
+        return index>0?13:bodyOffset;
     }
 
     private void rememberAnchor() {
@@ -478,28 +478,23 @@ public final class BookReaderScreen extends HLGuiGuidePage {
             var content=session.content(page);
             float wholeWash=revealWash(page,page.getPresentation().revealLevel());
             var bounds=leaf(side);
-            boolean companion=(geometry.spread() && index==1 && page.getPresentation().layout().equals("record")?13:bodyOffset)==13;
-            if(index>0 && !companion && (leaves.size()<=index||leaves.get(index).blank())) return;
+            if(index>0 && (leaves.size()<=index||leaves.get(index).blank())) return;
             int x=bounds.x()+14,y=bounds.y()+13;
             if((!pairedEntries.isEmpty()||leafIndex==0 && side==(geometry.spread()&&page.getPresentation().layout().equals("record")?1:0))) canvas.decal(graphics,page,bounds.x()+bounds.width()-72,bounds.y()+bounds.height()-94);
             if((side==0||!pairedEntries.isEmpty())&&page.getPresentation().pinned()) canvas.ribbon(graphics,bounds.x()+6,bounds.y(),40,visual.color("seal"));
-            if(page.getPageRenderer()==null&&!companion) {
+            if(page.getPageRenderer()==null&&index==0) {
                 graphics.renderFakeItem(page.getIconItem(),x,y);
-                var range=pageRange(book,page.getId());
-                int number=range==null?0:range.leafNumber(leaves,index);
                 int chapterNumber=book.getSourceIndex().chapters().getOrDefault(chapter.getId(),1);
-                String reference="p."+number;
-                int refWidth=canvas.width(reference,"label");
-                canvas.text(graphics,canvas.ellipsis(BookCanvas.roman(chapterNumber).toUpperCase(Locale.ROOT)+" · "+I18n.get(chapter.getTitle()),"label",geometry.textWidth()-25-refWidth),"label","inkMuted",x+20,y+4);
-                canvas.text(graphics,reference,"label","inkMuted",x+geometry.textWidth()-refWidth,y+4);
-                y+=19;
+                canvas.text(graphics,canvas.ellipsis(BookCanvas.roman(chapterNumber).toUpperCase(Locale.ROOT)+" · "+I18n.get(chapter.getTitle()),"label",geometry.textWidth()-20),"label","inkMuted",x+20,y+4);
+                y+=19+Math.max(0,canvas.headingLineHeight()-16);
                 if(mouseX>=x&&mouseX<x+geometry.textWidth()&&mouseY>=y&&mouseY<bounds.y()+bodyOffset)
                     tooltip(content.subtitle().isBlank()?List.of(Component.literal(content.title())):List.of(Component.literal(content.title()),Component.literal(content.subtitle())));
-                for(String line:canvas.heading(content.title(),"title",geometry.textWidth())) { canvas.text(graphics,line,"title","accent",x,y);y+=16; }
-                if(!content.subtitle().isBlank()) canvas.text(graphics,canvas.ellipsis(content.subtitle(),"body",geometry.textWidth()),"body","inkMuted",x,y+1);
+                canvas.fittedText(graphics,content.title(),canvas.headingFace(),"accent",x,y,geometry.textWidth());
+                y+=canvas.headingLineHeight();
+                if(!content.subtitle().isBlank()) canvas.fittedText(graphics,content.subtitle(),"body","inkMuted",x,y+1-BookEntryLayout.SUBTITLE_RISE,geometry.textWidth());
                 if(visual.layout().rule()) graphics.fill(x,bounds.y()+bodyOffset-5,x+geometry.textWidth(),bounds.y()+bodyOffset-4,visual.color("accent"));
             }
-            int contentTop=bounds.y()+(geometry.spread() && index==1 && page.getPresentation().layout().equals("record")?13:bodyOffset);
+            int contentTop=bounds.y()+(index>0?13:bodyOffset);
             int clipTop=page.getPageRenderer()!=null?bounds.y()+13:contentTop-3;
             int clipBottom=Math.min(bounds.y()+bodyOffset+bodyHeight,footerY()-4);
             graphics.enableScissor(x-4,clipTop,x+geometry.textWidth()+4,clipBottom);

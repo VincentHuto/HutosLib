@@ -50,7 +50,9 @@ final class BookReaderViews {
     private void heading(String title,int side) {
         var leaf=screen.leaf(side);
         paints.add(graphics-> {
-            canvas().text(graphics,canvas().ellipsis(title,"title",textWidth()),"title","accent",leaf.x()+14,leaf.y()+15);
+            String face=canvas().headingFace();
+            canvas().text(graphics,canvas().ellipsis(title,face,textWidth()),face,"accent",
+                    leaf.x()+14,leaf.y()+15+Math.max(0,canvas().headingLineHeight()-16));
             if(theme().layout().rule()) graphics.fill(leaf.x()+14,leaf.y()+37,leaf.x()+14+textWidth(),leaf.y()+38,theme().color("accent"));
         });
     }
@@ -58,21 +60,27 @@ final class BookReaderViews {
     private void cover() {
         var leaf=screen.leaf(0);
         var book=session().book();
+        int contraction=Math.max(0,224-leaf.height());
+        int iconSize=contraction>0?32:48;
+        int iconY=contraction>0?Math.max(66,78-contraction/2):86;
+        int epigraphY=Math.max(iconY+iconSize+8,142-contraction);
         String title=I18n.get(book.getTemplate().getTitle());
         paints.add(graphics-> {
-            int y=leaf.y()+19;
             String face=theme().font("title24")!=null?"title24":"title";
-            for(String line:canvas().heading(title,face,textWidth())) {canvas().centered(graphics,line,face,"accent",leaf.x()+leaf.width()/2,y);y+=24;}
+            if(theme().font("title28")!=null&&canvas().width(title,"title28")<=textWidth()) face="title28";
+            int lineHeight=face.equals("title28")?28:24;
+            int y=leaf.y()+19+lineHeight-24;
+            for(String line:canvas().heading(title,face,textWidth())) {canvas().centered(graphics,line,face,"accent",leaf.x()+leaf.width()/2,y);y+=lineHeight;}
             canvas().centered(graphics,canvas().ellipsis(I18n.get(book.getTemplate().getSubtitle()),"label",textWidth()),"label","inkMuted",leaf.x()+leaf.width()/2,y+5);
             graphics.pose().pushPose();
-            graphics.pose().translate(leaf.x()+leaf.width()/2-24,leaf.y()+86,0);
-            graphics.pose().scale(3,3,1);
+            graphics.pose().translate(leaf.x()+leaf.width()/2-iconSize/2,leaf.y()+iconY,0);
+            graphics.pose().scale(iconSize/16f,iconSize/16f,1);
             graphics.renderFakeItem(book.getTemplate().getIconItem(),0,0);
             graphics.pose().popPose();
             canvas().centered(graphics,canvas().ellipsis(book.getReaderHooks().owner().apply(session().player()).getString(),"label",textWidth()),"label","inkMuted",leaf.x()+leaf.width()/2,leaf.y()+leaf.height()-54);
             canvas().centered(graphics,canvas().ellipsis(book.getReaderHooks().status().apply(session().player()).getString(),"label",textWidth()),"label","inkMuted",leaf.x()+leaf.width()/2,leaf.y()+leaf.height()-43);
         });
-        rich("epigraph",book.getTemplate().getText(),leaf.x()+14,leaf.y()+142,textWidth(),Math.max(9,leaf.height()-206),session().view().listPage());
+        rich("epigraph",book.getTemplate().getText(),leaf.x()+14,leaf.y()+epigraphY,textWidth(),Math.max(9,leaf.height()-epigraphY-58),session().view().listPage());
         int buttonsY=leaf.y()+leaf.height()-29;
         screen.textButton(leaf.x()+14,buttonsY,textWidth()/2-2,tr("resume"),session()::resume);
         screen.textButton(leaf.x()+16+textWidth()/2,buttonsY,textWidth()/2-2,tr("contents"),()->session().show(BookReaderSession.View.CONTENTS,null));
@@ -233,12 +241,12 @@ final class BookReaderViews {
     private void search() {
         heading(tr("search"),0);
         var first=screen.leaf(0);
-        EditBox field=new EditBox(screen.bookFont(),first.x()+14,first.y()+44,textWidth(),14,Component.literal(tr("search")));
+        EditBox field=new BookSearchBox(screen.bookFont(),first.x()+14,first.y()+44,textWidth(),14,
+                Component.literal(tr("search")),session().view().query(),value->session().search(value));
         field.setBordered(false);field.setTextColor(theme().color("ink"));
         field.setTextShadow(false);
         field.setFormatter((value,offset)->canvas().text(value,"body").getVisualOrderText());
         paints.add(g->canvas().panel(g,BookAtlas.F,first.x()+12,first.y()+41,textWidth()+4,16,2,0xFFFFFFFF));
-        field.setMaxLength(256);field.setValue(session().view().query());field.setResponder(value->session().search(value));
         screen.searchBox(field);screen.setFocused(field);
         int resultsY=first.y()+65;
         if(screen.geometry.spread()||filtersExpanded) {

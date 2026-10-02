@@ -37,26 +37,33 @@ public final class BookPaginator {
 
     public static List<Leaf> paginate(List<Block> main, List<Block> companion, boolean record, boolean spread,
                                       int width, int bodyHeight,int companionHeight, Measurer measurer, String continued) {
-        if (width < 1 || bodyHeight < 1) throw new IllegalArgumentException("Book body must have positive dimensions");
+        return paginate(main,companion,record,spread,width,bodyHeight,companionHeight,bodyHeight,measurer,continued);
+    }
+
+    public static List<Leaf> paginate(List<Block> main, List<Block> companion, boolean record, boolean spread,
+                                      int width, int bodyHeight,int companionHeight,int continuationHeight,
+                                      Measurer measurer, String continued) {
+        if (width < 1 || bodyHeight < 1 || companionHeight < 1 || continuationHeight < 1)
+            throw new IllegalArgumentException("Book body must have positive dimensions");
         List<Block> notes = new ArrayList<>();
         main.stream().filter(block -> block.kind() == Kind.FOOTNOTE).forEach(notes::add);
         companion.stream().filter(block -> block.kind() == Kind.FOOTNOTE).forEach(notes::add);
         main = main.stream().filter(block -> block.kind() != Kind.FOOTNOTE).toList();
         companion = companion.stream().filter(block -> block.kind() != Kind.FOOTNOTE).toList();
         if (record && spread) {
-            List<Leaf> left = flow(main, width, bodyHeight, measurer, continued);
-            List<Leaf> right = flow(companion, width, companionHeight, bodyHeight, measurer, continued);
+            List<Leaf> left = flow(main, width, bodyHeight, continuationHeight, measurer, continued);
+            List<Leaf> right = flow(companion, width, companionHeight, continuationHeight, measurer, continued);
             if(right.size()==1)right=List.of(bottomLinks(right.getFirst(),companionHeight));
             List<Leaf> result = new ArrayList<>();
             result.add(left.getFirst());
             result.add(right.getFirst());
             result.addAll(left.subList(1, left.size()));
             result.addAll(right.subList(1, right.size()));
-            return appendNotes(result, notes, 1, width, companionHeight, bodyHeight, measurer, continued);
+            return appendNotes(result, notes, 1, width, companionHeight, continuationHeight, measurer, continued);
         }
         List<Block> blocks = new ArrayList<>(main);
         blocks.addAll(companion);
-        return appendNotes(flow(blocks, width, bodyHeight, measurer, continued), notes, 0, width, bodyHeight, bodyHeight, measurer, continued);
+        return appendNotes(flow(blocks, width, bodyHeight, continuationHeight, measurer, continued), notes, 0, width, bodyHeight, continuationHeight, measurer, continued);
     }
 
     private static Leaf bottomLinks(Leaf leaf,int height) {

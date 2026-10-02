@@ -27,13 +27,25 @@ public final class BookCanvas {
     public int width(String value, String role) { return font.width(text(value, role)); }
     public int width(BookText.Run run, String role) { return font.width(run(run, role)); }
 
+    public String headingFace() { return theme.font("title20") != null ? "title20" : "title"; }
+    public int headingLineHeight() { return theme.font("title20") != null ? 20 : 16; }
+
     public void text(GuiGraphics graphics, String value, String face, String color, int x, int y) {
-        boolean title = face.equals("title") || face.equals("title20") || face.equals("title24");
-        graphics.drawString(font, text(value, face), x, y, theme.color(color), title);
+        boolean title = face.equals("title") || face.equals("title20") || face.equals("title24") || face.equals("title28");
+        graphics.drawString(font, text(value, face), x, y, theme.color(color), title && theme.font("title20") == null);
     }
 
     public void centered(GuiGraphics graphics, String value, String face, String color, int center, int y) {
         text(graphics, value, face, color, center - width(value, face) / 2, y);
+    }
+
+    public void fittedText(GuiGraphics graphics, String value, String face, String color, int x, int y, int available) {
+        float scale=Math.min(1f,(float)available/Math.max(1,width(value,face)));
+        graphics.pose().pushPose();
+        graphics.pose().translate(x,y,0);
+        graphics.pose().scale(scale,scale,1);
+        text(graphics,value,face,color,0,0);
+        graphics.pose().popPose();
     }
 
     public String ellipsis(String value, String face, int available) {
@@ -89,27 +101,27 @@ public final class BookCanvas {
         }
         if (geometry.spread()) {
             graphics.fill(x,y,x+w,y+h,theme.color("board"));
-            leaf(graphics,x+4,y+4,170,224);
-            leaf(graphics,x+174,y+4,170,224);
+            leaf(graphics,x+4,y+4,170,geometry.leafHeight());
+            leaf(graphics,x+174,y+4,170,geometry.leafHeight());
             ResourceLocation spread = theme.texture("spread");
-            if (spread != null) roundedCrease(graphics,spread,x+162,y);
+            if (spread != null) roundedCrease(graphics,spread,x+162,y,h);
             else sprite(graphics,BookAtlas.Sp,x+162,y+4,0,0,24,24,0xFFFFFFFF);
         } else if (cover && theme.texture("cover") != null && !geometry.compact()) {
             blit(graphics,theme.texture("cover"),x,y,w,h,0,0,174,228,174,228,0xFFFFFFFF);
         } else leaf(graphics,x,y,w,h);
     }
 
-    private static void roundedCrease(GuiGraphics graphics, ResourceLocation texture, int x, int y) {
+    private static void roundedCrease(GuiGraphics graphics, ResourceLocation texture, int x, int y, int height) {
         // The paper starts four pixels into the texture. Reveal the page border beneath
         // each rounded corner instead of covering it with the rectangular spine strip.
         int[] insets = {5, 3, 2, 1, 1, 0};
         for (int row = 0; row < insets.length; row++) {
             int inset = insets[row], width = 24 - 2 * inset;
-            int top = 4 + row, bottom = 227 - row;
+            int top = 4 + row, bottom = height - 5 - row;
             blit(graphics,texture,x+inset,y+top,width,1,inset,top,width,1,24,232,0xFFFFFFFF);
-            blit(graphics,texture,x+inset,y+bottom,width,1,inset,bottom,width,1,24,232,0xFFFFFFFF);
+            blit(graphics,texture,x+inset,y+bottom,width,1,inset,227-row,width,1,24,232,0xFFFFFFFF);
         }
-        blit(graphics,texture,x,y+10,24,212,0,10,24,212,24,232,0xFFFFFFFF);
+        blit(graphics,texture,x,y+10,24,height-20,0,10,24,212,24,232,0xFFFFFFFF);
     }
 
     private void leaf(GuiGraphics graphics, int x, int y, int width, int height) {

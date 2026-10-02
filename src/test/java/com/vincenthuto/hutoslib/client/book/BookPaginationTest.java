@@ -100,4 +100,34 @@ class BookPaginationTest {
         return leaves.stream().flatMap(leaf -> leaf.lines().stream()).filter(line -> line.blockId().equals(id) && !line.label())
                 .map(BookPaginator.Line::sourceText).reduce("", String::concat);
     }
+
+    @Test
+    void continuationTextUsesTheSpaceFreedByTheOpeningHeader() {
+        var body=block("body","word ".repeat(6));
+        var leaves=BookPaginator.paginate(List.of(body),List.of(),false,true,30,18,36,36,MONO,"continued");
+        assertEquals(2,leaves.size());
+        assertEquals(2,leaves.getFirst().lines().size());
+        assertEquals(4,leaves.get(1).lines().size());
+        assertEquals(36,leaves.get(1).lines().getLast().y()+leaves.get(1).lines().getLast().height());
+        assertEquals(body.text().plainText(),content(leaves,"body"));
+        assertEquals(1,BookPaginator.locate(leaves,"body",body.text().plainText().length()-1));
+    }
+
+    @Test
+    void recordOverflowAndFootnotesUseHeaderlessContinuationLeaves() {
+        var body=block("body","body ".repeat(100));
+        var margin=new BookPaginator.Block("margin",BookText.parse("margin ".repeat(100)),BookPaginator.Kind.MARGIN,9,"",null);
+        var note=new BookPaginator.Block("footnote/0",BookText.parse("note ".repeat(100)),BookPaginator.Kind.FOOTNOTE,9,"Note 1",null);
+        var leaves=BookPaginator.paginate(List.of(body),List.of(margin,note),true,true,142,36,90,90,MONO,"continued");
+        assertEquals("body",leaves.getFirst().lines().getFirst().blockId());
+        assertEquals("margin",leaves.get(1).lines().getFirst().blockId());
+        for(int i=0;i<leaves.size();i++) for(var line:leaves.get(i).lines())
+            assertTrue(line.y()+line.height()<=(i==0?36:90));
+        for(String id:List.of("body","margin","footnote/0"))
+            assertTrue(leaves.subList(2,leaves.size()).stream().flatMap(leaf->leaf.lines().stream())
+                    .anyMatch(line->line.blockId().equals(id)&&line.y()+line.height()>36),id+" must use the reclaimed space");
+        assertEquals(body.text().plainText(),content(leaves,"body"));
+        assertEquals(margin.text().plainText(),content(leaves,"margin"));
+        assertEquals(note.text().plainText(),content(leaves,"footnote/0"));
+    }
 }
