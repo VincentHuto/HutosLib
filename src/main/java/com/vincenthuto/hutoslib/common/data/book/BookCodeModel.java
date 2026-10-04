@@ -36,6 +36,7 @@ public class BookCodeModel {
 	private BookSourceIndex sourceIndex = BookSourceIndex.EMPTY;
 	private List<GlossaryTermTemplate> glossary = List.of();
 	private BookReaderHooks readerHooks = BookReaderHooks.DEFAULT;
+	private boolean showWashedSearchCount;
 	private static final java.util.Set<ResourceLocation> WARNED_MISSING_REVEAL = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
 	public BookCodeModel(ResourceLocation resourceLocation, BookTemplate template) {
@@ -67,6 +68,7 @@ public class BookCodeModel {
 		copy.sourceIndex = sourceIndex;
 		copy.glossary = glossary;
 		copy.readerHooks = readerHooks;
+		copy.showWashedSearchCount = showWashedSearchCount;
 		return copy;
 	}
 
@@ -75,6 +77,8 @@ public class BookCodeModel {
 	public List<GlossaryTermTemplate> getGlossary() { return glossary; }
 	public void setGlossary(List<GlossaryTermTemplate> glossary) { this.glossary = List.copyOf(glossary); }
 	public BookReaderHooks getReaderHooks() { return readerHooks; }
+	public boolean showsWashedSearchCount() { return showWashedSearchCount; }
+	public void setShowWashedSearchCount(boolean show) { showWashedSearchCount = show; }
 
 	public void setRedactionPredicate(BiPredicate<Player, Integer> predicate) {
 		readerHooks = new BookReaderHooks(predicate, readerHooks.requirement(), readerHooks.owner(), readerHooks.status());

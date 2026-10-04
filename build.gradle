@@ -18,6 +18,9 @@ sourceSets.main.resources {
     srcDir('src/generated/resources')
     // Exclude common development-only resources from finalized outputs
     exclude("**/*.bbmodel")
+    // Keep authoring duplicates in source; their names are invalid Minecraft resource paths.
+    exclude("assets/hutoslib/textures/item/raw_clay_flask - Copy.png")
+    exclude("assets/hutoslib/textures/item/cured_clay_flask - Copy.png")
     exclude("src/generated/**/.cache")
 }
 

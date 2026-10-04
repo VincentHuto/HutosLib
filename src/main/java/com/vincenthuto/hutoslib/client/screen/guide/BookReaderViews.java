@@ -288,7 +288,10 @@ final class BookReaderViews {
         else resultsY=Math.max(resultsY,first.y()+83);
         int found=(int)results.stream().filter(result->!result.washedMatch()).count(),washed=results.size()-found;
         int summaryY=resultsY;
-        paints.add(g->canvas().text(g,found+" "+tr("found")+" · "+washed+" "+tr("washed"),"label","inkMuted",leaf.x()+14,summaryY));
+        String summary=found+" "+tr("found");
+        if(session().book().showsWashedSearchCount()) summary+=" · "+washed+" "+tr("washed");
+        String searchSummary=summary;
+        paints.add(g->canvas().text(g,searchSummary,"label","inkMuted",leaf.x()+14,summaryY));
         resultsY+=14;
         int capacity=Math.max(1,(leaf.y()+leaf.height()-24-resultsY)/18);
         pageCount=Math.max(1,(results.size()+capacity-1)/capacity);
